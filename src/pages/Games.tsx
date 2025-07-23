@@ -1,76 +1,63 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Users, Clock, Play, Star } from "lucide-react";
+import { Clock, Play } from "lucide-react";
 
 const Games = () => {
   const games = [
     {
       id: 1,
-      title: "Market Maker Challenge",
-      description: "Test your market making skills in a simulated trading environment",
-      difficulty: "Hard",
-      players: 1247,
-      timeLimit: "15 min",
-      reward: "500 XP",
-      category: "Trading",
-      featured: true
+      title: "Arithmetic Zetamac",
+      description: "How good are you at basic arithmetic? Deal with whole numbers and show you qualify the bare minimum! Just like Zetamac :)",
+      icon: "±",
+      timeLimit: "1-3 minutes",
+      category: "Mental Math",
+      difficulty: "Easy"
     },
     {
       id: 2,
-      title: "Portfolio Optimization Race",
-      description: "Build the most efficient portfolio under various constraints",
-      difficulty: "Medium",
-      players: 892,
-      timeLimit: "20 min",
-      reward: "300 XP",
-      category: "Portfolio Management",
-      featured: false
+      title: "Sequences",
+      description: "How good are you at recognizing patterns? Start out and see how well you know your numbers!",
+      icon: "⋯",
+      timeLimit: "2-6 minutes",
+      category: "Pattern Recognition",
+      difficulty: "Medium"
     },
     {
       id: 3,
-      title: "Derivatives Pricing Quiz",
-      description: "Quick-fire questions on options, futures, and swaps pricing",
-      difficulty: "Easy",
-      players: 2156,
-      timeLimit: "10 min",
-      reward: "150 XP",
+      title: "Options Pricing Battle",
+      description: "Price complex derivatives under time pressure using Black-Scholes and beyond",
+      icon: "📊",
+      timeLimit: "10-15 minutes",
       category: "Derivatives",
-      featured: false
+      difficulty: "Hard"
     },
     {
       id: 4,
-      title: "Risk Management Simulator",
-      description: "Navigate market crises and manage portfolio risk in real-time",
-      difficulty: "Hard",
-      players: 634,
-      timeLimit: "25 min",
-      reward: "600 XP",
-      category: "Risk Management",
-      featured: true
+      title: "Portfolio Optimization",
+      description: "Build efficient portfolios with various constraints and risk models",
+      icon: "📈",
+      timeLimit: "15-20 minutes",
+      category: "Portfolio Management",
+      difficulty: "Hard"
     },
     {
       id: 5,
-      title: "Algorithmic Trading Battle",
-      description: "Code trading algorithms and compete against other players",
-      difficulty: "Hard",
-      players: 445,
-      timeLimit: "30 min",
-      reward: "750 XP",
-      category: "Algorithmic Trading",
-      featured: false
+      title: "Risk Management Quiz",
+      description: "Test your knowledge of VaR, stress testing, and risk metrics",
+      icon: "⚠️",
+      timeLimit: "5-10 minutes",
+      category: "Risk Management",
+      difficulty: "Medium"
     },
     {
       id: 6,
-      title: "Financial Modeling Sprint",
-      description: "Build and validate financial models under time pressure",
-      difficulty: "Medium",
-      players: 1089,
-      timeLimit: "18 min",
-      reward: "400 XP",
-      category: "Modeling",
-      featured: false
+      title: "Market Data Analysis",
+      description: "Analyze real-time market data and identify trading opportunities",
+      icon: "📊",
+      timeLimit: "8-12 minutes",
+      category: "Market Analysis",
+      difficulty: "Medium"
     }
   ];
 
@@ -85,160 +72,59 @@ const Games = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto">        
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Interactive Games</h1>
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold text-foreground mb-4">Quant Interview Games</h1>
           <p className="text-muted-foreground text-lg">
-            Learn quantitative finance through engaging, competitive gameplay
+            Sharpen your quantitative skills through interactive challenges
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Games Played</p>
-                  <p className="text-2xl font-bold text-primary">47</p>
-                </div>
-                <Play className="w-8 h-8 text-primary" />
+        {/* Games Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {games.map((game) => (
+            <div 
+              key={game.id} 
+              className="bg-card border border-border rounded-xl p-8 hover:shadow-card transition-all duration-300 hover:scale-105 hover:border-primary/30 cursor-pointer group"
+            >
+              {/* Icon */}
+              <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                <span className="text-2xl">{game.icon}</span>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
+              
+              {/* Content */}
+              <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total XP</p>
-                  <p className="text-2xl font-bold text-primary">12,450</p>
-                </div>
-                <Star className="w-8 h-8 text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Rank</p>
-                  <p className="text-2xl font-bold text-primary">#127</p>
-                </div>
-                <Trophy className="w-8 h-8 text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Win Rate</p>
-                  <p className="text-2xl font-bold text-primary">68%</p>
-                </div>
-                <Users className="w-8 h-8 text-primary" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Featured Games */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-4">Featured Games</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {games.filter(game => game.featured).map((game) => (
-              <Card key={game.id} className="hover:shadow-card transition-all duration-300 hover:scale-105 border-primary/20">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-xl font-semibold text-foreground flex items-center gap-2">
-                        {game.title}
-                        <Star className="w-5 h-5 text-primary" />
-                      </CardTitle>
-                      <Badge variant="outline" className="mt-2 text-xs">
-                        {game.category}
-                      </Badge>
-                    </div>
-                    <Badge className={getDifficultyColor(game.difficulty)}>
-                      {game.difficulty}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    {game.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center">
-                        <Users className="w-4 h-4 mr-1" />
-                        {game.players.toLocaleString()} players
-                      </span>
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {game.timeLimit}
-                      </span>
-                    </div>
-                    <div className="text-primary font-medium">
-                      {game.reward}
-                    </div>
-                  </div>
-                  <Button className="w-full" variant="premium">
-                    <Play className="w-4 h-4 mr-2" />
-                    Play Now
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* All Games */}
-        <div>
-          <h2 className="text-2xl font-bold text-foreground mb-4">All Games</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {games.filter(game => !game.featured).map((game) => (
-              <Card key={game.id} className="hover:shadow-card transition-all duration-300 hover:scale-105">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg font-semibold text-foreground">
-                      {game.title}
-                    </CardTitle>
-                    <Badge className={getDifficultyColor(game.difficulty)}>
-                      {game.difficulty}
-                    </Badge>
-                  </div>
-                  <Badge variant="outline" className="text-xs w-fit">
-                    {game.category}
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                    {game.title}
+                  </h3>
+                  <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
+                    {game.difficulty}
                   </Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {game.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                      <span className="flex items-center">
-                        <Users className="w-4 h-4 mr-1" />
-                        {game.players.toLocaleString()}
-                      </span>
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {game.timeLimit}
-                      </span>
-                    </div>
-                    <div className="text-primary font-medium text-sm">
-                      {game.reward}
-                    </div>
+                </div>
+                
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {game.description}
+                </p>
+                
+                <div className="flex items-center justify-between pt-4">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4 mr-2" />
+                    {game.timeLimit}
                   </div>
-                  <Button className="w-full" size="sm">
+                  
+                  <Button 
+                    size="sm" 
+                    className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  >
                     <Play className="w-4 h-4 mr-2" />
                     Play
                   </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
