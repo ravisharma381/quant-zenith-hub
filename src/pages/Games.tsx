@@ -73,13 +73,6 @@ const Games = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">        
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Quant Interview Games</h1>
-          <p className="text-muted-foreground text-lg">
-            Sharpen your quantitative skills through interactive challenges
-          </p>
-        </div>
 
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -99,9 +92,6 @@ const Games = () => {
                   <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                     {game.title}
                   </h3>
-                  <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                    {game.difficulty}
-                  </Badge>
                 </div>
                 
                 <p className="text-muted-foreground text-sm leading-relaxed">

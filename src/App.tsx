@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Problems from "./pages/Problems";
 import Games from "./pages/Games";
 import Courses from "./pages/Courses";
+import CourseLanding from "./pages/CourseLanding";
+import CourseContent from "./pages/CourseContent";
 import Blogs from "./pages/Blogs";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -22,12 +24,14 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/problems" element={<Layout><Problems /></Layout>} />
-            <Route path="/games" element={<Layout><Games /></Layout>} />
-            <Route path="/courses" element={<Layout><Courses /></Layout>} />
-            <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
-            <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/problems" element={<Layout><Problems /></Layout>} />
+        <Route path="/games" element={<Layout><Games /></Layout>} />
+        <Route path="/courses" element={<Layout><Courses /></Layout>} />
+        <Route path="/course/:id" element={<CourseLanding />} />
+        <Route path="/course-content/:id" element={<CourseContent />} />
+        <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
+        <Route path="/login" element={<Login />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

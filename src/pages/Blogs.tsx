@@ -102,13 +102,6 @@ const Blogs = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Blog</h1>
-          <p className="text-muted-foreground text-lg">
-            Insights, analysis, and thought leadership in quantitative finance
-          </p>
-        </div>
 
         {/* Search and Filters */}
         <div className="flex flex-col lg:flex-row gap-4 mb-8">
@@ -136,69 +129,11 @@ const Blogs = () => {
           </div>
         </div>
 
-        {/* Featured Articles */}
-        {featuredPosts.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center">
-              <TrendingUp className="w-6 h-6 mr-2 text-primary" />
-              Featured Articles
-            </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {featuredPosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-card transition-all duration-300 hover:scale-105 border-primary/20">
-                  <CardHeader>
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge variant="outline" className="text-xs">
-                        {post.category}
-                      </Badge>
-                      <Button variant="ghost" size="sm">
-                        <Bookmark className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <CardTitle className="text-xl font-semibold text-foreground leading-tight">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          #{tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                      <span className="flex items-center">
-                        <User className="w-4 h-4 mr-1" />
-                        {post.author}
-                      </span>
-                      <span className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {formatDate(post.publishDate)}
-                      </span>
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {post.readTime}
-                      </span>
-                    </div>
-                    <Button className="w-full" variant="premium">
-                      Read Article
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Regular Articles */}
+        {/* Latest Articles */}
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Latest Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularPosts.map((post) => (
+            {blogPosts.slice(0, 6).map((post) => (
               <Card key={post.id} className="hover:shadow-card transition-all duration-300 hover:scale-105">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">

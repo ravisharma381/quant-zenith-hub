@@ -103,13 +103,6 @@ const Courses = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Expert-Led Courses</h1>
-          <p className="text-muted-foreground text-lg">
-            Learn from industry professionals and academics
-          </p>
-        </div>
 
         {/* Courses Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,9 +110,10 @@ const Courses = () => {
             <div 
               key={course.id} 
               className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
+              onClick={() => window.location.href = `/course/${course.id}`}
             >
               {/* Gradient Header with Instructor Photo */}
-              <div className={`h-32 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
+              <div className={`h-42 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
@@ -154,11 +148,7 @@ const Courses = () => {
                   <span className="text-muted-foreground">{course.duration}</span>
                 </div>
                 
-                {/* Level Badge */}
-                <div className="flex items-center justify-between">
-                  <Badge className={getLevelColor(course.level)} variant="outline">
-                    {course.level}
-                  </Badge>
+                <div className="flex items-center justify-end">
                   <span className="text-lg font-bold text-primary">{course.price}</span>
                 </div>
                 

@@ -112,25 +112,16 @@ const Problems = () => {
   const filteredProblems = problems.filter(problem => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
-    const matchesTag = selectedTag === "All" || problem.tags.includes(selectedTag);
     const matchesDifficulty = selectedDifficulty === "All" || problem.difficulty === selectedDifficulty;
-    const matchesStatus = selectedStatus === "All" || problem.status === selectedStatus;
-    return matchesSearch && matchesTopic && matchesTag && matchesDifficulty && matchesStatus;
+    return matchesSearch && matchesTopic && matchesDifficulty;
   });
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Practice Problems</h1>
-          <p className="text-muted-foreground text-lg">
-            Master quantitative finance concepts through hands-on problem solving
-          </p>
-        </div>
 
         {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Search</label>
             <Input
@@ -153,19 +144,6 @@ const Problems = () => {
             </Select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Tags</label>
-            <Select value={selectedTag} onValueChange={setSelectedTag}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a tag" />
-              </SelectTrigger>
-              <SelectContent>
-                {tags.map((tag) => (
-                  <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
             <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
             <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
               <SelectTrigger>
@@ -178,76 +156,35 @@ const Problems = () => {
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Status</label>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statuses.map((status) => (
-                  <SelectItem key={status} value={status}>{status}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
         {/* Problems Table */}
         <div className="bg-card border border-border rounded-lg overflow-hidden">
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">STATUS</div>
-            <div className="col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TAGS</div>
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">DIFFICULTY</div>
+            <div className="col-span-6 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+            <div className="col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
+            <div className="col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">DIFFICULTY</div>
           </div>
           
           {/* Table Body */}
           <div className="divide-y divide-border">
             {filteredProblems.map((problem) => (
               <div key={problem.id} className="grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors cursor-pointer group">
-                <div className="col-span-2 flex items-center">
-                  <Badge className={getStatusColor(problem.status)}>
-                    {problem.status}
-                  </Badge>
+                <div className="col-span-6 flex items-center">
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {problem.title}
+                  </h3>
                 </div>
-                <div className="col-span-4 flex items-center">
-                  <div>
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {problem.title}
-                    </h3>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {problem.estimatedTime}
-                    </div>
-                  </div>
-                  {problem.completed && (
-                    <CheckCircle className="w-4 h-4 text-primary ml-2 flex-shrink-0" />
-                  )}
-                </div>
-                <div className="col-span-2 flex items-center">
-                  <Badge variant="outline" className="text-xs">
+                <div className="col-span-3 flex items-center">
+                  <Badge className={getTagColor(problem.topic)} variant="outline">
                     {problem.topic}
                   </Badge>
                 </div>
-                <div className="col-span-2 flex items-center">
-                  <div className="flex flex-wrap gap-1">
-                    {problem.tags.map((tag) => (
-                      <Badge key={tag} className={getTagColor(tag)} variant="outline">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                <div className="col-span-2 flex items-center justify-between">
+                <div className="col-span-3 flex items-center">
                   <Badge className={getDifficultyColor(problem.difficulty)}>
                     {problem.difficulty}
                   </Badge>
-                  <Button size="sm" variant={problem.completed ? "outline" : "default"}>
-                    {problem.completed ? "Review" : "Solve"}
-                  </Button>
                 </div>
               </div>
             ))}
