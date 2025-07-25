@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
 
-const Login = () => {
+const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,7 +15,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Sign In Form */}
+      {/* Left Side - Sign Up Form */}
       <div className="w-1/2 bg-background flex items-center justify-center p-8">
         <div className="w-full max-w-md space-y-8">
           {/* Navigation */}
@@ -28,11 +28,11 @@ const Login = () => {
             </Link>
           </div>
 
-          {/* Sign In Form */}
+          {/* Sign Up Form */}
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Sign In
+                Sign Up
               </h1>
               <p className="text-muted-foreground">
                 Connect your Google account or other provider to get started.
@@ -46,7 +46,7 @@ const Login = () => {
                 disabled={isLoading}
               >
                 <span className="mr-2 font-bold">G</span>
-                {isLoading ? "Signing in..." : "Sign in with Google"}
+                {isLoading ? "Signing up..." : "Sign up with Google"}
               </Button>
               
               <Button 
@@ -56,19 +56,19 @@ const Login = () => {
                 disabled={isLoading}
               >
                 <Github className="mr-2 h-5 w-5" />
-                {isLoading ? "Signing in..." : "Sign in with GitHub"}
+                {isLoading ? "Signing up..." : "Sign up with GitHub"}
               </Button>
             </div>
 
             <div className="text-center">
               <span className="text-muted-foreground">
-                Not registered yet? 
+                Already registered? 
               </span>
               <Link 
-                to="/signup"
+                to="/login"
                 className="text-primary hover:underline ml-1"
               >
-                Create an account.
+                Sign In.
               </Link>
             </div>
           </div>
@@ -79,10 +79,10 @@ const Login = () => {
       <div className="w-1/2 bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center p-8">
         <div className="text-center text-white space-y-6">
           <h2 className="text-4xl font-bold">
-            Welcome Back To Quantprof.org
+            You're One Step Away From Acing Your Next Interview.
           </h2>
           <p className="text-xl text-white/90">
-            Sign into your account and get ready for your next interview!
+            Create your account and start practicing!
           </p>
         </div>
       </div>
@@ -90,4 +90,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
