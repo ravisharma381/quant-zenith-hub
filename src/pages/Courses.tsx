@@ -119,7 +119,7 @@ const Courses = () => {
               className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
             >
               {/* Gradient Header with Instructor Photo */}
-              <div className={`h-32 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
+              <div className={`h-44 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
