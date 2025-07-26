@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,6 +9,7 @@ import drivLogo from "@/assets/driv-logo.png";
 import companyLogo from "@/assets/company-logo.png";
 
 const Problems = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
@@ -143,7 +145,11 @@ const Problems = () => {
           {/* Table Body */}
           <div className="divide-y divide-border">
             {filteredProblems.map((problem) => (
-              <div key={problem.id} className="grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors cursor-pointer group">
+              <div 
+                key={problem.id} 
+                className="grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
+                onClick={() => navigate(`/problems/${problem.id}`)}
+              >
                 <div className="col-span-1 flex items-center">
                   <span className="text-muted-foreground">{problem.id}</span>
                 </div>
