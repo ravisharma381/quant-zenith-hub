@@ -66,7 +66,7 @@ const ProblemDetail = () => {
             <div>
               <h1 className="text-2xl font-bold text-foreground mb-4">{problem.title}</h1>
               <div className="prose prose-invert max-w-none">
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                <p className="text-white leading-relaxed whitespace-pre-line">
                   {problem.description}
                 </p>
               </div>
@@ -77,7 +77,7 @@ const ProblemDetail = () => {
                 placeholder="Place answer here"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                className="min-h-[100px] resize-none"
+                className="h-10 resize-none"
               />
               <Button 
                 onClick={handleSubmit}
@@ -92,11 +92,9 @@ const ProblemDetail = () => {
             <div>
               <h1 className="text-2xl font-bold text-foreground mb-4">{problem.title} - Solution</h1>
               <div className="prose prose-invert max-w-none">
-                <div className="bg-muted/20 border border-border rounded-lg p-6">
-                  <p className="text-foreground leading-relaxed whitespace-pre-line">
-                    {problem.solution}
-                  </p>
-                </div>
+                <p className="text-white leading-relaxed whitespace-pre-line">
+                  {problem.solution}
+                </p>
               </div>
             </div>
           </TabsContent>
