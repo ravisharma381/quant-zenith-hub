@@ -76,7 +76,7 @@ const Signup = () => {
       </div>
 
       {/* Right Side - Welcome Message */}
-      <div className="w-1/2 bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center p-8">
+      <div className="w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 flex items-center justify-center p-8">
         <div className="text-center text-white space-y-6">
           <h2 className="text-4xl font-bold">
             You're One Step Away From Acing Your Next Interview.

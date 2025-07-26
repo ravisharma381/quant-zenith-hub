@@ -55,9 +55,11 @@ const Navigation = () => {
                 Login
               </Link>
             </Button>
-            <Button variant="premium" size="sm">
-              <User className="w-4 h-4" />
-              Sign Up
+            <Button variant="premium" size="sm" asChild>
+              <Link to="/signup">
+                <User className="w-4 h-4" />
+                Sign Up
+              </Link>
             </Button>
           </div>
 
@@ -96,9 +98,11 @@ const Navigation = () => {
                     Login
                   </Link>
                 </Button>
-                <Button variant="premium" size="sm" className="w-full">
-                  <User className="w-4 h-4" />
-                  Sign Up
+                <Button variant="premium" size="sm" className="w-full" asChild>
+                  <Link to="/signup" onClick={() => setIsOpen(false)}>
+                    <User className="w-4 h-4" />
+                    Sign Up
+                  </Link>
                 </Button>
               </div>
             </div>
