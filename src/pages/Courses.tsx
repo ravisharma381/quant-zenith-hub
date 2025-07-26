@@ -18,6 +18,76 @@ const Courses = () => {
       price: "$149",
       image: "/placeholder.svg",
       gradient: "from-orange-400 to-yellow-500"
+    },
+    {
+      id: 2,
+      title: "Algorithmic Trading Strategies",
+      instructor: "Sarah Chen",
+      description: "Build and deploy sophisticated trading algorithms",
+      level: "Advanced",
+      duration: "28.4 total hours",
+      students: 35000,
+      rating: 4.6,
+      reviews: "3.5K ratings",
+      price: "$299",
+      image: "/placeholder.svg",
+      gradient: "from-purple-500 to-blue-600"
+    },
+    {
+      id: 3,
+      title: "Risk Management & Portfolio Theory",
+      instructor: "Prof. David Kim",
+      description: "Advanced portfolio optimization and risk modeling techniques",
+      level: "Intermediate",
+      duration: "47.1 total hours",
+      students: 219000,
+      rating: 4.6,
+      reviews: "219K ratings",
+      price: "$199",
+      image: "/placeholder.svg",
+      gradient: "from-pink-500 to-purple-600"
+    },
+    {
+      id: 4,
+      title: "Derivatives Pricing Models",
+      instructor: "Dr. Elena Petrov",
+      description: "Deep dive into Black-Scholes, Monte Carlo, and exotic options",
+      level: "Advanced",
+      duration: "32.8 total hours",
+      students: 87000,
+      rating: 4.8,
+      reviews: "87K ratings",
+      price: "$349",
+      image: "/placeholder.svg",
+      gradient: "from-green-400 to-blue-500"
+    },
+    {
+      id: 5,
+      title: "Machine Learning for Finance",
+      instructor: "Alex Thompson",
+      description: "Apply ML techniques to financial modeling and prediction",
+      level: "Intermediate",
+      duration: "41.2 total hours",
+      students: 156000,
+      rating: 4.7,
+      reviews: "156K ratings",
+      price: "$249",
+      image: "/placeholder.svg",
+      gradient: "from-cyan-400 to-purple-500"
+    },
+    {
+      id: 6,
+      title: "Fixed Income Securities",
+      instructor: "Dr. James Wilson",
+      description: "Comprehensive guide to bonds, yield curves, and credit risk",
+      level: "Intermediate",
+      duration: "36.5 total hours",
+      students: 94000,
+      rating: 4.5,
+      reviews: "94K ratings",
+      price: "$179",
+      image: "/placeholder.svg",
+      gradient: "from-indigo-400 to-pink-500"
     }
   ];
 
@@ -42,7 +112,7 @@ const Courses = () => {
         </div>
 
         {/* Courses Grid */}
-        <div className="max-w-md mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
             <div 
               key={course.id} 
@@ -99,11 +169,6 @@ const Courses = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* More Coming Soon */}
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground text-lg">More courses coming soon...</p>
         </div>
       </div>
     </div>
