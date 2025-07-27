@@ -96,7 +96,7 @@ const ProblemDetail = () => {
               <h1 className="text-2xl font-bold text-foreground mb-4">{problem.title}</h1>
               <Accordion type="single" collapsible className="w-full space-y-4">
                 <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-primary font-medium hover:no-underline">
+                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                     Hint 1
                   </AccordionTrigger>
                   <AccordionContent className="text-white leading-relaxed">
@@ -105,7 +105,7 @@ const ProblemDetail = () => {
                 </AccordionItem>
                 
                 <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-primary font-medium hover:no-underline">
+                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                     Hint 2
                   </AccordionTrigger>
                   <AccordionContent className="text-white leading-relaxed">
@@ -114,7 +114,7 @@ const ProblemDetail = () => {
                 </AccordionItem>
                 
                 <AccordionItem value="solution" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-primary font-medium hover:no-underline">
+                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                     Solution
                   </AccordionTrigger>
                   <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
