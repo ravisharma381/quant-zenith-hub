@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Heart, Share, MoreHorizontal } from "lucide-react";
 
 const ProblemDetail = () => {
@@ -17,6 +18,8 @@ const ProblemDetail = () => {
     difficulty: "Easy",
     topic: "Statistics",
     description: `Varun has 4 fair coins. He flips all 4 at once and notes the parity of each. After seeing the outcomes, he may turn over (rather than flip) any pair of coins. Note that this means a heads becomes a tails and vice versa. Varun may not turn over a single coin without turning over another. He can iterate this process as many times as he would like. If Varun plays to maximize his expected number of heads, find the expected number of heads he will have.`,
+    hint1: "Think about what configurations of heads/tails are possible after any number of pair flips.",
+    hint2: "Consider the parity constraints - turning over pairs preserves certain properties of the configuration.",
     solution: "The expected number of heads Varun will have is 3.\n\nExplanation:\nWhen Varun flips 4 fair coins, he gets various outcomes. The key insight is that he can always turn over pairs of coins to optimize his result. Since he wants to maximize heads, he should turn over pairs strategically.\n\nBy turning over pairs, Varun can always achieve at least 2 heads from any initial configuration. However, with optimal play, he can achieve an expected value of 3 heads through careful pair selection based on the initial outcome."
   };
 
@@ -91,11 +94,34 @@ const ProblemDetail = () => {
           <TabsContent value="solution" className="space-y-6">
             <div>
               <h1 className="text-2xl font-bold text-foreground mb-4">{problem.title} - Solution</h1>
-              <div className="prose prose-invert max-w-none">
-                <p className="text-white leading-relaxed whitespace-pre-line">
-                  {problem.solution}
-                </p>
-              </div>
+              <Accordion type="single" collapsible className="w-full space-y-4">
+                <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
+                  <AccordionTrigger className="text-white font-medium">
+                    Hint 1
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white leading-relaxed">
+                    {problem.hint1}
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
+                  <AccordionTrigger className="text-white font-medium">
+                    Hint 2
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white leading-relaxed">
+                    {problem.hint2}
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="solution" className="border border-border rounded-lg px-4">
+                  <AccordionTrigger className="text-white font-medium">
+                    Solution
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
+                    {problem.solution}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </TabsContent>
         </Tabs>
