@@ -8,6 +8,7 @@ import Problems from "./pages/Problems";
 import ProblemDetail from "./pages/ProblemDetail";
 import Games from "./pages/Games";
 import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import Blogs from "./pages/Blogs";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/problems/:id" element={<Layout><ProblemDetail /></Layout>} />
             <Route path="/games" element={<Layout><Games /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
+            <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

@@ -2,12 +2,14 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Courses = () => {
+  const navigate = useNavigate();
   const courses = [
     {
       id: 1,
-      title: "Quantitative Finance Fundamentals",
+      title: "Quant Interview Masterclass",
       instructor: "Dr. Michael Rodriguez",
       description: "Master the mathematical foundations of quantitative finance",
       level: "Beginner",
@@ -117,6 +119,7 @@ const Courses = () => {
             <div 
               key={course.id} 
               className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
+              onClick={() => course.id === 1 ? navigate('/course/quant-interview-masterclass') : null}
             >
               {/* Gradient Header with Instructor Photo */}
               <div className={`h-52 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
