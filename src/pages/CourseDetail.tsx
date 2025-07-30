@@ -75,9 +75,10 @@ const CourseDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Course Info */}
             <div>
               <h1 className="text-5xl font-bold text-foreground mb-6">
@@ -116,20 +117,19 @@ const CourseDetail = () => {
 
             {/* Right Side - Course Preview */}
             <div className="flex justify-center">
-              <Card className="bg-primary/20 border-primary/30 w-80 h-64 relative overflow-hidden">
-                <CardContent className="p-0 h-full flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
-                      <Play className="w-8 h-8 text-background ml-1" />
-                    </div>
-                    <h3 className="text-foreground font-semibold mb-2">Course Preview</h3>
-                    <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
+              <div className="bg-card/30 border border-primary/20 rounded-xl w-96 h-72 relative overflow-hidden backdrop-blur-sm">
+                <div className="p-0 h-full flex flex-col items-center justify-center">
+                  <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mb-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                    <Play className="w-12 h-12 text-background ml-1" />
                   </div>
-                </CardContent>
-              </Card>
+                  <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
+                  <p className="text-muted-foreground text-sm text-center px-6">Get a sneak peek of what you'll learn</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* What You'll Master Section */}
