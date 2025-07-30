@@ -117,13 +117,15 @@ const CourseDetail = () => {
 
             {/* Right Side - Course Preview */}
             <div className="flex justify-center">
-              <div className="bg-card/30 border border-primary/20 rounded-xl w-96 h-72 relative overflow-hidden backdrop-blur-sm">
-                <div className="p-0 h-full flex flex-col items-center justify-center">
-                  <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mb-6 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-                    <Play className="w-12 h-12 text-background ml-1" />
+              <div className="w-full max-w-lg">
+                <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
+                  <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                    <Play className="w-10 h-10 text-background ml-1" />
                   </div>
+                </div>
+                <div className="text-center mt-6">
                   <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
-                  <p className="text-muted-foreground text-sm text-center px-6">Get a sneak peek of what you'll learn</p>
+                  <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
                 </div>
               </div>
             </div>
