@@ -102,7 +102,11 @@ const MLCourseDetail = () => {
 
                 {/* CTA and Rating */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <Button size="lg" className="bg-red-500 hover:bg-red-600 text-background font-semibold px-8">
+                  <Button 
+                    size="lg" 
+                    className="bg-red-500 hover:bg-red-600 text-background font-semibold px-8"
+                    onClick={() => navigate("/course/machine-learning-for-finance/learn")}
+                  >
                     Enroll Me Now - £299
                   </Button>
                   <div className="flex items-center gap-2">
@@ -183,7 +187,11 @@ const MLCourseDetail = () => {
       {/* Final CTA */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto text-center">
-          <Button size="lg" className="bg-red-500 hover:bg-red-600 text-background font-semibold px-12 py-6 text-lg">
+          <Button 
+            size="lg" 
+            className="bg-red-500 hover:bg-red-600 text-background font-semibold px-12 py-6 text-lg"
+            onClick={() => navigate("/course/machine-learning-for-finance/learn")}
+          >
             Start Your ML Journey Today
           </Button>
         </div>
