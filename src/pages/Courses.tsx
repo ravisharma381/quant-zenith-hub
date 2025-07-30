@@ -23,9 +23,9 @@ const Courses = () => {
     },
     {
       id: 2,
-      title: "Algorithmic Trading Strategies",
+      title: "Machine Learning for Finance",
       instructor: "Sarah Chen",
-      description: "Build and deploy sophisticated trading algorithms",
+      description: "Apply ML techniques to financial modeling and prediction",
       level: "Advanced",
       duration: "28.4 total hours",
       students: 35000,
@@ -119,7 +119,10 @@ const Courses = () => {
             <div 
               key={course.id} 
               className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
-              onClick={() => course.id === 1 ? navigate('/course/quant-interview-masterclass') : null}
+              onClick={() => {
+                if (course.id === 1) navigate('/course/quant-interview-masterclass');
+                if (course.id === 2) navigate('/course/machine-learning-for-finance');
+              }}
             >
               {/* Gradient Header with Instructor Photo */}
               <div className={`h-52 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
