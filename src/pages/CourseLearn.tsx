@@ -149,43 +149,34 @@ const CourseLearn = () => {
                   open={section.expanded} 
                   onOpenChange={() => toggleSection(section.id)}
                 >
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-                    <h3 className="text-white font-medium text-lg">{section.title}</h3>
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
+                    <h3 className="text-white font-normal text-xl">{section.title}</h3>
                     {section.expanded ? (
-                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                      <ChevronDown className="w-5 h-5 text-white" />
                     ) : (
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="w-5 h-5 text-white" />
                     )}
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4 space-y-2">
+                  <CollapsibleContent className="mt-4">
                     {section.chapters.map((chapter) => (
                       <div
                         key={chapter.id}
                         className={cn(
-                          "flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all",
+                          "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
                           selectedChapter === chapter.id 
-                            ? "bg-green-600 text-white" 
-                            : "hover:bg-gray-800 text-gray-300"
+                            ? "bg-green-600 text-green-400" 
+                            : "text-white hover:bg-gray-800"
                         )}
                         onClick={() => setSelectedChapter(chapter.id)}
                       >
                         <div className="relative">
-                          <input
-                            type="checkbox"
-                            checked={chapter.completed}
-                            onChange={(e) => {
-                              e.stopPropagation();
-                              toggleChapterCompletion(section.id, chapter.id);
-                            }}
-                            className="w-5 h-5 rounded border-2 border-gray-500 bg-transparent appearance-none checked:bg-green-500 checked:border-green-500 cursor-pointer"
-                          />
-                          {chapter.completed && (
-                            <div className="absolute inset-0 flex items-center justify-center text-white text-xs">
-                              ✓
-                            </div>
-                          )}
+                          <div className="w-5 h-5 border-2 border-gray-400 rounded bg-transparent flex items-center justify-center">
+                            {chapter.completed && (
+                              <div className="text-white text-xs">✓</div>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-sm font-medium">{chapter.title}</span>
+                        <span className="text-base font-normal">{chapter.title}</span>
                       </div>
                     ))}
                   </CollapsibleContent>
