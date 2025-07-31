@@ -148,8 +148,9 @@ const CourseLearn = () => {
         <div className="w-96 bg-black border-r border-gray-800">
           {/* Course Title */}
           <div className="p-6">
-            <h1 className="text-xl font-bold text-white mb-1">Quant Interview Masterclass</h1>
-            <p className="text-gray-400 text-sm mb-4">0% complete</p>
+            <div className="bg-primary/20 border border-primary/30 rounded-lg px-4 py-3">
+              <h1 className="text-2xl font-bold text-white">Quant Interview Masterclass</h1>
+            </div>
           </div>
 
           {/* Search Bar */}
@@ -160,7 +161,8 @@ const CourseLearn = () => {
                 placeholder="Search for lesson title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                className="pl-10 border-gray-700 text-white placeholder-gray-400"
+                style={{ backgroundColor: '#1c1c1c' }}
               />
             </div>
           </div>
@@ -174,7 +176,7 @@ const CourseLearn = () => {
                   onOpenChange={() => toggleSection(section.id)}
                 >
                   <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
-                    <h3 className="text-white font-normal text-xl">{section.title}</h3>
+                    <h3 className="text-white font-normal text-lg">{section.title}</h3>
                     {section.expanded ? (
                       <ChevronDown className="w-5 h-5 text-white" />
                     ) : (
