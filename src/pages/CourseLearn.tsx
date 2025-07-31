@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Menu, ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
+import { Input } from "@/components/ui/input";
 
 interface Chapter {
   id: string;
@@ -59,6 +60,7 @@ const CourseLearn = () => {
     courseData[courseId as keyof typeof courseData]?.sections || []
   );
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const currentCourse = courseData[courseId as keyof typeof courseData];
   if (!currentCourse) {
@@ -127,6 +129,14 @@ const CourseLearn = () => {
     };
   };
 
+  // Filter chapters based on search term
+  const filteredSections = sections.map(section => ({
+    ...section,
+    chapters: section.chapters.filter(chapter => 
+      chapter.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  })).filter(section => section.chapters.length > 0 || searchTerm === "");
+
   const selectedContent = getSelectedChapterContent();
 
   return (
@@ -137,13 +147,27 @@ const CourseLearn = () => {
         {/* Left Sidebar */}
         <div className="w-96 bg-black border-r border-gray-800">
           {/* Course Title */}
-          <div className="p-6 border-b border-gray-800">
-            <h1 className="text-2xl font-bold text-white mb-4">{currentCourse.title}</h1>
+          <div className="p-6">
+            <h1 className="text-xl font-bold text-white mb-1">Quant Interview Masterclass</h1>
+            <p className="text-gray-400 text-sm mb-4">0% complete</p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="px-6 mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search for lesson title"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+              />
+            </div>
           </div>
 
           {/* Sections */}
           <div className="p-6">
-            {sections.map((section) => (
+            {filteredSections.map((section) => (
               <div key={section.id} className="mb-6">
                 <Collapsible 
                   open={section.expanded} 
