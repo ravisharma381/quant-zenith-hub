@@ -149,7 +149,7 @@ const CourseLearn = () => {
           {/* Course Title */}
           <div className="p-6">
             <div className="bg-primary/20 border border-primary/30 rounded-lg px-4 py-3">
-              <h1 className="text-2xl font-bold text-white">Quant Interview Masterclass</h1>
+              <h1 className="text-xl font-bold text-white">Quant Interview Masterclass</h1>
             </div>
           </div>
 
