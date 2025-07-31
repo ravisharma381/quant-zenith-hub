@@ -113,7 +113,15 @@ const Blogs = () => {
         {/* All Blog Posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogPosts.map((post) => (
-            <Card key={post.id} className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border">
+            <Card 
+              key={post.id} 
+              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer"
+              onClick={() => {
+                if (post.id === 1) {
+                  window.location.href = '/blog/1';
+                }
+              }}
+            >
               <div className="aspect-video bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
               <CardHeader>
                 <Badge variant="outline" className="text-xs w-fit mb-2">
@@ -147,7 +155,8 @@ const Blogs = () => {
                 <Button 
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
                   size="sm"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (post.id === 1) {
                       window.location.href = '/blog/1';
                     }
