@@ -199,7 +199,7 @@ const CourseLearn = () => {
           </div>
 
           {/* Content */}
-          <div className="px-2 py-6 overflow-y-auto" style={{ height: 'calc(100vh - 140px)' }}>
+          <div className="p-6">
             <div className="max-w-5xl">
               {selectedContent.content}
             </div>
