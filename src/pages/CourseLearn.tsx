@@ -53,6 +53,35 @@ const CourseLearn = () => {
           expanded: false
         }
       ]
+    },
+    "machine-learning-for-finance": {
+      title: "Machine Learning Fundamentals",
+      sections: [
+        {
+          id: "ml-basics",
+          title: "ML Basics",
+          chapters: [
+            { id: "introduction", title: "Introduction to ML in Finance", completed: false },
+            { id: "supervised", title: "Supervised Learning", completed: false },
+            { id: "unsupervised", title: "Unsupervised Learning", completed: false },
+            { id: "feature-engineering", title: "Feature Engineering", completed: false },
+            { id: "model-selection", title: "Model Selection", completed: false },
+          ],
+          expanded: true
+        },
+        {
+          id: "financial-applications",
+          title: "Financial Applications",
+          chapters: [],
+          expanded: false
+        },
+        {
+          id: "advanced-topics",
+          title: "Advanced Topics",
+          chapters: [],
+          expanded: false
+        }
+      ]
     }
   };
 
