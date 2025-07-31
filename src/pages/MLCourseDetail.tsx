@@ -104,7 +104,7 @@ const MLCourseDetail = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button 
                     size="lg" 
-                    className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-8"
+                    className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-8 hover:!bg-purple-600 hover:!shadow-[0_0_40px_hsl(270_91%_65%_/_0.3)]"
                     onClick={() => navigate("/course/machine-learning-for-finance/learn")}
                   >
                     Enroll Me Now - £299
@@ -189,7 +189,7 @@ const MLCourseDetail = () => {
         <div className="max-w-2xl mx-auto text-center">
           <Button 
             size="lg" 
-            className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-12 py-6 text-lg"
+            className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-12 py-6 text-lg hover:!bg-purple-600 hover:!shadow-[0_0_40px_hsl(270_91%_65%_/_0.3)]"
             onClick={() => navigate("/course/machine-learning-for-finance/learn")}
           >
             Start Your ML Journey Today
