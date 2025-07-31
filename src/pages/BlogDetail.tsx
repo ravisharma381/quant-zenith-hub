@@ -37,7 +37,7 @@ In this article, we cover a handful of the most prominent quant conferences, com
         </Badge>
 
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
           {blogPost.title}
         </h1>
 
