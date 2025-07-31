@@ -93,18 +93,18 @@ const CourseLearn = () => {
       return {
         title: "Fundamental Definitions",
         content: (
-          <div className="space-y-6 text-gray-400">
-            <p className="leading-relaxed">
+          <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
+            <p>
               What is probability? It's a really abstract question to ask. To assign a probability to some event, 
               we must know the process/action we are performing and what we are interested in measuring 
               about this process. This leads us to the idea of experiments and their outcomes.
             </p>
             
-            <div className="border-l-4 border-green-500 bg-green-500/10 p-6 rounded-r-lg">
-              <p className="text-green-500 font-medium mb-3">
+            <div className="border-l-4 border-[hsl(122_97%_50%)] bg-[hsl(122_97%_50%_/_0.1)] p-6 rounded-r-lg">
+              <p className="text-[hsl(122_97%_50%)] font-medium mb-3 text-lg">
                 Definition (Experiment, Sample Point, and Sample Space):
               </p>
-              <p className="text-white leading-relaxed">
+              <p className="text-white leading-relaxed text-lg">
                 An experiment is a repeatable process of observation that produces individual outcomes. 
                 In probability, these outcomes are called <span className="text-yellow-400 font-medium">sample points</span>. 
                 The collection of all possible sample points (outcomes) of an experiment is called the{" "}
@@ -112,7 +112,7 @@ const CourseLearn = () => {
               </p>
             </div>
 
-            <p className="leading-relaxed">
+            <p>
               You can think of a sample space as a large box that contains every single possible outcome of 
               an experiment, and a sample point as an item inside that box that is possible to be selected as 
               a result of the experiment. Conventionally, we denote the sample space of a certain experiment
@@ -123,7 +123,7 @@ const CourseLearn = () => {
     }
     return {
       title: "Select a Chapter",
-      content: <p className="text-gray-400">Select a chapter from the sidebar to view its content.</p>
+      content: <p className="text-gray-400 text-lg">Select a chapter from the sidebar to view its content.</p>
     };
   };
 
@@ -199,8 +199,8 @@ const CourseLearn = () => {
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto" style={{ height: 'calc(100vh - 140px)' }}>
-            <div className="max-w-4xl">
+          <div className="px-2 py-6 overflow-y-auto" style={{ height: 'calc(100vh - 140px)' }}>
+            <div className="max-w-5xl">
               {selectedContent.content}
             </div>
           </div>
