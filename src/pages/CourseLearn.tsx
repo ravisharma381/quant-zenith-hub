@@ -146,13 +146,6 @@ const CourseLearn = () => {
       <div className="flex">
         {/* Left Sidebar */}
         <div className="w-96 bg-black border-r border-gray-800">
-          {/* Course Title */}
-          <div className="p-6">
-            <div className="bg-primary/20 border border-primary/30 rounded-lg px-4 py-3 text-center">
-              <h1 className="text-xl font-bold text-white">Quant Interview Masterclass</h1>
-            </div>
-          </div>
-
           {/* Search Bar */}
           <div className="px-6 mb-4">
             <div className="relative">
