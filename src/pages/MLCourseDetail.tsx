@@ -75,7 +75,7 @@ const MLCourseDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-background via-red-500/10 to-red-500/20 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-background via-purple-500/10 to-purple-500/20 overflow-hidden">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -92,7 +92,7 @@ const MLCourseDetail = () => {
                 <div className="space-y-4 mb-8">
                   {features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                      <div className="flex-shrink-0 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                         <Check className="w-4 h-4 text-background" />
                       </div>
                       <span className="text-foreground">{feature}</span>
@@ -104,7 +104,7 @@ const MLCourseDetail = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <Button 
                     size="lg" 
-                    className="bg-red-500 hover:bg-red-600 text-background font-semibold px-8"
+                    className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-8"
                     onClick={() => navigate("/course/machine-learning-for-finance/learn")}
                   >
                     Enroll Me Now - £299
@@ -122,8 +122,8 @@ const MLCourseDetail = () => {
               {/* Right Side - Course Preview */}
               <div className="flex justify-center">
                 <div className="w-full max-w-lg">
-                  <div className="bg-gradient-to-br from-red-500/80 to-red-600/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-red-500/90 hover:to-red-600/70 transition-all duration-300">
-                    <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                  <div className="bg-gradient-to-br from-purple-500/80 to-purple-600/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-purple-500/90 hover:to-purple-600/70 transition-all duration-300">
+                    <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
                       <Play className="w-10 h-10 text-background ml-1" />
                     </div>
                   </div>
@@ -150,10 +150,10 @@ const MLCourseDetail = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {masterTopics.map((topic, index) => (
-              <Card key={index} className="border-border hover:border-red-500/50 transition-colors h-full">
+              <Card key={index} className="border-border hover:border-purple-500/50 transition-colors h-full">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                    <topic.icon className="w-6 h-6 text-red-500" />
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                    <topic.icon className="w-6 h-6 text-purple-500" />
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{topic.description}</p>
@@ -172,7 +172,7 @@ const MLCourseDetail = () => {
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
-                <AccordionTrigger className="text-left text-foreground hover:text-red-500 [&[data-state=open]]:text-red-500 [&>svg]:text-white">
+                <AccordionTrigger className="text-left text-foreground hover:text-purple-500 [&[data-state=open]]:text-purple-500 [&>svg]:text-white">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pb-6">
@@ -189,7 +189,7 @@ const MLCourseDetail = () => {
         <div className="max-w-2xl mx-auto text-center">
           <Button 
             size="lg" 
-            className="bg-red-500 hover:bg-red-600 text-background font-semibold px-12 py-6 text-lg"
+            className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-12 py-6 text-lg"
             onClick={() => navigate("/course/machine-learning-for-finance/learn")}
           >
             Start Your ML Journey Today
