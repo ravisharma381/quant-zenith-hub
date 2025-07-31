@@ -164,15 +164,20 @@ const CourseLearn = () => {
                         className={cn(
                           "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
                           selectedChapter === chapter.id 
-                            ? "bg-green-600 text-green-400" 
+                            ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
                             : "text-white hover:bg-gray-800"
                         )}
                         onClick={() => setSelectedChapter(chapter.id)}
                       >
                         <div className="relative">
-                          <div className="w-5 h-5 border-2 border-gray-400 rounded bg-transparent flex items-center justify-center">
+                          <div className={cn(
+                            "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center",
+                            chapter.completed 
+                              ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                              : "border-gray-400"
+                          )}>
                             {chapter.completed && (
-                              <div className="text-white text-xs">✓</div>
+                              <div className="text-black text-xs font-bold">✓</div>
                             )}
                           </div>
                         </div>
