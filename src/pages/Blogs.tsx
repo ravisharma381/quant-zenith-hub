@@ -144,7 +144,15 @@ const Blogs = () => {
                     {post.readTime}
                   </span>
                 </div>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" size="sm">
+                <Button 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
+                  size="sm"
+                  onClick={() => {
+                    if (post.id === 1) {
+                      window.location.href = '/blog/1';
+                    }
+                  }}
+                >
                   Read More
                 </Button>
               </CardContent>
