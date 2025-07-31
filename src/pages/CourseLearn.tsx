@@ -189,12 +189,18 @@ const CourseLearn = () => {
                         onClick={() => setSelectedChapter(chapter.id)}
                       >
                         <div className="relative">
-                          <div className={cn(
-                            "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center",
-                            chapter.completed 
-                              ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
-                              : "border-gray-400"
-                          )}>
+                          <div 
+                            className={cn(
+                              "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                              chapter.completed 
+                                ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                : "border-gray-400"
+                            )}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleChapterCompletion(section.id, chapter.id);
+                            }}
+                          >
                             {chapter.completed && (
                               <div className="text-black text-xs font-bold">✓</div>
                             )}
