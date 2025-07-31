@@ -31,6 +31,7 @@ const MLCourseEnroll = () => {
       id: "course-overview",
       title: "Course Overview",
       chapters: [
+        { id: "fundamentals", title: "Fundamental Definitions", completed: false },
         { id: "introduction", title: "Course Introduction", completed: false },
         { id: "curriculum", title: "Curriculum Breakdown", completed: false },
         { id: "prerequisites", title: "Prerequisites", completed: false },
@@ -63,7 +64,7 @@ const MLCourseEnroll = () => {
   ];
 
   const [sections, setSections] = useState<Section[]>(enrollmentSections);
-  const [selectedChapter, setSelectedChapter] = useState<string>("introduction");
+  const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const toggleSection = (sectionId: string) => {
@@ -90,97 +91,42 @@ const MLCourseEnroll = () => {
   };
 
   const getSelectedChapterContent = () => {
-    switch (selectedChapter) {
-      case "introduction":
-        return {
-          title: "Course Introduction",
-          content: (
-            <div className="space-y-6">
-              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-6">
-                <h2 className="text-2xl font-bold text-purple-400 mb-4">Welcome to Machine Learning for Finance</h2>
-                <p className="text-gray-300 leading-relaxed">
-                  This comprehensive course will teach you how to apply cutting-edge machine learning techniques 
-                  to financial modeling, risk analysis, and algorithmic trading. You'll work with real financial 
-                  data and build practical models used in the industry.
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="bg-purple-500/5 border-purple-500/20">
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold text-purple-400 mb-3">What You'll Learn</h3>
-                    <ul className="space-y-2 text-gray-300">
-                      <li>• Advanced ML algorithms for finance</li>
-                      <li>• Python programming with scikit-learn</li>
-                      <li>• Portfolio optimization techniques</li>
-                      <li>• Risk management with ML</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-purple-500/5 border-purple-500/20">
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold text-purple-400 mb-3">Course Features</h3>
-                    <ul className="space-y-2 text-gray-300">
-                      <li>• 50+ hours of content</li>
-                      <li>• Real financial datasets</li>
-                      <li>• Hands-on projects</li>
-                      <li>• Industry certification</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
+    if (selectedChapter === "fundamentals") {
+      return {
+        title: "Fundamental Definitions",
+        content: (
+          <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
+            <p>
+              What is probability? It's a really abstract question to ask. To assign a probability to some event, 
+              we must know the process/action we are performing and what we are interested in measuring 
+              about this process. This leads us to the idea of experiments and their outcomes.
+            </p>
+            
+            <div className="border-l-4 border-purple-500 bg-purple-500/10 p-6 rounded-r-lg">
+              <p className="text-purple-500 font-medium mb-3 text-lg">
+                Definition (Experiment, Sample Point, and Sample Space):
+              </p>
+              <p className="text-white leading-relaxed text-lg">
+                An experiment is a repeatable process of observation that produces individual outcomes. 
+                In probability, these outcomes are called <span className="text-yellow-400 font-medium">sample points</span>. 
+                The collection of all possible sample points (outcomes) of an experiment is called the{" "}
+                <span className="text-yellow-400 font-medium">sample space</span>.
+              </p>
+            </div>
 
-              <div className="text-center py-8">
-                <Button 
-                  size="lg" 
-                  className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-12 py-6 text-lg hover:!bg-purple-600 hover:!shadow-[0_0_40px_hsl(270_91%_65%_/_0.3)]"
-                  onClick={() => navigate("/course/machine-learning-for-finance/learn")}
-                >
-                  Start Learning Now - £299
-                </Button>
-              </div>
-            </div>
-          )
-        };
-      case "curriculum":
-        return {
-          title: "Curriculum Breakdown",
-          content: (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-purple-400">Complete Curriculum</h2>
-              <div className="grid gap-4">
-                {[
-                  { module: "Module 1", title: "ML Fundamentals", duration: "12 hours" },
-                  { module: "Module 2", title: "Financial Data Analysis", duration: "10 hours" },
-                  { module: "Module 3", title: "Predictive Modeling", duration: "15 hours" },
-                  { module: "Module 4", title: "Portfolio Optimization", duration: "8 hours" },
-                  { module: "Module 5", title: "Risk Management", duration: "5 hours" }
-                ].map((item, index) => (
-                  <Card key={index} className="bg-purple-500/5 border-purple-500/20">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="text-purple-400 font-semibold">{item.module}</span>
-                          <h3 className="text-white font-medium">{item.title}</h3>
-                        </div>
-                        <Badge variant="outline" className="border-purple-500/30 text-purple-400">
-                          {item.duration}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )
-        };
-      default:
-        return {
-          title: "Select a Section",
-          content: <p className="text-gray-400 text-lg">Select a section from the sidebar to view enrollment details.</p>
-        };
+            <p>
+              You can think of a sample space as a large box that contains every single possible outcome of 
+              an experiment, and a sample point as an item inside that box that is possible to be selected as 
+              a result of the experiment. Conventionally, we denote the sample space of a certain experiment
+            </p>
+          </div>
+        )
+      };
     }
+    return {
+      title: "Select a Chapter",
+      content: <p className="text-gray-400 text-lg">Select a chapter from the sidebar to view its content.</p>
+    };
   };
 
   // Filter chapters based on search term
@@ -310,10 +256,17 @@ const MLCourseEnroll = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl font-bold text-white mb-8">{selectedContent.title}</h1>
-            {selectedContent.content}
+        <div className="flex-1 bg-black">
+          {/* Header */}
+          <div className="p-6">
+            <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            <div className="max-w-5xl">
+              {selectedContent.content}
+            </div>
           </div>
         </div>
       </div>
