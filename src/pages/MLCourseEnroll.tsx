@@ -7,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Input } from "@/components/ui/input";
 import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Search, ChevronDown, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "@/components/Navigation";
+
 import { cn } from "@/lib/utils";
 
 interface Chapter {
@@ -195,8 +195,6 @@ const MLCourseEnroll = () => {
 
   return (
     <div className="min-h-screen bg-black">
-      <Navigation />
-      
       <div className="flex">
         {/* Left Sidebar */}
         <div className="w-96 bg-black border-r border-gray-800">
