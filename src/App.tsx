@@ -39,7 +39,7 @@ const App = () => (
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
-            <Route path="/blog/:id" element={<Layout><BlogDetail /></Layout>} />
+            <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, User, Share2, Facebook, Twitter, Linkedin, Mail } from "lucide-react";
 
 const BlogDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
 
   // For now, we'll show the first blog post content
   const blogPost = {

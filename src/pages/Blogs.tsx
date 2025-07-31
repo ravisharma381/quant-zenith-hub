@@ -118,7 +118,7 @@ const Blogs = () => {
               className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer"
               onClick={() => {
                 if (post.id === 1) {
-                  window.location.href = '/blog/1';
+                  window.location.href = '/blogs/first';
                 }
               }}
             >
@@ -158,7 +158,7 @@ const Blogs = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (post.id === 1) {
-                      window.location.href = '/blog/1';
+                      window.location.href = '/blogs/first';
                     }
                   }}
                 >
