@@ -47,7 +47,7 @@ In this article, we cover a handful of the most prominent quant conferences, com
         </p>
 
         {/* Meta Information */}
-        <div className="border-t-4 border-b-4 border-border py-4 mb-8">
+        <div className="border-t-3 border-b-3 border-border py-4 mb-8">
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center">
               <User className="w-4 h-4 mr-2" />
