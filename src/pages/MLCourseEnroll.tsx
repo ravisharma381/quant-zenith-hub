@@ -206,7 +206,7 @@ const MLCourseEnroll = () => {
                 placeholder="Search enrollment topics"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-700 text-white placeholder-gray-400"
+                className="pl-10 border-gray-700 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500"
                 style={{ backgroundColor: '#1c1c1c' }}
               />
             </div>
