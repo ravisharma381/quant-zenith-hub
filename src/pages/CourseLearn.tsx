@@ -194,19 +194,8 @@ const CourseLearn = () => {
         {/* Main Content */}
         <div className="flex-1 bg-black">
           {/* Header */}
-          <div className="border-b border-gray-800 p-6 flex items-center justify-between">
+          <div className="p-6">
             <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
-            <div className="flex items-center gap-4">
-              <button className="p-2 text-gray-400 hover:text-white">
-                <Menu className="w-6 h-6" />
-              </button>
-              <button className="p-2 text-gray-400 hover:text-white">
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-              <button className="p-2 text-gray-400 hover:text-white">
-                <ArrowRight className="w-6 h-6" />
-              </button>
-            </div>
           </div>
 
           {/* Content */}
