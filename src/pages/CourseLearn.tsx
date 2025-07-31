@@ -147,7 +147,7 @@ const CourseLearn = () => {
         {/* Left Sidebar */}
         <div className="w-96 bg-black border-r border-gray-800">
           {/* Search Bar */}
-          <div className="px-6 mb-4 mt-6">
+          <div className="px-6 mb-2 mt-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
@@ -162,57 +162,98 @@ const CourseLearn = () => {
 
           {/* Sections */}
           <div className="p-6">
-            {filteredSections.map((section) => (
-              <div key={section.id} className="mb-6">
-                <Collapsible 
-                  open={section.expanded} 
-                  onOpenChange={() => toggleSection(section.id)}
-                >
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
-                    <h3 className="text-white font-normal text-lg">{section.title}</h3>
-                    {section.expanded ? (
-                      <ChevronDown className="w-5 h-5 text-white" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-white" />
-                    )}
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    {section.chapters.map((chapter) => (
-                      <div
-                        key={chapter.id}
-                        className={cn(
-                          "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
-                          selectedChapter === chapter.id 
-                            ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
-                            : "text-white hover:bg-gray-800"
-                        )}
-                        onClick={() => setSelectedChapter(chapter.id)}
-                      >
-                        <div className="relative">
-                          <div 
-                            className={cn(
-                              "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                              chapter.completed 
-                                ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
-                                : "border-gray-400"
-                            )}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleChapterCompletion(section.id, chapter.id);
-                            }}
-                          >
-                            {chapter.completed && (
-                              <div className="text-black text-xs font-bold">✓</div>
-                            )}
-                          </div>
+            {searchTerm ? (
+              // When searching, show only matching chapters without section headers
+              <div className="space-y-1">
+                {filteredSections.flatMap(section => 
+                  section.chapters.map((chapter) => (
+                    <div
+                      key={chapter.id}
+                      className={cn(
+                        "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
+                        selectedChapter === chapter.id 
+                          ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                          : "text-white hover:bg-gray-800"
+                      )}
+                      onClick={() => setSelectedChapter(chapter.id)}
+                    >
+                      <div className="relative">
+                        <div 
+                          className={cn(
+                            "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                            chapter.completed 
+                              ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                              : "border-gray-400"
+                          )}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleChapterCompletion(section.id, chapter.id);
+                          }}
+                        >
+                          {chapter.completed && (
+                            <div className="text-black text-xs font-bold">✓</div>
+                          )}
                         </div>
-                        <span className="text-base font-normal">{chapter.title}</span>
                       </div>
-                    ))}
-                  </CollapsibleContent>
-                </Collapsible>
+                      <span className="text-base font-normal">{chapter.title}</span>
+                    </div>
+                  ))
+                )}
               </div>
-            ))}
+            ) : (
+              // When not searching, show normal section structure
+              filteredSections.map((section) => (
+                <div key={section.id} className="mb-6">
+                  <Collapsible 
+                    open={section.expanded} 
+                    onOpenChange={() => toggleSection(section.id)}
+                  >
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
+                      <h3 className="text-white font-normal text-lg">{section.title}</h3>
+                      {section.expanded ? (
+                        <ChevronDown className="w-5 h-5 text-white" />
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-white" />
+                      )}
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4">
+                      {section.chapters.map((chapter) => (
+                        <div
+                          key={chapter.id}
+                          className={cn(
+                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
+                            selectedChapter === chapter.id 
+                              ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                              : "text-white hover:bg-gray-800"
+                          )}
+                          onClick={() => setSelectedChapter(chapter.id)}
+                        >
+                          <div className="relative">
+                            <div 
+                              className={cn(
+                                "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                                chapter.completed 
+                                  ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                  : "border-gray-400"
+                              )}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleChapterCompletion(section.id, chapter.id);
+                              }}
+                            >
+                              {chapter.completed && (
+                                <div className="text-black text-xs font-bold">✓</div>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-base font-normal">{chapter.title}</span>
+                        </div>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
