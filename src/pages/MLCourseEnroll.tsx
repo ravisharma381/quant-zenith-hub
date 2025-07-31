@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const MLCourseDetail = () => {
+const MLCourseEnroll = () => {
   const navigate = useNavigate();
 
   const features = [
@@ -105,7 +105,7 @@ const MLCourseDetail = () => {
                   <Button 
                     size="lg" 
                     className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-8 hover:!bg-purple-600 hover:!shadow-[0_0_40px_hsl(270_91%_65%_/_0.3)]"
-                    onClick={() => navigate("/course/machine-learning-for-finance/enroll")}
+                    onClick={() => navigate("/course/machine-learning-for-finance/learn")}
                   >
                     Enroll Me Now - £299
                   </Button>
@@ -190,7 +190,7 @@ const MLCourseDetail = () => {
           <Button 
             size="lg" 
             className="bg-purple-500 hover:bg-purple-600 text-background font-semibold px-12 py-6 text-lg hover:!bg-purple-600 hover:!shadow-[0_0_40px_hsl(270_91%_65%_/_0.3)]"
-            onClick={() => navigate("/course/machine-learning-for-finance/enroll")}
+            onClick={() => navigate("/course/machine-learning-for-finance/learn")}
           >
             Start Your ML Journey Today
           </Button>
@@ -200,4 +200,4 @@ const MLCourseDetail = () => {
   );
 };
 
-export default MLCourseDetail;
+export default MLCourseEnroll;

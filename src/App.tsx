@@ -10,6 +10,7 @@ import Games from "./pages/Games";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import MLCourseDetail from "./pages/MLCourseDetail";
+import MLCourseEnroll from "./pages/MLCourseEnroll";
 import CourseLearn from "./pages/CourseLearn";
 import Blogs from "./pages/Blogs";
 import Login from "./pages/Login";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
+            <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/login" element={<Login />} />
