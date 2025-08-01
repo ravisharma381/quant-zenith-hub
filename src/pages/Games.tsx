@@ -48,6 +48,47 @@ const Games = () => {
     }
   };
 
+  const getGameTheme = (gameId: number) => {
+    switch (gameId) {
+      case 1: // Arithmetic Pro - Green (default)
+        return {
+          primary: "hsl(122, 97%, 50%)",
+          primaryForeground: "hsl(220, 13%, 8%)",
+          hoverBorder: "hover:border-[hsl(122,97%,50%)]/30",
+          iconBg: "bg-[hsl(122,97%,50%)]/10 group-hover:bg-[hsl(122,97%,50%)]/20",
+          titleHover: "group-hover:text-[hsl(122,97%,50%)]",
+          buttonHover: "group-hover:bg-[hsl(122,97%,50%)] group-hover:text-[hsl(220,13%,8%)]"
+        };
+      case 2: // Sequences Pro - Purple
+        return {
+          primary: "hsl(270, 95%, 60%)",
+          primaryForeground: "hsl(220, 13%, 8%)",
+          hoverBorder: "hover:border-[hsl(270,95%,60%)]/30",
+          iconBg: "bg-[hsl(270,95%,60%)]/10 group-hover:bg-[hsl(270,95%,60%)]/20",
+          titleHover: "group-hover:text-[hsl(270,95%,60%)]",
+          buttonHover: "group-hover:bg-[hsl(270,95%,60%)] group-hover:text-[hsl(220,13%,8%)]"
+        };
+      case 3: // Optiver 80 - Red
+        return {
+          primary: "hsl(0, 84%, 60%)",
+          primaryForeground: "hsl(220, 13%, 8%)",
+          hoverBorder: "hover:border-[hsl(0,84%,60%)]/30",
+          iconBg: "bg-[hsl(0,84%,60%)]/10 group-hover:bg-[hsl(0,84%,60%)]/20",
+          titleHover: "group-hover:text-[hsl(0,84%,60%)]",
+          buttonHover: "group-hover:bg-[hsl(0,84%,60%)] group-hover:text-[hsl(220,13%,8%)]"
+        };
+      default:
+        return {
+          primary: "hsl(122, 97%, 50%)",
+          primaryForeground: "hsl(220, 13%, 8%)",
+          hoverBorder: "hover:border-primary/30",
+          iconBg: "bg-primary/10 group-hover:bg-primary/20",
+          titleHover: "group-hover:text-primary",
+          buttonHover: "group-hover:bg-primary group-hover:text-primary-foreground"
+        };
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">        
@@ -61,49 +102,52 @@ const Games = () => {
 
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {games.map((game) => (
-            <div 
-              key={game.id} 
-              onClick={() => navigate(game.route)}
-              className="bg-card border border-border rounded-xl p-8 hover:shadow-card transition-all duration-300 hover:scale-105 hover:border-primary/30 cursor-pointer group"
-            >
-              {/* Icon */}
-              <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <span className="text-2xl">{game.icon}</span>
-              </div>
-              
-              {/* Content */}
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                    {game.title}
-                  </h3>
-                  <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                    {game.difficulty}
-                  </Badge>
+          {games.map((game) => {
+            const theme = getGameTheme(game.id);
+            return (
+              <div 
+                key={game.id} 
+                onClick={() => navigate(game.route)}
+                className={`bg-card border border-border rounded-xl p-8 hover:shadow-card transition-all duration-300 hover:scale-105 ${theme.hoverBorder} cursor-pointer group`}
+              >
+                {/* Icon */}
+                <div className={`w-16 h-16 ${theme.iconBg} rounded-lg flex items-center justify-center mb-6 transition-colors`}>
+                  <span className="text-2xl">{game.icon}</span>
                 </div>
                 
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {game.description}
-                </p>
-                
-                <div className="flex items-center justify-between pt-4">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4 mr-2" />
-                    {game.timeLimit}
+                {/* Content */}
+                <div className="space-y-4">
+                  <div>
+                    <h3 className={`text-xl font-bold text-foreground ${theme.titleHover} transition-colors`}>
+                      {game.title}
+                    </h3>
+                    <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
+                      {game.difficulty}
+                    </Badge>
                   </div>
                   
-                  <Button 
-                    size="sm" 
-                    className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Play
-                  </Button>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {game.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between pt-4">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {game.timeLimit}
+                    </div>
+                    
+                    <Button 
+                      size="sm" 
+                      className={`${theme.buttonHover} transition-colors`}
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Play
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
