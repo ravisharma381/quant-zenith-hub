@@ -139,13 +139,10 @@ const SequencesPro = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">Sequences Pro</h1>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-              <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
-            </div>
-            <div className="text-lg font-bold text-primary">Score: {score}</div>
+          <div className="text-lg font-bold text-primary">Score: {score}</div>
+          <div className="flex items-center">
+            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+            <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
           </div>
         </div>
 
