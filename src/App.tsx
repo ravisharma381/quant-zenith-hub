@@ -36,9 +36,9 @@ const App = () => (
             <Route path="/problems" element={<Layout><Problems /></Layout>} />
             <Route path="/problems/:id" element={<Layout><ProblemDetail /></Layout>} />
             <Route path="/games" element={<Layout><Games /></Layout>} />
-            <Route path="/games/arithmetic-pro" element={<ArithmeticPro />} />
-            <Route path="/games/sequences-pro" element={<SequencesPro />} />
-            <Route path="/games/optiver-80" element={<Optiver80 />} />
+            <Route path="/games/arithmetic-pro" element={<Layout><ArithmeticPro /></Layout>} />
+            <Route path="/games/sequences-pro" element={<Layout><SequencesPro /></Layout>} />
+            <Route path="/games/optiver-80" element={<Layout><Optiver80 /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
