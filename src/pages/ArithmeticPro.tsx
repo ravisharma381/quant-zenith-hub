@@ -161,7 +161,7 @@ const ArithmeticPro = () => {
               placeholder="Your answer"
               autoFocus
             />
-            <Button type="submit" size="default" className="mx-auto" disabled={!userAnswer}>
+            <Button type="submit" variant="premium" size="default" className="mx-auto" disabled={!userAnswer}>
               Submit Answer
             </Button>
           </form>
