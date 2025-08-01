@@ -148,7 +148,7 @@ const ArithmeticPro = () => {
 
         {/* Question */}
         <div className="bg-card rounded-xl p-12 text-center">
-          <div className="text-6xl font-bold text-foreground mb-8">
+          <div className="text-4xl font-bold text-foreground mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
           
@@ -157,7 +157,7 @@ const ArithmeticPro = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16"
+              className="text-center text-2xl h-16 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Your answer"
               autoFocus
             />
@@ -167,12 +167,6 @@ const ArithmeticPro = () => {
           </form>
         </div>
 
-        {/* Stats */}
-        <div className="mt-8 text-center">
-          <div className="text-muted-foreground">
-            Questions answered: {questionsAnswered} | Accuracy: {questionsAnswered > 0 ? Math.round((score / questionsAnswered) * 100) : 0}%
-          </div>
-        </div>
       </div>
     </div>
   );

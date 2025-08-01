@@ -153,8 +153,8 @@ const SequencesPro = () => {
 
         {/* Question */}
         <div className="bg-card rounded-xl p-12 text-center">
-          <div className="text-2xl font-bold text-foreground mb-4">What comes next?</div>
-          <div className="text-4xl font-bold text-foreground mb-8 font-mono">
+          <div className="text-xl font-bold text-foreground mb-4">What comes next?</div>
+          <div className="text-3xl font-bold text-foreground mb-8 font-mono">
             {currentSequence.sequence.join(', ')}, ?
           </div>
           
@@ -163,7 +163,7 @@ const SequencesPro = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16"
+              className="text-center text-2xl h-16 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Next number"
               autoFocus
             />
@@ -173,12 +173,6 @@ const SequencesPro = () => {
           </form>
         </div>
 
-        {/* Stats */}
-        <div className="mt-8 text-center">
-          <div className="text-muted-foreground">
-            Questions answered: {questionsAnswered} | Accuracy: {questionsAnswered > 0 ? Math.round((score / questionsAnswered) * 100) : 0}%
-          </div>
-        </div>
       </div>
     </div>
   );

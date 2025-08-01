@@ -162,7 +162,7 @@ const Optiver80 = () => {
 
         {/* Question */}
         <div className="bg-card rounded-xl p-12 text-center">
-          <div className="text-6xl font-bold text-foreground mb-8">
+          <div className="text-4xl font-bold text-foreground mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
           
@@ -171,7 +171,7 @@ const Optiver80 = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16"
+              className="text-center text-2xl h-16 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Answer"
               autoFocus
             />
@@ -181,19 +181,6 @@ const Optiver80 = () => {
           </form>
         </div>
 
-        {/* Quick Stats */}
-        <div className="mt-8 flex justify-center space-x-8 text-center">
-          <div>
-            <div className="text-2xl font-bold text-primary">{Math.round((questionsAnswered / (80 - timeLeft || 1)) * 60) || 0}</div>
-            <div className="text-sm text-muted-foreground">Questions/min</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-primary">
-              {questionsAnswered > 0 ? Math.round((score / questionsAnswered) * 100) : 0}%
-            </div>
-            <div className="text-sm text-muted-foreground">Accuracy</div>
-          </div>
-        </div>
       </div>
     </div>
   );
