@@ -86,7 +86,7 @@ const ArithmeticPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground mb-8">Arithmetic Pro</h1>
           <div className="text-8xl font-bold text-primary mb-4 animate-pulse">
@@ -100,7 +100,7 @@ const ArithmeticPro = () => {
 
   if (gameState === 'finished') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <Trophy className="w-16 h-16 text-primary mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-foreground mb-4">Game Over!</h1>
@@ -126,7 +126,7 @@ const ArithmeticPro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="min-h-screen p-4">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -160,7 +160,7 @@ const ArithmeticPro = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16"
+              className="text-center text-2xl h-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Your answer"
               autoFocus
             />
