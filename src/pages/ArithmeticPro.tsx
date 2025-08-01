@@ -134,7 +134,7 @@ const ArithmeticPro = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="text-xl font-bold text-primary">Score: {score}</div>
+          <div className="text-2xl text-primary">Score: {score}</div>
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
             <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
