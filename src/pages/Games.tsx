@@ -2,62 +2,40 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Games = () => {
+  const navigate = useNavigate();
   const games = [
     {
       id: 1,
-      title: "Arithmetic Zetamac",
-      description: "How good are you at basic arithmetic? Deal with whole numbers and show you qualify the bare minimum! Just like Zetamac :)",
+      title: "Arithmetic Pro",
+      description: "Master mental math with rapid-fire arithmetic questions. Test your speed and accuracy!",
       icon: "±",
-      timeLimit: "1-3 minutes",
+      timeLimit: "3 minutes",
       category: "Mental Math",
-      difficulty: "Easy"
+      difficulty: "Medium",
+      route: "/games/arithmetic-pro"
     },
     {
       id: 2,
-      title: "Sequences",
-      description: "How good are you at recognizing patterns? Start out and see how well you know your numbers!",
+      title: "Sequences Pro",
+      description: "Identify patterns and find the next number in sequences. Challenge your logical thinking!",
       icon: "⋯",
-      timeLimit: "2-6 minutes",
-      category: "Pattern Recognition",
-      difficulty: "Medium"
+      timeLimit: "5 minutes",
+      category: "Pattern Recognition", 
+      difficulty: "Hard",
+      route: "/games/sequences-pro"
     },
     {
       id: 3,
-      title: "Options Pricing Battle",
-      description: "Price complex derivatives under time pressure using Black-Scholes and beyond",
-      icon: "📊",
-      timeLimit: "10-15 minutes",
-      category: "Derivatives",
-      difficulty: "Hard"
-    },
-    {
-      id: 4,
-      title: "Portfolio Optimization",
-      description: "Build efficient portfolios with various constraints and risk models",
-      icon: "📈",
-      timeLimit: "15-20 minutes",
-      category: "Portfolio Management",
-      difficulty: "Hard"
-    },
-    {
-      id: 5,
-      title: "Risk Management Quiz",
-      description: "Test your knowledge of VaR, stress testing, and risk metrics",
-      icon: "⚠️",
-      timeLimit: "5-10 minutes",
-      category: "Risk Management",
-      difficulty: "Medium"
-    },
-    {
-      id: 6,
-      title: "Market Data Analysis",
-      description: "Analyze real-time market data and identify trading opportunities",
-      icon: "📊",
-      timeLimit: "8-12 minutes",
-      category: "Market Analysis",
-      difficulty: "Medium"
+      title: "Optiver 80 in 80",
+      description: "Complete 80 mental math questions in 80 seconds. Based on Optiver's online assessment!",
+      icon: "⚡",
+      timeLimit: "80 seconds",
+      category: "Speed Math",
+      difficulty: "Hard",
+      route: "/games/optiver-80"
     }
   ];
 
@@ -86,6 +64,7 @@ const Games = () => {
           {games.map((game) => (
             <div 
               key={game.id} 
+              onClick={() => navigate(game.route)}
               className="bg-card border border-border rounded-xl p-8 hover:shadow-card transition-all duration-300 hover:scale-105 hover:border-primary/30 cursor-pointer group"
             >
               {/* Icon */}
