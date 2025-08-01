@@ -134,7 +134,7 @@ const ArithmeticPro = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="text-lg font-bold text-primary">Score: {score}</div>
+          <div className="text-xl font-bold text-primary">Score: {score}</div>
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
             <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
@@ -157,11 +157,11 @@ const ArithmeticPro = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Your answer"
               autoFocus
             />
-            <Button type="submit" size="lg" className="w-full" disabled={!userAnswer}>
+            <Button type="submit" variant="premium" size="sm" className="mx-auto" disabled={!userAnswer}>
               Submit Answer
             </Button>
           </form>
