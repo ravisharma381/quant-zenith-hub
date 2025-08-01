@@ -73,7 +73,39 @@ const Index = () => {
   ];
 
   return (
-    <Layout>
+    <div className="min-h-screen bg-background">{/* Add Navigation */}
+      <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="text-2xl font-bold text-primary">
+            QuantProf
+          </Link>
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/problems" className="text-foreground hover:text-primary transition-colors">
+              Problems
+            </Link>
+            <Link to="/games" className="text-foreground hover:text-primary transition-colors">
+              Games
+            </Link>
+            <Link to="/courses" className="text-foreground hover:text-primary transition-colors">
+              Courses
+            </Link>
+            <Link to="/blogs" className="text-foreground hover:text-primary transition-colors">
+              Blogs
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link to="/signup">Sign Up</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      {/* Add padding for fixed nav */}
+      <div className="pt-16">
       {/* Hero Section */}
       <section className="relative py-20 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
@@ -315,7 +347,8 @@ const Index = () => {
           </p>
         </div>
       </section>
-    </Layout>
+      </div>
+    </div>
   );
 };
 
