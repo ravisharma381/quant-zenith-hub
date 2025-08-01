@@ -175,7 +175,7 @@ const Optiver80 = () => {
               placeholder="Answer"
               autoFocus
             />
-            <Button type="submit" variant="solid" size="lg" className="w-full" disabled={!userAnswer}>
+            <Button type="submit" variant="premium" size="sm" className="w-full" disabled={!userAnswer}>
               Submit
             </Button>
           </form>

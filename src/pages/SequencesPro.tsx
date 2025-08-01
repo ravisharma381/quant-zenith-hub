@@ -167,7 +167,7 @@ const SequencesPro = () => {
               placeholder="Next number"
               autoFocus
             />
-            <Button type="submit" variant="solid" size="lg" className="w-full" disabled={!userAnswer}>
+            <Button type="submit" variant="premium" size="sm" className="w-full" disabled={!userAnswer}>
               Submit Answer
             </Button>
           </form>
