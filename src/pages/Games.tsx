@@ -57,7 +57,7 @@ const Games = () => {
           hoverBorder: "hover:border-[hsl(122,97%,50%)]/30",
           iconBg: "bg-[hsl(122,97%,50%)]/10 group-hover:bg-[hsl(122,97%,50%)]/20",
           titleHover: "group-hover:text-[hsl(122,97%,50%)]",
-          buttonHover: "group-hover:bg-[hsl(122,97%,50%)] group-hover:text-[hsl(220,13%,8%)]"
+          buttonStyles: "bg-[hsl(122,97%,50%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(122,97%,50%)]/90"
         };
       case 2: // Sequences Pro - Purple
         return {
@@ -66,7 +66,7 @@ const Games = () => {
           hoverBorder: "hover:border-[hsl(270,95%,60%)]/30",
           iconBg: "bg-[hsl(270,95%,60%)]/10 group-hover:bg-[hsl(270,95%,60%)]/20",
           titleHover: "group-hover:text-[hsl(270,95%,60%)]",
-          buttonHover: "group-hover:bg-[hsl(270,95%,60%)] group-hover:text-[hsl(220,13%,8%)]"
+          buttonStyles: "bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(270,95%,60%)]/90"
         };
       case 3: // Optiver 80 - Red
         return {
@@ -75,7 +75,7 @@ const Games = () => {
           hoverBorder: "hover:border-[hsl(0,84%,60%)]/30",
           iconBg: "bg-[hsl(0,84%,60%)]/10 group-hover:bg-[hsl(0,84%,60%)]/20",
           titleHover: "group-hover:text-[hsl(0,84%,60%)]",
-          buttonHover: "group-hover:bg-[hsl(0,84%,60%)] group-hover:text-[hsl(220,13%,8%)]"
+          buttonStyles: "bg-[hsl(0,84%,60%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(0,84%,60%)]/90"
         };
       default:
         return {
@@ -84,7 +84,7 @@ const Games = () => {
           hoverBorder: "hover:border-primary/30",
           iconBg: "bg-primary/10 group-hover:bg-primary/20",
           titleHover: "group-hover:text-primary",
-          buttonHover: "group-hover:bg-primary group-hover:text-primary-foreground"
+          buttonStyles: "bg-primary text-primary-foreground hover:bg-primary/90"
         };
     }
   };
@@ -138,7 +138,7 @@ const Games = () => {
                     
                     <Button 
                       size="sm" 
-                      className={`${theme.buttonHover} transition-colors`}
+                      className={`${theme.buttonStyles} transition-colors`}
                     >
                       <Play className="w-4 h-4 mr-2" />
                       Play
