@@ -183,7 +183,7 @@ const Optiver80 = () => {
             Back
           </Button>
           <div 
-            className="text-2xl font-bold"
+            className="text-2xl font-bold text-center"
             style={{ color: themeColors.primary }}
           >
             {score}/80

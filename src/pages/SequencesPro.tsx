@@ -165,7 +165,7 @@ const SequencesPro = () => {
             Back
           </Button>
           <div 
-            className="text-2xl font-bold"
+            className="text-2xl font-bold text-center"
             style={{ color: themeColors.primary }}
           >
             Score: {score}
