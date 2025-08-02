@@ -214,11 +214,22 @@ const ArithmeticPro = () => {
             />
             <Button 
               type="submit" 
-              className="mx-auto px-8"
+              className="mx-auto px-8 transition-all duration-300"
               disabled={!userAnswer}
               style={{ 
                 backgroundColor: themeColors.primary,
-                color: themeColors.primaryForeground
+                color: themeColors.primaryForeground,
+                boxShadow: userAnswer ? `0 0 20px rgba(${themeColors.primaryRgb}, 0.3)` : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (!userAnswer) return;
+                e.currentTarget.style.backgroundColor = `rgba(${themeColors.primaryRgb}, 0.9)`;
+                e.currentTarget.style.boxShadow = `0 0 25px rgba(${themeColors.primaryRgb}, 0.4)`;
+              }}
+              onMouseLeave={(e) => {
+                if (!userAnswer) return;
+                e.currentTarget.style.backgroundColor = themeColors.primary;
+                e.currentTarget.style.boxShadow = `0 0 20px rgba(${themeColors.primaryRgb}, 0.3)`;
               }}
             >
               Submit Answer
