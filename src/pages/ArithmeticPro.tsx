@@ -15,6 +15,13 @@ const ArithmeticPro = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
+  // Green theme colors
+  const themeColors = {
+    primary: "hsl(122, 97%, 50%)",
+    primaryRgb: "34, 197, 94",
+    primaryForeground: "hsl(220, 13%, 8%)"
+  };
+
   const generateQuestion = useCallback(() => {
     const operations = ['+', '-', '×', '÷'];
     const operation = operations[Math.floor(Math.random() * operations.length)];
@@ -89,7 +96,10 @@ const ArithmeticPro = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground mb-8">Arithmetic Pro</h1>
-          <div className="text-8xl font-bold text-primary mb-4 animate-pulse">
+          <div 
+            className="text-8xl font-bold mb-4 animate-pulse"
+            style={{ color: themeColors.primary }}
+          >
             {countdown || "GO!"}
           </div>
           <p className="text-muted-foreground">Get ready for rapid-fire mental math!</p>
@@ -102,17 +112,32 @@ const ArithmeticPro = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <Trophy className="w-16 h-16 text-primary mx-auto mb-6" />
+          <Trophy 
+            className="w-16 h-16 mx-auto mb-6" 
+            style={{ color: themeColors.primary }}
+          />
           <h1 className="text-4xl font-bold text-foreground mb-4">Game Over!</h1>
-          <div className="bg-card rounded-xl p-6 mb-6">
-            <div className="text-3xl font-bold text-primary mb-2">{score}</div>
+          <div className="bg-card rounded-xl p-6 mb-6 border">
+            <div 
+              className="text-3xl font-bold mb-2"
+              style={{ color: themeColors.primary }}
+            >
+              {score}
+            </div>
             <div className="text-muted-foreground">Correct Answers</div>
             <div className="text-sm text-muted-foreground mt-2">
               out of {questionsAnswered} questions
             </div>
           </div>
           <div className="space-y-4">
-            <Button onClick={() => window.location.reload()} className="w-full">
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="w-full"
+              style={{ 
+                backgroundColor: themeColors.primary,
+                color: themeColors.primaryForeground
+              }}
+            >
               Play Again
             </Button>
             <Button variant="outline" onClick={() => navigate('/games')} className="w-full">
@@ -134,7 +159,12 @@ const ArithmeticPro = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="text-2xl text-primary">Score: {score}</div>
+          <div 
+            className="text-2xl font-bold"
+            style={{ color: themeColors.primary }}
+          >
+            Score: {score}
+          </div>
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
             <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
@@ -143,11 +173,23 @@ const ArithmeticPro = () => {
 
         {/* Progress */}
         <div className="mb-8">
-          <Progress value={(180 - timeLeft) / 180 * 100} className="h-2" />
+          <Progress 
+            value={(180 - timeLeft) / 180 * 100} 
+            className="h-2"
+            style={{
+              background: `rgba(${themeColors.primaryRgb}, 0.2)`
+            }}
+          />
         </div>
 
         {/* Question */}
-        <div className="bg-card rounded-xl p-12 text-center">
+        <div 
+          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
+          style={{
+            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
+            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
+          }}
+        >
           <div className="text-4xl font-bold text-foreground mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
@@ -158,15 +200,26 @@ const ArithmeticPro = () => {
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              style={{
+                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
+                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
+              }}
               placeholder="Your answer"
               autoFocus
             />
-            <Button type="submit" variant="premium" size="sm" className="mx-auto" disabled={!userAnswer}>
+            <Button 
+              type="submit" 
+              className="mx-auto px-8"
+              disabled={!userAnswer}
+              style={{ 
+                backgroundColor: themeColors.primary,
+                color: themeColors.primaryForeground
+              }}
+            >
               Submit Answer
             </Button>
           </form>
         </div>
-
       </div>
     </div>
   );

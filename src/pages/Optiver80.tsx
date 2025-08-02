@@ -15,6 +15,13 @@ const Optiver80 = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
+  // Red theme colors
+  const themeColors = {
+    primary: "hsl(0, 84%, 60%)",
+    primaryRgb: "239, 68, 68",
+    primaryForeground: "hsl(220, 13%, 8%)"
+  };
+
   const generateQuestion = useCallback(() => {
     const operations = ['+', '-', '×'];
     const operation = operations[Math.floor(Math.random() * operations.length)];
@@ -74,11 +81,11 @@ const Optiver80 = () => {
   };
 
   const getPerformanceRating = () => {
-    if (score >= 70) return { text: "Outstanding!", color: "text-primary" };
-    if (score >= 60) return { text: "Excellent", color: "text-green-400" };
-    if (score >= 50) return { text: "Good", color: "text-yellow-400" };
-    if (score >= 40) return { text: "Fair", color: "text-orange-400" };
-    return { text: "Keep Practicing", color: "text-red-400" };
+    if (score >= 70) return { text: "Outstanding!", color: themeColors.primary };
+    if (score >= 60) return { text: "Excellent", color: "hsl(122, 39%, 49%)" };
+    if (score >= 50) return { text: "Good", color: "hsl(48, 96%, 53%)" };
+    if (score >= 40) return { text: "Fair", color: "hsl(25, 95%, 53%)" };
+    return { text: "Keep Practicing", color: "hsl(0, 84%, 60%)" };
   };
 
   if (gameState === 'countdown') {
@@ -86,10 +93,16 @@ const Optiver80 = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <Zap className="w-12 h-12 text-primary mr-4" />
+            <Zap 
+              className="w-12 h-12 mr-4" 
+              style={{ color: themeColors.primary }}
+            />
             <h1 className="text-4xl font-bold text-foreground">Optiver 80 in 80</h1>
           </div>
-          <div className="text-8xl font-bold text-primary mb-4 animate-pulse">
+          <div 
+            className="text-8xl font-bold mb-4 animate-pulse"
+            style={{ color: themeColors.primary }}
+          >
             {countdown || "GO!"}
           </div>
           <p className="text-muted-foreground">80 questions in 80 seconds - Can you make it?</p>
@@ -103,24 +116,51 @@ const Optiver80 = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <Trophy className="w-16 h-16 text-primary mx-auto mb-6" />
+          <Trophy 
+            className="w-16 h-16 mx-auto mb-6" 
+            style={{ color: themeColors.primary }}
+          />
           <h1 className="text-4xl font-bold text-foreground mb-4">Challenge Complete!</h1>
-          <div className="bg-card rounded-xl p-6 mb-6">
-            <div className="text-3xl font-bold text-primary mb-2">{score}/80</div>
+          <div className="bg-card rounded-xl p-6 mb-6 border">
+            <div 
+              className="text-3xl font-bold mb-2"
+              style={{ color: themeColors.primary }}
+            >
+              {score}/80
+            </div>
             <div className="text-muted-foreground">Correct Answers</div>
-            <div className={`text-lg font-bold mt-2 ${rating.color}`}>
+            <div 
+              className="text-lg font-bold mt-2"
+              style={{ color: rating.color }}
+            >
               {rating.text}
             </div>
           </div>
           {score >= 60 && (
-            <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 mb-6">
-              <p className="text-primary text-sm">
+            <div 
+              className="border rounded-lg p-4 mb-6"
+              style={{
+                backgroundColor: `rgba(${themeColors.primaryRgb}, 0.1)`,
+                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`
+              }}
+            >
+              <p 
+                className="text-sm"
+                style={{ color: themeColors.primary }}
+              >
                 🎉 Congratulations! You've reached Optiver interview level!
               </p>
             </div>
           )}
           <div className="space-y-4">
-            <Button onClick={() => window.location.reload()} className="w-full">
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="w-full"
+              style={{ 
+                backgroundColor: themeColors.primary,
+                color: themeColors.primaryForeground
+              }}
+            >
               Try Again
             </Button>
             <Button variant="outline" onClick={() => navigate('/games')} className="w-full">
@@ -142,10 +182,18 @@ const Optiver80 = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="text-lg font-bold text-primary">{score}/80</div>
+          <div 
+            className="text-2xl font-bold"
+            style={{ color: themeColors.primary }}
+          >
+            {score}/80
+          </div>
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span className={`font-mono text-lg ${timeLeft <= 10 ? 'text-red-400 animate-pulse' : ''}`}>
+            <span 
+              className={`font-mono text-lg ${timeLeft <= 10 ? 'animate-pulse' : ''}`}
+              style={{ color: timeLeft <= 10 ? themeColors.primary : 'inherit' }}
+            >
               {timeLeft}s
             </span>
           </div>
@@ -153,7 +201,13 @@ const Optiver80 = () => {
 
         {/* Progress */}
         <div className="mb-8">
-          <Progress value={(80 - timeLeft) / 80 * 100} className="h-2" />
+          <Progress 
+            value={(80 - timeLeft) / 80 * 100} 
+            className="h-2"
+            style={{
+              background: `rgba(${themeColors.primaryRgb}, 0.2)`
+            }}
+          />
           <div className="flex justify-between text-sm text-muted-foreground mt-2">
             <span>Target: 60+ correct</span>
             <span>Questions: {questionsAnswered}</span>
@@ -161,7 +215,13 @@ const Optiver80 = () => {
         </div>
 
         {/* Question */}
-        <div className="bg-card rounded-xl p-12 text-center">
+        <div 
+          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
+          style={{
+            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
+            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
+          }}
+        >
           <div className="text-4xl font-bold text-foreground mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
@@ -171,16 +231,27 @@ const Optiver80 = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-2xl h-16 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              style={{
+                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
+                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
+              }}
               placeholder="Answer"
               autoFocus
             />
-            <Button type="submit" variant="premium" size="sm" className="w-full" disabled={!userAnswer}>
+            <Button 
+              type="submit" 
+              className="mx-auto px-8"
+              disabled={!userAnswer}
+              style={{ 
+                backgroundColor: themeColors.primary,
+                color: themeColors.primaryForeground
+              }}
+            >
               Submit
             </Button>
           </form>
         </div>
-
       </div>
     </div>
   );
