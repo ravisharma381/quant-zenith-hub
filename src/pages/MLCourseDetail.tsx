@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Cpu, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const MLCourseDetail = () => {
@@ -46,6 +46,27 @@ const MLCourseDetail = () => {
       icon: Award,
       title: "Career Advancement",
       description: "Get insights on ML roles in quantitative finance and fintech."
+    }
+  ];
+
+  const courseFeatures = [
+    {
+      icon: Brain,
+      title: "Advanced ML Algorithms",
+      description: "Master cutting-edge machine learning algorithms specifically designed for financial applications. Learn neural networks, ensemble methods, and deep learning techniques that are revolutionizing the finance industry.",
+      imageType: "ai"
+    },
+    {
+      icon: Database,
+      title: "Real Financial Data",
+      description: "Work with authentic market data from major exchanges and financial institutions. Practice with high-frequency trading data, market microstructure, and alternative datasets used by top hedge funds.",
+      imageType: "data"
+    },
+    {
+      icon: Cpu,
+      title: "Production-Ready Systems",
+      description: "Build scalable ML systems that can handle real-time trading and risk management. Learn deployment strategies, model monitoring, and performance optimization used in production environments.",
+      imageType: "system"
     }
   ];
 
@@ -134,6 +155,46 @@ const MLCourseDetail = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
+            <p className="text-lg text-muted-foreground">
+              Discover what makes our ML course the ultimate preparation for fintech success
+            </p>
+          </div>
+          
+          <div className="space-y-20">
+            {courseFeatures.map((feature, index) => (
+              <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+                {/* Text Content */}
+                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                      <feature.icon className="w-6 h-6 text-purple-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
+                  </div>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+                
+                {/* Image/Visual */}
+                <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
+                  <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/20 rounded-xl h-64 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                      <feature.icon className="w-8 h-8 text-purple-500" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Calculator, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const CourseDetail = () => {
@@ -46,6 +46,27 @@ const CourseDetail = () => {
       icon: Award,
       title: "Career Guidance",
       description: "Get insider tips on landing positions at top quantitative finance firms."
+    }
+  ];
+
+  const courseFeatures = [
+    {
+      icon: Brain,
+      title: "Learn The Right Approach",
+      description: "Each question is paired with a comprehensive solution that systematically walks you through how to solve the question. Each question also has a hint to guide you towards the right approach.",
+      imageType: "mockup"
+    },
+    {
+      icon: Calculator,
+      title: "Mathematical Excellence",
+      description: "Master advanced mathematical concepts including stochastic calculus, probability theory, and statistical inference essential for quantitative finance roles.",
+      imageType: "formula"
+    },
+    {
+      icon: BarChart3,
+      title: "Real-World Applications",
+      description: "Apply theoretical knowledge to practical scenarios used in top investment banks and hedge funds. Learn through case studies from Goldman Sachs, JPMorgan, and Two Sigma.",
+      imageType: "chart"
     }
   ];
 
@@ -136,6 +157,46 @@ const CourseDetail = () => {
           </div>
         </div>
       </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
+            <p className="text-lg text-muted-foreground">
+              Discover what makes our course the ultimate preparation for quantitative finance success
+            </p>
+          </div>
+          
+          <div className="space-y-20">
+            {courseFeatures.map((feature, index) => (
+              <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+                {/* Text Content */}
+                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                      <feature.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
+                  </div>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+                
+                {/* Image/Visual */}
+                <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
+                      <feature.icon className="w-8 h-8 text-primary" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* What You'll Master Section */}
