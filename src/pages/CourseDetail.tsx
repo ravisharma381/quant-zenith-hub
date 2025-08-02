@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Calculator, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import FeatureRow from "@/components/FeatureRow";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
@@ -169,57 +170,16 @@ const CourseDetail = () => {
             </p>
           </div>
           
-          <div className="space-y-20">
+          <div className="space-y-8">
             {courseFeatures.map((feature, index) => (
-              <div key={index} className={`grid gap-12 items-center ${index % 2 === 1 ? 'lg:grid-cols-[2fr_3fr]' : 'lg:grid-cols-[3fr_2fr]'}`}>
-                {index % 2 === 1 ? (
-                  <>
-                    {/* Image first for odd rows */}
-                    <div>
-                      <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
-                          <feature.icon className="w-8 h-8 text-primary" />
-                        </div>
-                      </div>
-                    </div>
-                    {/* Text second for odd rows */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                          <feature.icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
-                      </div>
-                      <p className="text-lg text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* Text first for even rows */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                          <feature.icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
-                      </div>
-                      <p className="text-lg text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                    {/* Image second for even rows */}
-                    <div>
-                      <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
-                          <feature.icon className="w-8 h-8 text-primary" />
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
+              <FeatureRow
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                index={index}
+                theme="primary"
+              />
             ))}
           </div>
         </div>
