@@ -58,18 +58,18 @@ const Navigation = () => {
                 <ChevronDown className="w-3 h-3" />
               </span>
               
-              {/* Dropdown Content */}
-              <div className="absolute top-full left-0 mt-1 w-48 bg-card border-2 border-primary rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="py-2">
+              {/* Dropdown Content with original styling */}
+              <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-card border border-border rounded-md shadow-md">
                   <Link 
                     to="/my-courses" 
-                    className="block px-4 py-3 text-sm text-foreground hover:bg-muted hover:text-primary transition-colors"
+                    className="block px-3 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-sm"
                   >
                     My Courses
                   </Link>
                   <Link 
                     to="/courses" 
-                    className="block px-4 py-3 text-sm text-foreground hover:bg-muted hover:text-primary transition-colors"
+                    className="block px-3 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-sm"
                   >
                     All Courses
                   </Link>
