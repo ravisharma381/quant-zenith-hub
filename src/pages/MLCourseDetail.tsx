@@ -171,7 +171,7 @@ const MLCourseDetail = () => {
           
           <div className="space-y-20">
             {courseFeatures.map((feature, index) => (
-              <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+              <div key={index} className={`grid lg:grid-cols-[7fr_3fr] gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
                 {/* Text Content */}
                 <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                   <div className="flex items-center gap-3 mb-6">
