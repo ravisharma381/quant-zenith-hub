@@ -214,7 +214,7 @@ const ArithmeticPro = () => {
             />
             <Button 
               type="submit" 
-              className="mx-auto px-8 !bg-[hsl(122,97%,50%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(122,97%,50%)]/90 hover:!shadow-[0_0_20px_hsl(122,97%,50%,0.3)] focus-visible:!ring-[hsl(122,97%,50%)] transition-colors"
+              className="mx-auto px-8 bg-[hsl(122,97%,50%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(122,97%,50%)]/90 hover:shadow-[0_0_20px_hsl(122,97%,50%,0.3)] focus-visible:ring-[hsl(122,97%,50%)]"
               disabled={!userAnswer}
             >
               Submit Answer
