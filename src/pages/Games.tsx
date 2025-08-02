@@ -107,7 +107,7 @@ const Games = () => {
             return (
               <div 
                 key={game.id} 
-                className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group`}
+                className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group hover:scale-105`}
               >
                 {/* Icon */}
                 <div className={`w-16 h-16 ${theme.iconBg} rounded-lg flex items-center justify-center mb-6 transition-colors`}>
