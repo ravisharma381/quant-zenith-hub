@@ -246,7 +246,7 @@ const Optiver80 = () => {
             />
             <Button 
               type="submit" 
-              className="mx-auto px-8 bg-[hsl(0,84%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(0,84%,60%)]/90 hover:!shadow-[0_0_20px_hsl(0,84%,60%,0.3)] focus-visible:!ring-[hsl(0,84%,60%)]"
+              className="mx-auto px-8 !bg-[hsl(0,84%,60%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(0,84%,60%)]/90 hover:!shadow-[0_0_20px_hsl(0,84%,60%,0.3)] focus-visible:!ring-[hsl(0,84%,60%)] transition-colors"
               disabled={!userAnswer}
             >
               Submit

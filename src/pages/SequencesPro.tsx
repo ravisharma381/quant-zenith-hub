@@ -220,7 +220,7 @@ const SequencesPro = () => {
             />
             <Button 
               type="submit" 
-              className="mx-auto px-8 bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)]"
+              className="mx-auto px-8 !bg-[hsl(270,95%,60%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)] transition-colors"
               disabled={!userAnswer}
             >
               Submit Answer
