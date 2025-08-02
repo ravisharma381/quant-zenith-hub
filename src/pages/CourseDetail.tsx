@@ -171,9 +171,9 @@ const CourseDetail = () => {
           
           <div className="space-y-20">
             {courseFeatures.map((feature, index) => (
-              <div key={index} className={`grid lg:grid-cols-[7fr_3fr] gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+              <div key={index} className={`grid lg:grid-cols-[3fr_2fr] gap-12 items-center ${index % 2 === 1 ? 'lg:grid-cols-[2fr_3fr]' : ''}`}>
                 {/* Text Content */}
-                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
+                <div className={index % 2 === 1 ? 'order-2' : ''}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
                       <feature.icon className="w-6 h-6 text-primary" />
@@ -186,7 +186,7 @@ const CourseDetail = () => {
                 </div>
                 
                 {/* Image/Visual */}
-                <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
+                <div className={index % 2 === 1 ? 'order-1' : ''}>
                   <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
                     <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
                       <feature.icon className="w-8 h-8 text-primary" />
