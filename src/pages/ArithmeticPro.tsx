@@ -93,7 +93,7 @@ const ArithmeticPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground mb-8">Arithmetic Pro</h1>
           <div 
@@ -173,13 +173,18 @@ const ArithmeticPro = () => {
 
         {/* Progress */}
         <div className="mb-8">
-          <Progress 
-            value={(180 - timeLeft) / 180 * 100} 
-            className="h-2"
-            style={{
-              background: `rgba(${themeColors.primaryRgb}, 0.2)`
-            }}
-          />
+          <div 
+            className="w-full h-2 rounded-full"
+            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
+          >
+            <div 
+              className="h-2 rounded-full transition-all duration-300"
+              style={{ 
+                width: `${(180 - timeLeft) / 180 * 100}%`,
+                backgroundColor: themeColors.primary
+              }}
+            />
+          </div>
         </div>
 
         {/* Question */}

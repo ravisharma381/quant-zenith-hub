@@ -90,7 +90,7 @@ const Optiver80 = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
             <Zap 
@@ -201,13 +201,18 @@ const Optiver80 = () => {
 
         {/* Progress */}
         <div className="mb-8">
-          <Progress 
-            value={(80 - timeLeft) / 80 * 100} 
-            className="h-2"
-            style={{
-              background: `rgba(${themeColors.primaryRgb}, 0.2)`
-            }}
-          />
+          <div 
+            className="w-full h-2 rounded-full"
+            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
+          >
+            <div 
+              className="h-2 rounded-full transition-all duration-300"
+              style={{ 
+                width: `${(80 - timeLeft) / 80 * 100}%`,
+                backgroundColor: themeColors.primary
+              }}
+            />
+          </div>
           <div className="flex justify-between text-sm text-muted-foreground mt-2">
             <span>Target: 60+ correct</span>
             <span>Questions: {questionsAnswered}</span>
