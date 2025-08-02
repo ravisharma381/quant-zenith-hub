@@ -66,7 +66,7 @@ const Games = () => {
           hoverBorder: "hover:border-[hsl(270,95%,60%)]/30",
           iconBg: "bg-[hsl(270,95%,60%)]/10 group-hover:bg-[hsl(270,95%,60%)]/20",
           titleHover: "group-hover:text-[hsl(270,95%,60%)]",
-          buttonStyles: "bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(270,95%,60%)]/90 hover:shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:ring-[hsl(270,95%,60%)]"
+          buttonStyles: "bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)]"
         };
       case 3: // Optiver 80 - Red
         return {
@@ -75,7 +75,7 @@ const Games = () => {
           hoverBorder: "hover:border-[hsl(0,84%,60%)]/30",
           iconBg: "bg-[hsl(0,84%,60%)]/10 group-hover:bg-[hsl(0,84%,60%)]/20",
           titleHover: "group-hover:text-[hsl(0,84%,60%)]",
-          buttonStyles: "bg-[hsl(0,84%,60%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(0,84%,60%)]/90 hover:shadow-[0_0_20px_hsl(0,84%,60%,0.3)] focus-visible:ring-[hsl(0,84%,60%)]"
+          buttonStyles: "bg-[hsl(0,84%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(0,84%,60%)]/90 hover:!shadow-[0_0_20px_hsl(0,84%,60%,0.3)] focus-visible:!ring-[hsl(0,84%,60%)]"
         };
       default:
         return {
