@@ -107,44 +107,41 @@ const Games = () => {
             return (
               <div 
                 key={game.id} 
-                onClick={() => navigate(game.route)}
-                className={`bg-card border border-border rounded-xl p-8 hover:shadow-card transition-all duration-300 hover:scale-105 ${theme.hoverBorder} cursor-pointer group`}
+                className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group`}
               >
                 {/* Icon */}
                 <div className={`w-16 h-16 ${theme.iconBg} rounded-lg flex items-center justify-center mb-6 transition-colors`}>
                   <span className="text-2xl">{game.icon}</span>
                 </div>
                 
-                {/* Content */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className={`text-xl font-bold text-foreground ${theme.titleHover} transition-colors`}>
-                      {game.title}
-                    </h3>
-                    <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                      {game.difficulty}
-                    </Badge>
-                  </div>
-                  
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {game.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between pt-4">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Clock className="w-4 h-4 mr-2" />
-                      {game.timeLimit}
-                    </div>
-                    
-                    <Button 
-                      size="sm" 
-                      className={`${theme.buttonStyles} transition-colors`}
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Play
-                    </Button>
+                {/* Title */}
+                <h3 className={`text-xl font-bold text-foreground ${theme.titleHover} transition-colors mb-4`}>
+                  {game.title}
+                </h3>
+                
+                {/* Description */}
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  {game.description}
+                </p>
+                
+                {/* Badge and Time */}
+                <div className="flex items-center justify-between mb-6">
+                  <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
+                    {game.difficulty}
+                  </Badge>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4 mr-2" />
+                    {game.timeLimit}
                   </div>
                 </div>
+                
+                {/* Play Button - Full Width */}
+                <Button 
+                  onClick={() => navigate(game.route)}
+                  className={`w-full ${theme.buttonStyles} transition-colors`}
+                >
+                  Play
+                </Button>
               </div>
             );
           })}
