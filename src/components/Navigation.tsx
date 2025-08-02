@@ -36,7 +36,7 @@ const Navigation = () => {
                 key={item.name}
                 to={item.path}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary",
+                  "text-base font-medium transition-colors hover:text-primary",
                   isActive(item.path)
                     ? "text-primary"
                     : "text-muted-foreground"
@@ -49,7 +49,7 @@ const Navigation = () => {
             {/* Courses Dropdown - Hover based */}
             <div className="relative group">
               <span className={cn(
-                "text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 cursor-default",
+                "text-base font-medium transition-colors hover:text-primary flex items-center gap-1 cursor-default",
                 (isActive("/courses") || isActive("/my-courses"))
                   ? "text-primary"
                   : "text-muted-foreground"
