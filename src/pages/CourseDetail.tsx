@@ -171,28 +171,54 @@ const CourseDetail = () => {
           
           <div className="space-y-20">
             {courseFeatures.map((feature, index) => (
-              <div key={index} className="grid lg:grid-cols-[3fr_2fr] gap-12 items-center">
-                {/* Text Content */}
-                <div className={`${index % 2 === 1 ? 'order-2' : 'order-1'}`}>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                      <feature.icon className="w-6 h-6 text-primary" />
+              <div key={index} className={`grid gap-12 items-center ${index % 2 === 1 ? 'lg:grid-cols-[2fr_3fr]' : 'lg:grid-cols-[3fr_2fr]'}`}>
+                {index % 2 === 1 ? (
+                  <>
+                    {/* Image first for odd rows */}
+                    <div>
+                      <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
+                          <feature.icon className="w-8 h-8 text-primary" />
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
-                  </div>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-                
-                {/* Image/Visual */}
-                <div className={`${index % 2 === 1 ? 'order-1' : 'order-2'}`}>
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
-                      <feature.icon className="w-8 h-8 text-primary" />
+                    {/* Text second for odd rows */}
+                    <div>
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                          <feature.icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
+                      </div>
+                      <p className="text-lg text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
                     </div>
-                  </div>
-                </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Text first for even rows */}
+                    <div>
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                          <feature.icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-foreground">{feature.title}</h3>
+                      </div>
+                      <p className="text-lg text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                    {/* Image second for even rows */}
+                    <div>
+                      <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-xl h-64 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center">
+                          <feature.icon className="w-8 h-8 text-primary" />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
