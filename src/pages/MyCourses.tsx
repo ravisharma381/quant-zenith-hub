@@ -120,8 +120,11 @@ const MyCourses = () => {
                   <span className="text-lg font-bold text-primary">{course.price}</span>
                 </div>
                 
-                {/* Start Learning Button - not clickable */}
-                <Button className="w-full mt-4" disabled>
+                {/* Start Learning Button - styled same as Enroll Now but not clickable */}
+                <Button 
+                  className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  onClick={(e) => e.preventDefault()}
+                >
                   Start Learning
                 </Button>
               </div>
