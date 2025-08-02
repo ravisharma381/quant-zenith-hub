@@ -46,30 +46,36 @@ const Navigation = () => {
               </Link>
             ))}
             
-            {/* Courses Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className={cn(
-                "text-sm font-medium transition-colors hover:text-primary flex items-center gap-1",
+            {/* Courses Dropdown - Hover based */}
+            <div className="relative group">
+              <span className={cn(
+                "text-sm font-medium transition-colors hover:text-primary flex items-center gap-1 cursor-default",
                 (isActive("/courses") || isActive("/my-courses"))
                   ? "text-primary"
                   : "text-muted-foreground"
               )}>
                 Courses
                 <ChevronDown className="w-3 h-3" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-card border border-border">
-                <DropdownMenuItem asChild>
-                  <Link to="/my-courses" className="w-full cursor-pointer">
+              </span>
+              
+              {/* Dropdown Content */}
+              <div className="absolute top-full left-0 mt-1 w-48 bg-card border-2 border-primary rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <Link 
+                    to="/my-courses" 
+                    className="block px-4 py-3 text-sm text-foreground hover:bg-muted hover:text-primary transition-colors"
+                  >
                     My Courses
                   </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/courses" className="w-full cursor-pointer">
+                  <Link 
+                    to="/courses" 
+                    className="block px-4 py-3 text-sm text-foreground hover:bg-muted hover:text-primary transition-colors"
+                  >
                     All Courses
                   </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Desktop Auth Buttons */}
