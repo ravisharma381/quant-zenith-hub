@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogIn, User } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Menu, X, LogIn, User, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -11,7 +12,6 @@ const Navigation = () => {
   const navItems = [
     { name: "Problems", path: "/problems" },
     { name: "Games", path: "/games" },
-    { name: "Courses", path: "/courses" },
     { name: "Blogs", path: "/blogs" },
   ];
 
@@ -45,6 +45,31 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Courses Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className={cn(
+                "text-sm font-medium transition-colors hover:text-primary flex items-center gap-1",
+                (isActive("/courses") || isActive("/my-courses"))
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}>
+                Courses
+                <ChevronDown className="w-3 h-3" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-card border border-border">
+                <DropdownMenuItem asChild>
+                  <Link to="/my-courses" className="w-full cursor-pointer">
+                    My Courses
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/courses" className="w-full cursor-pointer">
+                    All Courses
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Desktop Auth Buttons */}
@@ -91,6 +116,38 @@ const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Mobile Courses Section */}
+              <div className="border-t border-border pt-2 mt-2">
+                <div className="px-3 py-2 text-sm font-medium text-muted-foreground">
+                  Courses
+                </div>
+                <Link
+                  to="/my-courses"
+                  className={cn(
+                    "block px-6 py-2 text-base font-medium transition-colors hover:text-primary",
+                    isActive("/my-courses")
+                      ? "text-primary bg-gradient-accent"
+                      : "text-muted-foreground"
+                  )}
+                  onClick={() => setIsOpen(false)}
+                >
+                  My Courses
+                </Link>
+                <Link
+                  to="/courses"
+                  className={cn(
+                    "block px-6 py-2 text-base font-medium transition-colors hover:text-primary",
+                    isActive("/courses")
+                      ? "text-primary bg-gradient-accent"
+                      : "text-muted-foreground"
+                  )}
+                  onClick={() => setIsOpen(false)}
+                >
+                  All Courses
+                </Link>
+              </div>
+              
               <div className="pt-4 space-y-2">
                 <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
                   <Link to="/login" onClick={() => setIsOpen(false)}>

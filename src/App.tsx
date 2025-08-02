@@ -11,6 +11,7 @@ import ArithmeticPro from "./pages/ArithmeticPro";
 import SequencesPro from "./pages/SequencesPro";
 import Optiver80 from "./pages/Optiver80";
 import Courses from "./pages/Courses";
+import MyCourses from "./pages/MyCourses";
 import CourseDetail from "./pages/CourseDetail";
 import MLCourseDetail from "./pages/MLCourseDetail";
 import MLCourseEnroll from "./pages/MLCourseEnroll";
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/games/sequences-pro" element={<Layout><SequencesPro /></Layout>} />
             <Route path="/games/optiver-80" element={<Layout><Optiver80 /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
+            <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
