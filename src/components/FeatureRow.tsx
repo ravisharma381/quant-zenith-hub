@@ -38,7 +38,7 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
           <>
             {/* Image first for odd rows */}
             <div className="flex justify-center">
-              <div className="w-4/5 max-w-md">
+              <div className="w-3/5 lg:w-4/5 max-w-md">
                 <div className={`bg-gradient-to-br ${colors.gradientFrom} ${colors.gradientTo} rounded-xl h-64 flex items-center justify-center`}>
                   <div className={`w-16 h-16 ${colors.visualIconBg} rounded-lg flex items-center justify-center`}>
                     <Icon className={`w-8 h-8 ${colors.iconColor}`} />
@@ -75,7 +75,7 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
             </div>
             {/* Image second for even rows */}
             <div className="flex justify-center">
-              <div className="w-4/5 max-w-md">
+              <div className="w-3/5 lg:w-4/5 max-w-md">
                 <div className={`bg-gradient-to-br ${colors.gradientFrom} ${colors.gradientTo} rounded-xl h-64 flex items-center justify-center`}>
                   <div className={`w-16 h-16 ${colors.visualIconBg} rounded-lg flex items-center justify-center`}>
                     <Icon className={`w-8 h-8 ${colors.iconColor}`} />
