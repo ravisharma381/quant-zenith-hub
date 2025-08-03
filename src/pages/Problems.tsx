@@ -172,7 +172,7 @@ const Problems = () => {
                     {problem.title}
                   </h3>
                 </div>
-                <div className="col-span-2 flex items-center justify-start">
+                <div className="col-span-2 flex items-center justify-center">
                   <Badge className={`${getTopicColor(problem.topic)} text-center`} variant="outline">
                     {problem.topic}
                   </Badge>
