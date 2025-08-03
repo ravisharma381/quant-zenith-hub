@@ -151,7 +151,7 @@ const Problems = () => {
           <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
             <div className="col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
+            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">TOPIC</div>
             <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
             <div className="col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
           </div>
@@ -173,7 +173,7 @@ const Problems = () => {
                   </h3>
                 </div>
                 <div className="col-span-2 flex items-center justify-center">
-                  <Badge className={`${getTopicColor(problem.topic)} text-center`} variant="outline">
+                  <Badge className={getTopicColor(problem.topic)} variant="outline">
                     {problem.topic}
                   </Badge>
                 </div>
