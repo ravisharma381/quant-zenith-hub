@@ -47,8 +47,8 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
               </div>
             </div>
             {/* Text second for odd rows */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-3 mb-6">
                 <div className={`w-12 h-12 ${colors.iconBg} rounded-lg flex items-center justify-center`}>
                   <Icon className={`w-6 h-6 ${colors.iconColor}`} />
                 </div>
@@ -62,8 +62,8 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
         ) : (
           <>
             {/* Text first for even rows */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-3 mb-6">
                 <div className={`w-12 h-12 ${colors.iconBg} rounded-lg flex items-center justify-center`}>
                   <Icon className={`w-6 h-6 ${colors.iconColor}`} />
                 </div>
