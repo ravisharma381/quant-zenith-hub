@@ -169,13 +169,13 @@ const Problems = () => {
                     {problem.topic}
                   </Badge>
                 </div>
-                <div className="col-span-2 flex items-center">
+                <div className="col-span-2 flex items-center justify-center">
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger>
-                        <Badge className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-help`}>
+                      <TooltipTrigger asChild>
+                        <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold`}>
                           {problem.difficulty}/10
-                        </Badge>
+                        </div>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
