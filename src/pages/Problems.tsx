@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
 import drivLogo from "@/assets/driv-logo.png";
@@ -18,57 +19,59 @@ const Problems = () => {
     {
       id: 1,
       title: "Black-Scholes Options Pricing",
-      difficulty: "Medium",
+      difficulty: 5,
       topic: "Derivatives",
       askedIn: [janeStreetLogo, citadelLogo]
     },
     {
       id: 2,
       title: "Portfolio Risk Calculation",
-      difficulty: "Hard",
+      difficulty: 8,
       topic: "Risk Management",
       askedIn: [citadelLogo, drivLogo, companyLogo]
     },
     {
       id: 3,
       title: "Time Series Analysis",
-      difficulty: "Easy",
+      difficulty: 2,
       topic: "Statistics",
       askedIn: [janeStreetLogo]
     },
     {
       id: 4,
       title: "Monte Carlo Simulation",
-      difficulty: "Medium",
+      difficulty: 6,
       topic: "Quantitative Methods",
       askedIn: [citadelLogo, drivLogo]
     },
     {
       id: 5,
       title: "CAPM Beta Calculation",
-      difficulty: "Easy",
+      difficulty: 3,
       topic: "Asset Pricing",
       askedIn: [janeStreetLogo, citadelLogo, drivLogo]
     },
     {
       id: 6,
       title: "Yield Curve Construction",
-      difficulty: "Hard",
+      difficulty: 9,
       topic: "Fixed Income",
       askedIn: [companyLogo]
     }
   ];
 
   const topics = ["All", "Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
-  const difficulties = ["All", "Easy", "Medium", "Hard"];
+  const difficulties = ["All", "1-3", "4-6", "7-10"];
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy": return "bg-green-500/20 text-green-400 border-green-500/30";
-      case "Medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "Hard": return "bg-red-500/20 text-red-400 border-red-500/30";
-      default: return "bg-muted text-muted-foreground";
+  const getDifficultyColor = (difficulty: number) => {
+    if (difficulty >= 1 && difficulty <= 3) {
+      return "bg-green-500/20 text-green-400 border-green-500/30";
+    } else if (difficulty >= 4 && difficulty <= 6) {
+      return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+    } else if (difficulty >= 7 && difficulty <= 10) {
+      return "bg-red-500/20 text-red-400 border-red-500/30";
     }
+    return "bg-muted text-muted-foreground";
   };
 
   const getTopicColor = (topic: string) => {
@@ -85,7 +88,10 @@ const Problems = () => {
   const filteredProblems = problems.filter(problem => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
-    const matchesDifficulty = selectedDifficulty === "All" || problem.difficulty === selectedDifficulty;
+    const matchesDifficulty = selectedDifficulty === "All" || 
+      (selectedDifficulty === "1-3" && problem.difficulty >= 1 && problem.difficulty <= 3) ||
+      (selectedDifficulty === "4-6" && problem.difficulty >= 4 && problem.difficulty <= 6) ||
+      (selectedDifficulty === "7-10" && problem.difficulty >= 7 && problem.difficulty <= 10);
     return matchesSearch && matchesTopic && matchesDifficulty;
   });
 
@@ -164,9 +170,18 @@ const Problems = () => {
                   </Badge>
                 </div>
                 <div className="col-span-2 flex items-center">
-                  <Badge className={getDifficultyColor(problem.difficulty)}>
-                    {problem.difficulty}
-                  </Badge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Badge className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-help`}>
+                          {problem.difficulty}/10
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <div className="col-span-3 flex items-center justify-center">
                   <div className="flex flex-wrap gap-2 justify-center">
