@@ -54,7 +54,7 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">{title}</h3>
               </div>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed text-center">
                 {description}
               </p>
             </div>
@@ -69,7 +69,7 @@ const FeatureRow = ({ icon: Icon, title, description, index, theme }: FeatureRow
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">{title}</h3>
               </div>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed text-center">
                 {description}
               </p>
             </div>
