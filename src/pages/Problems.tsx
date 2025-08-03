@@ -85,6 +85,14 @@ const Problems = () => {
     return colors[topic.length % colors.length];
   };
 
+  const getCompanyName = (logo: string) => {
+    if (logo.includes('jane-street')) return 'Jane Street';
+    if (logo.includes('citadel')) return 'Citadel';
+    if (logo.includes('driv')) return 'Driv';
+    if (logo.includes('company')) return 'Top Firm';
+    return 'Company';
+  };
+
   const filteredProblems = problems.filter(problem => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
@@ -186,12 +194,20 @@ const Problems = () => {
                 <div className="col-span-3 flex items-center justify-center">
                   <div className="flex flex-wrap gap-2 justify-center">
                     {problem.askedIn.map((logo, index) => (
-                      <img 
-                        key={index} 
-                        src={logo} 
-                        alt="Company logo" 
-                        className="w-8 h-8 object-contain rounded"
-                      />
+                      <TooltipProvider delayDuration={0} key={index}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <img 
+                              src={logo} 
+                              alt="Company logo" 
+                              className="w-8 h-8 object-contain rounded hover:scale-110 transition-transform cursor-default"
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent side="top" align="center">
+                            <p>{getCompanyName(logo)}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     ))}
                   </div>
                 </div>
