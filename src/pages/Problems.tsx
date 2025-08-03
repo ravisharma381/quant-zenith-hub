@@ -177,7 +177,7 @@ const Problems = () => {
                           {problem.difficulty}/10
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent side="top" align="center">
+                      <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
                         <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
                       </TooltipContent>
                     </Tooltip>
