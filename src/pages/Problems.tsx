@@ -144,7 +144,7 @@ const Problems = () => {
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
             <div className="col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
             <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">DIFFICULTY</div>
+            <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
             <div className="col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
           </div>
           
