@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('mockLoggedIn') === 'true');
   const location = useLocation();
+
+  const handleLogout = () => {
+    localStorage.removeItem('mockLoggedIn');
+    setIsLoggedIn(false);
+  };
 
   const navItems = [
     { name: "Problems", path: "/problems" },
@@ -90,20 +97,46 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Desktop Auth Buttons */}
+          {/* Desktop Auth Buttons / User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/login">
-                <LogIn className="w-4 h-4" />
-                Login
-              </Link>
-            </Button>
-            <Button variant="premium" size="sm" asChild>
-              <Link to="/signup">
-                <User className="w-4 h-4" />
-                Sign Up
-              </Link>
-            </Button>
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-primary text-primary-foreground">A</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuItem asChild>
+                    <Link to="/my-courses" className="flex items-center">
+                      <GraduationCap className="mr-2 h-4 w-4" />
+                      My Courses
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">
+                    <LogIn className="w-4 h-4" />
+                    Login
+                  </Link>
+                </Button>
+                <Button variant="premium" size="sm" asChild>
+                  <Link to="/signup">
+                    <User className="w-4 h-4" />
+                    Sign Up
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -167,18 +200,43 @@ const Navigation = () => {
               </div>
               
               <div className="pt-4 space-y-2">
-                <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
-                    <LogIn className="w-4 h-4" />
-                    Login
-                  </Link>
-                </Button>
-                <Button variant="premium" size="sm" className="w-full" asChild>
-                  <Link to="/signup" onClick={() => setIsOpen(false)}>
-                    <User className="w-4 h-4" />
-                    Sign Up
-                  </Link>
-                </Button>
+                {isLoggedIn ? (
+                  <>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+                      <Link to="/my-courses" onClick={() => setIsOpen(false)}>
+                        <GraduationCap className="w-4 h-4" />
+                        My Courses
+                      </Link>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-full justify-start" 
+                      onClick={() => {
+                        handleLogout();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+                      <Link to="/login" onClick={() => setIsOpen(false)}>
+                        <LogIn className="w-4 h-4" />
+                        Login
+                      </Link>
+                    </Button>
+                    <Button variant="premium" size="sm" className="w-full" asChild>
+                      <Link to="/signup" onClick={() => setIsOpen(false)}>
+                        <User className="w-4 h-4" />
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

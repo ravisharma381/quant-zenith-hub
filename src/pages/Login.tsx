@@ -1,16 +1,31 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      localStorage.setItem('mockLoggedIn', 'true');
+      setIsLoading(false);
+      navigate('/');
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
+      });
+    }, 1500);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => setIsLoading(false), 2000);
+    handleGoogleSignIn();
   };
 
   return (
@@ -42,7 +57,7 @@ const Login = () => {
             <div className="space-y-4">
               <Button 
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={handleSubmit}
+                onClick={handleGoogleSignIn}
                 disabled={isLoading}
               >
                 <span className="mr-2 font-bold">G</span>
