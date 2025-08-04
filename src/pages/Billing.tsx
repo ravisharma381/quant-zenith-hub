@@ -72,32 +72,6 @@ const Billing = () => {
           </p>
         </div>
 
-        {/* Billing Summary Card */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="w-5 h-5" />
-              Billing Summary
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">3</div>
-                <div className="text-sm text-muted-foreground">Active Courses</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">$647.00</div>
-                <div className="text-sm text-muted-foreground">Total Spent</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">Jan 2025</div>
-                <div className="text-sm text-muted-foreground">Next Expiration</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Purchase History */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-foreground">Purchase History</h2>
