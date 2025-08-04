@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Star, Calendar, CreditCard, Clock } from "lucide-react";
 
 const MyCourses = () => {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
   const courses = [
     {
       id: 1,
@@ -17,7 +20,11 @@ const MyCourses = () => {
       reviews: "451K ratings",
       price: "$149",
       image: "/placeholder.svg",
-      gradient: "from-orange-400 to-yellow-500"
+      gradient: "from-orange-400 to-yellow-500",
+      purchaseDate: "March 15, 2024",
+      paymentMethod: "Credit Card ending in ****1234",
+      nextBilling: "March 15, 2025",
+      progress: "45%"
     },
     {
       id: 2,
@@ -31,7 +38,11 @@ const MyCourses = () => {
       reviews: "3.5K ratings",
       price: "$299",
       image: "/placeholder.svg",
-      gradient: "from-purple-500 to-blue-600"
+      gradient: "from-purple-500 to-blue-600",
+      purchaseDate: "January 8, 2024",
+      paymentMethod: "Credit Card ending in ****5678",
+      nextBilling: "January 8, 2025",
+      progress: "72%"
     },
     {
       id: 3,
@@ -45,7 +56,11 @@ const MyCourses = () => {
       reviews: "219K ratings",
       price: "$199",
       image: "/placeholder.svg",
-      gradient: "from-pink-500 to-purple-600"
+      gradient: "from-pink-500 to-purple-600",
+      purchaseDate: "February 22, 2024",
+      paymentMethod: "PayPal",
+      nextBilling: "February 22, 2025",
+      progress: "28%"
     }
   ];
 
@@ -120,13 +135,72 @@ const MyCourses = () => {
                   <span className="text-lg font-bold text-primary">{course.price}</span>
                 </div>
                 
-                {/* Start Learning Button - styled same as Enroll Now but not clickable */}
-                <Button 
-                  className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Start Learning
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex gap-2 mt-4">
+                  <Button 
+                    className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    Continue Learning
+                  </Button>
+                  
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setSelectedCourse(course)}
+                      >
+                        View Purchase Details
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Purchase Details</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-4">
+                        <div className="flex items-center gap-3">
+                          <Calendar className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Purchase Date</p>
+                            <p className="text-sm text-muted-foreground">{course.purchaseDate}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <CreditCard className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Payment Method</p>
+                            <p className="text-sm text-muted-foreground">{course.paymentMethod}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <Clock className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Progress</p>
+                            <p className="text-sm text-muted-foreground">{course.progress} completed</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <Star className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">Next Billing</p>
+                            <p className="text-sm text-muted-foreground">{course.nextBilling}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="border-t pt-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">Amount Paid</span>
+                            <span className="text-lg font-bold text-primary">{course.price}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
             </div>
           ))}
