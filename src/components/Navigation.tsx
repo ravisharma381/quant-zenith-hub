@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -100,27 +100,55 @@ const Navigation = () => {
           {/* Desktop Auth Buttons / User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
             {isLoggedIn ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-primary text-primary-foreground">A</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuItem asChild>
-                    <Link to="/my-courses" className="flex items-center">
-                      <GraduationCap className="mr-2 h-4 w-4" />
-                      My Courses
+              <div className="relative group">
+                <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary text-primary-foreground">A</AvatarFallback>
+                  </Avatar>
+                </Button>
+                
+                {/* User Dropdown with courses styling */}
+                <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
+                    <Link 
+                      to="/my-courses" 
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    >
+                      <div className="mt-1">
+                        <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-foreground">My Courses</div>
+                        <div className="text-sm text-muted-foreground">Continue your learning journey</div>
+                      </div>
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <Link 
+                      to="/billing" 
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    >
+                      <div className="mt-1">
+                        <CreditCard className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-foreground">Billing</div>
+                        <div className="text-sm text-muted-foreground">View purchase history & details</div>
+                      </div>
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item w-full text-left"
+                    >
+                      <div className="mt-1">
+                        <LogOut className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-foreground">Logout</div>
+                        <div className="text-sm text-muted-foreground">Sign out of your account</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
@@ -206,6 +234,12 @@ const Navigation = () => {
                       <Link to="/my-courses" onClick={() => setIsOpen(false)}>
                         <GraduationCap className="w-4 h-4" />
                         My Courses
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+                      <Link to="/billing" onClick={() => setIsOpen(false)}>
+                        <CreditCard className="w-4 h-4" />
+                        Billing
                       </Link>
                     </Button>
                     <Button 

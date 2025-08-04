@@ -20,6 +20,7 @@ import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
+            <Route path="/billing" element={<Layout><Billing /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
