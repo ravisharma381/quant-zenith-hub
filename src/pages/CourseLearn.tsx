@@ -333,8 +333,65 @@ const CourseLearn = () => {
 
             {/* Main Content */}
           <div className="flex-1 bg-black">
-            {/* Header */}
-            <div className="px-6 pt-6">
+            {/* Controls above lesson title */}
+            <div className="px-6 pt-6 pb-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setSidebarVisible(!sidebarVisible)}
+                      className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                    >
+                      <Menu className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                    <p>{sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={goToPreviousChapter}
+                      disabled={!canGoPrevious}
+                      className={cn(
+                        "p-2 rounded-md transition-colors",
+                        canGoPrevious
+                          ? "text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800"
+                          : "text-gray-600 cursor-not-allowed"
+                      )}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                    <p>Previous chapter</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={goToNextChapter}
+                      disabled={!canGoNext}
+                      className={cn(
+                        "p-2 rounded-md transition-colors",
+                        canGoNext
+                          ? "text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800"
+                          : "text-gray-600 cursor-not-allowed"
+                      )}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                    <p>Next chapter</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              
+              {/* Header */}
               <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
             </div>
 
