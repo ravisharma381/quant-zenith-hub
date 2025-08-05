@@ -194,26 +194,6 @@ const CourseLearn = () => {
       <div className="min-h-screen bg-black">
         <Navigation />
         
-        {/* Course Navigation Bar */}
-        <div className="h-12 bg-black border-b border-gray-800 flex items-center px-6">
-          <div className="flex items-center gap-4">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => navigate('/courses')}
-                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
-                <p>Back to courses</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <span className="text-white font-medium text-lg">{currentCourse.title}</span>
-          </div>
-        </div>
         
         <div className="flex">
           {/* Left Sidebar */}
