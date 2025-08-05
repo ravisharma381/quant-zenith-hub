@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,7 @@ interface Section {
 
 const CourseLearn = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   
   // Course data matching the screenshot structure
   const courseData = {
@@ -194,7 +195,7 @@ const CourseLearn = () => {
         <Navigation />
         
         {/* Course Navigation Bar */}
-        <div className="h-12 bg-black border-b border-gray-800 flex items-center px-4">
+        <div className="h-12 bg-black border-b border-gray-800 flex items-center px-6">
           <div className="flex items-center gap-4">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -207,6 +208,20 @@ const CourseLearn = () => {
               </TooltipTrigger>
               <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
                 <p>{sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => navigate('/courses')}
+                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                <p>Back to courses</p>
               </TooltipContent>
             </Tooltip>
 
