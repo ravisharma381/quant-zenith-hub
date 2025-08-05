@@ -294,7 +294,7 @@ const CourseLearn = () => {
         {/* Main Content */}
         <div className="flex-1 bg-black">
           {/* Header */}
-          <div className="p-6 flex items-center justify-between">
+          <div className="p-6">
             <div className="flex items-center gap-4">
               <TooltipProvider>
                 <Tooltip>
