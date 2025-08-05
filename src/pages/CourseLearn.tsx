@@ -26,7 +26,7 @@ const CourseLearn = () => {
   // Course data matching the screenshot structure
   const courseData = {
     "quant-interview-masterclass": {
-      title: "Probability I",
+      title: "Quant Interview Masterclass",
       sections: [
         {
           id: "combinatorics",

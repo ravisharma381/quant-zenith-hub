@@ -33,7 +33,7 @@ const Navigation = () => {
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">Q</span>
             </div>
-            <span className="text-xl font-bold text-foreground">QuantProf</span>
+            <span className="text-lg font-bold text-foreground">QuantProf</span>
           </Link>
 
           {/* Desktop Navigation */}
