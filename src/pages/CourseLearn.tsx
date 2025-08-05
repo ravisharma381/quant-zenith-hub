@@ -296,7 +296,7 @@ const CourseLearn = () => {
           {/* Header */}
           <div className="p-6">
             <div className="flex items-center gap-4">
-              <TooltipProvider>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
