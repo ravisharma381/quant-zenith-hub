@@ -318,8 +318,8 @@ const CourseLearn = () => {
           </div>
 
           {/* Content */}
-          <div className="p-6">
-            <div className={cn("mx-auto", sidebarVisible ? "max-w-5xl" : "max-w-7xl")}>
+          <div className="px-6 pb-6">
+            <div className={cn("mx-auto", sidebarVisible ? "max-w-5xl" : "max-w-7xl")} style={{ marginLeft: '4rem' }}>
               {selectedContent.content}
             </div>
           </div>
