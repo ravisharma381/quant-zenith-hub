@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search, PanelLeft } from "lucide-react";
+import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Chapter {
   id: string;
@@ -92,7 +90,6 @@ const CourseLearn = () => {
   );
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
 
   const currentCourse = courseData[courseId as keyof typeof courseData];
   if (!currentCourse) {
@@ -177,8 +174,7 @@ const CourseLearn = () => {
       
       <div className="flex">
         {/* Left Sidebar */}
-        {sidebarVisible && (
-          <div className="w-96 bg-black border-r border-gray-800">
+        <div className="w-96 bg-black border-r border-gray-800">
           {/* Search Bar */}
           <div className="px-6 mb-1 mt-6">
             <div className="relative">
@@ -288,38 +284,18 @@ const CourseLearn = () => {
               ))
             )}
           </div>
-          </div>
-        )}
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 bg-black">
           {/* Header */}
           <div className="p-6">
-            <div className="flex items-center gap-4">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSidebarVisible(!sidebarVisible)}
-                      className="text-white hover:bg-[hsl(122_97%_50%_/_0.2)] hover:text-[hsl(122_97%_50%)] transition-colors"
-                    >
-                      <PanelLeft className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{sidebarVisible ? "Hide sidebar" : "Show sidebar"}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
-            </div>
+            <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
           </div>
 
           {/* Content */}
-          <div className="pl-6 pr-6 pb-6">
-            <div className={cn("", sidebarVisible ? "max-w-5xl" : "max-w-7xl")}>
+          <div className="p-6">
+            <div className="max-w-5xl">
               {selectedContent.content}
             </div>
           </div>
