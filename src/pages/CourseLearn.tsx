@@ -372,15 +372,15 @@ const CourseLearn = () => {
             </div>
           )}
 
-          {/* Main Content */}
+            {/* Main Content */}
           <div className="flex-1 bg-black">
             {/* Header */}
-            <div className="p-6">
+            <div className="px-6 pt-6">
               <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
             </div>
 
             {/* Content */}
-            <div className="p-6">
+            <div className="px-6 pb-6">
               <div className={cn(
                 "transition-all duration-300",
                 sidebarVisible ? "max-w-5xl" : "max-w-7xl"
