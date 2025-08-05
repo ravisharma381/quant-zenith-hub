@@ -381,7 +381,10 @@ const CourseLearn = () => {
 
             {/* Content */}
             <div className="p-6">
-              <div className="max-w-5xl">
+              <div className={cn(
+                "transition-all duration-300",
+                sidebarVisible ? "max-w-5xl" : "max-w-7xl"
+              )}>
                 {selectedContent.content}
               </div>
             </div>
