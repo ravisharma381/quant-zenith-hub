@@ -261,7 +261,7 @@ const CourseLearn = () => {
           {sidebarVisible && (
             <div className="w-96 bg-black border-r border-gray-800">
               {/* Search Bar */}
-              <div className="pl-7 pr-6 mb-1 mt-6">
+              <div className="px-6 mb-1 mt-6">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -275,7 +275,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <div className="pl-7 pr-6 pb-6">
+              <div className="p-6">
                 {searchTerm ? (
                   // When searching, show only matching chapters without section headers
                   <div className="space-y-1">
