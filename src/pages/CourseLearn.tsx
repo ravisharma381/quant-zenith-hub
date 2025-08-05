@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Chapter {
   id: string;
@@ -295,21 +296,30 @@ const CourseLearn = () => {
           {/* Header */}
           <div className="p-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSidebarVisible(!sidebarVisible)}
-                className="text-white hover:bg-gray-800"
-              >
-                <PanelLeft className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSidebarVisible(!sidebarVisible)}
+                      className="text-white hover:bg-[hsl(122_97%_50%_/_0.2)] hover:text-[hsl(122_97%_50%)] transition-colors"
+                    >
+                      <PanelLeft className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{sidebarVisible ? "Hide sidebar" : "Show sidebar"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
             </div>
           </div>
 
           {/* Content */}
           <div className="p-6">
-            <div className="max-w-5xl">
+            <div className={cn("mx-auto", sidebarVisible ? "max-w-5xl" : "max-w-7xl")}>
               {selectedContent.content}
             </div>
           </div>
