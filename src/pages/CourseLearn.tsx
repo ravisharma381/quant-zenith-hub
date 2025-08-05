@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Chapter {
   id: string;
@@ -90,6 +91,7 @@ const CourseLearn = () => {
   );
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
 
   const currentCourse = courseData[courseId as keyof typeof courseData];
   if (!currentCourse) {
@@ -168,89 +170,121 @@ const CourseLearn = () => {
 
   const selectedContent = getSelectedChapterContent();
 
+  // Get all chapters for navigation
+  const allChapters = sections.flatMap(section => section.chapters);
+  const currentChapterIndex = allChapters.findIndex(chapter => chapter.id === selectedChapter);
+  const canGoPrevious = currentChapterIndex > 0;
+  const canGoNext = currentChapterIndex < allChapters.length - 1;
+
+  const goToPreviousChapter = () => {
+    if (canGoPrevious) {
+      setSelectedChapter(allChapters[currentChapterIndex - 1].id);
+    }
+  };
+
+  const goToNextChapter = () => {
+    if (canGoNext) {
+      setSelectedChapter(allChapters[currentChapterIndex + 1].id);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-black">
-      <Navigation />
-      
-      <div className="flex">
-        {/* Left Sidebar */}
-        <div className="w-96 bg-black border-r border-gray-800">
-          {/* Search Bar */}
-          <div className="px-6 mb-1 mt-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search for lesson title"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-700 text-white placeholder-gray-400"
-                style={{ backgroundColor: '#1c1c1c' }}
-              />
+    <TooltipProvider delayDuration={0}>
+      <div className="min-h-screen bg-black">
+        <Navigation />
+        
+        {/* Course Navigation Bar */}
+        <div className="h-12 bg-black border-b border-gray-800 flex items-center px-4">
+          <div className="flex items-center gap-4">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setSidebarVisible(!sidebarVisible)}
+                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                >
+                  <Menu className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                <p>{sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <span className="text-white font-medium text-lg">{currentCourse.title}</span>
+            
+            <div className="flex items-center gap-2 ml-4">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={goToPreviousChapter}
+                    disabled={!canGoPrevious}
+                    className={cn(
+                      "p-2 rounded-md transition-colors",
+                      canGoPrevious
+                        ? "text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800"
+                        : "text-gray-600 cursor-not-allowed"
+                    )}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                  <p>Previous chapter</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={goToNextChapter}
+                    disabled={!canGoNext}
+                    className={cn(
+                      "p-2 rounded-md transition-colors",
+                      canGoNext
+                        ? "text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800"
+                        : "text-gray-600 cursor-not-allowed"
+                    )}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
+                  <p>Next chapter</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
-
-          {/* Sections */}
-          <div className="p-6">
-            {searchTerm ? (
-              // When searching, show only matching chapters without section headers
-              <div className="space-y-1">
-                {filteredSections.flatMap(section => 
-                  section.chapters.map((chapter) => (
-                    <div
-                      key={chapter.id}
-                      className={cn(
-                        "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
-                        selectedChapter === chapter.id 
-                          ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
-                          : "text-white hover:bg-gray-800"
-                      )}
-                      onClick={() => setSelectedChapter(chapter.id)}
-                    >
-                      <div className="relative">
-                        <div 
-                          className={cn(
-                            "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                            chapter.completed 
-                              ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
-                              : "border-gray-400"
-                          )}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleChapterCompletion(section.id, chapter.id);
-                          }}
-                        >
-                          {chapter.completed && (
-                            <div className="text-black text-xs font-bold">✓</div>
-                          )}
-                        </div>
-                      </div>
-                      <span className="text-base font-normal">{chapter.title}</span>
-                    </div>
-                  ))
-                )}
+        </div>
+        
+        <div className="flex">
+          {/* Left Sidebar */}
+          {sidebarVisible && (
+            <div className="w-96 bg-black border-r border-gray-800">
+              {/* Search Bar */}
+              <div className="px-6 mb-1 mt-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search for lesson title"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 border-gray-700 text-white placeholder-gray-400"
+                    style={{ backgroundColor: '#1c1c1c' }}
+                  />
+                </div>
               </div>
-            ) : (
-              // When not searching, show normal section structure
-              filteredSections.map((section) => (
-                <div key={section.id} className="mb-6">
-                  <Collapsible 
-                    open={section.expanded} 
-                    onOpenChange={() => toggleSection(section.id)}
-                  >
-                    <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
-                      <h3 className="text-white font-normal text-lg">{section.title}</h3>
-                      {section.expanded ? (
-                        <ChevronDown className="w-5 h-5 text-white" />
-                      ) : (
-                        <ChevronRight className="w-5 h-5 text-white" />
-                      )}
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-4">
-                      {section.chapters.map((chapter) => (
+
+              {/* Sections */}
+              <div className="p-6">
+                {searchTerm ? (
+                  // When searching, show only matching chapters without section headers
+                  <div className="space-y-1">
+                    {filteredSections.flatMap(section => 
+                      section.chapters.map((chapter) => (
                         <div
                           key={chapter.id}
                           className={cn(
-                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
+                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
                             selectedChapter === chapter.id 
                               ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
                               : "text-white hover:bg-gray-800"
@@ -277,31 +311,84 @@ const CourseLearn = () => {
                           </div>
                           <span className="text-base font-normal">{chapter.title}</span>
                         </div>
-                      ))}
-                    </CollapsibleContent>
-                  </Collapsible>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+                      ))
+                    )}
+                  </div>
+                ) : (
+                  // When not searching, show normal section structure
+                  filteredSections.map((section) => (
+                    <div key={section.id} className="mb-6">
+                      <Collapsible 
+                        open={section.expanded} 
+                        onOpenChange={() => toggleSection(section.id)}
+                      >
+                        <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
+                          <h3 className="text-white font-normal text-lg">{section.title}</h3>
+                          {section.expanded ? (
+                            <ChevronDown className="w-5 h-5 text-white" />
+                          ) : (
+                            <ChevronRight className="w-5 h-5 text-white" />
+                          )}
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4">
+                          {section.chapters.map((chapter) => (
+                            <div
+                              key={chapter.id}
+                              className={cn(
+                                "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
+                                selectedChapter === chapter.id 
+                                  ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                                  : "text-white hover:bg-gray-800"
+                              )}
+                              onClick={() => setSelectedChapter(chapter.id)}
+                            >
+                              <div className="relative">
+                                <div 
+                                  className={cn(
+                                    "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                                    chapter.completed 
+                                      ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                      : "border-gray-400"
+                                  )}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleChapterCompletion(section.id, chapter.id);
+                                  }}
+                                >
+                                  {chapter.completed && (
+                                    <div className="text-black text-xs font-bold">✓</div>
+                                  )}
+                                </div>
+                              </div>
+                              <span className="text-base font-normal">{chapter.title}</span>
+                            </div>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
 
-        {/* Main Content */}
-        <div className="flex-1 bg-black">
-          {/* Header */}
-          <div className="p-6">
-            <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
-          </div>
+          {/* Main Content */}
+          <div className="flex-1 bg-black">
+            {/* Header */}
+            <div className="p-6">
+              <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
+            </div>
 
-          {/* Content */}
-          <div className="p-6">
-            <div className="max-w-5xl">
-              {selectedContent.content}
+            {/* Content */}
+            <div className="p-6">
+              <div className="max-w-5xl">
+                {selectedContent.content}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
