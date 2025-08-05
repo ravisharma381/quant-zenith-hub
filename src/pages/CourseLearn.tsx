@@ -380,7 +380,7 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <div className="px-6 pb-6">
+            <div className="px-6 pb-6 pt-8">
               <div className={cn(
                 "transition-all duration-300",
                 sidebarVisible ? "max-w-5xl" : "max-w-7xl"
