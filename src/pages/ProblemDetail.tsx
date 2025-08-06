@@ -93,8 +93,8 @@ const ProblemDetail = () => {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="resize-none"
-                style={{ height: '38px', minHeight: '38px', maxHeight: '38px' }}
+                className="resize-none flex items-center"
+                style={{ height: '46px', minHeight: '46px', maxHeight: '46px', paddingTop: '12px', paddingBottom: '12px' }}
               />
               
               {/* Fixed height container for feedback to prevent button movement */}
