@@ -93,7 +93,8 @@ const ProblemDetail = () => {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="h-4 resize-none"
+                className="h-4 min-h-4 max-h-4 resize-none"
+                style={{ height: '16px' }}
               />
               
               {feedback.type && (
