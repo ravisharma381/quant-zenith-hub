@@ -10,6 +10,8 @@ import { Heart, Share, MoreHorizontal } from "lucide-react";
 const ProblemDetail = () => {
   const { id } = useParams();
   const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
+  const [showAnimation, setShowAnimation] = useState(false);
 
   // Mock problem data - in real app this would come from API
   const problem = {
@@ -33,12 +35,27 @@ const ProblemDetail = () => {
   };
 
   const handleSubmit = () => {
-    // Handle answer submission
-    console.log("Submitted answer:", answer);
+    const correctAnswer = "3";
+    if (answer.trim() === correctAnswer) {
+      setFeedback({ type: 'correct', message: "Correct answer!" });
+      setShowAnimation(true);
+      setTimeout(() => setShowAnimation(false), 3000);
+    } else {
+      setFeedback({ type: 'wrong', message: "The answer is wrong" });
+    }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 relative">
+      {/* Party Popper Animation */}
+      {showAnimation && (
+        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+          <div className="text-8xl animate-bounce">🎉</div>
+          <div className="absolute text-6xl animate-pulse">🎊</div>
+          <div className="absolute text-4xl animate-ping">✨</div>
+        </div>
+      )}
+      
       <div className="max-w-4xl mx-auto">
         <Tabs defaultValue="problem" className="w-full">
           <div className="flex items-center justify-between mb-6">
@@ -82,6 +99,15 @@ const ProblemDetail = () => {
                 onChange={(e) => setAnswer(e.target.value)}
                 className="h-10 resize-none"
               />
+              
+              {feedback.type && (
+                <div className={`text-sm font-medium ${
+                  feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  {feedback.message}
+                </div>
+              )}
+              
               <Button 
                 onClick={handleSubmit}
                 className="bg-primary hover:bg-primary/90"
