@@ -97,13 +97,16 @@ const ProblemDetail = () => {
                 style={{ height: '38px', minHeight: '38px', maxHeight: '38px' }}
               />
               
-              {feedback.type && (
-                <div className={`text-sm font-medium ${
-                  feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
-                }`}>
-                  {feedback.message}
-                </div>
-              )}
+              {/* Fixed height container for feedback to prevent button movement */}
+              <div className="h-6 flex items-center">
+                {feedback.type && (
+                  <div className={`text-sm font-medium ${
+                    feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {feedback.message}
+                  </div>
+                )}
+              </div>
               
               <Button 
                 onClick={handleSubmit}
