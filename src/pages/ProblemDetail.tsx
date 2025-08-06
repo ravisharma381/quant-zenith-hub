@@ -11,7 +11,6 @@ const ProblemDetail = () => {
   const { id } = useParams();
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
-  const [showAnimation, setShowAnimation] = useState(false);
 
   // Mock problem data - in real app this would come from API
   const problem = {
@@ -38,24 +37,20 @@ const ProblemDetail = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      setShowAnimation(true);
-      setTimeout(() => setShowAnimation(false), 3000);
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 relative">
-      {/* Party Popper Animation */}
-      {showAnimation && (
-        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-          <div className="text-8xl animate-bounce">🎉</div>
-          <div className="absolute text-6xl animate-pulse">🎊</div>
-          <div className="absolute text-4xl animate-ping">✨</div>
-        </div>
-      )}
-      
+    <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <Tabs defaultValue="problem" className="w-full">
           <div className="flex items-center justify-between mb-6">
@@ -97,7 +92,8 @@ const ProblemDetail = () => {
                 placeholder="Place answer here"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                className="h-10 resize-none"
+                onKeyDown={handleKeyDown}
+                className="h-4 resize-none"
               />
               
               {feedback.type && (
