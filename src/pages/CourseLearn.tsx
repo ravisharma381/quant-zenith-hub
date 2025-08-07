@@ -192,7 +192,7 @@ const CourseLearn = () => {
                 </TabsList>
               </div>
 
-              <TabsContent value="problem" className="space-y-6">
+              <TabsContent value="problem" className="space-y-6 -mt-6">
                 <div>
                   <div className="prose prose-invert max-w-none">
                     <p className="text-white leading-relaxed whitespace-pre-line">
@@ -215,7 +215,8 @@ const CourseLearn = () => {
                         maxHeight: '46px', 
                         paddingTop: '12px', 
                         paddingBottom: '12px',
-                        borderColor: '#d6d6d6'
+                        borderColor: '#d6d6d6',
+                        resize: 'none'
                       }}
                     />
                     
@@ -241,6 +242,7 @@ const CourseLearn = () => {
               </TabsContent>
 
               <TabsContent value="solution" className="space-y-6">
+                <h2 className="text-2xl font-bold text-white mb-4">4 Head I</h2>
                 <div>
                   <Accordion type="single" collapsible className="w-full space-y-4">
                     <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
