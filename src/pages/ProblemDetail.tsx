@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Heart, Share, MoreHorizontal } from "lucide-react";
+import { Heart, Share, MoreHorizontal, Send } from "lucide-react";
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -88,16 +88,27 @@ const ProblemDetail = () => {
             </div>
 
             <div className="space-y-4 mt-12">
-              <Textarea
-                placeholder="Place answer here"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="resize-none flex items-center"
-                style={{ height: '46px', minHeight: '46px', maxHeight: '46px', paddingTop: '12px', paddingBottom: '12px' }}
-              />
+              {/* Horizontal layout for input and submit button */}
+              <div className="flex gap-4 items-center">
+                <Textarea
+                  placeholder="Place answer here"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="resize-none flex items-center flex-1"
+                  style={{ height: '46px', minHeight: '46px', maxHeight: '46px', paddingTop: '12px', paddingBottom: '12px' }}
+                />
+                
+                <Button 
+                  onClick={handleSubmit}
+                  className="bg-primary hover:bg-primary-glow text-primary-foreground font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg hover:shadow-glow transition-all duration-300"
+                >
+                  <Send className="h-4 w-4" />
+                  Submit
+                </Button>
+              </div>
               
-              {/* Fixed height container for feedback to prevent button movement */}
+              {/* Fixed height container for feedback to prevent layout shift */}
               <div className="h-6 flex items-center">
                 {feedback.type && (
                   <div className={`text-sm font-medium ${
@@ -107,13 +118,6 @@ const ProblemDetail = () => {
                   </div>
                 )}
               </div>
-              
-              <Button 
-                onClick={handleSubmit}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Submit
-              </Button>
             </div>
           </TabsContent>
 
