@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Chapter {
   id: string;
@@ -34,7 +38,7 @@ const CourseLearn = () => {
           title: "Combinatorics",
           chapters: [
             { id: "fundamentals", title: "Fundamental Definitions", completed: false },
-            { id: "multiplication", title: "Multiplication Principle", completed: false },
+            { id: "multiplication", title: "4 Head I", completed: false },
             { id: "combinations", title: "Combinations and Permutations", completed: false },
             { id: "multinomial", title: "Multinomial Coefficient", completed: false },
             { id: "binomial", title: "Binomial Theorem", completed: false },
@@ -122,6 +126,25 @@ const CourseLearn = () => {
     ));
   };
 
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
+
+  const handleSubmit = () => {
+    const correctAnswer = "3";
+    if (answer.trim() === correctAnswer) {
+      setFeedback({ type: 'correct', message: "Correct answer!" });
+    } else {
+      setFeedback({ type: 'wrong', message: "The answer is wrong" });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   const getSelectedChapterContent = () => {
     if (selectedChapter === "fundamentals") {
       return {
@@ -155,6 +178,111 @@ const CourseLearn = () => {
         )
       };
     }
+    
+    if (selectedChapter === "multiplication") {
+      return {
+        title: "4 Head I",
+        content: (
+          <div className="max-w-4xl mx-auto">
+            <Tabs defaultValue="problem" className="w-full">
+              <div className="flex items-center justify-between mb-6">
+                <TabsList className="grid w-48 grid-cols-2">
+                  <TabsTrigger value="problem">Problem</TabsTrigger>
+                  <TabsTrigger value="solution">Solution</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="problem" className="space-y-6">
+                <div>
+                  <div className="prose prose-invert max-w-none">
+                    <p className="text-white leading-relaxed whitespace-pre-line">
+                      Varun has 4 fair coins. He flips all 4 at once and notes the parity of each. After seeing the outcomes, he may turn over (rather than flip) any pair of coins. Note that this means a heads becomes a tails and vice versa. Varun may not turn over a single coin without turning over another. He can iterate this process as many times as he would like. If Varun plays to maximize his expected number of heads, find the expected number of heads he will have.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mt-12">
+                  <div className="flex gap-4 items-center">
+                    <Textarea
+                      placeholder="Place answer here"
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="resize-none flex items-center flex-1 border-2"
+                      style={{ 
+                        height: '46px', 
+                        minHeight: '46px', 
+                        maxHeight: '46px', 
+                        paddingTop: '12px', 
+                        paddingBottom: '12px',
+                        borderColor: '#d6d6d6'
+                      }}
+                    />
+                    
+                    <Button 
+                      onClick={handleSubmit}
+                      className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
+                    >
+                      <Send className="h-4 w-4" />
+                      Submit
+                    </Button>
+                  </div>
+                  
+                  <div className="h-6 flex items-center">
+                    {feedback.type && (
+                      <div className={`text-sm font-medium ${
+                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {feedback.message}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="solution" className="space-y-6">
+                <div>
+                  <Accordion type="single" collapsible className="w-full space-y-4">
+                    <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
+                      <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                        Hint 1
+                      </AccordionTrigger>
+                      <AccordionContent className="text-white leading-relaxed">
+                        Think about what configurations of heads/tails are possible after any number of pair flips.
+                      </AccordionContent>
+                    </AccordionItem>
+                    
+                    <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
+                      <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                        Hint 2
+                      </AccordionTrigger>
+                      <AccordionContent className="text-white leading-relaxed">
+                        Consider the parity constraints - turning over pairs preserves certain properties of the configuration.
+                      </AccordionContent>
+                    </AccordionItem>
+                    
+                    <AccordionItem value="solution" className="border border-border rounded-lg px-4">
+                      <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                        Solution
+                      </AccordionTrigger>
+                      <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
+                        The expected number of heads Varun will have is 3.
+
+                        Explanation:
+                        When Varun flips 4 fair coins, he gets various outcomes. The key insight is that he can always turn over pairs of coins to optimize his result. Since he wants to maximize heads, he should turn over pairs strategically.
+
+                        By turning over pairs, Varun can always achieve at least 2 heads from any initial configuration. However, with optimal play, he can achieve an expected value of 3 heads through careful pair selection based on the initial outcome.
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        )
+      };
+    }
+    
     return {
       title: "Select a Chapter",
       content: <p className="text-gray-400 text-lg">Select a chapter from the sidebar to view its content.</p>
