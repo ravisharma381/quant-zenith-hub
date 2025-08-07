@@ -95,7 +95,7 @@ const ProblemDetail = () => {
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="resize-none flex items-center flex-1 border-2"
+                  className="resize-none flex items-center flex-1"
                   style={{ height: '46px', minHeight: '46px', maxHeight: '46px', paddingTop: '12px', paddingBottom: '12px' }}
                 />
                 
