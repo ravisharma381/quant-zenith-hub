@@ -208,7 +208,7 @@ const CourseLearn = () => {
                       value={answer}
                       onChange={(e) => setAnswer(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      className="resize-none flex items-center flex-1 border-2"
+                      className="resize-none flex items-center flex-1 border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[hsl(122_97%_50%)]"
                       style={{ 
                         height: '46px', 
                         minHeight: '46px', 
@@ -221,7 +221,7 @@ const CourseLearn = () => {
                     
                     <Button 
                       onClick={handleSubmit}
-                      className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
+                      className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
                     >
                       <Send className="h-4 w-4" />
                       Submit
