@@ -132,18 +132,24 @@ const CourseLearn = () => {
 
   // Fire vertical confetti rain from the entire top edge
   const fireTopRain = () => {
-    const columns = 16;
+    const columns = 20;
     for (let i = 0; i < columns; i++) {
-      const x = (i + 0.5) / columns; // evenly across the top
+      const x = (i + Math.random()) / columns; // across the top with slight jitter
+      const angle = 270 + (Math.random() * 20 - 10); // mostly downward, slight variance
+      const spread = 10 + Math.random() * 10; // small spread
+      const startVelocity = 20 + Math.random() * 20; // 20-40
+      const gravity = 1.0 + Math.random() * 0.4; // 1.0-1.4
+      const drift = (Math.random() - 0.5) * 1.2; // slight left/right drift
+      const scalar = 0.9 + Math.random() * 0.5; // varied size
       confetti({
-        particleCount: 10,
+        particleCount: 7 + Math.floor(Math.random() * 6),
         origin: { x, y: 0 },
-        angle: 270, // straight down
-        spread: 0,  // no horizontal spread
-        startVelocity: 25,
-        gravity: 1.1,
-        drift: 0,
-        scalar: 1
+        angle,
+        spread,
+        startVelocity,
+        gravity,
+        drift,
+        scalar,
       });
     }
   };
