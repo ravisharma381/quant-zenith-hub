@@ -200,7 +200,7 @@ const SequencesPro = () => {
           className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
           style={{
             borderColor: themeColors.primary,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.3)`
+            boxShadow: 'none'
           }}
         >
           <div className="text-xl font-bold text-foreground mb-4">What comes next?</div>
@@ -224,7 +224,7 @@ const SequencesPro = () => {
             {(() => { const theme = getGameTheme(2); return (
               <Button 
                 type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles} disabled:opacity-100`}
+                className={`mx-auto px-8 ${theme.buttonStyles} disabled:opacity-100 !text-foreground`}
                 disabled={!userAnswer}
               >
                 Submit Answer

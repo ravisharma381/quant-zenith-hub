@@ -226,8 +226,8 @@ const Optiver80 = () => {
         <div 
           className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
           style={{
-            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
+            borderColor: themeColors.primary,
+            boxShadow: 'none'
           }}
         >
           <div className="text-4xl font-bold text-foreground mb-8">
@@ -250,7 +250,7 @@ const Optiver80 = () => {
             {(() => { const theme = getGameTheme(3); return (
               <Button 
                 type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles}`}
+                className={`mx-auto px-8 ${theme.buttonStyles} disabled:opacity-100 !text-foreground`}
                 disabled={!userAnswer}
               >
                 Submit
