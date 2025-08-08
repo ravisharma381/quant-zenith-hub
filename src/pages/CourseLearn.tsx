@@ -7,7 +7,7 @@ import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -181,7 +181,7 @@ const CourseLearn = () => {
     
     if (selectedChapter === "multiplication") {
       return {
-        title: "4 Head I",
+        title: "",
         content: (
           <div className="max-w-4xl mx-auto">
             <Tabs defaultValue="problem" className="w-full">
@@ -203,20 +203,14 @@ const CourseLearn = () => {
 
                 <div className="space-y-4 mt-12">
                   <div className="flex gap-4 items-center">
-                    <Textarea
+                    <Input
+                      type="text"
                       placeholder="Place answer here"
                       value={answer}
                       onChange={(e) => setAnswer(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      className="resize-none flex items-center flex-1 border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[hsl(122_97%_50%)]"
-                      style={{ 
-                        height: '46px', 
-                        minHeight: '46px', 
-                        maxHeight: '46px', 
-                        paddingTop: '12px', 
-                        paddingBottom: '12px',
-                        borderColor: '#d6d6d6'
-                      }}
+                      className="flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[hsl(122_97%_50%)]"
+                      style={{ borderColor: '#d6d6d6' }}
                     />
                     
                     <Button 
@@ -500,7 +494,9 @@ const CourseLearn = () => {
               </div>
               
               {/* Header */}
-              <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
+              {selectedContent.title && (
+                <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
+              )}
             </div>
 
             {/* Content */}
