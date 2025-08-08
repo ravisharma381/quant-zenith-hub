@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Heart, Share, MoreHorizontal, Send } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -37,6 +38,11 @@ const ProblemDetail = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
+      // Confetti celebration from the top
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0, x: 0.5 }, angle: 270, startVelocity: 45, gravity: 1 });
+      setTimeout(() => {
+        confetti({ particleCount: 100, spread: 90, origin: { y: 0, x: 0.5 }, angle: 270, startVelocity: 40, gravity: 1 });
+      }, 200);
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
