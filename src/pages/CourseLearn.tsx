@@ -130,15 +130,30 @@ const CourseLearn = () => {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
 
+  // Fire vertical confetti rain from the entire top edge
+  const fireTopRain = () => {
+    const columns = 16;
+    for (let i = 0; i < columns; i++) {
+      const x = (i + 0.5) / columns; // evenly across the top
+      confetti({
+        particleCount: 10,
+        origin: { x, y: 0 },
+        angle: 270, // straight down
+        spread: 0,  // no horizontal spread
+        startVelocity: 25,
+        gravity: 1.1,
+        drift: 0,
+        scalar: 1
+      });
+    }
+  };
+
   const handleSubmit = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      // Confetti celebration from the top
-      confetti({ particleCount: 120, spread: 80, origin: { y: 0, x: 0.5 }, angle: 270, startVelocity: 45, gravity: 1 });
-      setTimeout(() => {
-        confetti({ particleCount: 100, spread: 90, origin: { y: 0, x: 0.5 }, angle: 270, startVelocity: 40, gravity: 1 });
-      }, 200);
+      fireTopRain();
+      setTimeout(fireTopRain, 200);
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
