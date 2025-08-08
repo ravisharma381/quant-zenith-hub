@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getGameTheme } from "@/lib/gameTheme";
 
 const SequencesPro = () => {
   const navigate = useNavigate();
@@ -220,13 +221,15 @@ const SequencesPro = () => {
               placeholder="Next number"
               autoFocus
             />
-            <Button 
-              type="submit" 
-              className="mx-auto px-8 !bg-[hsl(270,95%,60%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%_/_0.3)] focus-visible:!ring-[hsl(270,95%,60%)]"
-              disabled={!userAnswer}
-            >
-              Submit Answer
-            </Button>
+            {(() => { const theme = getGameTheme(2); return (
+              <Button 
+                type="submit" 
+                className={`mx-auto px-8 ${theme.buttonStyles}`}
+                disabled={!userAnswer}
+              >
+                Submit Answer
+              </Button>
+            )})()}
           </form>
         </div>
       </div>

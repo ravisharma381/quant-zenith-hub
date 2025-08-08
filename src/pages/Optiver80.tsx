@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getGameTheme } from "@/lib/gameTheme";
 
 const Optiver80 = () => {
   const navigate = useNavigate();
@@ -246,13 +247,15 @@ const Optiver80 = () => {
               placeholder="Answer"
               autoFocus
             />
-            <Button 
-              type="submit" 
-              className="mx-auto px-8 !bg-[hsl(0,84%,60%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(0,84%,60%)]/90 hover:!shadow-[0_0_20px_hsl(0,84%,60%_/_0.3)] focus-visible:!ring-[hsl(0,84%,60%)]"
-              disabled={!userAnswer}
-            >
-              Submit
-            </Button>
+            {(() => { const theme = getGameTheme(3); return (
+              <Button 
+                type="submit" 
+                className={`mx-auto px-8 ${theme.buttonStyles}`}
+                disabled={!userAnswer}
+              >
+                Submit
+              </Button>
+            )})()}
           </form>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getGameTheme } from "@/lib/gameTheme";
 
 const ArithmeticPro = () => {
   const navigate = useNavigate();
@@ -214,13 +215,15 @@ const ArithmeticPro = () => {
               placeholder="Your answer"
               autoFocus
             />
-            <Button 
-              type="submit" 
-              className="mx-auto px-8 !bg-[hsl(122,97%,50%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(122,97%,50%)]/90 hover:!shadow-[0_0_20px_hsl(122,97%,50%_/_0.3)] focus-visible:!ring-[hsl(122,97%,50%)]"
-              disabled={!userAnswer}
-            >
-              Submit Answer
-            </Button>
+            {(() => { const theme = getGameTheme(1); return (
+              <Button 
+                type="submit" 
+                className={`mx-auto px-8 ${theme.buttonStyles}`}
+                disabled={!userAnswer}
+              >
+                Submit Answer
+              </Button>
+            )})()}
           </form>
         </div>
       </div>
