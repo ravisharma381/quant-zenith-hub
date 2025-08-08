@@ -154,18 +154,20 @@ const ArithmeticPro = () => {
     <div className="min-h-screen bg-background p-4">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Button variant="ghost" onClick={() => navigate('/games')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
+        <div className="grid grid-cols-3 items-center mb-8">
+          <div className="justify-self-start">
+            <Button variant="ghost" onClick={() => navigate('/games')}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+          </div>
           <div 
-            className="text-2xl font-bold text-center"
+            className="justify-self-center text-2xl font-bold text-center"
             style={{ color: themeColors.primary }}
           >
             Score: {score}
           </div>
-          <div className="flex items-center">
+          <div className="justify-self-end flex items-center">
             <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
             <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
           </div>
@@ -178,7 +180,7 @@ const ArithmeticPro = () => {
             style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
           >
             <div 
-              className="h-2 rounded-full transition-all duration-300"
+              className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
               style={{ 
                 width: `${(180 - timeLeft) / 180 * 100}%`,
                 backgroundColor: themeColors.primary
@@ -214,7 +216,7 @@ const ArithmeticPro = () => {
             />
             <Button 
               type="submit" 
-              className="mx-auto px-8 bg-[hsl(122,97%,50%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(122,97%,50%)]/90 hover:shadow-[0_0_20px_hsl(122,97%,50%,0.3)] focus-visible:ring-[hsl(122,97%,50%)]"
+              className="mx-auto px-8 !bg-[hsl(122,97%,50%)] !text-[hsl(220,13%,8%)] hover:!bg-[hsl(122,97%,50%)]/90 hover:!shadow-[0_0_20px_hsl(122,97%,50%_/_0.3)] focus-visible:!ring-[hsl(122,97%,50%)]"
               disabled={!userAnswer}
             >
               Submit Answer
