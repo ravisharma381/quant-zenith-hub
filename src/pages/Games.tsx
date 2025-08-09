@@ -10,12 +10,12 @@ const Games = () => {
   const games = [
     {
       id: 1,
-      title: "Arithmetic Pro",
+      title: "Arithmetic Zetamac",
       description: "Master mental math with rapid-fire arithmetic questions. Test your speed and accuracy!",
       icon: "±",
       timeLimit: "3 minutes",
       category: "Mental Math",
-      difficulty: "Medium",
+      difficulty: "Custom",
       route: "/games/arithmetic-pro"
     },
     {
@@ -89,7 +89,7 @@ const Games = () => {
                 {/* Badge and Time */}
                 <div className="flex items-center justify-between mb-6">
                   <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                    {game.difficulty}
+                    Difficulty: {game.difficulty}
                   </Badge>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="w-4 h-4 mr-2" />
