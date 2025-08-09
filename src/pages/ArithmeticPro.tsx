@@ -118,7 +118,7 @@ const ArithmeticPro = () => {
     const theme = getGameTheme(1);
     const isOpSelected = (op: '+' | '-' | '×' | '÷') => selectedOps.includes(op);
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center pt-24">
+      <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
         <div className="w-full max-w-2xl bg-card rounded-2xl p-8 border" style={{ borderColor: 'hsl(var(--primary))' }}>
           <h1 className="text-3xl font-bold text-foreground mb-2 text-center">Quant Arithmetic Zetamac</h1>
           <p className="text-muted-foreground mb-8 text-center">Configure your drill, then race the clock with rapid-fire arithmetic.</p>
@@ -132,7 +132,7 @@ const ArithmeticPro = () => {
                   variant="outline"
                   onClick={() => setSelectedDifficulty(d)}
                   className="flex-1"
-                  style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', color: 'hsl(var(--primary-foreground))', borderColor: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))' } : {}}
+                  style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary) / 0.2)' : d === 'Medium' ? 'hsl(var(--warning) / 0.2)' : 'hsl(var(--destructive) / 0.2)', color: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', borderColor: d === 'Easy' ? 'hsl(var(--primary) / 0.3)' : d === 'Medium' ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--destructive) / 0.3)' } : {}}
                 >
                   {d}
                 </Button>
