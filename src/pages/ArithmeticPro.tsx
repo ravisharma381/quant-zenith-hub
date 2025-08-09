@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, Clock } from "lucide-react";
+import { ArrowLeft, Trophy, Clock, Zap, Timer, Rocket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
 
@@ -118,21 +118,21 @@ const ArithmeticPro = () => {
     const theme = getGameTheme(1);
     const isOpSelected = (op: '+' | '-' | '×' | '÷') => selectedOps.includes(op);
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="w-full max-w-2xl bg-card rounded-2xl p-8 border" style={{ borderColor: `rgba(${themeColors.primaryRgb}, 0.4)` }}>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Quant Arithmetic Zetamac</h1>
-          <p className="text-muted-foreground mb-8">Configure your drill, then race the clock with rapid-fire arithmetic.</p>
+      <div className="min-h-screen bg-background flex items-center justify-center pt-24">
+        <div className="w-full max-w-2xl bg-card rounded-2xl p-8 border" style={{ borderColor: 'hsl(var(--primary))' }}>
+          <h1 className="text-3xl font-bold text-foreground mb-2 text-center">Quant Arithmetic Zetamac</h1>
+          <p className="text-muted-foreground mb-8 text-center">Configure your drill, then race the clock with rapid-fire arithmetic.</p>
 
           <section className="mb-6">
-            <h2 className="text-sm text-muted-foreground mb-2">Choose Difficulty</h2>
-            <div className="flex gap-3">
+            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
+            <div className="flex gap-3 justify-center">
               {(['Easy','Medium','Hard'] as const).map((d) => (
                 <Button
                   key={d}
                   variant="outline"
                   onClick={() => setSelectedDifficulty(d)}
                   className="flex-1"
-                  style={selectedDifficulty === d ? { backgroundColor: themeColors.primary, color: themeColors.primaryForeground, borderColor: themeColors.primary } : {}}
+                  style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', color: 'hsl(var(--primary-foreground))', borderColor: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))' } : {}}
                 >
                   {d}
                 </Button>
@@ -141,8 +141,8 @@ const ArithmeticPro = () => {
           </section>
 
           <section className="mb-6">
-            <h2 className="text-sm text-muted-foreground mb-2">Choose Duration</h2>
-            <div className="flex gap-3">
+            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Duration</h2>
+            <div className="flex gap-3 justify-center">
               {[60, 120, 180].map((s) => (
                 <Button
                   key={s}
@@ -151,15 +151,15 @@ const ArithmeticPro = () => {
                   className="flex-1"
                   style={selectedDuration === s ? { backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)`, borderColor: themeColors.primary } : {}}
                 >
-                  {s === 60 ? 'Bullet - 1 min' : s === 120 ? 'Blitz - 2 min' : 'Rapid - 3 min'}
+                  {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
                 </Button>
               ))}
             </div>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-sm text-muted-foreground mb-2">Choose Operations (minimum 1)</h2>
-            <div className="flex flex-wrap gap-3">
+            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Operations (minimum 1)</h2>
+            <div className="flex flex-wrap gap-3 justify-center">
               {(['+','-','×','÷'] as const).map((op) => {
                 const active = isOpSelected(op);
                 return (

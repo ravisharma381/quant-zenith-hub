@@ -33,6 +33,10 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
+    /* Status tokens */
+    --warning: 45 93% 50%;
+    --warning-foreground: 220 13% 8%;
+
     --border: 215 25% 15%;
     --input: 215 25% 15%;
     --ring: 122 97% 50%;
