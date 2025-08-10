@@ -11,7 +11,7 @@ const SequencesSetup = () => {
   // SEO
   useEffect(() => {
     document.title = "Sequences Pro Setup – Quant Interview Games";
-    const desc = "Configure Sequences Pro: choose difficulty, duration, and sequence types (arithmetic, geometric, Fibonacci, squares, cubes).";
+    const desc = "Configure Sequences Pro: choose difficulty and duration.";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
       meta = document.createElement("meta");
@@ -23,11 +23,6 @@ const SequencesSetup = () => {
 
   const [selectedDifficulty, setSelectedDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Medium');
   const [selectedDuration, setSelectedDuration] = useState<60 | 120 | 180>(180);
-  const [selectedTypes, setSelectedTypes] = useState<Array<'arithmetic' | 'geometric' | 'fibonacci' | 'squares' | 'cubes'>>([
-    'arithmetic', 'geometric', 'fibonacci', 'squares', 'cubes'
-  ]);
-
-  const isTypeSelected = (t: 'arithmetic' | 'geometric' | 'fibonacci' | 'squares' | 'cubes') => selectedTypes.includes(t);
 
   // Helpers to apply alpha on theme primary HSL string
   const withAlpha = (hsl: string, a: number) => hsl.replace(')', ` / ${a})`);
@@ -50,7 +45,7 @@ const SequencesSetup = () => {
                   variant="outline"
                   onClick={() => setSelectedDifficulty(d)}
                   className="flex-1"
-                  style={selectedDifficulty === d ? { backgroundColor: withAlpha(theme.primary, 0.2), color: theme.primary, borderColor: withAlpha(theme.primary, 0.3) } : {}}
+                  style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary) / 0.2)' : d === 'Medium' ? 'hsl(var(--warning) / 0.2)' : 'hsl(var(--destructive) / 0.2)', color: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', borderColor: d === 'Easy' ? 'hsl(var(--primary) / 0.3)' : d === 'Medium' ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--destructive) / 0.3)' } : {}}
                 >
                   {d}
                 </Button>
@@ -75,33 +70,6 @@ const SequencesSetup = () => {
             </div>
           </section>
 
-          <section>
-            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Sequence Types (minimum 1)</h2>
-            <div className="flex flex-wrap gap-3 justify-center">
-              {(['arithmetic','geometric','fibonacci','squares','cubes'] as const).map((t) => {
-                const active = isTypeSelected(t);
-                return (
-                  <Button
-                    key={t}
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedTypes((prev) => {
-                        const has = prev.includes(t);
-                        if (has) {
-                          if (prev.length === 1) return prev;
-                          return prev.filter(x => x !== t);
-                        }
-                        return [...prev, t];
-                      });
-                    }}
-                    style={active ? { backgroundColor: withAlpha(theme.primary, 0.2), color: theme.primary, borderColor: withAlpha(theme.primary, 0.3) } : {}}
-                  >
-                    {t}
-                  </Button>
-                );
-              })}
-            </div>
-          </section>
 
           <div className="flex justify-center gap-3 pt-2">
             <Button variant="outline" onClick={() => navigate('/games')}>

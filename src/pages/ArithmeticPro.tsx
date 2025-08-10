@@ -185,7 +185,10 @@ const ArithmeticPro = () => {
             </div>
           </section>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-3">
+            <Button variant="outline" onClick={() => navigate('/games')}>
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
+            </Button>
             <Button onClick={handleStart} className={`px-8 ${theme.buttonStyles}`}>
               Start Now
             </Button>
