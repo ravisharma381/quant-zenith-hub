@@ -3,14 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
 
 const SequencesPro = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [gameState, setGameState] = useState<'countdown' | 'playing' | 'finished'>('countdown');
   const [countdown, setCountdown] = useState(3);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const params = new URLSearchParams(location.search);
+    const d = parseInt(params.get('duration') || '300', 10);
+    return isNaN(d) ? 300 : d; // default 5 minutes
+  });
   const [score, setScore] = useState(0);
   const [currentSequence, setCurrentSequence] = useState<{ sequence: number[], answer: number, type: string }>({ sequence: [], answer: 0, type: '' });
   const [userAnswer, setUserAnswer] = useState('');
@@ -30,32 +35,36 @@ const SequencesPro = () => {
     let answer = 0;
 
     switch (type) {
-      case 'arithmetic':
+      case 'arithmetic': {
         const diff = Math.floor(Math.random() * 10) + 1;
         const start = Math.floor(Math.random() * 20) + 1;
         sequence = [start, start + diff, start + 2*diff, start + 3*diff, start + 4*diff];
         answer = start + 5*diff;
         break;
-      case 'geometric':
+      }
+      case 'geometric': {
         const ratio = Math.floor(Math.random() * 3) + 2;
         const base = Math.floor(Math.random() * 5) + 1;
         sequence = [base, base*ratio, base*ratio*ratio, base*ratio*ratio*ratio];
         answer = base * Math.pow(ratio, 4);
         break;
+      }
       case 'fibonacci':
         sequence = [1, 1, 2, 3, 5];
         answer = 8;
         break;
-      case 'squares':
+      case 'squares': {
         const n = Math.floor(Math.random() * 3) + 2;
         sequence = [n*n, (n+1)*(n+1), (n+2)*(n+2), (n+3)*(n+3)];
         answer = (n+4)*(n+4);
         break;
-      case 'cubes':
+      }
+      case 'cubes': {
         const m = Math.floor(Math.random() * 3) + 2;
         sequence = [m*m*m, (m+1)*(m+1)*(m+1), (m+2)*(m+2)*(m+2)];
         answer = (m+3)*(m+3)*(m+3);
         break;
+      }
     }
 
     setCurrentSequence({ sequence, answer, type });
@@ -156,6 +165,11 @@ const SequencesPro = () => {
     );
   }
 
+  const totalDuration = (() => {
+    const d = parseInt(new URLSearchParams(location.search).get('duration') || `${timeLeft}`, 10);
+    return isNaN(d) || d <= 0 ? timeLeft : d;
+  })();
+
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="container mx-auto max-w-2xl">
@@ -188,7 +202,7 @@ const SequencesPro = () => {
             <div 
               className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
               style={{ 
-                width: `${(300 - timeLeft) / 300 * 100}%`,
+                width: `${(totalDuration - timeLeft) / totalDuration * 100}%`,
                 backgroundColor: themeColors.primary
               }}
             />

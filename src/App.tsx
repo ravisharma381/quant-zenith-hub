@@ -9,6 +9,7 @@ import ProblemDetail from "./pages/ProblemDetail";
 import Games from "./pages/Games";
 import ArithmeticPro from "./pages/ArithmeticPro";
 import SequencesPro from "./pages/SequencesPro";
+import SequencesSetup from "./pages/SequencesSetup";
 import Optiver80 from "./pages/Optiver80";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/problems/:id" element={<Layout><ProblemDetail /></Layout>} />
             <Route path="/games" element={<Layout><Games /></Layout>} />
             <Route path="/games/arithmetic-pro" element={<Layout><ArithmeticPro /></Layout>} />
+            <Route path="/games/sequences-pro/setup" element={<Layout><SequencesSetup /></Layout>} />
             <Route path="/games/sequences-pro" element={<Layout><SequencesPro /></Layout>} />
             <Route path="/games/optiver-80" element={<Layout><Optiver80 /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />

@@ -26,7 +26,7 @@ const Games = () => {
       timeLimit: "5 minutes",
       category: "Pattern Recognition", 
       difficulty: "Hard",
-      route: "/games/sequences-pro"
+      route: "/games/sequences-pro/setup"
     },
     {
       id: 3,
