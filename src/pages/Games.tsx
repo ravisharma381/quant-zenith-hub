@@ -45,6 +45,7 @@ const Games = () => {
       case "Easy": return "bg-green-500/20 text-green-400 border-green-500/30";
       case "Medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
       case "Hard": return "bg-red-500/20 text-red-400 border-red-500/30";
+      case "Custom": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
       default: return "bg-muted text-muted-foreground";
     }
   };
@@ -88,15 +89,18 @@ const Games = () => {
                 
                 {/* Badge and Time */}
                 <div className="flex items-center justify-between mb-6">
-                  <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                    Difficulty: {game.difficulty}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Difficulty:</span>
+                    <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
+                      {game.difficulty}
+                    </Badge>
+                  </div>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="w-4 h-4 mr-2" />
                     {game.timeLimit}
                   </div>
                 </div>
-                
+
                 {/* Play Button - Full Width */}
                 <Button 
                   onClick={() => navigate(game.route)}
