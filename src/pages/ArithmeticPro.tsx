@@ -149,7 +149,7 @@ const ArithmeticPro = () => {
                   variant="outline"
                   onClick={() => setSelectedDuration(s as 60 | 120 | 180)}
                   className="flex-1"
-                  style={selectedDuration === s ? { backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)`, borderColor: themeColors.primary } : {}}
+                  style={selectedDuration === s ? { backgroundColor: 'hsl(var(--primary) / 0.2)', color: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary) / 0.3)' } : {}}
                 >
                   {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
                 </Button>
@@ -176,7 +176,7 @@ const ArithmeticPro = () => {
                         return [...prev, op];
                       });
                     }}
-                    style={active ? { backgroundColor: themeColors.primary, color: themeColors.primaryForeground, borderColor: themeColors.primary } : {}}
+                    style={active ? { backgroundColor: 'hsl(var(--primary) / 0.2)', color: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary) / 0.3)' } : {}}
                   >
                     {op === '+' ? 'addition' : op === '-' ? 'subtraction' : op === '×' ? 'multiplication' : 'division'}
                   </Button>
