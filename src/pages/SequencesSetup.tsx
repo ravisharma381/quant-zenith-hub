@@ -35,7 +35,7 @@ const SequencesSetup = () => {
           <p className="text-muted-foreground mt-2">Configure your challenge, then race the clock to find the next term in each sequence.</p>
         </header>
 
-        <main className="space-y-6">
+        <main className="space-y-4">
           <section>
             <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
             <div className="flex gap-3 justify-center">
@@ -71,7 +71,7 @@ const SequencesSetup = () => {
           </section>
 
 
-          <div className="flex justify-center gap-3 pt-2">
+          <div className="flex justify-center gap-3 pt-4 pb-4">
             <Button variant="outline" onClick={() => navigate('/games')}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
             </Button>
