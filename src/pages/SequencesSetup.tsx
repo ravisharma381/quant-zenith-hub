@@ -4,7 +4,7 @@ import { ArrowLeft, Zap, Timer, Rocket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
 
-const SequencesSetup: React.FC = () => {
+const SequencesSetup = () => {
   const navigate = useNavigate();
   const theme = getGameTheme(2);
 
@@ -29,18 +29,13 @@ const SequencesSetup: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
-      {/* Card: remove bottom padding (pb-0) so the border hugs inner content; overflow-hidden to clip any stray shadows */}
-      <div
-        className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-0 border overflow-hidden"
-        style={{ borderColor: theme.primary }}
-      >
-        <header className="mb-6 text-center">
+      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-4 border" style={{ borderColor: theme.primary }}>
+        <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-foreground">Sequences Pro</h1>
           <p className="text-muted-foreground mt-2">Configure your challenge, then race the clock to find the next term in each sequence.</p>
         </header>
 
-        {/* Keep internal bottom spacing in main (pb-4) so content isn't cramped but the border remains tight */}
-        <main className="space-y-6 pb-4">
+        <main className="space-y-6">
           <section>
             <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
             <div className="flex gap-3 justify-center">
@@ -49,12 +44,8 @@ const SequencesSetup: React.FC = () => {
                   key={d}
                   variant="outline"
                   onClick={() => setSelectedDifficulty(d)}
-                  className="flex-1 !m-0"
-                  style={selectedDifficulty === d ? {
-                    backgroundColor: d === 'Easy' ? 'hsl(var(--primary) / 0.2)' : d === 'Medium' ? 'hsl(var(--warning) / 0.2)' : 'hsl(var(--destructive) / 0.2)',
-                    color: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))',
-                    borderColor: d === 'Easy' ? 'hsl(var(--primary) / 0.3)' : d === 'Medium' ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--destructive) / 0.3)'
-                  } : {}}
+                  className="flex-1"
+                  style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary) / 0.2)' : d === 'Medium' ? 'hsl(var(--warning) / 0.2)' : 'hsl(var(--destructive) / 0.2)', color: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', borderColor: d === 'Easy' ? 'hsl(var(--primary) / 0.3)' : d === 'Medium' ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--destructive) / 0.3)' } : {}}
                 >
                   {d}
                 </Button>
@@ -70,12 +61,12 @@ const SequencesSetup: React.FC = () => {
                   key={s}
                   variant="outline"
                   onClick={() => setSelectedDuration(s as 60 | 120 | 180)}
-                  className="flex-1 !m-0"
-                  style={selectedDuration === s ? {
-                    backgroundColor: 'hsl(270, 95%, 60%, 0.15)',
-                    color: 'hsl(270, 95%, 60%)',
-                    borderColor: 'hsl(270, 95%, 60%, 0.3)'
-                    // avoid using an extra box-shadow here since it can visually extend past the border
+                  className="flex-1"
+                  style={selectedDuration === s ? { 
+                    backgroundColor: 'hsl(270, 95%, 60%, 0.15)', 
+                    color: 'hsl(270, 95%, 60%)', 
+                    borderColor: 'hsl(270, 95%, 60%, 0.3)',
+                    boxShadow: '0 0 0 1px hsl(270, 95%, 60%, 0.3)'
                   } : {}}
                 >
                   {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
@@ -84,14 +75,14 @@ const SequencesSetup: React.FC = () => {
             </div>
           </section>
 
-          {/* Removed extra top padding on this row so buttons sit closer to the border */}
-          <div className="flex justify-center gap-3">
-            <Button variant="outline" onClick={() => navigate('/games')} className="!m-0">
+
+          <div className="flex justify-center gap-3 pt-1">
+            <Button variant="outline" onClick={() => navigate('/games')}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
             </Button>
             <Button
               onClick={() => navigate(`/games/sequences-pro?duration=${selectedDuration}`)}
-              className={`px-8 ${theme.buttonStyles} !m-0`}
+              className={`px-8 ${theme.buttonStyles}`}
             >
               Start Now
             </Button>
