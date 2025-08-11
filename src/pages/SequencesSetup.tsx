@@ -62,7 +62,12 @@ const SequencesSetup = () => {
                   variant="outline"
                   onClick={() => setSelectedDuration(s as 60 | 120 | 180)}
                   className="flex-1"
-                  style={selectedDuration === s ? { backgroundColor: withAlpha(theme.primary, 0.2), color: theme.primary, borderColor: withAlpha(theme.primary, 0.3) } : {}}
+                  style={selectedDuration === s ? { 
+                    backgroundColor: 'hsl(270, 95%, 60%, 0.15)', 
+                    color: 'hsl(270, 95%, 60%)', 
+                    borderColor: 'hsl(270, 95%, 60%, 0.3)',
+                    boxShadow: '0 0 0 1px hsl(270, 95%, 60%, 0.3)'
+                  } : {}}
                 >
                   {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
                 </Button>
