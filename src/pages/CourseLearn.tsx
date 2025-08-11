@@ -463,7 +463,7 @@ const CourseLearn = () => {
           <div className="flex-1 bg-black">
             {/* Controls above lesson title */}
             <div className={cn(
-              "pt-6 pb-4 transition-all duration-300",
+              "pt-6 pb-4",
               sidebarVisible ? "px-6" : "px-16"
             )}>
               <div className="flex items-center gap-2 mb-4">
@@ -530,11 +530,11 @@ const CourseLearn = () => {
 
             {/* Content */}
             <div className={cn(
-              "pb-6 pt-8 transition-all duration-300",
+              "pb-6 pt-8",
               sidebarVisible ? "px-6" : "px-16"
             )}>
               <div className={cn(
-                "mx-auto transition-all duration-300",
+                "mx-auto",
                 sidebarVisible ? "max-w-5xl" : "max-w-6xl"
               )}>
                 {selectedContent.content}
