@@ -29,13 +29,13 @@ const SequencesSetup = () => {
 
   return (
     <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
-      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-0 border" style={{ borderColor: theme.primary }}>
+      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-4 border" style={{ borderColor: theme.primary }}>
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-foreground">Sequences Pro</h1>
           <p className="text-muted-foreground mt-2">Configure your challenge, then race the clock to find the next term in each sequence.</p>
         </header>
 
-        <main className="space-y-4">
+        <main className="space-y-6">
           <section>
             <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
             <div className="flex gap-3 justify-center">
@@ -71,7 +71,7 @@ const SequencesSetup = () => {
           </section>
 
 
-          <div className="flex justify-center gap-3 pt-4 pb-4">
+          <div className="flex justify-center gap-3 pt-1">
             <Button variant="outline" onClick={() => navigate('/games')}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
             </Button>
