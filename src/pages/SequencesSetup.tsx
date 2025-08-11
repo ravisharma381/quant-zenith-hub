@@ -8,7 +8,6 @@ const SequencesSetup = () => {
   const navigate = useNavigate();
   const theme = getGameTheme(2);
 
-  // SEO
   useEffect(() => {
     document.title = "Sequences Pro Setup – Quant Interview Games";
     const desc = "Configure Sequences Pro: choose difficulty and duration.";
@@ -24,18 +23,19 @@ const SequencesSetup = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Medium');
   const [selectedDuration, setSelectedDuration] = useState<60 | 120 | 180>(180);
 
-  // Helpers to apply alpha on theme primary HSL string
   const withAlpha = (hsl: string, a: number) => hsl.replace(')', ` / ${a})`);
 
   return (
     <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
-      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-4 border" style={{ borderColor: theme.primary }}>
+      {/* Removed pb-4 from card and added overflow-hidden to prevent stray shadows from creating the illusion of a gap */}
+      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 border overflow-hidden" style={{ borderColor: theme.primary }}>
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-foreground">Sequences Pro</h1>
           <p className="text-muted-foreground mt-2">Configure your challenge, then race the clock to find the next term in each sequence.</p>
         </header>
 
-        <main className="space-y-6">
+        {/* Move bottom padding into main so the border hugs the content */}
+        <main className="space-y-6 pb-4">
           <section>
             <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
             <div className="flex gap-3 justify-center">
@@ -66,7 +66,8 @@ const SequencesSetup = () => {
                     backgroundColor: 'hsl(270, 95%, 60%, 0.15)', 
                     color: 'hsl(270, 95%, 60%)', 
                     borderColor: 'hsl(270, 95%, 60%, 0.3)',
-                    boxShadow: '0 0 0 1px hsl(270, 95%, 60%, 0.3)'
+                    /* prefer borderColor over boxShadow to avoid overflow visual issues */
+                    /* boxShadow: '0 0 0 1px hsl(270, 95%, 60%, 0.3)' */
                   } : {}}
                 >
                   {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
