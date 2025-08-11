@@ -462,7 +462,10 @@ const CourseLearn = () => {
             {/* Main Content */}
           <div className="flex-1 bg-black">
             {/* Controls above lesson title */}
-            <div className="px-6 pt-6 pb-4">
+            <div className={cn(
+              "pt-6 pb-4 transition-all duration-300",
+              sidebarVisible ? "px-6" : "px-16"
+            )}>
               <div className="flex items-center gap-2 mb-4">
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -528,7 +531,7 @@ const CourseLearn = () => {
             {/* Content */}
             <div className={cn(
               "pb-6 pt-8 transition-all duration-300",
-              sidebarVisible ? "px-6" : "px-24"
+              sidebarVisible ? "px-6" : "px-16"
             )}>
               <div className={cn(
                 "mx-auto transition-all duration-300",
