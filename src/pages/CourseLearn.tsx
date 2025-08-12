@@ -129,7 +129,6 @@ const CourseLearn = () => {
 
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
-  const [lastConfettiTime, setLastConfettiTime] = useState<number>(0);
 
   // Fire vertical confetti rain from the entire top edge
   const fireTopRain = () => {
@@ -159,14 +158,8 @@ const CourseLearn = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      
-      // Rate limit confetti to prevent multiple rapid triggers
-      const now = Date.now();
-      if (now - lastConfettiTime > 2000) { // 2 second cooldown
-        setLastConfettiTime(now);
-        fireTopRain();
-        setTimeout(fireTopRain, 200);
-      }
+      fireTopRain();
+      setTimeout(fireTopRain, 200);
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
