@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
 import drivLogo from "@/assets/driv-logo.png";
@@ -194,20 +195,12 @@ const Problems = () => {
                 <div className="col-span-3 flex items-center justify-center">
                   <div className="flex flex-wrap gap-2 justify-center">
                     {problem.askedIn.map((logo, index) => (
-                      <TooltipProvider delayDuration={0} key={index}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <img 
-                              src={logo} 
-                              alt="Company logo" 
-                              className="w-8 h-8 object-contain rounded hover:scale-110 transition-transform cursor-default"
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent side="top" align="center">
-                            <p>{getCompanyName(logo)}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <LogoWithSkeleton
+                        key={index}
+                        src={logo}
+                        alt="Company logo"
+                        companyName={getCompanyName(logo)}
+                      />
                     ))}
                   </div>
                 </div>
