@@ -174,7 +174,7 @@ const Problems = () => {
                   </h3>
                 </div>
                 <div className="col-span-2 flex items-center justify-center">
-                  <Badge className={`${getTopicColor(problem.topic)} text-center`} variant="outline">
+                  <Badge className={`${getTopicColor(problem.topic)} text-center inline-flex items-center justify-center px-2 py-1`} variant="outline">
                     {problem.topic}
                   </Badge>
                 </div>
