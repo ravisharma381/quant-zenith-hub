@@ -24,7 +24,7 @@ const LogoWithSkeleton: React.FC<LogoWithSkeletonProps> = ({
         <TooltipTrigger asChild>
           <div className="relative">
             {!isLoaded && !hasError && (
-              <Skeleton className="w-8 h-8 rounded bg-muted/50" />
+              <Skeleton className="w-8 h-8 rounded" style={{ backgroundColor: '#707070' }} />
             )}
             <img
               src={src}
