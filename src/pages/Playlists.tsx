@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import Navigation from "@/components/Navigation";
 
 const Playlists = () => {
   const navigate = useNavigate();
@@ -190,10 +189,8 @@ const Playlists = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Curated quant interview question playlists
@@ -240,7 +237,6 @@ const Playlists = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
         </div>
       </div>
     </div>
