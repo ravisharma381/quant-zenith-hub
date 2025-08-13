@@ -62,7 +62,7 @@ const Problems = () => {
   ];
 
   const topics = ["All", "Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
-  const difficulties = ["All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"];
 
   const getDifficultyColor = (difficulty: number) => {
     if (difficulty >= 1 && difficulty <= 3) {
@@ -98,7 +98,7 @@ const Problems = () => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
     const matchesDifficulty = selectedDifficulty === "All" || 
-      problem.difficulty.toString() === selectedDifficulty;
+      `Level ${problem.difficulty}` === selectedDifficulty;
     return matchesSearch && matchesTopic && matchesDifficulty;
   });
 
