@@ -23,6 +23,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
+import Playlists from "./pages/Playlists";
+import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
@@ -49,6 +51,8 @@ const App = () => (
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
+            <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
+            <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
             <Route path="/billing" element={<Layout><Billing /></Layout>} />

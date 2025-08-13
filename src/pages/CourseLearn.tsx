@@ -41,7 +41,7 @@ const CourseLearn = () => {
             { id: "fundamentals", title: "Fundamental Definitions", completed: false },
             { id: "multiplication", title: "4 Head I", completed: false },
             { id: "combinations", title: "Combinations and Permutations", completed: false },
-            { id: "multinomial", title: "Multinomial Coefficient", completed: false },
+            { id: "playlists", title: "Playlists", completed: false },
             { id: "binomial", title: "Binomial Theorem", completed: false },
             { id: "stars", title: "Stars and Bars", completed: false },
           ],
@@ -298,6 +298,29 @@ const CourseLearn = () => {
                 </div>
               </TabsContent>
             </Tabs>
+          </div>
+        )
+      };
+    }
+
+    if (selectedChapter === "playlists") {
+      return {
+        title: "Playlists",
+        content: (
+          <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
+            <p>
+              Access curated collections of interview questions organized by company and topic. 
+              Each playlist contains problems that are commonly asked by specific firms or cover particular themes.
+            </p>
+            
+            <div className="mt-8">
+              <button
+                onClick={() => navigate('/playlists')}
+                className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg"
+              >
+                View All Playlists
+              </button>
+            </div>
           </div>
         )
       };
