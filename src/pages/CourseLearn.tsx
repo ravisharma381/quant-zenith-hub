@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -98,6 +100,8 @@ const CourseLearn = () => {
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+  const [currentView, setCurrentView] = useState<'course' | 'playlists' | 'company'>('course');
+  const [selectedCompany, setSelectedCompany] = useState<string>('');
 
   const currentCourse = courseData[courseId as keyof typeof courseData];
   if (!currentCourse) {
@@ -315,7 +319,7 @@ const CourseLearn = () => {
             
             <div className="mt-8">
               <button
-                onClick={() => navigate('/playlists')}
+                onClick={() => setCurrentView('playlists')}
                 className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg"
               >
                 View All Playlists
@@ -340,7 +344,205 @@ const CourseLearn = () => {
     )
   })).filter(section => section.chapters.length > 0 || searchTerm === "");
 
-  const selectedContent = getSelectedChapterContent();
+  // Company data for playlists
+  const companies = [
+    {
+      id: "dice",
+      name: "Dice",
+      problems: 124,
+      topics: 8,
+      color: "bg-purple-500/20 border-purple-500/30",
+      iconBg: "bg-purple-500/10",
+      icon: "🎲"
+    },
+    {
+      id: "jane-street", 
+      name: "Jane Street",
+      problems: 133,
+      topics: 32,
+      color: "bg-blue-500/20 border-blue-500/30",
+      iconBg: "bg-blue-500/10",
+      icon: "🎯"
+    },
+    {
+      id: "citadel",
+      name: "Citadel",
+      problems: 84,
+      topics: 6,
+      color: "bg-blue-600/20 border-blue-600/30",
+      iconBg: "bg-blue-600/10",
+      icon: "🏢"
+    },
+    {
+      id: "optiver",
+      name: "Optiver",
+      problems: 60,
+      topics: 18,
+      color: "bg-orange-600/20 border-orange-600/30",
+      iconBg: "bg-orange-600/10",
+      icon: "⚠️"
+    }
+  ];
+
+  const getCompanyProblems = (companyId: string) => [
+    {
+      id: 1,
+      title: "Coin Flipping Expected Value",
+      difficulty: "Medium",
+      topics: ["Probability", "Expected Value"],
+      completed: false
+    },
+    {
+      id: 2,
+      title: "Random Walk Probability",
+      difficulty: "Hard",
+      topics: ["Probability", "Markov Chains"],
+      completed: false
+    },
+    {
+      id: 3,
+      title: "Portfolio Optimization",
+      difficulty: "Medium",
+      topics: ["Finance", "Optimization"],
+      completed: false
+    }
+  ];
+
+  const renderPlaylistsView = () => (
+    <div className="space-y-8">
+      <div className="flex items-center gap-4 mb-8">
+        <button
+          onClick={() => setCurrentView('course')}
+          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Course
+        </button>
+      </div>
+      
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Curated quant interview question playlists
+        </h1>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {companies.map((company) => (
+          <Card
+            key={company.id}
+            className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
+            onClick={() => {
+              setSelectedCompany(company.id);
+              setCurrentView('company');
+            }}
+          >
+            <CardContent className="p-6">
+              <div className="flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                    {company.name}
+                  </h3>
+                  <div className={`${company.iconBg} p-2 rounded-lg text-lg`}>
+                    {company.icon}
+                  </div>
+                </div>
+                
+                <div className="mt-auto grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">
+                      {company.problems}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Problems
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-foreground">
+                      {company.topics}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Topics
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderCompanyView = () => {
+    const company = companies.find(c => c.id === selectedCompany);
+    const problems = getCompanyProblems(selectedCompany);
+    
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => setCurrentView('playlists')}
+            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Playlists
+          </button>
+        </div>
+
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-4">
+            {company?.name} Interview Questions
+          </h1>
+          <p className="text-muted-foreground">
+            Curated collection of {company?.problems} problems commonly asked in {company?.name} interviews
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {problems.map((problem) => (
+            <Card key={problem.id} className="border border-border/50 hover:border-border transition-colors">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {problem.title}
+                    </h3>
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary" className="text-xs">
+                        {problem.difficulty}
+                      </Badge>
+                      <div className="flex gap-2">
+                        {problem.topics.map((topic) => (
+                          <Badge key={topic} variant="outline" className="text-xs">
+                            {topic}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Solve
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const getMainContent = () => {
+    if (currentView === 'playlists') {
+      return { content: renderPlaylistsView() };
+    }
+    if (currentView === 'company') {
+      return { content: renderCompanyView() };
+    }
+    return getSelectedChapterContent();
+  };
+
+  const selectedContent = getMainContent();
 
   // Get all chapters for navigation
   const allChapters = sections.flatMap(section => section.chapters);
@@ -546,7 +748,7 @@ const CourseLearn = () => {
               </div>
               
               {/* Header */}
-              {selectedContent.title && (
+              {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
                 <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
               )}
             </div>
