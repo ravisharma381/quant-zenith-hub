@@ -407,27 +407,80 @@ const CourseLearn = () => {
     }
   ];
 
-  const getCompanyProblems = (companyId: string) => [
+  const getCompanyTopics = (companyId: string) => [
     {
-      id: 1,
-      title: "Coin Flipping Expected Value",
-      difficulty: "Medium",
-      topics: ["Probability", "Expected Value"],
-      completed: false
+      id: "probability-basics",
+      title: "Probability Basics",
+      problems: [
+        {
+          id: 1,
+          title: "Coin Flipping Expected Value",
+          difficulty: "Medium"
+        },
+        {
+          id: 2,
+          title: "Dice Rolling Probability",
+          difficulty: "Easy"
+        },
+        {
+          id: 3,
+          title: "Card Drawing Without Replacement",
+          difficulty: "Medium"
+        }
+      ]
     },
     {
-      id: 2,
-      title: "Random Walk Probability",
-      difficulty: "Hard",
-      topics: ["Probability", "Markov Chains"],
-      completed: false
+      id: "random-walks",
+      title: "Random Walks & Markov Chains",
+      problems: [
+        {
+          id: 4,
+          title: "Random Walk Probability",
+          difficulty: "Hard"
+        },
+        {
+          id: 5,
+          title: "Markov Chain Equilibrium",
+          difficulty: "Hard"
+        }
+      ]
     },
     {
-      id: 3,
-      title: "Portfolio Optimization",
-      difficulty: "Medium",
-      topics: ["Finance", "Optimization"],
-      completed: false
+      id: "portfolio-theory",
+      title: "Portfolio Theory",
+      problems: [
+        {
+          id: 6,
+          title: "Portfolio Optimization",
+          difficulty: "Medium"
+        },
+        {
+          id: 7,
+          title: "Risk-Return Analysis",
+          difficulty: "Medium"
+        },
+        {
+          id: 8,
+          title: "Sharpe Ratio Calculation",
+          difficulty: "Easy"
+        }
+      ]
+    },
+    {
+      id: "derivatives",
+      title: "Derivatives Pricing",
+      problems: [
+        {
+          id: 9,
+          title: "Black-Scholes Model",
+          difficulty: "Hard"
+        },
+        {
+          id: 10,
+          title: "Option Greeks Calculation",
+          difficulty: "Medium"
+        }
+      ]
     }
   ];
 
@@ -480,7 +533,7 @@ const CourseLearn = () => {
 
   const renderCompanyView = () => {
     const company = companies.find(c => c.id === selectedCompany);
-    const problems = getCompanyProblems(selectedCompany);
+    const topics = getCompanyTopics(selectedCompany);
     
     return (
       <div className="space-y-8">
@@ -502,38 +555,53 @@ const CourseLearn = () => {
             {company?.name} Interview Questions
           </h1>
           <p className="text-muted-foreground">
-            Curated collection of {company?.problems} problems commonly asked in {company?.name} interviews
+            Curated collection of {company?.problems} problems organized by topic
           </p>
         </div>
 
-        <div className="space-y-4">
-          {problems.map((problem) => (
-            <Card key={problem.id} className="border border-border/50 hover:border-border transition-colors">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      {problem.title}
-                    </h3>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="secondary" className="text-xs">
-                        {problem.difficulty}
-                      </Badge>
-                      <div className="flex gap-2">
-                        {problem.topics.map((topic) => (
-                          <Badge key={topic} variant="outline" className="text-xs">
-                            {topic}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
+        <div className="space-y-6">
+          {topics.map((topic) => (
+            <Accordion key={topic.id} type="single" collapsible className="w-full">
+              <AccordionItem value={topic.id} className="border border-border/50 rounded-lg px-0">
+                <AccordionTrigger className="text-white font-semibold text-lg px-6 py-4 hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                  <div className="flex items-center justify-between w-full mr-4">
+                    <span>{topic.title}</span>
+                    <Badge variant="secondary" className="text-xs">
+                      {topic.problems.length} problems
+                    </Badge>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Solve
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4">
+                  <div className="space-y-3">
+                    {topic.problems.map((problem) => (
+                      <Card key={problem.id} className="border border-border/30 hover:border-border/50 transition-colors bg-card/50">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="text-base font-medium text-foreground mb-2">
+                                {problem.title}
+                              </h4>
+                              <Badge 
+                                variant={
+                                  problem.difficulty === "Easy" ? "default" :
+                                  problem.difficulty === "Medium" ? "secondary" : "destructive"
+                                } 
+                                className="text-xs"
+                              >
+                                {problem.difficulty}
+                              </Badge>
+                            </div>
+                            <Button variant="outline" size="sm">
+                              Solve
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ))}
         </div>
       </div>
