@@ -309,7 +309,7 @@ const CourseLearn = () => {
 
     if (selectedChapter === "playlists") {
       return {
-        title: "Curated quant interview question playlists",
+        title: "Playlists",
         content: (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -322,25 +322,25 @@ const CourseLearn = () => {
                     setCurrentView('company');
                   }}
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="p-6 h-[170px]">
                     <div className="flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4">
+                      <div className="flex justify-between items-start mb-6">
                         <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                           {company.name}
                         </h3>
-                        <div className={`${company.iconBg} p-2 rounded-lg text-sm`}>
+                        <div className={`${company.iconBg} p-3 rounded-lg text-lg`}>
                           {company.icon}
                         </div>
                       </div>
                       
-                      <div className="mt-auto grid grid-cols-2 gap-3">
+                      <div className="mt-auto grid grid-cols-2 gap-4">
                         <div className="text-center">
-                          <div className="text-xl font-bold text-foreground">{company.problems}</div>
-                          <div className="text-xs text-muted-foreground">Problems</div>
+                          <div className="text-2xl font-bold text-foreground">{company.problems}</div>
+                          <div className="text-sm text-muted-foreground">Problems</div>
                         </div>
                         <div className="text-center">
-                          <div className="text-xl font-bold text-foreground">{company.topics}</div>
-                          <div className="text-xs text-muted-foreground">Topics</div>
+                          <div className="text-2xl font-bold text-foreground">{company.topics}</div>
+                          <div className="text-sm text-muted-foreground">Topics</div>
                         </div>
                       </div>
                     </div>
