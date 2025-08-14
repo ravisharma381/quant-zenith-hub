@@ -606,7 +606,10 @@ const CourseLearn = () => {
                               ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
                               : "text-white hover:bg-gray-800"
                           )}
-                          onClick={() => setSelectedChapter(chapter.id)}
+                          onClick={() => {
+                            setSelectedChapter(chapter.id);
+                            setCurrentView('course');
+                          }}
                         >
                           <div className="relative">
                             <div 
@@ -657,7 +660,10 @@ const CourseLearn = () => {
                                   ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
                                   : "text-white hover:bg-gray-800"
                               )}
-                              onClick={() => setSelectedChapter(chapter.id)}
+                              onClick={() => {
+                                setSelectedChapter(chapter.id);
+                                setCurrentView('course');
+                              }}
                             >
                               <div className="relative">
                                 <div 
