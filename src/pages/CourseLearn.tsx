@@ -309,21 +309,44 @@ const CourseLearn = () => {
 
     if (selectedChapter === "playlists") {
       return {
-        title: "Playlists",
+        title: "Curated quant interview question playlists",
         content: (
-          <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
-            <p>
-              Access curated collections of interview questions organized by company and topic. 
-              Each playlist contains problems that are commonly asked by specific firms or cover particular themes.
-            </p>
-            
-            <div className="mt-8">
-              <button
-                onClick={() => setCurrentView('playlists')}
-                className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg"
-              >
-                View All Playlists
-              </button>
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {companies.map((company) => (
+                <Card
+                  key={company.id}
+                  className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
+                  onClick={() => {
+                    setSelectedCompany(company.id);
+                    setCurrentView('company');
+                  }}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex flex-col h-full">
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                          {company.name}
+                        </h3>
+                        <div className={`${company.iconBg} p-2 rounded-lg text-sm`}>
+                          {company.icon}
+                        </div>
+                      </div>
+                      
+                      <div className="mt-auto grid grid-cols-2 gap-3">
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-foreground">{company.problems}</div>
+                          <div className="text-xs text-muted-foreground">Problems</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-foreground">{company.topics}</div>
+                          <div className="text-xs text-muted-foreground">Topics</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         )
@@ -410,23 +433,13 @@ const CourseLearn = () => {
 
   const renderPlaylistsView = () => (
     <div className="space-y-8">
-      <div className="flex items-center gap-4 mb-8">
-        <button
-          onClick={() => setCurrentView('course')}
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Course
-        </button>
-      </div>
-      
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
           Curated quant interview question playlists
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {companies.map((company) => (
           <Card
             key={company.id}
@@ -436,33 +449,25 @@ const CourseLearn = () => {
               setCurrentView('company');
             }}
           >
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex flex-col h-full">
-                <div className="flex justify-between items-start mb-6">
-                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                     {company.name}
                   </h3>
-                  <div className={`${company.iconBg} p-2 rounded-lg text-lg`}>
+                  <div className={`${company.iconBg} p-2 rounded-lg text-sm`}>
                     {company.icon}
                   </div>
                 </div>
                 
-                <div className="mt-auto grid grid-cols-2 gap-4">
+                <div className="mt-auto grid grid-cols-2 gap-3">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-foreground">
-                      {company.problems}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Problems
-                    </div>
+                    <div className="text-xl font-bold text-foreground">{company.problems}</div>
+                    <div className="text-xs text-muted-foreground">Problems</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-foreground">
-                      {company.topics}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Topics
-                    </div>
+                    <div className="text-xl font-bold text-foreground">{company.topics}</div>
+                    <div className="text-xs text-muted-foreground">Topics</div>
                   </div>
                 </div>
               </div>
