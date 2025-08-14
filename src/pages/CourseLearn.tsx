@@ -486,7 +486,10 @@ const CourseLearn = () => {
       <div className="space-y-8">
         <div className="flex items-center gap-4 mb-8">
           <button
-            onClick={() => setCurrentView('playlists')}
+            onClick={() => {
+              setCurrentView('course');
+              setSelectedChapter('playlists');
+            }}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
