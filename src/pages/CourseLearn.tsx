@@ -499,11 +499,16 @@ const CourseLearn = () => {
                   <span>{topic.title}</span>
                 </AccordionTrigger>
                 <AccordionContent className="pb-0">
-                  <div className="space-y-0">
+                  <div className="space-y-3 ml-4">
                     {topic.problems.map((problem, index) => (
-                      <div key={problem.id} className={`border-b border-border/30 ${index === topic.problems.length - 1 ? 'border-b-0' : ''}`}>
-                        <div className="ml-4 py-4 px-4 hover:bg-green-500/10 transition-colors cursor-pointer rounded">
-                          <div className="flex items-center justify-between">
+                      <div key={problem.id} className="border border-border/30 rounded-lg hover:bg-green-500/10 transition-colors cursor-pointer">
+                        <div className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="relative">
+                              <div className="w-6 h-6 border-2 border-gray-400 rounded-full bg-transparent flex items-center justify-center cursor-pointer hover:border-gray-300 transition-colors">
+                                {/* Empty circle for completion state */}
+                              </div>
+                            </div>
                             <div className="flex-1">
                               <h4 className="text-base font-medium text-foreground">
                                 {problem.title}
