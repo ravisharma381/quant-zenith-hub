@@ -493,25 +493,27 @@ const CourseLearn = () => {
 
         <div className="space-y-6">
           {topics.map((topic) => (
-            <Accordion key={topic.id} type="single" collapsible className="w-full">
+            <Accordion key={topic.id} type="single" collapsible defaultValue={topic.id} className="w-full">
               <AccordionItem value={topic.id} className="border-none">
-                <AccordionTrigger className="text-white font-medium text-lg py-6 hover:no-underline data-[state=open]:text-primary">
+                <AccordionTrigger className="text-white font-medium text-lg py-6 hover:no-underline hover:text-white data-[state=open]:text-white">
                   <span>{topic.title}</span>
                 </AccordionTrigger>
-                <AccordionContent className="pb-4">
-                  <div className="space-y-3">
-                    {topic.problems.map((problem) => (
-                      <div key={problem.id} className="border-b border-border/30 pb-4 last:border-0">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <h4 className="text-base font-medium text-foreground">
-                              {problem.title}
-                            </h4>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <Badge variant="outline" className="text-green-400 border-green-400/30">
-                              Level {topic.title.split(' ')[1]}
-                            </Badge>
+                <AccordionContent className="pb-0">
+                  <div className="space-y-0">
+                    {topic.problems.map((problem, index) => (
+                      <div key={problem.id} className={`border-b border-border/30 ${index === topic.problems.length - 1 ? 'border-b-0' : ''}`}>
+                        <div className="ml-4 py-4 px-4 hover:bg-green-500/10 transition-colors cursor-pointer rounded">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="text-base font-medium text-foreground">
+                                {problem.title}
+                              </h4>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <Badge variant="outline" className="text-green-400 border-green-400/30">
+                                Level {topic.title.split(' ')[1]}
+                              </Badge>
+                            </div>
                           </div>
                         </div>
                       </div>
