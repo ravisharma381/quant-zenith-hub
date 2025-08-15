@@ -309,39 +309,31 @@ const CourseLearn = () => {
 
     if (selectedChapter === "playlists") {
       return {
-        title: "Playlists",
+        title: "Company Specific Playlists",
         content: (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {companies.map((company) => (
                 <Card
                   key={company.id}
-                  className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
+                  className="bg-card hover:scale-105 transition-all duration-200 cursor-pointer group border-2 hover:border-primary/50"
                   onClick={() => {
                     setSelectedCompany(company.id);
                     setCurrentView('company');
                   }}
                 >
-                  <CardContent className="p-6 h-[170px]">
-                    <div className="flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-6">
-                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                          {company.name}
+                  <CardContent className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                          {company.name} {company.number}
                         </h3>
-                        <div className={`${company.iconBg} p-3 rounded-lg text-lg`}>
-                          {company.icon}
-                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {company.description}
+                        </p>
                       </div>
-                      
-                      <div className="mt-auto grid grid-cols-2 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">{company.problems}</div>
-                          <div className="text-sm text-muted-foreground">Problems</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">{company.topics}</div>
-                          <div className="text-sm text-muted-foreground">Topics</div>
-                        </div>
+                      <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center ml-4">
+                        <span className="text-3xl font-bold text-primary">{company.number}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -370,166 +362,96 @@ const CourseLearn = () => {
   // Company data for playlists
   const companies = [
     {
-      id: "dice",
+      id: "coin-75",
+      name: "Coin",
+      number: "75",
+      description: "Bias the coin flip of recruiting in your favor!"
+    },
+    {
+      id: "cards-40", 
+      name: "Cards",
+      number: "40",
+      description: "Learn to count cards."
+    },
+    {
+      id: "calculus-heavy",
+      name: "Calculus-Heavy",
+      number: "HS",
+      description: "Probability meets sums and integrals."
+    },
+    {
+      id: "advanced-50",
+      name: "Advanced",
+      number: "50", 
+      description: "The best place to finish your probability journey!"
+    },
+    {
+      id: "intuition-heavy",
+      name: "Intuition-Heavy",
+      number: "IH",
+      description: "They'll call you the thinker of probability."
+    },
+    {
+      id: "geometric-50",
+      name: "Geometric",
+      number: "50",
+      description: "Enhance your geometric and probabilistic intuition!"
+    },
+    {
+      id: "dice-75",
       name: "Dice",
-      problems: 124,
-      topics: 8,
-      color: "bg-purple-500/20 border-purple-500/30",
-      iconBg: "bg-purple-500/10",
-      icon: "🎲"
+      number: "75",
+      description: "Roll the dice and take a bet on yourself."
     },
     {
-      id: "jane-street", 
-      name: "Jane Street",
-      problems: 133,
-      topics: 32,
-      color: "bg-blue-500/20 border-blue-500/30",
-      iconBg: "bg-blue-500/10",
-      icon: "🎯"
+      id: "quantables-hit-100",
+      name: "Quantable's Hit",
+      number: "100",
+      description: "100 of our all-time favorite questions."
     },
     {
-      id: "citadel",
-      name: "Citadel",
-      problems: 84,
-      topics: 6,
-      color: "bg-blue-600/20 border-blue-600/30",
-      iconBg: "bg-blue-600/10",
-      icon: "🏢"
-    },
-    {
-      id: "optiver",
-      name: "Optiver",
-      problems: 60,
-      topics: 18,
-      color: "bg-orange-600/20 border-orange-600/30",
-      iconBg: "bg-orange-600/10",
-      icon: "⚠️"
+      id: "uniform-50",
+      name: "Uniform",
+      number: "50",
+      description: "Not the one you wear to work."
     }
   ];
 
-  const getCompanyTopics = (companyId: string) => [
-    {
-      id: "probability-basics",
-      title: "Probability Basics",
-      problems: [
+  const getCompanyTopics = (companyId: string) => {
+    const topicsMap: {[key: string]: any} = {
+      "coin-75": [
         {
-          id: 1,
-          title: "Coin Flipping Expected Value",
-          difficulty: "Medium"
+          id: "level-1",
+          title: "Level 1",
+          problems: [
+            { id: 1, title: "4Head I" },
+            { id: 2, title: "Coinsecutive II" },
+            { id: 3, title: "St. Petersburg I" },
+            { id: 4, title: "60 Heads I" }
+          ]
         },
         {
-          id: 2,
-          title: "Dice Rolling Probability",
-          difficulty: "Easy"
+          id: "level-2", 
+          title: "Level 2",
+          problems: [
+            { id: 5, title: "Coin Bias Detection" },
+            { id: 6, title: "Expected Flips to HTHTH" },
+            { id: 7, title: "Gambler's Ruin Variant" }
+          ]
         },
         {
-          id: 3,
-          title: "Card Drawing Without Replacement",
-          difficulty: "Medium"
+          id: "level-3",
+          title: "Level 3", 
+          problems: [
+            { id: 8, title: "Optimal Stopping Coin" },
+            { id: 9, title: "Secretary Problem Coins" }
+          ]
         }
       ]
-    },
-    {
-      id: "random-walks",
-      title: "Random Walks & Markov Chains",
-      problems: [
-        {
-          id: 4,
-          title: "Random Walk Probability",
-          difficulty: "Hard"
-        },
-        {
-          id: 5,
-          title: "Markov Chain Equilibrium",
-          difficulty: "Hard"
-        }
-      ]
-    },
-    {
-      id: "portfolio-theory",
-      title: "Portfolio Theory",
-      problems: [
-        {
-          id: 6,
-          title: "Portfolio Optimization",
-          difficulty: "Medium"
-        },
-        {
-          id: 7,
-          title: "Risk-Return Analysis",
-          difficulty: "Medium"
-        },
-        {
-          id: 8,
-          title: "Sharpe Ratio Calculation",
-          difficulty: "Easy"
-        }
-      ]
-    },
-    {
-      id: "derivatives",
-      title: "Derivatives Pricing",
-      problems: [
-        {
-          id: 9,
-          title: "Black-Scholes Model",
-          difficulty: "Hard"
-        },
-        {
-          id: 10,
-          title: "Option Greeks Calculation",
-          difficulty: "Medium"
-        }
-      ]
-    }
-  ];
+    };
+    return topicsMap[companyId] || [];
+  };
 
-  const renderPlaylistsView = () => (
-    <div className="space-y-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Curated quant interview question playlists
-        </h1>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {companies.map((company) => (
-          <Card
-            key={company.id}
-            className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
-            onClick={() => {
-              setSelectedCompany(company.id);
-              setCurrentView('company');
-            }}
-          >
-            <CardContent className="p-4">
-              <div className="flex flex-col h-full">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                    {company.name}
-                  </h3>
-                  <div className={`${company.iconBg} p-2 rounded-lg text-sm`}>
-                    {company.icon}
-                  </div>
-                </div>
-                
-                <div className="mt-auto grid grid-cols-2 gap-3">
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-foreground">{company.problems}</div>
-                    <div className="text-xs text-muted-foreground">Problems</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-foreground">{company.topics}</div>
-                    <div className="text-xs text-muted-foreground">Topics</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
 
   const renderCompanyView = () => {
     const company = companies.find(c => c.id === selectedCompany);
@@ -546,57 +468,53 @@ const CourseLearn = () => {
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Playlists
+            Back
           </button>
         </div>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-4">
-            {company?.name} Interview Questions
+        <div className="text-center mb-12">
+          <div className="w-32 h-32 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <span className="text-6xl font-bold text-primary">{company?.number}</span>
+          </div>
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            {company?.name} {company?.number}
           </h1>
-          <p className="text-muted-foreground">
-            Curated collection of {company?.problems} problems organized by topic
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            {company?.description}
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-foreground mb-6">About</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            We love coins. They are such simple objects that lead to so many probability questions. The Coin 75 playlist aggregates 75 of our favorite and most impactful coin questions that will surely make you a master of the coin flip that recruiting is.
           </p>
         </div>
 
         <div className="space-y-6">
           {topics.map((topic) => (
             <Accordion key={topic.id} type="single" collapsible className="w-full">
-              <AccordionItem value={topic.id} className="border border-border/50 rounded-lg px-0">
-                <AccordionTrigger className="text-white font-semibold text-lg px-6 py-4 hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
-                  <div className="flex items-center justify-between w-full mr-4">
-                    <span>{topic.title}</span>
-                    <Badge variant="secondary" className="text-xs">
-                      {topic.problems.length} problems
-                    </Badge>
-                  </div>
+              <AccordionItem value={topic.id} className="border-none">
+                <AccordionTrigger className="text-white font-medium text-lg py-6 hover:no-underline data-[state=open]:text-primary">
+                  <span>{topic.title}</span>
                 </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
+                <AccordionContent className="pb-4">
                   <div className="space-y-3">
                     {topic.problems.map((problem) => (
-                      <Card key={problem.id} className="border border-border/30 hover:border-border/50 transition-colors bg-card/50">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <h4 className="text-base font-medium text-foreground mb-2">
-                                {problem.title}
-                              </h4>
-                              <Badge 
-                                variant={
-                                  problem.difficulty === "Easy" ? "default" :
-                                  problem.difficulty === "Medium" ? "secondary" : "destructive"
-                                } 
-                                className="text-xs"
-                              >
-                                {problem.difficulty}
-                              </Badge>
-                            </div>
-                            <Button variant="outline" size="sm">
-                              Solve
-                            </Button>
+                      <div key={problem.id} className="border-b border-border/30 pb-4 last:border-0">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <h4 className="text-base font-medium text-foreground">
+                              {problem.title}
+                            </h4>
                           </div>
-                        </CardContent>
-                      </Card>
+                          <div className="flex items-center gap-4">
+                            <Badge variant="outline" className="text-green-400 border-green-400/30">
+                              Level {topic.title.split(' ')[1]}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </AccordionContent>
@@ -609,9 +527,6 @@ const CourseLearn = () => {
   };
 
   const getMainContent = () => {
-    if (currentView === 'playlists') {
-      return { content: renderPlaylistsView() };
-    }
     if (currentView === 'company') {
       return { content: renderCompanyView() };
     }
