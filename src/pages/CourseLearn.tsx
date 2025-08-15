@@ -491,42 +491,44 @@ const CourseLearn = () => {
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {topics.map((topic) => (
-            <Accordion key={topic.id} type="single" collapsible defaultValue={topic.id} className="w-full">
-              <AccordionItem value={topic.id} className="border-none">
-                <AccordionTrigger className="text-white font-medium text-lg py-6 hover:no-underline hover:text-white data-[state=open]:text-white">
-                  <span>{topic.title}</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-0">
-                  <div className="space-y-3 ml-4">
-                    {topic.problems.map((problem, index) => (
-                      <div key={problem.id} className="border border-border/30 rounded-lg hover:bg-green-500/10 transition-colors cursor-pointer">
-                        <div className="p-4">
-                          <div className="flex items-center gap-4">
-                            <div className="relative">
-                              <div className="w-6 h-6 border-2 border-gray-400 rounded-full bg-transparent flex items-center justify-center cursor-pointer hover:border-gray-300 transition-colors">
-                                {/* Empty circle for completion state */}
+            <div key={topic.id} className="border border-border/50 rounded-lg overflow-hidden">
+              <Accordion type="single" collapsible defaultValue={topic.id} className="w-full">
+                <AccordionItem value={topic.id} className="border-none">
+                  <AccordionTrigger className="text-white font-medium text-lg py-4 px-6 hover:no-underline hover:text-white data-[state=open]:text-white border-b border-border/30">
+                    <span>{topic.title}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-0 px-0">
+                    <div className="space-y-2 py-2">
+                      {topic.problems.map((problem, index) => (
+                        <div key={problem.id} className="border-b border-border/20 last:border-b-0 hover:bg-green-500/10 transition-colors cursor-pointer">
+                          <div className="px-6 py-3">
+                            <div className="flex items-center gap-3">
+                              <div className="relative">
+                                <div className="w-4 h-4 border-2 border-gray-400 rounded-full bg-transparent flex items-center justify-center cursor-pointer hover:border-gray-300 transition-colors">
+                                  {/* Empty circle for completion state */}
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex-1">
-                              <h4 className="text-base font-medium text-foreground">
-                                {problem.title}
-                              </h4>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <Badge variant="outline" className="text-green-400 border-green-400/30">
-                                Level {topic.title.split(' ')[1]}
-                              </Badge>
+                              <div className="flex-1">
+                                <h4 className="text-sm font-normal text-foreground">
+                                  {problem.title}
+                                </h4>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <Badge variant="outline" className="text-green-400 border-green-400/30 text-xs">
+                                  Level {topic.title.split(' ')[1]}
+                                </Badge>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           ))}
         </div>
       </div>
