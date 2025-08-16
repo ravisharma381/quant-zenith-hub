@@ -493,7 +493,7 @@ const CourseLearn = () => {
 
         <div className="space-y-4">
           {topics.map((topic) => (
-            <div key={topic.id} className="border border-border/50 rounded-lg overflow-hidden">
+            <div key={topic.id} className="border border-border rounded-lg overflow-hidden">
               <Accordion type="single" collapsible defaultValue={topic.id} className="w-full">
                 <AccordionItem value={topic.id} className="border-none">
                   <AccordionTrigger className="text-white font-medium text-lg py-4 px-6 hover:no-underline hover:text-white data-[state=open]:text-white border-b border-border/30">
