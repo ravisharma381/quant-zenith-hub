@@ -500,9 +500,9 @@ const CourseLearn = () => {
                     <span>{topic.title}</span>
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 px-0">
-                    <div className="space-y-2 py-2">
+                    <div className="divide-y divide-border">
                       {topic.problems.map((problem, index) => (
-                        <div key={problem.id} className="border-b border-border/20 last:border-b-0 hover:bg-green-500/10 transition-colors cursor-pointer">
+                        <div key={problem.id} className="hover:bg-green-500/10 transition-colors cursor-pointer">
                           <div className="px-6 py-3">
                             <div className="flex items-center gap-3">
                               <div className="relative">
