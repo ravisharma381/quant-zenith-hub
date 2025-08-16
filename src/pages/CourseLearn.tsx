@@ -493,16 +493,16 @@ const CourseLearn = () => {
 
         <div className="space-y-4">
           {topics.map((topic) => (
-            <div key={topic.id} className="border border-border/50 rounded-lg overflow-hidden">
+            <div key={topic.id} className="border rounded-lg overflow-hidden" style={{ borderColor: '#c7c6c5' }}>
               <Accordion type="single" collapsible defaultValue={topic.id} className="w-full">
                 <AccordionItem value={topic.id} className="border-none">
-                  <AccordionTrigger className="text-white font-medium text-lg py-4 px-6 hover:no-underline hover:text-white data-[state=open]:text-white border-b border-border/30">
+                  <AccordionTrigger className="text-white font-medium text-lg py-4 px-6 hover:no-underline hover:text-white data-[state=open]:text-white border-b" style={{ borderBottomColor: '#c7c6c5' }}>
                     <span>{topic.title}</span>
                   </AccordionTrigger>
                   <AccordionContent className="pb-0 px-0">
-                    <div className="space-y-2 py-2">
+                    <div className="divide-y" style={{ '--divide-color': '#c7c6c5' } as React.CSSProperties}>
                       {topic.problems.map((problem, index) => (
-                        <div key={problem.id} className="border-b border-border/20 last:border-b-0 hover:bg-green-500/10 transition-colors cursor-pointer">
+                        <div key={problem.id} className="hover:bg-green-500/10 transition-colors cursor-pointer border-b last:border-b-0" style={{ borderBottomColor: '#c7c6c5' }}>
                           <div className="px-6 py-3">
                             <div className="flex items-center gap-3">
                               <div className="relative">
