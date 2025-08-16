@@ -472,7 +472,7 @@ const CourseLearn = () => {
           </button>
         </div>
 
-        <div className="flex items-start gap-8 mb-12">
+        <div className="flex items-center gap-8 mb-12">
           {/* Logo section - 25% width */}
           <div className="w-1/4 flex-shrink-0">
             <div className="w-full aspect-square bg-primary/10 rounded-3xl flex items-center justify-center">
@@ -482,12 +482,6 @@ const CourseLearn = () => {
           
           {/* About content - 75% width */}
           <div className="flex-1">
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              {company?.name} {company?.number}
-            </h1>
-            <p className="text-muted-foreground text-lg mb-6">
-              {company?.description}
-            </p>
             <p className="text-muted-foreground leading-relaxed">
               We love coins. They are such simple objects that lead to so many probability questions. The Coin 75 playlist aggregates 75 of our favorite and most impactful coin questions that will surely make you a master of the coin flip that recruiting is.
             </p>
