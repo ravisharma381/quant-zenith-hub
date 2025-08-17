@@ -94,7 +94,7 @@ const fireFireworks = (selectedType: any) => {
         startVelocity: 50, // Fast initial burst
         gravity: 1.2, // Faster fall
         scalar: 1.2,
-        ticks: 100, // Shorter lifetime for fast effect
+        ticks: 70, // Reduced by 30% (was 100)
         shapes: ['circle'] // Round particles for firework effect
       });
       
@@ -108,12 +108,12 @@ const fireFireworks = (selectedType: any) => {
           startVelocity: 25,
           gravity: 0.8,
           scalar: 0.8,
-          ticks: 80,
+          ticks: 56, // Reduced by 30% (was 80)
           shapes: ['circle']
         });
-      }, 100);
+      }, 70); // Reduced by 30% (was 100)
       
-    }, i * 400); // Stagger bursts by 400ms for faster sequence
+    }, i * 280); // Reduced by 30% (was 400)
   }
 };
 
