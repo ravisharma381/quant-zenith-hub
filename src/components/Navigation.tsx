@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -179,99 +179,143 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-card border-t border-border">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={cn(
-                    "block px-3 py-2 text-base font-medium transition-colors hover:text-primary",
-                    isActive(item.path)
-                      ? "text-primary bg-gradient-accent"
-                      : "text-muted-foreground"
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              
-              {/* Mobile Courses Section */}
-              <div className="border-t border-border pt-2 mt-2">
-                <div className="px-3 py-2 text-sm font-medium text-muted-foreground">
-                  Courses
+            <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2 mx-4 mb-4">
+              {/* Main Navigation Items */}
+              <Link 
+                to="/problems" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <Puzzle className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
-                <Link
-                  to="/my-courses"
-                  className={cn(
-                    "block px-6 py-2 text-base font-medium transition-colors hover:text-primary",
-                    isActive("/my-courses")
-                      ? "text-primary bg-gradient-accent"
-                      : "text-muted-foreground"
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  My Courses
-                </Link>
-                <Link
-                  to="/courses"
-                  className={cn(
-                    "block px-6 py-2 text-base font-medium transition-colors hover:text-primary",
-                    isActive("/courses")
-                      ? "text-primary bg-gradient-accent"
-                      : "text-muted-foreground"
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  All Courses
-                </Link>
-              </div>
+                <div>
+                  <div className="font-medium text-foreground">Problems</div>
+                  <div className="text-sm text-muted-foreground">Practice problem solving</div>
+                </div>
+              </Link>
               
-              <div className="pt-4 space-y-2">
-                {isLoggedIn ? (
-                  <>
-                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                      <Link to="/my-courses" onClick={() => setIsOpen(false)}>
-                        <GraduationCap className="w-4 h-4" />
-                        My Courses
-                      </Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                      <Link to="/billing" onClick={() => setIsOpen(false)}>
-                        <CreditCard className="w-4 h-4" />
-                        Billing
-                      </Link>
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="w-full justify-start" 
-                      onClick={() => {
-                        handleLogout();
-                        setIsOpen(false);
-                      }}
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                      <Link to="/login" onClick={() => setIsOpen(false)}>
-                        <LogIn className="w-4 h-4" />
-                        Login
-                      </Link>
-                    </Button>
-                    <Button variant="premium" size="sm" className="w-full" asChild>
-                      <Link to="/signup" onClick={() => setIsOpen(false)}>
-                        <User className="w-4 h-4" />
-                        Sign Up
-                      </Link>
-                    </Button>
-                  </>
-                )}
-              </div>
+              <Link 
+                to="/games" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <Gamepad2 className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Games</div>
+                  <div className="text-sm text-muted-foreground">Interactive challenges</div>
+                </div>
+              </Link>
+              
+              <Link 
+                to="/blogs" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <FileText className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Blogs</div>
+                  <div className="text-sm text-muted-foreground">Read insights and tips</div>
+                </div>
+              </Link>
+              
+              <Link 
+                to="/courses" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <BookOpen className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">All Courses</div>
+                  <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
+                </div>
+              </Link>
+              
+              {isLoggedIn && (
+                <>
+                  <Link 
+                    to="/my-courses" 
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="mt-1">
+                      <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">My Courses</div>
+                      <div className="text-sm text-muted-foreground">Continue your learning journey</div>
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    to="/billing" 
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="mt-1">
+                      <CreditCard className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">Billing</div>
+                      <div className="text-sm text-muted-foreground">View purchase history & details</div>
+                    </div>
+                  </Link>
+                  
+                  <button 
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item w-full text-left"
+                  >
+                    <div className="mt-1">
+                      <LogOut className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">Logout</div>
+                      <div className="text-sm text-muted-foreground">Sign out of your account</div>
+                    </div>
+                  </button>
+                </>
+              )}
+              
+              {!isLoggedIn && (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="mt-1">
+                      <LogIn className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">Login</div>
+                      <div className="text-sm text-muted-foreground">Sign in to your account</div>
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    to="/signup" 
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="mt-1">
+                      <User className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">Sign Up</div>
+                      <div className="text-sm text-muted-foreground">Create your account</div>
+                    </div>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
