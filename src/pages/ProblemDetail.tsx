@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Heart, Share, MoreHorizontal, Send } from "lucide-react";
-import { fireRandomConfetti } from "@/lib/confetti";
+import { fireRandomCelebration } from "@/lib/confetti";
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -39,8 +39,7 @@ const ProblemDetail = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      fireRandomConfetti();
-      setTimeout(fireRandomConfetti, 200);
+      fireRandomCelebration();
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }

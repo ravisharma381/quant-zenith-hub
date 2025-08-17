@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { fireRandomConfetti } from "@/lib/confetti";
+import { fireRandomCelebration } from "@/lib/confetti";
 
 interface Chapter {
   id: string;
@@ -139,8 +139,7 @@ const CourseLearn = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      fireRandomConfetti();
-      setTimeout(fireRandomConfetti, 200);
+      fireRandomCelebration();
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
