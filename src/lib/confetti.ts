@@ -77,25 +77,43 @@ const fireConfettiRain = (selectedType: any) => {
 };
 
 const fireFireworks = (selectedType: any) => {
-  // Create multiple bursts from different positions
-  const burstCount = 5 + Math.floor(Math.random() * 3); // 5-7 bursts
+  // Create 3-4 realistic firework explosions
+  const burstCount = 3 + Math.floor(Math.random() * 2); // 3-4 bursts
   
   for (let i = 0; i < burstCount; i++) {
     setTimeout(() => {
       const x = 0.2 + Math.random() * 0.6; // Random position across screen
-      const y = 0.3 + Math.random() * 0.4; // Random height
+      const y = 0.2 + Math.random() * 0.3; // Higher in the sky
       
+      // Create the initial explosion burst - radial pattern
       confetti({
-        particleCount: 80 + Math.floor(Math.random() * 40), // 80-120 particles per burst
-        spread: 60 + Math.random() * 40, // 60-100 spread
+        particleCount: 120,
+        spread: 360, // Full circle explosion
         origin: { x, y },
         colors: selectedType.colors,
-        startVelocity: 40 + Math.random() * 20, // 40-60 velocity
-        gravity: 0.6 + Math.random() * 0.4, // 0.6-1.0 gravity
-        scalar: 1.0 + Math.random() * 0.5, // 1.0-1.5 size
-        ticks: 200 + Math.floor(Math.random() * 100) // 200-300 lifetime
+        startVelocity: 50, // Fast initial burst
+        gravity: 1.2, // Faster fall
+        scalar: 1.2,
+        ticks: 100, // Shorter lifetime for fast effect
+        shapes: ['circle'] // Round particles for firework effect
       });
-    }, i * 150); // Stagger bursts by 150ms
+      
+      // Add trailing sparkles after a short delay
+      setTimeout(() => {
+        confetti({
+          particleCount: 60,
+          spread: 180,
+          origin: { x, y: y + 0.1 },
+          colors: selectedType.colors,
+          startVelocity: 25,
+          gravity: 0.8,
+          scalar: 0.8,
+          ticks: 80,
+          shapes: ['circle']
+        });
+      }, 100);
+      
+    }, i * 400); // Stagger bursts by 400ms for faster sequence
   }
 };
 
