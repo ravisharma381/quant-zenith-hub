@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import confetti from "canvas-confetti";
+import { fireRandomConfetti } from "@/lib/confetti";
 
 interface Chapter {
   id: string;
@@ -134,36 +134,13 @@ const CourseLearn = () => {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
 
-  // Fire vertical confetti rain from the entire top edge
-  const fireTopRain = () => {
-    const columns = 20;
-    for (let i = 0; i < columns; i++) {
-      const x = (i + Math.random()) / columns; // across the top with slight jitter
-      const angle = 270 + (Math.random() * 20 - 10); // mostly downward, slight variance
-      const spread = 10 + Math.random() * 10; // small spread
-      const startVelocity = 20 + Math.random() * 20; // 20-40
-      const gravity = 1.0 + Math.random() * 0.4; // 1.0-1.4
-      const drift = (Math.random() - 0.5) * 1.2; // slight left/right drift
-      const scalar = 0.9 + Math.random() * 0.5; // varied size
-      confetti({
-        particleCount: 7 + Math.floor(Math.random() * 6),
-        origin: { x, y: 0 },
-        angle,
-        spread,
-        startVelocity,
-        gravity,
-        drift,
-        scalar,
-      });
-    }
-  };
 
   const handleSubmit = () => {
     const correctAnswer = "3";
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
-      fireTopRain();
-      setTimeout(fireTopRain, 200);
+      fireRandomConfetti();
+      setTimeout(fireRandomConfetti, 200);
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
     }
