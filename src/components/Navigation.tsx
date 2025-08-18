@@ -179,7 +179,7 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden">
-            <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2 mx-4 mb-4">
+            <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-4 mb-4">
               {/* Main Navigation Items */}
               <Link 
                 to="/problems" 
