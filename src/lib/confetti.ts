@@ -46,8 +46,15 @@ const fireworksTypes = {
   }
 };
 
+// Detect if mobile device
+const isMobile = () => {
+  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
 const fireConfettiRain = (selectedType: any) => {
-  const columns = 20;
+  const mobile = isMobile();
+  const columns = mobile ? 12 : 20; // Fewer columns on mobile
+  
   for (let i = 0; i < columns; i++) {
     const x = (i + Math.random()) / columns;
     const angle = 270 + (Math.random() * 20 - 10);
@@ -58,7 +65,7 @@ const fireConfettiRain = (selectedType: any) => {
     const scalar = 0.9 + Math.random() * 0.5;
     
     const confettiOptions: any = {
-      particleCount: 7 + Math.floor(Math.random() * 6),
+      particleCount: mobile ? 4 + Math.floor(Math.random() * 4) : 7 + Math.floor(Math.random() * 6), // Fewer particles on mobile
       origin: { x, y: 0 },
       angle,
       spread,
@@ -77,8 +84,9 @@ const fireConfettiRain = (selectedType: any) => {
 };
 
 const fireFireworks = (selectedType: any) => {
-  // Create 3-4 realistic firework explosions
-  const burstCount = 3 + Math.floor(Math.random() * 2); // 3-4 bursts
+  const mobile = isMobile();
+  // Create fewer firework explosions on mobile for performance
+  const burstCount = mobile ? 2 + Math.floor(Math.random() * 2) : 3 + Math.floor(Math.random() * 2); // 2-3 on mobile, 3-4 on desktop
   
   for (let i = 0; i < burstCount; i++) {
     setTimeout(() => {
@@ -87,13 +95,13 @@ const fireFireworks = (selectedType: any) => {
       
       // Create the initial explosion burst - radial pattern
       confetti({
-        particleCount: 120,
+        particleCount: mobile ? 80 : 120, // Fewer particles on mobile
         spread: 360, // Full circle explosion
         origin: { x, y },
         colors: selectedType.colors,
         startVelocity: 50, // Fast initial burst
         gravity: 1.2, // Faster fall
-        scalar: 1.2,
+        scalar: mobile ? 1.0 : 1.2, // Smaller particles on mobile
         ticks: 70, // Reduced by 30% (was 100)
         shapes: ['circle'] // Round particles for firework effect
       });
@@ -101,13 +109,13 @@ const fireFireworks = (selectedType: any) => {
       // Add trailing sparkles after a short delay
       setTimeout(() => {
         confetti({
-          particleCount: 60,
+          particleCount: mobile ? 40 : 60, // Fewer particles on mobile
           spread: 180,
           origin: { x, y: y + 0.1 },
           colors: selectedType.colors,
           startVelocity: 25,
           gravity: 0.8,
-          scalar: 0.8,
+          scalar: mobile ? 0.7 : 0.8, // Smaller particles on mobile
           ticks: 56, // Reduced by 30% (was 80)
           shapes: ['circle']
         });
