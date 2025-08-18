@@ -118,20 +118,20 @@ const ArithmeticPro = () => {
     const theme = getGameTheme(1);
     const isOpSelected = (op: '+' | '-' | '×' | '÷') => selectedOps.includes(op);
     return (
-      <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
-        <div className="w-full max-w-2xl bg-card rounded-2xl p-8 border" style={{ borderColor: 'hsl(var(--primary))' }}>
-          <h1 className="text-3xl font-bold text-foreground mb-2 text-center">Quant Arithmetic Zetamac</h1>
-          <p className="text-muted-foreground mb-8 text-center">Configure your drill, then race the clock with rapid-fire arithmetic.</p>
+      <div className="min-h-screen bg-background flex justify-center pt-4 pb-4 px-4">
+        <div className="w-full max-w-lg bg-card rounded-2xl p-4 md:p-8 border" style={{ borderColor: 'hsl(var(--primary))' }}>
+          <h1 className="text-xl md:text-3xl font-bold text-foreground mb-2 text-center">Quant Arithmetic Zetamac</h1>
+          <p className="text-sm md:text-base text-muted-foreground mb-6 md:mb-8 text-center">Configure your drill, then race the clock with rapid-fire arithmetic.</p>
 
-          <section className="mb-6">
-            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
-            <div className="flex gap-3 justify-center">
+          <section className="mb-4 md:mb-6">
+            <h2 className="text-xs md:text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
+            <div className="flex gap-2 md:gap-3 justify-center">
               {(['Easy','Medium','Hard'] as const).map((d) => (
                 <Button
                   key={d}
                   variant="outline"
                   onClick={() => setSelectedDifficulty(d)}
-                  className="flex-1"
+                  className="flex-1 text-xs md:text-sm px-2 md:px-4"
                   style={selectedDifficulty === d ? { backgroundColor: d === 'Easy' ? 'hsl(var(--primary) / 0.2)' : d === 'Medium' ? 'hsl(var(--warning) / 0.2)' : 'hsl(var(--destructive) / 0.2)', color: d === 'Easy' ? 'hsl(var(--primary))' : d === 'Medium' ? 'hsl(var(--warning))' : 'hsl(var(--destructive))', borderColor: d === 'Easy' ? 'hsl(var(--primary) / 0.3)' : d === 'Medium' ? 'hsl(var(--warning) / 0.3)' : 'hsl(var(--destructive) / 0.3)' } : {}}
                 >
                   {d}
@@ -140,26 +140,26 @@ const ArithmeticPro = () => {
             </div>
           </section>
 
-          <section className="mb-6">
-            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Duration</h2>
-            <div className="flex gap-3 justify-center">
+          <section className="mb-4 md:mb-6">
+            <h2 className="text-xs md:text-sm text-muted-foreground mb-2 text-center">Choose Duration</h2>
+            <div className="flex gap-2 md:gap-3 justify-center">
               {[60, 120, 180].map((s) => (
                 <Button
                   key={s}
                   variant="outline"
                   onClick={() => setSelectedDuration(s as 60 | 120 | 180)}
-                  className="flex-1"
+                  className="flex-1 text-xs md:text-sm px-1 md:px-4"
                   style={selectedDuration === s ? { backgroundColor: 'hsl(var(--primary) / 0.2)', color: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary) / 0.3)' } : {}}
                 >
-                  {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
+                  {s === 60 ? (<><Zap className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Bullet - </span>1 min</>) : s === 120 ? (<><Timer className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Blitz - </span>2 min</>) : (<><Rocket className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Rapid - </span>3 min</>)}
                 </Button>
               ))}
             </div>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Operations (minimum 1)</h2>
-            <div className="flex flex-wrap gap-3 justify-center">
+          <section className="mb-6 md:mb-8">
+            <h2 className="text-xs md:text-sm text-muted-foreground mb-2 text-center">Choose Operations (minimum 1)</h2>
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:gap-3 md:justify-center">
               {(['+','-','×','÷'] as const).map((op) => {
                 const active = isOpSelected(op);
                 return (
@@ -176,6 +176,7 @@ const ArithmeticPro = () => {
                         return [...prev, op];
                       });
                     }}
+                    className="text-xs md:text-sm"
                     style={active ? { backgroundColor: 'hsl(var(--primary) / 0.2)', color: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary) / 0.3)' } : {}}
                   >
                     {op === '+' ? 'addition' : op === '-' ? 'subtraction' : op === '×' ? 'multiplication' : 'division'}
@@ -185,11 +186,11 @@ const ArithmeticPro = () => {
             </div>
           </section>
 
-          <div className="flex justify-center gap-3">
-            <Button variant="outline" onClick={() => navigate('/games')}>
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <Button variant="outline" onClick={() => navigate('/games')} className="text-sm">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
             </Button>
-            <Button onClick={handleStart} className={`px-8 ${theme.buttonStyles}`}>
+            <Button onClick={handleStart} className={`px-8 ${theme.buttonStyles} text-sm`}>
               Start Now
             </Button>
           </div>
@@ -258,24 +259,24 @@ const ArithmeticPro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="container mx-auto max-w-2xl">
+    <div className="min-h-screen bg-background p-2 md:p-4">
+      <div className="container mx-auto max-w-xl md:max-w-2xl">
         {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-8">
+        <div className="grid grid-cols-3 items-center mb-4 md:mb-8">
           <div className="justify-self-start">
-            <div className="text-foreground font-bold">{score} points</div>
+            <div className="text-foreground font-bold text-sm md:text-base">{score} points</div>
           </div>
-          <div className="justify-self-center text-2xl font-bold text-center">
+          <div className="justify-self-center text-lg md:text-2xl font-bold text-center">
             Quant Arithmetic Zetamac
           </div>
           <div className="justify-self-end flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+            <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-muted-foreground" />
+            <span className="font-mono text-sm md:text-lg">{formatTime(timeLeft)}</span>
           </div>
         </div>
 
         {/* Progress */}
-        <div className="mb-8">
+        <div className="mb-4 md:mb-8">
           <div 
             className="w-full h-2 rounded-full"
             style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
@@ -292,22 +293,22 @@ const ArithmeticPro = () => {
 
         {/* Question */}
         <div 
-          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
+          className="bg-card rounded-xl p-6 md:p-12 text-center border-2 transition-all duration-300"
           style={{
             borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
             boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
           }}
         >
-          <div className="text-4xl font-bold text-foreground mb-8">
+          <div className="text-2xl md:text-4xl font-bold text-foreground mb-4 md:mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <Input
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-center text-lg md:text-xl h-10 md:h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               style={{
                 borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
                 boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
@@ -318,7 +319,7 @@ const ArithmeticPro = () => {
             {(() => { const theme = getGameTheme(1); return (
               <Button 
                 type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles}`}
+                className={`mx-auto px-6 md:px-8 ${theme.buttonStyles} text-sm md:text-base`}
                 disabled={!userAnswer}
               >
                 Submit Answer

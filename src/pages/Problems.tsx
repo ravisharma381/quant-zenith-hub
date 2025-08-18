@@ -146,8 +146,8 @@ const Problems = () => {
 
         {/* Problems Table */}
         <div className="bg-card border border-border rounded-lg overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
+          {/* Table Header - Desktop Only */}
+          <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
             <div className="col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
             <div className="col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">TOPIC</div>
@@ -160,37 +160,74 @@ const Problems = () => {
             {filteredProblems.map((problem) => (
               <div 
                 key={problem.id} 
-                className="grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
+                className="p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
                 onClick={() => navigate(`/problems/${problem.id}`)}
               >
-                <div className="col-span-1 flex items-center">
-                  <span className="text-muted-foreground">{problem.id}</span>
+                {/* Desktop Layout */}
+                <div className="hidden md:grid grid-cols-12 gap-4">
+                  <div className="col-span-1 flex items-center">
+                    <span className="text-muted-foreground">{problem.id}</span>
+                  </div>
+                  <div className="col-span-4 flex items-center">
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                      {problem.title}
+                    </h3>
+                  </div>
+                  <div className="col-span-2 flex items-center justify-center">
+                    <Badge className={`${getTopicColor(problem.topic)} text-center inline-flex items-center justify-center px-2 py-1`} variant="outline">
+                      {problem.topic}
+                    </Badge>
+                  </div>
+                  <div className="col-span-2 flex items-center justify-center">
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-5 py-0.5 text-sm font-semibold`}>
+                            {problem.difficulty}/10
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
+                          <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="col-span-3 flex items-center justify-center">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {problem.askedIn.map((logo, index) => (
+                        <LogoWithSkeleton
+                          key={index}
+                          src={logo}
+                          alt="Company logo"
+                          companyName={getCompanyName(logo)}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="col-span-4 flex items-center">
-                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {problem.title}
-                  </h3>
-                </div>
-                <div className="col-span-2 flex items-center justify-center">
-                  <Badge className={`${getTopicColor(problem.topic)} text-center inline-flex items-center justify-center px-2 py-1`} variant="outline">
-                    {problem.topic}
-                  </Badge>
-                </div>
-                <div className="col-span-2 flex items-center justify-center">
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-5 py-0.5 text-sm font-semibold`}>
-                          {problem.difficulty}/10
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
-                        <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-                <div className="col-span-3 flex items-center justify-center">
+                
+                {/* Mobile Layout */}
+                <div className="md:hidden space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-muted-foreground">#{problem.id}</span>
+                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {problem.title}
+                      </h3>
+                    </div>
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold`}>
+                            {problem.difficulty}/10
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
+                          <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   <div className="flex flex-wrap gap-2 justify-center">
                     {problem.askedIn.map((logo, index) => (
                       <LogoWithSkeleton

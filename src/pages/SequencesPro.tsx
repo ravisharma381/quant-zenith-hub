@@ -171,30 +171,30 @@ const SequencesPro = () => {
   })();
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="container mx-auto max-w-2xl">
+    <div className="min-h-screen bg-background p-2 md:p-4">
+      <div className="container mx-auto max-w-xl md:max-w-2xl">
         {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-8">
+        <div className="grid grid-cols-3 items-center mb-4 md:mb-8">
           <div className="justify-self-start">
-            <Button variant="ghost" onClick={() => navigate('/games')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <Button variant="ghost" onClick={() => navigate('/games')} className="text-xs md:text-sm p-1 md:p-2">
+              <ArrowLeft className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
               Back
             </Button>
           </div>
           <div 
-            className="justify-self-center text-2xl font-bold text-center"
+            className="justify-self-center text-lg md:text-2xl font-bold text-center"
             style={{ color: themeColors.primary }}
           >
             Score: {score}
           </div>
           <div className="justify-self-end flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+            <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-muted-foreground" />
+            <span className="font-mono text-sm md:text-lg">{formatTime(timeLeft)}</span>
           </div>
         </div>
 
         {/* Progress */}
-        <div className="mb-8">
+        <div className="mb-4 md:mb-8">
           <div 
             className="w-full h-2 rounded-full"
             style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
@@ -211,23 +211,23 @@ const SequencesPro = () => {
 
         {/* Question */}
         <div 
-          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
+          className="bg-card rounded-xl p-6 md:p-12 text-center border-2 transition-all duration-300"
           style={{
             borderColor: themeColors.primary,
             boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.3)`
           }}
         >
-          <div className="text-xl font-bold text-foreground mb-4">What comes next?</div>
-          <div className="text-3xl font-bold text-foreground mb-8 font-mono">
+          <div className="text-lg md:text-xl font-bold text-foreground mb-4">What comes next?</div>
+          <div className="text-xl md:text-3xl font-bold text-foreground mb-4 md:mb-8 font-mono break-all">
             {currentSequence.sequence.join(', ')}, ?
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <Input
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-center text-lg md:text-xl h-10 md:h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               style={{
                 borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
                 boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
@@ -238,7 +238,7 @@ const SequencesPro = () => {
             {(() => { const theme = getGameTheme(2); return (
               <Button 
                 type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles} disabled:opacity-100`}
+                className={`mx-auto px-6 md:px-8 ${theme.buttonStyles} disabled:opacity-100 text-sm md:text-base`}
                 disabled={!userAnswer}
               >
                 Submit Answer
