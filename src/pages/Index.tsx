@@ -75,7 +75,7 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
+      <section className="relative py-14 md:py-22 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center">
