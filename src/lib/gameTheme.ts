@@ -39,6 +39,26 @@ export const getGameTheme = (gameId: number): GameTheme => {
         buttonStyles:
           "bg-[hsl(0,84%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(0,84%,60%)]/90 hover:!shadow-[0_0_20px_hsl(0,84%,60%,0.3)] focus-visible:!ring-[hsl(0,84%,60%)]",
       }
+    case 4: // Sokoban - Yellow
+      return {
+        primary: "hsl(45, 93%, 58%)",
+        primaryForeground: "hsl(220, 13%, 8%)",
+        hoverBorder: "hover:border-[hsl(45,93%,58%)]/30",
+        iconBg: "bg-[hsl(45,93%,58%)]/10 group-hover:bg-[hsl(45,93%,58%)]/20",
+        titleHover: "group-hover:text-[hsl(45,93%,58%)]",
+        buttonStyles:
+          "bg-[hsl(45,93%,58%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(45,93%,58%)]/90 hover:!shadow-[0_0_20px_hsl(45,93%,58%,0.3)] focus-visible:!ring-[hsl(45,93%,58%)]",
+      }
+    case 5: // Probability Master - Orange
+      return {
+        primary: "hsl(24, 95%, 53%)",
+        primaryForeground: "hsl(220, 13%, 8%)",
+        hoverBorder: "hover:border-[hsl(24,95%,53%)]/30",
+        iconBg: "bg-[hsl(24,95%,53%)]/10 group-hover:bg-[hsl(24,95%,53%)]/20",
+        titleHover: "group-hover:text-[hsl(24,95%,53%)]",
+        buttonStyles:
+          "bg-[hsl(24,95%,53%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(24,95%,53%)]/90 hover:!shadow-[0_0_20px_hsl(24,95%,53%,0.3)] focus-visible:!ring-[hsl(24,95%,53%)]",
+      }
     default:
       return {
         primary: "hsl(122, 97%, 50%)",

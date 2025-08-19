@@ -37,6 +37,26 @@ const Games = () => {
       category: "Speed Math",
       difficulty: "Hard",
       route: "/games/optiver-80"
+    },
+    {
+      id: 4,
+      title: "Sokoban Puzzle",
+      description: "Push boxes to their targets in this classic puzzle game. Develop spatial reasoning and problem-solving skills!",
+      icon: "📦",
+      timeLimit: "No limit",
+      category: "Logic Puzzle",
+      difficulty: "Medium",
+      route: "/games/sokoban"
+    },
+    {
+      id: 5,
+      title: "Probability Master",
+      description: "Solve probability and statistics problems under time pressure. Master quantitative reasoning!",
+      icon: "🎲",
+      timeLimit: "10 minutes",
+      category: "Probability",
+      difficulty: "Hard",
+      route: "/games/probability-master"
     }
   ];
 
@@ -70,6 +90,7 @@ const Games = () => {
             return (
               <div 
                 key={game.id} 
+                onClick={() => navigate(game.route)}
                 className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group hover:scale-105`}
               >
                 {/* Icon */}
@@ -103,8 +124,7 @@ const Games = () => {
 
                 {/* Play Button - Full Width */}
                 <Button 
-                  onClick={() => navigate(game.route)}
-                  className={`w-full ${theme.buttonStyles} transition-colors`}
+                  className={`w-full ${theme.buttonStyles} transition-colors pointer-events-none`}
                 >
                   Play
                 </Button>

@@ -11,6 +11,8 @@ import ArithmeticPro from "./pages/ArithmeticPro";
 import SequencesPro from "./pages/SequencesPro";
 import SequencesSetup from "./pages/SequencesSetup";
 import Optiver80 from "./pages/Optiver80";
+import Sokoban from "./pages/Sokoban";
+import ProbabilityMaster from "./pages/ProbabilityMaster";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
 import CourseDetail from "./pages/CourseDetail";
@@ -45,6 +47,8 @@ const App = () => (
             <Route path="/games/sequences-pro/setup" element={<Layout><SequencesSetup /></Layout>} />
             <Route path="/games/sequences-pro" element={<Layout><SequencesPro /></Layout>} />
             <Route path="/games/optiver-80" element={<Layout><Optiver80 /></Layout>} />
+            <Route path="/games/sokoban" element={<Layout><Sokoban /></Layout>} />
+            <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
             <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
