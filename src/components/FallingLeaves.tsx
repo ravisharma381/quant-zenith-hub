@@ -20,7 +20,7 @@ const FallingLeaves = () => {
         delay: 0,
         duration: 8 + Math.random() * 4, // 8-12 seconds fall duration
         rotation: Math.random() * 360, // Random initial rotation
-        size: 0.8 + Math.random() * 0.4, // Random size between 0.8-1.2
+        size: 1.6 + Math.random() * 0.8, // Random size between 1.6-2.4 (100% bigger)
       };
 
       setLeaves(prev => [...prev, newLeaf]);
@@ -31,17 +31,18 @@ const FallingLeaves = () => {
       }, (newLeaf.duration + 2) * 1000);
     };
 
-    // Create initial leaf
+    // Create initial leaves
+    createLeaf();
     createLeaf();
 
-    // Create new leaves every 5-7 seconds
+    // Create new leaves every 2-4 seconds (more frequent)
     const interval = setInterval(() => {
-      // Only create 1-2 leaves at a time
-      const numLeaves = Math.random() > 0.5 ? 1 : 2;
+      // Create 2-3 leaves at a time
+      const numLeaves = 2 + Math.floor(Math.random() * 2);
       for (let i = 0; i < numLeaves; i++) {
-        setTimeout(createLeaf, i * 1000); // Slight delay between multiple leaves
+        setTimeout(createLeaf, i * 500); // 0.5 second delay between multiple leaves
       }
-    }, 5000 + Math.random() * 2000); // 5-7 seconds
+    }, 2000 + Math.random() * 2000); // 2-4 seconds
 
     return () => clearInterval(interval);
   }, []);
