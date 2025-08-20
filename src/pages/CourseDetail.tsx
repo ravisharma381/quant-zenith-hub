@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,8 @@ import FeatureRow from "@/components/FeatureRow";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const enrollButtonRef = useRef<HTMLButtonElement>(null);
 
   const features = [
     "Comprehensive interview preparation framework",
@@ -94,8 +96,48 @@ const CourseDetail = () => {
     }
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (enrollButtonRef.current) {
+        const rect = enrollButtonRef.current.getBoundingClientRect();
+        const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+        setShowStickyBar(!isVisible);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Sticky Enrollment Bar */}
+      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${
+        showStickyBar ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Quant Interview Masterclass</h2>
+              <p className="text-sm text-muted-foreground">Master quantitative finance interviews</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <span className="text-sm font-medium text-foreground">4.9/5</span>
+              </div>
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
+                onClick={() => navigate("/course/quant-interview-masterclass/learn")}
+              >
+                Enroll Now - £299
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
         <div className="container mx-auto px-4 py-16">
@@ -125,6 +167,7 @@ const CourseDetail = () => {
               {/* CTA and Rating */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Button 
+                  ref={enrollButtonRef}
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
                   onClick={() => navigate("/course/quant-interview-masterclass/learn")}
