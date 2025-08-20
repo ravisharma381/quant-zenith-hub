@@ -57,6 +57,16 @@ const Games = () => {
       category: "Probability",
       difficulty: "Hard",
       route: "/games/probability-master"
+    },
+    {
+      id: 6,
+      title: "Memory Sequences",
+      description: "Memorize digit sequences and reproduce them. Train your working memory and concentration!",
+      icon: "🧠",
+      timeLimit: "Varies",
+      category: "Memory",
+      difficulty: "Medium",
+      route: "/games/memory-sequences"
     }
   ];
 

@@ -59,6 +59,16 @@ export const getGameTheme = (gameId: number): GameTheme => {
         buttonStyles:
           "bg-[hsl(24,95%,53%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(24,95%,53%)]/90 hover:!shadow-[0_0_20px_hsl(24,95%,53%,0.3)] focus-visible:!ring-[hsl(24,95%,53%)]",
       }
+    case 6: // Memory Sequences - Cyan
+      return {
+        primary: "hsl(180, 83%, 57%)",
+        primaryForeground: "hsl(220, 13%, 8%)",
+        hoverBorder: "hover:border-[hsl(180,83%,57%)]/30",
+        iconBg: "bg-[hsl(180,83%,57%)]/10 group-hover:bg-[hsl(180,83%,57%)]/20",
+        titleHover: "group-hover:text-[hsl(180,83%,57%)]",
+        buttonStyles:
+          "bg-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(180,83%,57%)]/90 hover:!shadow-[0_0_20px_hsl(180,83%,57%,0.3)] focus-visible:!ring-[hsl(180,83%,57%)]",
+      }
     default:
       return {
         primary: "hsl(122, 97%, 50%)",
