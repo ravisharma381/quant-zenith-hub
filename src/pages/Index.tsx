@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
+import FallingLeaves from "@/components/FallingLeaves";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -74,6 +75,7 @@ const Index = () => {
 
   return (
     <Layout>
+      <FallingLeaves />
       {/* Hero Section */}
       <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
