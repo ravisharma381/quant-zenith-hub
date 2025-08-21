@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -560,106 +561,108 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <div className="p-6">
-                {searchTerm ? (
-                  // When searching, show only matching chapters without section headers
-                  <div className="space-y-1">
-                    {filteredSections.flatMap(section => 
-                      section.chapters.map((chapter) => (
-                        <div
-                          key={chapter.id}
-                          className={cn(
-                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
-                            selectedChapter === chapter.id 
-                              ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
-                              : "text-white hover:bg-gray-800"
-                          )}
-                          onClick={() => {
-                            setSelectedChapter(chapter.id);
-                            setCurrentView('course');
-                          }}
-                        >
-                          <div className="relative">
-                            <div 
-                              className={cn(
-                                "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                                chapter.completed 
-                                  ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
-                                  : "border-gray-400"
-                              )}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleChapterCompletion(section.id, chapter.id);
-                              }}
-                            >
-                              {chapter.completed && (
-                                <div className="text-black text-xs font-bold">✓</div>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-base font-normal">{chapter.title}</span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                ) : (
-                  // When not searching, show normal section structure
-                  filteredSections.map((section) => (
-                    <div key={section.id} className="mb-6">
-                      <Collapsible 
-                        open={section.expanded} 
-                        onOpenChange={() => toggleSection(section.id)}
-                      >
-                        <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
-                          <h3 className="text-white font-normal text-lg">{section.title}</h3>
-                          {section.expanded ? (
-                            <ChevronDown className="w-5 h-5 text-white" />
-                          ) : (
-                            <ChevronRight className="w-5 h-5 text-white" />
-                          )}
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-4">
-                          {section.chapters.map((chapter) => (
-                            <div
-                              key={chapter.id}
-                              className={cn(
-                                "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
-                                selectedChapter === chapter.id 
-                                  ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
-                                  : "text-white hover:bg-gray-800"
-                              )}
-                              onClick={() => {
-                                setSelectedChapter(chapter.id);
-                                setCurrentView('course');
-                              }}
-                            >
-                              <div className="relative">
-                                <div 
-                                  className={cn(
-                                    "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                                    chapter.completed 
-                                      ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
-                                      : "border-gray-400"
-                                  )}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleChapterCompletion(section.id, chapter.id);
-                                  }}
-                                >
-                                  {chapter.completed && (
-                                    <div className="text-black text-xs font-bold">✓</div>
-                                  )}
-                                </div>
+              <ScrollArea className="h-[calc(100vh-120px)]">
+                <div className="p-6">
+                  {searchTerm ? (
+                    // When searching, show only matching chapters without section headers
+                    <div className="space-y-1">
+                      {filteredSections.flatMap(section => 
+                        section.chapters.map((chapter) => (
+                          <div
+                            key={chapter.id}
+                            className={cn(
+                              "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
+                              selectedChapter === chapter.id 
+                                ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                                : "text-white hover:bg-gray-800"
+                            )}
+                            onClick={() => {
+                              setSelectedChapter(chapter.id);
+                              setCurrentView('course');
+                            }}
+                          >
+                            <div className="relative">
+                              <div 
+                                className={cn(
+                                  "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                                  chapter.completed 
+                                    ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                    : "border-gray-400"
+                                )}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleChapterCompletion(section.id, chapter.id);
+                                }}
+                              >
+                                {chapter.completed && (
+                                  <div className="text-black text-xs font-bold">✓</div>
+                                )}
                               </div>
-                              <span className="text-base font-normal">{chapter.title}</span>
                             </div>
-                          ))}
-                        </CollapsibleContent>
-                      </Collapsible>
+                            <span className="text-base font-normal">{chapter.title}</span>
+                          </div>
+                        ))
+                      )}
                     </div>
-                  ))
-                )}
-              </div>
+                  ) : (
+                    // When not searching, show normal section structure
+                    filteredSections.map((section) => (
+                      <div key={section.id} className="mb-6">
+                        <Collapsible 
+                          open={section.expanded} 
+                          onOpenChange={() => toggleSection(section.id)}
+                        >
+                          <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
+                            <h3 className="text-white font-normal text-lg">{section.title}</h3>
+                            {section.expanded ? (
+                              <ChevronDown className="w-5 h-5 text-white" />
+                            ) : (
+                              <ChevronRight className="w-5 h-5 text-white" />
+                            )}
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="mt-4">
+                            {section.chapters.map((chapter) => (
+                              <div
+                                key={chapter.id}
+                                className={cn(
+                                  "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
+                                  selectedChapter === chapter.id 
+                                    ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                                    : "text-white hover:bg-gray-800"
+                                )}
+                                onClick={() => {
+                                  setSelectedChapter(chapter.id);
+                                  setCurrentView('course');
+                                }}
+                              >
+                                <div className="relative">
+                                  <div 
+                                    className={cn(
+                                      "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                                      chapter.completed 
+                                        ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                        : "border-gray-400"
+                                    )}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleChapterCompletion(section.id, chapter.id);
+                                    }}
+                                  >
+                                    {chapter.completed && (
+                                      <div className="text-black text-xs font-bold">✓</div>
+                                    )}
+                                  </div>
+                                </div>
+                                <span className="text-base font-normal">{chapter.title}</span>
+                              </div>
+                            ))}
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
             </div>
           )}
 
@@ -733,17 +736,19 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <div className={cn(
-              "pb-6 pt-8",
-              sidebarVisible ? "px-6" : "px-16"
-            )}>
+            <ScrollArea className="h-[calc(100vh-100px)]">
               <div className={cn(
-                "mx-auto",
-                sidebarVisible ? "max-w-5xl" : "max-w-6xl"
+                "pb-6 pt-8",
+                sidebarVisible ? "px-6" : "px-16"
               )}>
-                {selectedContent.content}
+                <div className={cn(
+                  "mx-auto",
+                  sidebarVisible ? "max-w-5xl" : "max-w-6xl"
+                )}>
+                  {selectedContent.content}
+                </div>
               </div>
-            </div>
+            </ScrollArea>
           </div>
         </div>
       </div>
