@@ -736,7 +736,7 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <ScrollArea className="h-[calc(100vh-100px)]" scrollbarAlwaysVisible={true}>
+            <ScrollArea className="h-[calc(100vh-100px)]">
               <div className={cn(
                 "pb-6 pt-8",
                 sidebarVisible ? "px-6" : "px-16"
