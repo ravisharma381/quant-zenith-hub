@@ -561,7 +561,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <ScrollArea className="h-[calc(100vh-120px)]">
+              <ScrollArea className="h-[calc(100vh-120px)]" style={{ '--scrollbar-opacity': '1' } as any}>
                 <div className="p-6">
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
@@ -736,7 +736,7 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <ScrollArea className="h-[calc(100vh-100px)]">
+            <ScrollArea className="h-[calc(100vh-100px)]" style={{ '--scrollbar-opacity': '1' } as any}>
               <div className={cn(
                 "pb-6 pt-8",
                 sidebarVisible ? "px-6" : "px-16"
