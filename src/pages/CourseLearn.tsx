@@ -545,9 +545,9 @@ const CourseLearn = () => {
         <div className="flex">
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800">
+            <div className="w-96 bg-black border-r border-gray-800 h-screen overflow-hidden flex flex-col">
               {/* Search Bar */}
-              <div className="px-6 mb-1 mt-6">
+              <div className="px-6 mb-1 mt-6 flex-shrink-0">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -561,7 +561,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <ScrollArea className="h-[calc(100vh-120px)]">
+              <ScrollArea className="flex-1 overflow-y-auto">
                 <div className="p-6">
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
