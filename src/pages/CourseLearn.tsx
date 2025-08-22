@@ -736,7 +736,7 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <div className="h-[calc(100vh-100px)] overflow-y-auto select-none">
+            <div className="h-[calc(100vh-100px)] select-none">
               <div className={cn(
                 "pb-6 pt-8",
                 sidebarVisible ? "px-6" : "px-16"
