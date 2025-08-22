@@ -736,7 +736,7 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <ScrollArea className="h-[calc(100vh-100px)]">
+            <div className="h-[calc(100vh-100px)] overflow-y-auto">
               <div className={cn(
                 "pb-6 pt-8",
                 sidebarVisible ? "px-6" : "px-16"
@@ -748,7 +748,7 @@ const CourseLearn = () => {
                   {selectedContent.content}
                 </div>
               </div>
-            </ScrollArea>
+            </div>
           </div>
         </div>
       </div>
