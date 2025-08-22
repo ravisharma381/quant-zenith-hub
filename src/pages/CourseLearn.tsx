@@ -545,7 +545,7 @@ const CourseLearn = () => {
         <div className="flex">
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800 h-screen overflow-hidden flex flex-col">
+            <div className="w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] overflow-hidden flex flex-col">
               {/* Search Bar */}
               <div className="px-6 mb-1 mt-6 flex-shrink-0">
                 <div className="relative">
