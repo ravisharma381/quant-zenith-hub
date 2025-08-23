@@ -542,10 +542,10 @@ const CourseLearn = () => {
         <Navigation />
         
         
-        <div className="flex">
+        <div className="flex min-h-[calc(100vh-80px)]">
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800 h-screen overflow-hidden flex flex-col">
+            <div className="w-96 bg-black border-r border-gray-800 min-h-full flex flex-col">
               {/* Search Bar */}
               <div className="px-6 mb-1 mt-6 flex-shrink-0">
                 <div className="relative">
