@@ -53,31 +53,13 @@ const CourseLearn = () => {
         {
           id: "probability-theory",
           title: "Probability Theory",
-          chapters: [
-            { id: "sample-spaces", title: "Sample Spaces and Events", completed: false },
-            { id: "conditional-probability", title: "Conditional Probability", completed: false },
-            { id: "independence", title: "Independence", completed: false },
-            { id: "bayes-theorem", title: "Bayes' Theorem", completed: false },
-            { id: "law-total-probability", title: "Law of Total Probability", completed: false },
-            { id: "counting-methods", title: "Advanced Counting Methods", completed: false },
-            { id: "probability-distributions", title: "Basic Probability Distributions", completed: false },
-          ],
+          chapters: [],
           expanded: false
         },
         {
           id: "random-variables",
           title: "Random Variables",
-          chapters: [
-            { id: "discrete-rv", title: "Discrete Random Variables", completed: false },
-            { id: "continuous-rv", title: "Continuous Random Variables", completed: false },
-            { id: "expectation", title: "Expectation and Variance", completed: false },
-            { id: "moment-generating", title: "Moment Generating Functions", completed: false },
-            { id: "joint-distributions", title: "Joint Distributions", completed: false },
-            { id: "covariance-correlation", title: "Covariance and Correlation", completed: false },
-            { id: "central-limit", title: "Central Limit Theorem", completed: false },
-            { id: "law-large-numbers", title: "Law of Large Numbers", completed: false },
-            { id: "order-statistics", title: "Order Statistics", completed: false },
-          ],
+          chapters: [],
           expanded: false
         }
       ]
