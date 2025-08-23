@@ -579,7 +579,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <ScrollArea className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-scroll scrollbar-thin scrollbar-thumb-border scrollbar-track-background">
                 <div className="p-6">
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
@@ -680,7 +680,7 @@ const CourseLearn = () => {
                     ))
                   )}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
 
