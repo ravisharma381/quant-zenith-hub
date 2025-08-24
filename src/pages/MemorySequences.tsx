@@ -206,8 +206,8 @@ const MemorySequences = () => {
                   className="mb-8 max-w-md mx-auto"
                 />
                 
-                <div className="flex justify-center items-center">
-                  <div className="grid grid-cols-6 gap-4 max-w-2xl">
+                <div className="flex justify-center mb-8">
+                  <div className="inline-flex gap-4">
                     {sequence.map((digit, index) => (
                       <div
                         key={index}
@@ -240,8 +240,8 @@ const MemorySequences = () => {
                 </div>
                 
                 {/* Input Display */}
-                <div className="flex justify-center items-center gap-4 mb-8">
-                  <div className="grid grid-cols-6 gap-3 max-w-2xl">
+                <div className="flex justify-center mb-8">
+                  <div className="inline-flex gap-3">
                     {Array.from({ length: sequence.length }).map((_, index) => (
                       <div
                         key={index}
@@ -263,15 +263,7 @@ const MemorySequences = () => {
                   Use your keyboard to enter the numbers (0-9)
                 </p>
                 
-                <div className="flex justify-center gap-4">
-                  <Button
-                    onClick={handleBackspace}
-                    variant="outline"
-                    className="px-8"
-                    disabled={userInput.length === 0}
-                  >
-                    Backspace
-                  </Button>
+                <div className="flex justify-center">
                   <Button
                     onClick={handleSubmit}
                     className="bg-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(180,83%,57%)]/90 px-8"
