@@ -87,6 +87,26 @@ const MemorySequences = () => {
     }
   }, [gameState, timeLeft]);
 
+  // Handle keyboard input
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (gameState !== 'input') return;
+      
+      if (event.key >= '0' && event.key <= '9') {
+        handleNumberInput(event.key);
+      } else if (event.key === 'Backspace') {
+        event.preventDefault();
+        handleBackspace();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSubmit();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameState, userInput, sequence.length]);
+
   const checkAnswer = () => {
     const correct = userInput === sequence.join('');
     
@@ -186,21 +206,23 @@ const MemorySequences = () => {
                   className="mb-8 max-w-md mx-auto"
                 />
                 
-                <div className="grid grid-cols-6 gap-4 max-w-2xl mx-auto">
-                  {sequence.map((digit, index) => (
-                    <div
-                      key={index}
-                      className={`aspect-square rounded-lg border-2 flex items-center justify-center text-2xl font-bold transition-all duration-300 ${
-                        index < showingIndex
-                          ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)] scale-105'
-                          : index === showingIndex
-                          ? 'bg-[hsl(180,83%,57%)] border-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] scale-110 shadow-lg'
-                          : 'bg-muted border-border text-muted-foreground'
-                      }`}
-                    >
-                      {index <= showingIndex ? digit : '?'}
-                    </div>
-                  ))}
+                <div className="flex justify-center items-center">
+                  <div className="grid grid-cols-6 gap-4 max-w-2xl">
+                    {sequence.map((digit, index) => (
+                      <div
+                        key={index}
+                        className={`aspect-square w-16 h-16 rounded-lg border-2 flex items-center justify-center text-2xl font-bold transition-all duration-300 ${
+                          index < showingIndex
+                            ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)] scale-105'
+                            : index === showingIndex
+                            ? 'bg-[hsl(180,83%,57%)] border-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] scale-110 shadow-lg'
+                            : 'bg-muted border-border text-muted-foreground'
+                        }`}
+                      >
+                        {index <= showingIndex ? digit : '?'}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -218,59 +240,44 @@ const MemorySequences = () => {
                 </div>
                 
                 {/* Input Display */}
-                <div className="grid grid-cols-6 gap-2 max-w-2xl mx-auto mb-8">
-                  {Array.from({ length: sequence.length }).map((_, index) => (
-                    <div
-                      key={index}
-                      className={`aspect-square rounded-lg border-2 flex items-center justify-center text-2xl font-bold ${
-                        index < userInput.length
-                          ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)]'
-                          : 'bg-muted border-border text-muted-foreground'
-                      }`}
-                    >
-                      {userInput[index] || ''}
-                    </div>
-                  ))}
+                <div className="flex justify-center items-center gap-4 mb-8">
+                  <div className="grid grid-cols-6 gap-3 max-w-2xl">
+                    {Array.from({ length: sequence.length }).map((_, index) => (
+                      <div
+                        key={index}
+                        className={`aspect-square w-16 h-16 rounded-lg border-2 flex items-center justify-center text-2xl font-bold ${
+                          index < userInput.length
+                            ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)]'
+                            : index === userInput.length
+                            ? 'bg-muted border-[hsl(180,83%,57%)] text-muted-foreground animate-pulse'
+                            : 'bg-muted border-border text-muted-foreground'
+                        }`}
+                      >
+                        {userInput[index] || ''}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Number Keypad */}
-                <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-6">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <Button
-                      key={num}
-                      onClick={() => handleNumberInput(num.toString())}
-                      variant="outline"
-                      className="aspect-square text-xl hover:bg-[hsl(180,83%,57%)]/10 hover:border-[hsl(180,83%,57%)]"
-                      disabled={userInput.length >= sequence.length}
-                    >
-                      {num}
-                    </Button>
-                  ))}
-                </div>
+                <p className="text-muted-foreground mb-6">
+                  Use your keyboard to enter the numbers (0-9)
+                </p>
                 
                 <div className="flex justify-center gap-4">
-                  <Button
-                    onClick={() => handleNumberInput('0')}
-                    variant="outline"
-                    className="px-8 hover:bg-[hsl(180,83%,57%)]/10 hover:border-[hsl(180,83%,57%)]"
-                    disabled={userInput.length >= sequence.length}
-                  >
-                    0
-                  </Button>
                   <Button
                     onClick={handleBackspace}
                     variant="outline"
                     className="px-8"
                     disabled={userInput.length === 0}
                   >
-                    ←
+                    Backspace
                   </Button>
                   <Button
                     onClick={handleSubmit}
                     className="bg-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(180,83%,57%)]/90 px-8"
                     disabled={userInput.length !== sequence.length}
                   >
-                    Submit
+                    Submit (Enter)
                   </Button>
                 </div>
               </div>
