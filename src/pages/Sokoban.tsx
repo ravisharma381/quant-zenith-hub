@@ -76,25 +76,34 @@ const Sokoban = () => {
 
   const getCellDisplay = (cell: Cell) => {
     switch (cell) {
-      case 'wall': return '🟫';
-      case 'floor': return '⬜';
-      case 'target': return '🎯';
-      case 'box': return '📦';
-      case 'boxOnTarget': return '✅';
-      case 'player': return '🧑';
-      case 'playerOnTarget': return '🧑';
-      default: return '⬜';
+      case 'wall': return '';
+      case 'floor': return '';
+      case 'target': return '';
+      case 'box': return '';
+      case 'boxOnTarget': return '';
+      case 'player': return '';
+      case 'playerOnTarget': return '';
+      default: return '';
     }
   };
 
   const getCellStyle = (cell: Cell) => {
-    const baseStyle = "w-8 h-8 flex items-center justify-center text-lg select-none";
+    const baseStyle = "w-8 h-8 flex items-center justify-center border-0 relative";
     switch (cell) {
+      case 'wall':
+        return `${baseStyle} bg-red-800 bg-[linear-gradient(45deg,#8B4513_25%,transparent_25%),linear-gradient(-45deg,#8B4513_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#8B4513_75%),linear-gradient(-45deg,transparent_75%,#8B4513_75%)] bg-[length:8px_8px] bg-[position:0_0,0_4px,4px_-4px,-4px_0px] border border-amber-900`;
+      case 'floor':
+        return `${baseStyle} bg-gray-400 border border-gray-500`;
       case 'target':
-      case 'playerOnTarget':
-        return `${baseStyle} bg-yellow-500/20`;
+        return `${baseStyle} bg-gray-400 border border-gray-500 before:content-[''] before:absolute before:w-4 before:h-4 before:bg-blue-400 before:transform before:rotate-45 before:border before:border-blue-600`;
+      case 'box':
+        return `${baseStyle} bg-yellow-600 border-2 border-yellow-800 before:content-['×'] before:absolute before:text-orange-900 before:font-bold before:text-lg`;
       case 'boxOnTarget':
-        return `${baseStyle} bg-green-500/20`;
+        return `${baseStyle} bg-yellow-600 border-2 border-yellow-800 before:content-['×'] before:absolute before:text-orange-900 before:font-bold before:text-lg after:content-[''] after:absolute after:w-2 after:h-2 after:bg-blue-400 after:transform after:rotate-45 after:border after:border-blue-600 after:-z-10`;
+      case 'player':
+        return `${baseStyle} bg-gray-400 border border-gray-500 before:content-[''] before:absolute before:w-6 before:h-6 before:bg-yellow-400 before:rounded-full before:border-2 before:border-orange-600`;
+      case 'playerOnTarget':
+        return `${baseStyle} bg-gray-400 border border-gray-500 before:content-[''] before:absolute before:w-6 before:h-6 before:bg-yellow-400 before:rounded-full before:border-2 before:border-orange-600 after:content-[''] after:absolute after:w-2 after:h-2 after:bg-blue-400 after:transform after:rotate-45 after:border after:border-blue-600 after:-z-10`;
       default:
         return baseStyle;
     }
@@ -176,26 +185,18 @@ const Sokoban = () => {
     const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
-        case 'w':
-        case 'W':
           e.preventDefault();
           movePlayer(0, -1);
           break;
         case 'ArrowDown':
-        case 's':
-        case 'S':
           e.preventDefault();
           movePlayer(0, 1);
           break;
         case 'ArrowLeft':
-        case 'a':
-        case 'A':
           e.preventDefault();
           movePlayer(-1, 0);
           break;
         case 'ArrowRight':
-        case 'd':
-        case 'D':
           e.preventDefault();
           movePlayer(1, 0);
           break;
@@ -255,7 +256,7 @@ const Sokoban = () => {
           <h1 className="text-4xl font-bold text-foreground mb-2">Sokoban Puzzle</h1>
           <h2 className="text-xl text-muted-foreground mb-4">{levels[currentLevel].name}</h2>
           <p className="text-sm text-muted-foreground">
-            Push all boxes 📦 to targets 🎯 • Use WASD or Arrow keys to move
+            Push all boxes to targets • Use Arrow keys to move
           </p>
         </div>
 
@@ -269,8 +270,8 @@ const Sokoban = () => {
 
         {/* Game Grid */}
         <div className="flex justify-center mb-8">
-          <div className="bg-card border border-border rounded-xl p-6 inline-block">
-            <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${grid[0]?.length || 1}, 1fr)` }}>
+          <div className="bg-green-400 border-4 border-green-600 rounded-lg p-4 inline-block shadow-2xl">
+            <div className="grid gap-0 border-2 border-gray-600" style={{ gridTemplateColumns: `repeat(${grid[0]?.length || 1}, 1fr)` }}>
               {grid.map((row, y) =>
                 row.map((cell, x) => (
                   <div
@@ -323,28 +324,6 @@ const Sokoban = () => {
           </div>
         )}
 
-        {/* Legend */}
-        <div className="bg-card border border-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Legend</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🧑</span>
-              <span>Player</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">📦</span>
-              <span>Box</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🎯</span>
-              <span>Target</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">✅</span>
-              <span>Box on Target</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
