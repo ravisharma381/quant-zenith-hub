@@ -7,6 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Share, Send } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
+import LogoWithSkeleton from "@/components/LogoWithSkeleton";
+import janeStreetLogo from "@/assets/jane-street-logo.png";
+import citadelLogo from "@/assets/citadel-logo.png";
+import drivLogo from "@/assets/driv-logo.png";
+import companyLogo from "@/assets/company-logo.png";
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -17,21 +22,32 @@ const ProblemDetail = () => {
   const problem = {
     id: Number(id),
     title: "4Head I",
-    difficulty: "Easy",
+    difficulty: Number(id) || 1,
     topic: "Statistics",
+    askedIn: [janeStreetLogo, citadelLogo, drivLogo],
     description: `Varun has 4 fair coins. He flips all 4 at once and notes the parity of each. After seeing the outcomes, he may turn over (rather than flip) any pair of coins. Note that this means a heads becomes a tails and vice versa. Varun may not turn over a single coin without turning over another. He can iterate this process as many times as he would like. If Varun plays to maximize his expected number of heads, find the expected number of heads he will have.`,
     hint1: "Think about what configurations of heads/tails are possible after any number of pair flips.",
     hint2: "Consider the parity constraints - turning over pairs preserves certain properties of the configuration.",
     solution: "The expected number of heads Varun will have is 3.\n\nExplanation:\nWhen Varun flips 4 fair coins, he gets various outcomes. The key insight is that he can always turn over pairs of coins to optimize his result. Since he wants to maximize heads, he should turn over pairs strategically.\n\nBy turning over pairs, Varun can always achieve at least 2 heads from any initial configuration. However, with optimal play, he can achieve an expected value of 3 heads through careful pair selection based on the initial outcome."
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy": return "bg-green-500/20 text-green-400 border-green-500/30";
-      case "Medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "Hard": return "bg-red-500/20 text-red-400 border-red-500/30";
-      default: return "bg-muted text-muted-foreground";
+  const getDifficultyColor = (difficulty: number) => {
+    if (difficulty >= 1 && difficulty <= 3) {
+      return "bg-green-500/20 text-green-400 border-green-500/30";
+    } else if (difficulty >= 4 && difficulty <= 6) {
+      return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+    } else if (difficulty >= 7 && difficulty <= 10) {
+      return "bg-red-500/20 text-red-400 border-red-500/30";
     }
+    return "bg-muted text-muted-foreground";
+  };
+
+  const getCompanyName = (logo: string) => {
+    if (logo.includes('jane-street')) return 'Jane Street';
+    if (logo.includes('citadel')) return 'Citadel';
+    if (logo.includes('driv')) return 'Driv';
+    if (logo.includes('company')) return 'Top Firm';
+    return 'Company';
   };
 
 
@@ -64,13 +80,24 @@ const ProblemDetail = () => {
             
             <div className="flex items-center gap-4">
               <Badge className={getDifficultyColor(problem.difficulty)}>
-                {problem.difficulty}
+                Lvl {problem.difficulty}/10
               </Badge>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon">
-                  <Share className="h-5 w-5" />
-                </Button>
+                <span className="text-sm text-muted-foreground">Asked in:</span>
+                <div className="flex gap-1">
+                  {problem.askedIn.map((logo, index) => (
+                    <LogoWithSkeleton
+                      key={index}
+                      src={logo}
+                      alt="Company logo"
+                      companyName={getCompanyName(logo)}
+                    />
+                  ))}
+                </div>
               </div>
+              <Button variant="ghost" size="icon">
+                <Share className="h-5 w-5" />
+              </Button>
             </div>
           </div>
 
