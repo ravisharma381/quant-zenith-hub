@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import LogoWithSkeleton from "@/components/LogoWithSkeleton";
+
+import janeStreetLogo from "@/assets/jane-street-logo.png";
+import citadelLogo from "@/assets/citadel-logo.png";
+import drivLogo from "@/assets/driv-logo.png";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -206,6 +211,20 @@ const CourseLearn = () => {
     }
     
     if (selectedChapter === "multiplication") {
+      const getDifficultyColor = (difficulty: number) => {
+        if (difficulty <= 3) return "bg-green-500/20 text-green-400 border-green-500/50";
+        if (difficulty <= 6) return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
+        return "bg-red-500/20 text-red-400 border-red-500/50";
+      };
+
+      const problemData = {
+        difficulty: 3,
+        askedIn: [
+          { logo: janeStreetLogo, name: "Jane Street" },
+          { logo: citadelLogo, name: "Citadel" },
+        ]
+      };
+
       return {
         title: "",
         content: (
@@ -216,6 +235,46 @@ const CourseLearn = () => {
                   <TabsTrigger value="problem">Problem</TabsTrigger>
                   <TabsTrigger value="solution">Solution</TabsTrigger>
                 </TabsList>
+                
+                <div className="flex items-center gap-4">
+                  <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border`}>
+                    Lvl {problemData.difficulty}/10
+                  </Badge>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Asked in:</span>
+                    <div className="flex gap-2">
+                      {problemData.askedIn.map((company, index) => (
+                        <LogoWithSkeleton 
+                          key={index}
+                          src={company.logo} 
+                          alt={`${company.name} logo`}
+                          companyName={company.name}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          className="hover:bg-primary/10"
+                          onClick={() => {
+                            navigator.clipboard.writeText(window.location.href);
+                          }}
+                        >
+                          <Share2 className="h-5 w-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Share this problem</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
 
               <TabsContent value="problem" className="space-y-6">
