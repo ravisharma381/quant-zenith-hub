@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Heart, Share, MoreHorizontal, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 
 const ProblemDetail = () => {
@@ -68,13 +68,7 @@ const ProblemDetail = () => {
               </Badge>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon">
-                  <Heart className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Share className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <MoreHorizontal className="h-5 w-5" />
+                  <Send className="h-5 w-5" />
                 </Button>
               </div>
             </div>
