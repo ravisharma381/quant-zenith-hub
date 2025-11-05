@@ -150,7 +150,7 @@ const Problems = () => {
           <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
             <div className="col-span-4 md:col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
-            <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">TOPIC</div>
+            <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
             <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
             <div className="col-span-4 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
           </div>
