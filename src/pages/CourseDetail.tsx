@@ -130,9 +130,9 @@ const CourseDetail = () => {
               </div>
               <Button 
                 className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
-                onClick={() => navigate("/course/quant-interview-masterclass/learn")}
+                onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
               >
-                Enroll Now - £299
+                Enroll Now
               </Button>
             </div>
           </div>
@@ -170,9 +170,9 @@ const CourseDetail = () => {
                   ref={enrollButtonRef}
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                  onClick={() => navigate("/course/quant-interview-masterclass/learn")}
+                  onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
                 >
-                  Enroll Me Now - £299
+                  Enroll Me Now
                 </Button>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center">
@@ -280,7 +280,7 @@ const CourseDetail = () => {
           <Button 
             size="lg" 
             className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
-            onClick={() => navigate("/course/quant-interview-masterclass/learn")}
+            onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
           >
             Start Your Journey Today
           </Button>

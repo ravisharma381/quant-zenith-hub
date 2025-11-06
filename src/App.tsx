@@ -17,6 +17,7 @@ import MemorySequences from "./pages/MemorySequences";
 import Courses from "./pages/Courses";
 import MyCourses from "./pages/MyCourses";
 import CourseDetail from "./pages/CourseDetail";
+import CourseCheckout from "./pages/CourseCheckout";
 import MLCourseDetail from "./pages/MLCourseDetail";
 import MLCourseEnroll from "./pages/MLCourseEnroll";
 import CourseLearn from "./pages/CourseLearn";
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
             <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
+            <Route path="/course/quant-interview-masterclass/checkout" element={<Layout><CourseCheckout /></Layout>} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
