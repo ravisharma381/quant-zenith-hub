@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft, Share2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft, Share } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
@@ -255,25 +255,9 @@ const CourseLearn = () => {
                     </div>
                   </div>
                   
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          className="hover:bg-primary/10"
-                          onClick={() => {
-                            navigator.clipboard.writeText(window.location.href);
-                          }}
-                        >
-                          <Share2 className="h-5 w-5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Share this problem</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Button variant="ghost" size="icon">
+                    <Share className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
 
