@@ -135,7 +135,7 @@ const CourseCheckout = () => {
                             {plan.name}
                           </h3>
                           <div className="flex items-baseline justify-center gap-1">
-                            <span className="text-4xl font-bold text-primary">
+                            <span className={`text-4xl font-bold ${plan.id === "lifetime" ? "text-purple-500" : "text-primary"}`}>
                               ${plan.price}
                             </span>
                             <span className="text-muted-foreground">USD</span>
@@ -145,7 +145,7 @@ const CourseCheckout = () => {
                         <div className="space-y-3 mb-6">
                           {plan.benefits.map((benefit, index) => (
                             <div key={index} className="flex items-start gap-3">
-                              <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                              <Check className={`w-5 h-5 ${plan.id === "lifetime" ? "text-purple-500" : "text-primary"} flex-shrink-0 mt-0.5`} />
                               <span className="text-foreground">{benefit}</span>
                             </div>
                           ))}
