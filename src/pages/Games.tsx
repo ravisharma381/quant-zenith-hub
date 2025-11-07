@@ -39,26 +39,6 @@ const Games = () => {
       route: "/games/optiver-80"
     },
     {
-      id: 4,
-      title: "Sokoban Puzzle",
-      description: "Push boxes to their targets in this classic puzzle game. Develop spatial reasoning and problem-solving skills!",
-      icon: "📦",
-      timeLimit: "No limit",
-      category: "Logic Puzzle",
-      difficulty: "Medium",
-      route: "/games/sokoban"
-    },
-    {
-      id: 5,
-      title: "Probability Master",
-      description: "Solve probability and statistics problems under time pressure. Master quantitative reasoning!",
-      icon: "🎲",
-      timeLimit: "10 minutes",
-      category: "Probability",
-      difficulty: "Hard",
-      route: "/games/probability-master"
-    },
-    {
       id: 6,
       title: "Memory Sequences",
       description: "Memorize digit sequences and reproduce them. Train your working memory and concentration!",
