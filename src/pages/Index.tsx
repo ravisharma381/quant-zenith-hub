@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Layout from "@/components/Layout";
-import { 
-  TrendingUp, 
-  BookOpen, 
-  Gamepad2, 
-  PenTool, 
-  Users, 
-  Trophy, 
+import {
+  TrendingUp,
+  BookOpen,
+  Gamepad2,
+  PenTool,
+  Users,
+  Trophy,
   Star,
   ArrowRight,
   CheckCircle,
@@ -73,7 +72,7 @@ const Index = () => {
   ];
 
   return (
-    <Layout>
+    <>
       {/* Hero Section */}
       <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
@@ -89,7 +88,7 @@ const Index = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 animate-fade-in px-4">
-              Prepare for quantitative finance interviews and advance your career with interactive problems, 
+              Prepare for quantitative finance interviews and advance your career with interactive problems,
               expert-led courses, and real-world simulations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
@@ -118,7 +117,7 @@ const Index = () => {
               Everything You Need to Succeed
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
-              Comprehensive tools and resources designed by quantitative finance experts 
+              Comprehensive tools and resources designed by quantitative finance experts
               to help you master the field and excel in interviews.
             </p>
           </div>
@@ -166,7 +165,7 @@ const Index = () => {
                       Real Interview Questions
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      Practice with actual questions from top financial institutions like Goldman Sachs, 
+                      Practice with actual questions from top financial institutions like Goldman Sachs,
                       JPMorgan, and Two Sigma.
                     </p>
                   </div>
@@ -178,7 +177,7 @@ const Index = () => {
                       Interactive Learning
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      Engage with hands-on simulations, games, and interactive problem-solving tools 
+                      Engage with hands-on simulations, games, and interactive problem-solving tools
                       that make learning effective and enjoyable.
                     </p>
                   </div>
@@ -190,7 +189,7 @@ const Index = () => {
                       Personalized Learning Path
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      AI-powered recommendations adapt to your learning style and help you focus 
+                      AI-powered recommendations adapt to your learning style and help you focus
                       on areas that need improvement.
                     </p>
                   </div>
@@ -202,7 +201,7 @@ const Index = () => {
                       Expert Guidance
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      Learn from industry professionals with years of experience at leading 
+                      Learn from industry professionals with years of experience at leading
                       quantitative finance firms.
                     </p>
                   </div>
@@ -217,7 +216,7 @@ const Index = () => {
                     Join the Elite
                   </h3>
                   <p className="text-sm md:text-base text-muted-foreground mb-6">
-                    Over 10,000 professionals have successfully landed positions at top firms 
+                    Over 10,000 professionals have successfully landed positions at top firms
                     using QuantProf.
                   </p>
                   <Button variant="premium" size="lg" className="w-full sm:w-auto" asChild>
@@ -233,7 +232,7 @@ const Index = () => {
       </section>
 
 
-    </Layout>
+    </>
   );
 };
 

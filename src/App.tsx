@@ -1,7 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Problems from "./pages/Problems";
@@ -30,18 +29,18 @@ import NotFound from "./pages/NotFound";
 import Playlists from "./pages/Playlists";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
-
-const queryClient = new QueryClient();
+import ProtectedRoute from "./pages/ProtectedRoute";
+import AuthProvider from "./context/AuthContext";
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <AuthProvider>
     <TooltipProvider>
       <div className="dark">
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Layout><Index /></Layout>} />
             <Route path="/problems" element={<Layout><Problems /></Layout>} />
             <Route path="/problems/:id" element={<Layout><ProblemDetail /></Layout>} />
             <Route path="/games" element={<Layout><Games /></Layout>} />
@@ -53,9 +52,25 @@ const App = () => (
             <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} />
             <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
-            <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} />
+            {/* <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} /> */}
+            <Route
+              path="/my-courses"
+              element={
+                <Layout>
+                  <ProtectedRoute>
+                    <MyCourses />
+                  </ProtectedRoute>
+                </Layout>
+              }
+            />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
-            <Route path="/course/quant-interview-masterclass/checkout" element={<Layout><CourseCheckout /></Layout>} />
+            <Route path="/course/quant-interview-masterclass/checkout" element={
+              <Layout>
+                <ProtectedRoute>
+                  <CourseCheckout />
+                </ProtectedRoute>
+              </Layout>}
+            />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
@@ -72,7 +87,7 @@ const App = () => (
         </BrowserRouter>
       </div>
     </TooltipProvider>
-  </QueryClientProvider>
+  </AuthProvider>
 );
 
 export default App;

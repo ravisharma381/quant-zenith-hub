@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "@/firebase/config";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Check, CreditCard, Lock, ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
+import { Card, CardContent } from "@/components/ui/card";
+import { Check } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const CourseCheckout = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState("yearly");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [cardName, setCardName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const plans = [
     {
@@ -48,30 +47,74 @@ const CourseCheckout = () => {
     }
   ];
 
-  const handleEnroll = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!cardNumber || !expiryDate || !cvv || !cardName) {
-      toast.error("Please fill in all payment details");
-      return;
-    }
 
-    // Simulate payment processing
-    toast.success("Payment successful! Redirecting to course...");
-    
-    setTimeout(() => {
-      navigate("/course/quant-interview-masterclass/learn");
-    }, 1500);
-  };
-
-  const handleContinueToPayment = () => {
+  const handlePayment = async () => {
     setStep(2);
+    if (!user) {
+      return;
+    } setLoading(true);
+    try {
+      const createOrder = httpsCallable(functions, "createOrder");
+
+      // 🔹 call your edge function (course + plan)
+      const response: any = await createOrder({
+        courseId: "course_basic",
+        planType: selectedPlan,
+      });
+
+      const { orderId, keyId, amount, currency } = response.data.data;
+
+      // 🔹 dynamically load Razorpay checkout script
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      script.onload = () => {
+        const options = {
+          key: keyId,
+          amount,
+          currency,
+          name: "QuantZenith",
+          description: `Purchase ${selectedPlan} plan`,
+          order_id: orderId,
+          prefill: {
+            name: user.displayName || "",
+            email: user.email || "",
+          },
+          theme: { color: "#25FB2B" },
+          handler: (response: any) => {
+            console.log("Payment success:", response);
+            navigate("/course/quant-interview-masterclass/learn");
+            toast({
+              title: "Payment successful",
+              description: "Your Payment has been successful.",
+            });
+          },
+          modal: {
+            ondismiss: () => {
+              console.log("Payment popup closed");
+              setStep(1);
+              toast({
+                title: "Payment cancelled",
+                description: "Your Payment has been cancelled.",
+              });
+            },
+          },
+        };
+
+        // @ts-ignore
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      };
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Something went wrong while starting payment.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleBackToPlan = () => {
-    setStep(1);
-  };
 
   return (
     <div className="min-h-screen bg-background py-12 overflow-hidden">
@@ -85,22 +128,20 @@ const CourseCheckout = () => {
             <p className="text-lg text-muted-foreground">
               {step === 1 ? "Choose your plan and start learning today" : "Complete your payment"}
             </p>
-            
+
             {/* Step Indicator */}
             <div className="flex items-center justify-center gap-4 mt-6">
               <div className={`flex items-center gap-2 ${step === 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-                  step === 1 ? 'border-primary bg-primary/10' : 'border-muted-foreground'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${step === 1 ? 'border-primary bg-primary/10' : 'border-muted-foreground'
+                  }`}>
                   1
                 </div>
                 <span className="text-sm font-medium">Select Plan</span>
               </div>
               <div className="w-12 h-0.5 bg-border" />
               <div className={`flex items-center gap-2 ${step === 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
-                  step === 2 ? 'border-primary bg-primary/10' : 'border-muted-foreground'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${step === 2 ? 'border-primary bg-primary/10' : 'border-muted-foreground'
+                  }`}>
                   2
                 </div>
                 <span className="text-sm font-medium">Payment</span>
@@ -115,20 +156,19 @@ const CourseCheckout = () => {
                 <h2 className="text-2xl font-semibold text-foreground text-center mb-8">
                   Select Your Plan
                 </h2>
-                
+
                 <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                   {plans.map((plan) => (
                     <Card
                       key={plan.id}
-                      className={`cursor-pointer transition-all ${
-                        selectedPlan === plan.id
-                          ? plan.id === "yearly"
-                            ? "border-primary border-2 bg-primary/5"
-                            : "border-purple-500 border-2 bg-purple-500/5"
-                          : plan.id === "lifetime"
-                            ? "border-border hover:border-purple-500/50"
-                            : "border-border hover:border-primary/50"
-                      }`}
+                      className={`cursor-pointer transition-all ${selectedPlan === plan.id
+                        ? plan.id === "yearly"
+                          ? "border-primary border-2 bg-primary/5"
+                          : "border-purple-500 border-2 bg-purple-500/5"
+                        : plan.id === "lifetime"
+                          ? "border-border hover:border-purple-500/50"
+                          : "border-border hover:border-primary/50"
+                        }`}
                       onClick={() => setSelectedPlan(plan.id)}
                     >
                       <CardContent className="p-8">
@@ -143,7 +183,7 @@ const CourseCheckout = () => {
                             <span className="text-muted-foreground">USD</span>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-3 mb-6">
                           {plan.benefits.map((benefit, index) => (
                             <div key={index} className="flex items-start gap-3">
@@ -160,143 +200,12 @@ const CourseCheckout = () => {
                 <div className="flex justify-center mt-12">
                   <Button
                     size="lg"
-                    onClick={handleContinueToPayment}
+                    disabled={!selectedPlan || loading}
+                    onClick={handlePayment}
                     className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
                   >
                     Continue to Payment
                   </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Payment Details */}
-            {step === 2 && (
-              <div className="animate-slide-in-right">
-                <Button
-                  variant="ghost"
-                  onClick={handleBackToPlan}
-                  className="mb-6"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Plan Selection
-                </Button>
-
-                <div className="max-w-2xl mx-auto">
-                  <Card className="border-border">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <CreditCard className="w-5 h-5" />
-                        Payment Details
-                      </CardTitle>
-                      <div className="text-sm text-muted-foreground mt-2">
-                        Selected: {plans.find(p => p.id === selectedPlan)?.name} - ${plans.find(p => p.id === selectedPlan)?.price} USD
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <form onSubmit={handleEnroll} className="space-y-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="cardName">Cardholder Name</Label>
-                          <Input
-                            id="cardName"
-                            placeholder="John Doe"
-                            value={cardName}
-                            onChange={(e) => setCardName(e.target.value)}
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="cardNumber">Card Number</Label>
-                          <Input
-                            id="cardNumber"
-                            placeholder="1234 5678 9012 3456"
-                            value={cardNumber}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, "");
-                              if (value.length <= 16) {
-                                setCardNumber(
-                                  value.replace(/(\d{4})/g, "$1 ").trim()
-                                );
-                              }
-                            }}
-                            maxLength={19}
-                            required
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="expiryDate">Expiry Date</Label>
-                            <Input
-                              id="expiryDate"
-                              placeholder="MM/YY"
-                              value={expiryDate}
-                              onChange={(e) => {
-                                const value = e.target.value.replace(/\D/g, "");
-                                if (value.length <= 4) {
-                                  const formatted =
-                                    value.length >= 2
-                                      ? `${value.slice(0, 2)}/${value.slice(2)}`
-                                      : value;
-                                  setExpiryDate(formatted);
-                                }
-                              }}
-                              maxLength={5}
-                              required
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="cvv">CVV</Label>
-                            <Input
-                              id="cvv"
-                              placeholder="123"
-                              type="password"
-                              value={cvv}
-                              onChange={(e) => {
-                                const value = e.target.value.replace(/\D/g, "");
-                                if (value.length <= 3) {
-                                  setCvv(value);
-                                }
-                              }}
-                              maxLength={3}
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className="pt-4">
-                          <Button
-                            type="submit"
-                            className="w-full bg-primary hover:bg-primary/90 text-background font-semibold py-6 text-lg"
-                          >
-                            Enroll - ${plans.find(p => p.id === selectedPlan)?.price} USD
-                          </Button>
-                        </div>
-
-                        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                          <Lock className="w-4 h-4" />
-                          <span>Secure payment processing</span>
-                        </div>
-                      </form>
-                    </CardContent>
-                  </Card>
-
-                  {/* Trust Indicators */}
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span>30-day money-back guarantee</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span>Instant access after enrollment</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span>500+ students already enrolled</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}

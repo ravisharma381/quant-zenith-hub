@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { auth } from "@/firebase/config";
+import { useToast } from "@/hooks/use-toast";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('mockLoggedIn') === 'true');
+  const { user, loading, logout } = useAuth();
   const location = useLocation();
+  const { toast } = useToast();
 
-  const handleLogout = () => {
-    localStorage.removeItem('mockLoggedIn');
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    await logout();
+    toast({
+      title: "Signed out successfully 👋",
+      description: "You have been signed out.",
+    });
   };
 
   const navItems = [
@@ -52,7 +59,7 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
-            
+
             {/* Courses Dropdown - Hover based */}
             <div className="relative group">
               <span className={cn(
@@ -64,12 +71,12 @@ const Navigation = () => {
                 Courses
                 <ChevronDown className="w-3 h-3" />
               </span>
-              
+
               {/* Dropdown Content with screenshot styling */}
               <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
-                  <Link 
-                    to="/my-courses" 
+                  {user && <Link
+                    to="/my-courses"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                   >
                     <div className="mt-1">
@@ -79,9 +86,9 @@ const Navigation = () => {
                       <div className="font-medium text-foreground">My Courses</div>
                       <div className="text-sm text-muted-foreground">Continue your learning journey</div>
                     </div>
-                  </Link>
-                  <Link 
-                    to="/courses" 
+                  </Link>}
+                  <Link
+                    to="/courses"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                   >
                     <div className="mt-1">
@@ -99,19 +106,28 @@ const Navigation = () => {
 
           {/* Desktop Auth Buttons / User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
-            {isLoggedIn ? (
+            {loading && <span className="h-8 w-8" />}
+            {user && !loading && (
               <div className="relative group">
                 <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground">A</AvatarFallback>
+                    <AvatarImage src={user.photoURL} alt={user.displayName} />
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {user.displayName
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
-                
+
                 {/* User Dropdown with courses styling */}
                 <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
-                    <Link 
-                      to="/my-courses" 
+                    <Link
+                      to="/my-courses"
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     >
                       <div className="mt-1">
@@ -122,8 +138,8 @@ const Navigation = () => {
                         <div className="text-sm text-muted-foreground">Continue your learning journey</div>
                       </div>
                     </Link>
-                    <Link 
-                      to="/billing" 
+                    <Link
+                      to="/billing"
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     >
                       <div className="mt-1">
@@ -134,7 +150,7 @@ const Navigation = () => {
                         <div className="text-sm text-muted-foreground">View purchase history & details</div>
                       </div>
                     </Link>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item w-full text-left"
                     >
@@ -149,22 +165,24 @@ const Navigation = () => {
                   </div>
                 </div>
               </div>
-            ) : (
-              <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">
-                    <LogIn className="w-4 h-4" />
-                    Login
-                  </Link>
-                </Button>
-                <Button variant="premium" size="sm" asChild>
-                  <Link to="/signup">
-                    <User className="w-4 h-4" />
-                    Sign Up
-                  </Link>
-                </Button>
-              </>
             )}
+            {
+              !user && !loading && (
+                <>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/login">
+                      <LogIn className="w-4 h-4" />
+                      Login
+                    </Link>
+                  </Button>
+                  <Button variant="premium" size="sm" asChild>
+                    <Link to="/signup">
+                      <User className="w-4 h-4" />
+                      Sign Up
+                    </Link>
+                  </Button>
+                </>
+              )}
           </div>
 
           {/* Mobile menu button */}
@@ -181,8 +199,8 @@ const Navigation = () => {
           <div className="md:hidden">
             <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-4 mb-4">
               {/* Main Navigation Items */}
-              <Link 
-                to="/problems" 
+              <Link
+                to="/problems"
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
@@ -194,9 +212,9 @@ const Navigation = () => {
                   <div className="text-sm text-muted-foreground">Practice problem solving</div>
                 </div>
               </Link>
-              
-              <Link 
-                to="/games" 
+
+              <Link
+                to="/games"
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
@@ -208,9 +226,9 @@ const Navigation = () => {
                   <div className="text-sm text-muted-foreground">Interactive challenges</div>
                 </div>
               </Link>
-              
-              <Link 
-                to="/blogs" 
+
+              <Link
+                to="/blogs"
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
@@ -222,9 +240,9 @@ const Navigation = () => {
                   <div className="text-sm text-muted-foreground">Read insights and tips</div>
                 </div>
               </Link>
-              
-              <Link 
-                to="/courses" 
+
+              <Link
+                to="/courses"
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
@@ -236,11 +254,11 @@ const Navigation = () => {
                   <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
                 </div>
               </Link>
-              
-              {isLoggedIn && (
+
+              {user && (
                 <>
-                  <Link 
-                    to="/my-courses" 
+                  <Link
+                    to="/my-courses"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     onClick={() => setIsOpen(false)}
                   >
@@ -252,9 +270,9 @@ const Navigation = () => {
                       <div className="text-sm text-muted-foreground">Continue your learning journey</div>
                     </div>
                   </Link>
-                  
-                  <Link 
-                    to="/billing" 
+
+                  <Link
+                    to="/billing"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     onClick={() => setIsOpen(false)}
                   >
@@ -266,8 +284,8 @@ const Navigation = () => {
                       <div className="text-sm text-muted-foreground">View purchase history & details</div>
                     </div>
                   </Link>
-                  
-                  <button 
+
+                  <button
                     onClick={() => {
                       handleLogout();
                       setIsOpen(false);
@@ -284,11 +302,11 @@ const Navigation = () => {
                   </button>
                 </>
               )}
-              
-              {!isLoggedIn && (
+
+              {!user && !loading && (
                 <>
-                  <Link 
-                    to="/login" 
+                  <Link
+                    to="/login"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     onClick={() => setIsOpen(false)}
                   >
@@ -300,9 +318,9 @@ const Navigation = () => {
                       <div className="text-sm text-muted-foreground">Sign in to your account</div>
                     </div>
                   </Link>
-                  
-                  <Link 
-                    to="/signup" 
+
+                  <Link
+                    to="/signup"
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     onClick={() => setIsOpen(false)}
                   >
