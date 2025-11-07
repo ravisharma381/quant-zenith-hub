@@ -125,7 +125,9 @@ const CourseCheckout = () => {
                           ? plan.id === "yearly"
                             ? "border-primary border-2 bg-primary/5"
                             : "border-purple-500 border-2 bg-purple-500/5"
-                          : "border-border hover:border-primary/50"
+                          : plan.id === "lifetime"
+                            ? "border-border hover:border-purple-500/50"
+                            : "border-border hover:border-primary/50"
                       }`}
                       onClick={() => setSelectedPlan(plan.id)}
                     >
