@@ -122,7 +122,9 @@ const CourseCheckout = () => {
                       key={plan.id}
                       className={`cursor-pointer transition-all ${
                         selectedPlan === plan.id
-                          ? "border-primary border-2 bg-primary/5"
+                          ? plan.id === "yearly"
+                            ? "border-primary border-2 bg-primary/5"
+                            : "border-purple-500 border-2 bg-purple-500/5"
                           : "border-border hover:border-primary/50"
                       }`}
                       onClick={() => setSelectedPlan(plan.id)}
@@ -148,12 +150,6 @@ const CourseCheckout = () => {
                             </div>
                           ))}
                         </div>
-
-                        <RadioGroup value={selectedPlan} onValueChange={setSelectedPlan}>
-                          <div className="flex items-center justify-center">
-                            <RadioGroupItem value={plan.id} id={plan.id} />
-                          </div>
-                        </RadioGroup>
                       </CardContent>
                     </Card>
                   ))}
