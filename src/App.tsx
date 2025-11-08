@@ -64,7 +64,7 @@ const App = () => (
               }
             />
             <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
-            <Route path="/course/quant-interview-masterclass/checkout" element={
+            <Route path="/course/:slug/checkout" element={
               <Layout>
                 <ProtectedRoute>
                   <CourseCheckout />

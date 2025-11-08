@@ -1,20 +1,25 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { httpsCallable } from "firebase/functions";
-import { functions } from "@/firebase/config";
+import { functions, db } from "@/firebase/config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { Course } from "./Courses";
 
 const CourseCheckout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [selectedPlan, setSelectedPlan] = useState("yearly");
   const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("yearly");
   const { toast } = useToast();
+  const { slug } = useParams<{ slug: string }>();
+  const [course, setCourse] = useState<Course | null>(null);
+  const [courseLoading, setCourseLoading] = useState(true);
 
   const plans = [
     {
@@ -47,6 +52,54 @@ const CourseCheckout = () => {
     }
   ];
 
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        if (!slug) return;
+
+        const q = query(collection(db, "courses"), where("slug", "==", slug));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          const docData = snapshot.docs[0].data() as Omit<Course, "id">;
+          const fetchedCourse = { id: snapshot.docs[0].id, ...docData };
+          setCourse(fetchedCourse);
+
+          // 🔹 Check if user already enrolled
+          if (user && user.uid) {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+              console.log('userSnap.data()', userSnap.data());
+
+              const data = userSnap.data();
+              const purchased = data?.purchasedCourses || [];
+              const alreadyEnrolled = purchased.includes(fetchedCourse.id);
+
+              if (alreadyEnrolled) {
+                console.log("✅ User already enrolled, redirecting...");
+                navigate(`/course/${fetchedCourse.slug}/learn`, { replace: true });
+                return;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching course:", err);
+        toast({
+          title: "Error",
+          description: "Failed to load course details.",
+          variant: "destructive",
+        });
+      } finally {
+        setCourseLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [slug, user]);
+
 
   const handlePayment = async () => {
     setStep(2);
@@ -54,15 +107,20 @@ const CourseCheckout = () => {
       return;
     } setLoading(true);
     try {
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out")), 10000)
+      );
       const createOrder = httpsCallable(functions, "createOrder");
 
       // 🔹 call your edge function (course + plan)
-      const response: any = await createOrder({
-        courseId: "course_basic",
-        planType: selectedPlan,
-      });
-
-      const { orderId, keyId, amount, currency } = response.data.data;
+      const response: any = await Promise.race([
+        createOrder({
+          courseId: course?.id || '',
+          planType: selectedPlan,
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 10000))
+      ]);
+      const { orderId, keyId, amount, currency } = response?.data?.data || {};
 
       // 🔹 dynamically load Razorpay checkout script
       const script = document.createElement("script");
@@ -109,7 +167,12 @@ const CourseCheckout = () => {
       };
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Something went wrong while starting payment.");
+      setStep(1);
+      toast({
+        title: "Payment cancelled",
+        description: "Something went wrong while starting payment.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -149,7 +212,24 @@ const CourseCheckout = () => {
             </div>
           </div>
 
-          <div className="relative">
+          {!course && courseLoading && (
+            <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+              <div className="flex flex-col items-center gap-6">
+                {/* Scaling Circle */}
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                  <div className="w-12 h-12 rounded-full bg-primary"></div>
+                </div>
+
+                {/* Loading Text */}
+                <p className="text-muted-foreground text-lg font-medium">
+                  Fetching course plans...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!courseLoading && course && <div className="relative">
             {/* Step 1: Plan Selection */}
             {step === 1 && (
               <div className="animate-fade-in">
@@ -178,9 +258,9 @@ const CourseCheckout = () => {
                           </h3>
                           <div className="flex items-baseline justify-center gap-1">
                             <span className={`text-4xl font-bold ${plan.id === "lifetime" ? "text-purple-500" : "text-primary"}`}>
-                              ${plan.price}
+                              {`${course.currencySymbol} ${(course.price[plan.id] || 0)}`}
                             </span>
-                            <span className="text-muted-foreground">USD</span>
+                            <span className="text-muted-foreground">{course.currency}</span>
                           </div>
                         </div>
 
@@ -209,7 +289,23 @@ const CourseCheckout = () => {
                 </div>
               </div>
             )}
-          </div>
+            {step === 2 && (
+              <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+                <div className="flex flex-col items-center gap-6">
+                  {/* Scaling Circle */}
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                    <div className="w-12 h-12 rounded-full bg-primary"></div>
+                  </div>
+
+                  {/* Loading Text */}
+                  <p className="text-muted-foreground text-lg font-medium">
+                    Processing your payment...
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>}
         </div>
       </div>
     </div>
