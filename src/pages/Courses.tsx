@@ -113,19 +113,19 @@ const Courses = () => {
           </p>
         </div>
 
-        {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Courses List */}
+        <div className="space-y-6">
           {courses.map((course) => (
             <div 
               key={course.id} 
-              className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
+              className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 cursor-pointer group flex flex-col md:flex-row"
               onClick={() => {
                 if (course.id === 1) navigate('/course/quant-interview-masterclass');
                 if (course.id === 2) navigate('/course/machine-learning-for-finance');
               }}
             >
               {/* Gradient Header with Instructor Photo */}
-              <div className={`h-52 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center`}>
+              <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
                 <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
                   <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
@@ -136,42 +136,46 @@ const Courses = () => {
               </div>
               
               {/* Content */}
-              <div className="p-6 space-y-4">
-                <div>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                    {course.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1">{course.instructor}</p>
-                </div>
-                
-                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                  {course.description}
-                </p>
-                
-                {/* Rating and Stats */}
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                    <span className="font-medium text-foreground">{course.rating}</span>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {course.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">{course.instructor}</p>
                   </div>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="text-muted-foreground">{course.reviews}</span>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="text-muted-foreground">{course.duration}</span>
+                  
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                    {course.description}
+                  </p>
+                  
+                  {/* Rating and Stats */}
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 text-yellow-400 mr-1" />
+                      <span className="font-medium text-foreground">{course.rating}</span>
+                    </div>
+                    <span className="text-muted-foreground">|</span>
+                    <span className="text-muted-foreground">{course.reviews}</span>
+                    <span className="text-muted-foreground">|</span>
+                    <span className="text-muted-foreground">{course.duration}</span>
+                  </div>
                 </div>
                 
-                {/* Level Badge */}
-                <div className="flex items-center justify-between">
-                  <Badge className={getLevelColor(course.level)} variant="outline">
-                    {course.level}
-                  </Badge>
-                  <span className="text-lg font-bold text-primary">{course.price}</span>
+                {/* Bottom Section */}
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                  <div className="flex items-center gap-3">
+                    <Badge className={getLevelColor(course.level)} variant="outline">
+                      {course.level}
+                    </Badge>
+                    <span className="text-lg font-bold text-primary">{course.price}</span>
+                  </div>
+                  
+                  {/* Enroll Button */}
+                  <Button className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    Enroll Now
+                  </Button>
                 </div>
-                
-                {/* Enroll Button */}
-                <Button className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  Enroll Now
-                </Button>
               </div>
             </div>
           ))}
