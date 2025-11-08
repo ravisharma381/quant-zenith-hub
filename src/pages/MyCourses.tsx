@@ -9,7 +9,7 @@ const MyCourses = () => {
       id: 1,
       title: "Quant Interview Masterclass",
       instructor: "Dr. Michael Rodriguez",
-      description: "Master the mathematical foundations of quantitative finance",
+      description: "Master the mathematical foundations of quantitative finance including probability theory, stochastic calculus, linear algebra, and advanced statistical methods used in trading and risk management.",
       level: "Beginner",
       duration: "47.1 total hours",
       students: 451000,
@@ -23,7 +23,7 @@ const MyCourses = () => {
       id: 2,
       title: "Machine Learning for Finance",
       instructor: "Sarah Chen",
-      description: "Apply ML techniques to financial modeling and prediction",
+      description: "Apply cutting-edge machine learning techniques to financial modeling, algorithmic trading, and market prediction. Learn neural networks, ensemble methods, and deep learning frameworks for quantitative analysis.",
       level: "Advanced",
       duration: "28.4 total hours",
       students: 35000,
@@ -37,7 +37,7 @@ const MyCourses = () => {
       id: 3,
       title: "Risk Management & Portfolio Theory",
       instructor: "Prof. David Kim",
-      description: "Advanced portfolio optimization and risk modeling techniques",
+      description: "Advanced portfolio optimization techniques and comprehensive risk modeling strategies. Learn modern portfolio theory, value-at-risk calculations, stress testing, and sophisticated hedging methodologies for institutional portfolios.",
       level: "Intermediate",
       duration: "47.1 total hours",
       students: 219000,
@@ -90,14 +90,11 @@ const MyCourses = () => {
               {/* Content */}
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      {course.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{course.instructor}</p>
-                  </div>
+                  <h3 className="text-xl font-bold text-foreground">
+                    {course.title}
+                  </h3>
                   
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {course.description}
                   </p>
                   
@@ -123,12 +120,12 @@ const MyCourses = () => {
                     <span className="text-lg font-bold text-primary">{course.price}</span>
                   </div>
                   
-                  {/* Start Learning Button */}
+                  {/* View Course Button */}
                   <Button 
                     className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                     onClick={(e) => e.preventDefault()}
                   >
-                    Start Learning
+                    View Course
                   </Button>
                 </div>
               </div>
