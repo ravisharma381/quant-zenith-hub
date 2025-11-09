@@ -6,15 +6,21 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Calculator, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FeatureRow from "@/components/FeatureRow";
+import { useAuth } from "@/context/AuthContext";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
   const [showStickyBar, setShowStickyBar] = useState(false);
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
+  const { userProfile } = useAuth();
+  const slug = window.location.pathname.split("/course/")[1];
+
+  const isBought = userProfile?.purchasedSlugs?.includes(slug);
+
 
   const features = [
     "Comprehensive interview preparation framework",
-    "Real quantitative finance interview questions", 
+    "Real quantitative finance interview questions",
     "Advanced mathematical concepts and modeling",
     "Python and R programming for quants"
   ];
@@ -27,7 +33,7 @@ const CourseDetail = () => {
     },
     {
       icon: TrendingUp,
-      title: "Financial Modeling", 
+      title: "Financial Modeling",
       description: "Learn advanced modeling techniques used in top-tier investment firms."
     },
     {
@@ -114,9 +120,8 @@ const CourseDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Sticky Enrollment Bar */}
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${
-        showStickyBar ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : '-translate-y-full'
+        }`}>
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
@@ -128,7 +133,7 @@ const CourseDetail = () => {
                 <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                 <span className="text-sm font-medium text-foreground">4.9/5</span>
               </div>
-              <Button 
+              <Button
                 className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
                 onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
               >
@@ -143,64 +148,68 @@ const CourseDetail = () => {
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Course Info */}
-            <div>
-              <h1 className="text-5xl font-bold text-foreground mb-6">
-                Quant Interview Masterclass
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Master quantitative finance interviews with our comprehensive course designed by industry experts
-              </p>
-              
-              {/* Features List */}
-              <div className="space-y-4 mb-8">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                      <Check className="w-4 h-4 text-background" />
+              {/* Left Side - Course Info */}
+              <div>
+                <h1 className="text-5xl font-bold text-foreground mb-6">
+                  Quant Interview Masterclass
+                </h1>
+                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                  Master quantitative finance interviews with our comprehensive course designed by industry experts
+                </p>
+
+                {/* Features List */}
+                <div className="space-y-4 mb-8">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                        <Check className="w-4 h-4 text-background" />
+                      </div>
+                      <span className="text-foreground">{feature}</span>
                     </div>
-                    <span className="text-foreground">{feature}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* CTA and Rating */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Button 
-                  ref={enrollButtonRef}
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                  onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
-                >
-                  Enroll Me Now
-                </Button>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span className="ml-1 font-medium text-foreground">4.9/5</span>
+                {/* CTA and Rating */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <Button
+                    ref={enrollButtonRef}
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
+                    onClick={() => navigate(
+                      isBought
+                        ? `/course/${slug}/learn`
+                        : `/course/${slug}/checkout`,
+                    )}
+                  >
+                    {isBought ? "Continue Learning" : "Enroll Me Now"}
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span className="ml-1 font-medium text-foreground">4.9/5</span>
+                    </div>
+                    <span className="text-muted-foreground">from 500+ students</span>
                   </div>
-                  <span className="text-muted-foreground">from 500+ students</span>
                 </div>
               </div>
-            </div>
 
-            {/* Right Side - Course Preview */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-lg">
-                <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
-                  <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-                    <Play className="w-10 h-10 text-background ml-1" />
+              {/* Right Side - Course Preview */}
+              <div className="flex justify-center">
+                <div className="w-full max-w-lg">
+                  <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
+                    <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                      <Play className="w-10 h-10 text-background ml-1" />
+                    </div>
                   </div>
-                </div>
-                <div className="text-center mt-6">
-                  <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
-                  <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
+                  <div className="text-center mt-6">
+                    <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
+                    <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* Features Section */}
@@ -212,7 +221,7 @@ const CourseDetail = () => {
               Discover what makes our course the ultimate preparation for quantitative finance success
             </p>
           </div>
-          
+
           <div className="space-y-8">
             {courseFeatures.map((feature, index) => (
               <FeatureRow
@@ -237,7 +246,7 @@ const CourseDetail = () => {
               Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {masterTopics.map((topic, index) => (
               <Card key={index} className="border-border hover:border-primary/50 transition-colors h-full">
@@ -258,7 +267,7 @@ const CourseDetail = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-foreground text-center mb-12">Frequently Asked Questions</h2>
-          
+
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
@@ -277,8 +286,8 @@ const CourseDetail = () => {
       {/* Final CTA */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto text-center">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
             onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
           >

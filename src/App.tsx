@@ -52,7 +52,6 @@ const App = () => (
             <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} />
             <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} />
             <Route path="/courses" element={<Layout><Courses /></Layout>} />
-            {/* <Route path="/my-courses" element={<Layout><MyCourses /></Layout>} /> */}
             <Route
               path="/my-courses"
               element={

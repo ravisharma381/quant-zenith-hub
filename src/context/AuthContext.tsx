@@ -10,7 +10,7 @@ import {
     User as FirebaseUser,
     signInWithPopup,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where, documentId } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
 
 interface UserProfile {
@@ -21,6 +21,7 @@ interface UserProfile {
     provider: string;
     role: "user" | "admin";
     purchasedCourses: string[];
+    purchasedSlugs?: string[];
     createdAt?: any;
     lastLoginAt?: any;
 }
@@ -67,10 +68,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 setUser(firebaseUser);
-                const userRef = doc(db, "users", firebaseUser.uid);
-                const snap = await getDoc(userRef);
 
-                if (!snap.exists()) {
+                const userRef = doc(db, "users", firebaseUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (!userSnap.exists()) {
                     await setDoc(userRef, {
                         name: firebaseUser.displayName,
                         email: firebaseUser.email,
@@ -82,14 +84,25 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         lastLoginAt: serverTimestamp(),
                     });
                 } else {
-                    // Update last login time
                     await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
                 }
 
                 const profileSnap = await getDoc(userRef);
+                const data = profileSnap.data() as Omit<UserProfile, "id">;
+
+                // ✅ Fetch slugs for purchased course IDs
+                let purchasedSlugs: string[] = [];
+                if (data.purchasedCourses?.length) {
+                    const validIds = data.purchasedCourses.filter(Boolean);
+                    const q = query(collection(db, "courses"), where(documentId(), "in", validIds.slice(0, 10)));
+                    const snapshot = await getDocs(q);
+                    purchasedSlugs = snapshot.docs.map((doc: any) => doc.data().slug as string);
+                }
+
                 setUserProfile({
                     id: profileSnap.id,
-                    ...(profileSnap.data() as Omit<UserProfile, "id">),
+                    ...data,
+                    purchasedSlugs, // ✅ store derived field
                 });
             } else {
                 setUser(null);
@@ -100,6 +113,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
         return unsubscribe;
     }, []);
+
 
     // 🔹 3️⃣ Login with Google (with persistence)
     const loginWithGoogle = async () => {
