@@ -798,13 +798,13 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <div className="h-[calc(100vh-100px)] select-none">
+            <div className="min-h-[calc(100vh-100px)] select-none bg-black">
               <div className={cn(
-                "pb-6 pt-8",
+                "pb-6 pt-8 bg-black",
                 sidebarVisible ? "px-6" : "px-16"
               )}>
                 <div className={cn(
-                  "mx-auto",
+                  "mx-auto bg-black",
                   sidebarVisible ? "max-w-5xl" : "max-w-6xl"
                 )}>
                   {selectedContent.content}
