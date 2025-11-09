@@ -545,10 +545,10 @@ const CourseLearn = () => {
                                   {problem.title}
                                 </h4>
                               </div>
-                              <div className="flex items-center gap-4">
+                              <div className="flex items-center justify-center w-28">
                                 <Badge 
                                   variant="outline" 
-                                  className={`w-24 justify-center text-xs ${problem.solved 
+                                  className={`text-xs ${problem.solved 
                                     ? "text-green-400 border-green-400/30" 
                                     : "text-red-400 border-red-400/30"
                                   }`}
