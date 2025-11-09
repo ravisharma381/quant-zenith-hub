@@ -160,7 +160,14 @@ const CourseLearn = () => {
 
 
   const handleSubmit = () => {
-    const correctAnswer = "3";
+    let correctAnswer = "";
+    
+    if (selectedChapter === "fundamentals") {
+      correctAnswer = "4";
+    } else if (selectedChapter === "multiplication") {
+      correctAnswer = "3";
+    }
+    
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
       fireRandomCelebration();
@@ -205,6 +212,67 @@ const CourseLearn = () => {
               an experiment, and a sample point as an item inside that box that is possible to be selected as 
               a result of the experiment. Conventionally, we denote the sample space of a certain experiment
             </p>
+
+            <div className="border-l-4 border-purple-500 bg-purple-500/10 p-6 rounded-r-lg">
+              <p className="text-purple-400 font-medium mb-3 text-lg">
+                Problem (Coin Flip Sample Space):
+              </p>
+              <p className="text-white leading-relaxed text-lg mb-6">
+                Consider the experiment of flipping a fair coin twice. How many outcomes are in the sample space? 
+                Enter your answer as a single number.
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex gap-4 items-center">
+                  <Input
+                    type="text"
+                    placeholder="Enter your answer"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-purple-500"
+                  />
+                  
+                  <Button 
+                    onClick={handleSubmit}
+                    className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
+                  >
+                    <Send className="h-4 w-4" />
+                    Submit
+                  </Button>
+                </div>
+                
+                <div className="h-6 flex items-center">
+                  {feedback.type && (
+                    <div className={`text-sm font-medium ${
+                      feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      {feedback.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <Accordion type="single" collapsible className="w-full mt-6">
+                <AccordionItem value="solution" className="border border-border/30 rounded-lg px-4">
+                  <AccordionTrigger className="text-purple-300 font-medium hover:no-underline hover:text-purple-400 data-[state=open]:text-purple-400 [&>svg]:text-purple-300">
+                    View Solution
+                  </AccordionTrigger>
+                  <AccordionContent className="text-white leading-relaxed whitespace-pre-line pt-4">
+                    The answer is 4.
+
+                    Explanation:
+                    When flipping a coin twice, each flip can result in either Heads (H) or Tails (T). 
+                    
+                    The complete sample space is: {"{HH, HT, TH, TT}"}
+                    
+                    This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different 
+                    outcomes because the order matters - the first represents heads on the first flip and tails 
+                    on the second, while the second represents the opposite sequence.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
         )
       };
