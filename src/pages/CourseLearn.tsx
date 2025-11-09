@@ -548,10 +548,10 @@ const CourseLearn = () => {
                               <div className="flex items-center gap-4">
                                 <Badge 
                                   variant="outline" 
-                                  className={problem.solved 
-                                    ? "text-green-400 border-green-400/30 text-xs" 
-                                    : "text-red-400 border-red-400/30 text-xs"
-                                  }
+                                  className={`w-24 justify-center text-xs ${problem.solved 
+                                    ? "text-green-400 border-green-400/30" 
+                                    : "text-red-400 border-red-400/30"
+                                  }`}
                                 >
                                   {problem.solved ? "Solved" : "Not Solved"}
                                 </Badge>
