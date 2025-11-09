@@ -462,27 +462,27 @@ const CourseLearn = () => {
           id: "level-1",
           title: "Level 1",
           problems: [
-            { id: 1, title: "4Head I" },
-            { id: 2, title: "Coinsecutive II" },
-            { id: 3, title: "St. Petersburg I" },
-            { id: 4, title: "60 Heads I" }
+            { id: 1, title: "4Head I", solved: true },
+            { id: 2, title: "Coinsecutive II", solved: false },
+            { id: 3, title: "St. Petersburg I", solved: true },
+            { id: 4, title: "60 Heads I", solved: false }
           ]
         },
         {
           id: "level-2", 
           title: "Level 2",
           problems: [
-            { id: 5, title: "Coin Bias Detection" },
-            { id: 6, title: "Expected Flips to HTHTH" },
-            { id: 7, title: "Gambler's Ruin Variant" }
+            { id: 5, title: "Coin Bias Detection", solved: false },
+            { id: 6, title: "Expected Flips to HTHTH", solved: true },
+            { id: 7, title: "Gambler's Ruin Variant", solved: false }
           ]
         },
         {
           id: "level-3",
           title: "Level 3", 
           problems: [
-            { id: 8, title: "Optimal Stopping Coin" },
-            { id: 9, title: "Secretary Problem Coins" }
+            { id: 8, title: "Optimal Stopping Coin", solved: false },
+            { id: 9, title: "Secretary Problem Coins", solved: false }
           ]
         }
       ]
@@ -539,20 +539,21 @@ const CourseLearn = () => {
                       {topic.problems.map((problem, index) => (
                         <div key={problem.id} className="hover:bg-green-500/10 transition-colors cursor-pointer">
                           <div className="px-6 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="relative">
-                                <div className="w-4 h-4 border-2 border-gray-400 rounded-full bg-transparent flex items-center justify-center cursor-pointer hover:border-gray-300 transition-colors">
-                                  {/* Empty circle for completion state */}
-                                </div>
-                              </div>
+                            <div className="flex items-center justify-between">
                               <div className="flex-1">
                                 <h4 className="text-sm font-normal text-foreground">
                                   {problem.title}
                                 </h4>
                               </div>
                               <div className="flex items-center gap-4">
-                                <Badge variant="outline" className="text-green-400 border-green-400/30 text-xs">
-                                  Level {topic.title.split(' ')[1]}
+                                <Badge 
+                                  variant="outline" 
+                                  className={problem.solved 
+                                    ? "text-green-400 border-green-400/30 text-xs" 
+                                    : "text-red-400 border-red-400/30 text-xs"
+                                  }
+                                >
+                                  {problem.solved ? "Solved" : "Not Solved"}
                                 </Badge>
                               </div>
                             </div>
