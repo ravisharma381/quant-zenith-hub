@@ -157,6 +157,7 @@ const CourseLearn = () => {
 
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
+  const [shakeKey, setShakeKey] = useState(0);
 
 
   const handleSubmit = () => {
@@ -173,6 +174,7 @@ const CourseLearn = () => {
       fireRandomCelebration();
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
+      setShakeKey(prev => prev + 1);
     }
   };
 
@@ -244,16 +246,19 @@ const CourseLearn = () => {
                 
                 <div className="h-6 flex items-center">
                   {feedback.type && (
-                    <div className={`text-sm font-medium ${
-                      feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
-                    }`}>
+                    <div 
+                      key={shakeKey}
+                      className={`text-sm font-medium ${
+                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
+                      }`}
+                    >
                       {feedback.message}
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-8 space-y-4">
+              <div className="mt-4 space-y-4">
                 <p className="text-purple-400 font-medium text-lg">
                   Solution:
                 </p>
@@ -360,9 +365,12 @@ const CourseLearn = () => {
                   
                   <div className="h-6 flex items-center">
                     {feedback.type && (
-                      <div className={`text-sm font-medium ${
-                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
-                      }`}>
+                      <div 
+                        key={shakeKey}
+                        className={`text-sm font-medium ${
+                          feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
+                        }`}
+                      >
                         {feedback.message}
                       </div>
                     )}
