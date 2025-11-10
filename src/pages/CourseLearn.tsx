@@ -219,20 +219,27 @@ const CourseLearn = () => {
               <p className="text-purple-400 font-medium mb-3 text-lg">
                 Problem (Coin Flip Sample Space):
               </p>
-              <p className="text-white leading-relaxed text-lg mb-6">
+              <p className="text-white leading-relaxed text-lg mb-4">
                 Consider the experiment of flipping a fair coin twice. How many outcomes are in the sample space? 
                 Enter your answer as a single number.
               </p>
               
-              <div className="space-y-4">
+              <div className="space-y-4 mb-4">
                 <div className="flex gap-4 items-center">
                   <Input
+                    key={shakeKey}
                     type="text"
                     placeholder="Enter your answer"
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-purple-500"
+                    className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                      feedback.type === 'wrong' 
+                        ? 'border-red-500 animate-shake focus:border-red-500' 
+                        : feedback.type === 'correct'
+                        ? 'border-green-500 focus:border-green-500'
+                        : 'focus:border-purple-500'
+                    }`}
                   />
                   
                   <Button 
@@ -242,19 +249,6 @@ const CourseLearn = () => {
                     <Send className="h-4 w-4" />
                     Submit
                   </Button>
-                </div>
-                
-                <div className="h-6 flex items-center">
-                  {feedback.type && (
-                    <div 
-                      key={shakeKey}
-                      className={`text-sm font-medium ${
-                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
-                      }`}
-                    >
-                      {feedback.message}
-                    </div>
-                  )}
                 </div>
               </div>
 
