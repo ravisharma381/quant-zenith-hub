@@ -252,9 +252,11 @@ const CourseLearn = () => {
                 </div>
               </div>
 
+              <hr className="border-t border-border/30 my-4" />
+
               <div className="mt-4 space-y-4">
-                <p className="text-purple-400 font-medium text-lg">
-                  Solution:
+                <p className="text-white font-medium text-lg">
+                  SOLUTION:
                 </p>
                 <p className="text-white leading-relaxed text-lg">
                   The answer is 4.
