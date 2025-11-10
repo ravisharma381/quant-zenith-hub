@@ -245,7 +245,7 @@ const CourseLearn = () => {
                 <div className="h-6 flex items-center">
                   {feedback.type && (
                     <div className={`text-sm font-medium ${
-                      feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                      feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
                     }`}>
                       {feedback.message}
                     </div>
@@ -253,25 +253,25 @@ const CourseLearn = () => {
                 </div>
               </div>
 
-              <Accordion type="single" collapsible className="w-full mt-6">
-                <AccordionItem value="solution" className="border border-border/30 rounded-lg px-4">
-                  <AccordionTrigger className="text-purple-300 font-medium hover:no-underline hover:text-purple-400 data-[state=open]:text-purple-400 [&>svg]:text-purple-300">
-                    View Solution
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white leading-relaxed whitespace-pre-line pt-4">
-                    The answer is 4.
-
-                    Explanation:
-                    When flipping a coin twice, each flip can result in either Heads (H) or Tails (T). 
-                    
-                    The complete sample space is: {"{HH, HT, TH, TT}"}
-                    
-                    This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different 
-                    outcomes because the order matters - the first represents heads on the first flip and tails 
-                    on the second, while the second represents the opposite sequence.
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <div className="mt-8 space-y-4">
+                <p className="text-purple-400 font-medium text-lg">
+                  Solution:
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  The answer is 4.
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  Explanation: When flipping a coin twice, each flip can result in either Heads (H) or Tails (T). 
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  The complete sample space is: {"{HH, HT, TH, TT}"}
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different 
+                  outcomes because the order matters - the first represents heads on the first flip and tails 
+                  on the second, while the second represents the opposite sequence.
+                </p>
+              </div>
             </div>
           </div>
         )
@@ -361,7 +361,7 @@ const CourseLearn = () => {
                   <div className="h-6 flex items-center">
                     {feedback.type && (
                       <div className={`text-sm font-medium ${
-                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
+                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
                       }`}>
                         {feedback.message}
                       </div>
