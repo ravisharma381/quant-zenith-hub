@@ -56,16 +56,11 @@ const CourseLearn = () => {
           expanded: true
         },
         {
-          id: "probability-theory",
-          title: "Probability Theory",
+          id: "playlists-section",
+          title: "Playlists",
           chapters: [
-            { id: "sample-spaces", title: "Sample Spaces and Events", completed: false },
-            { id: "conditional-probability", title: "Conditional Probability", completed: false },
-            { id: "independence", title: "Independence", completed: false },
-            { id: "bayes-theorem", title: "Bayes' Theorem", completed: false },
-            { id: "law-total-probability", title: "Law of Total Probability", completed: false },
-            { id: "counting-methods", title: "Advanced Counting Methods", completed: false },
-            { id: "probability-distributions", title: "Basic Probability Distributions", completed: false },
+            { id: "playlist-1", title: "Playlist 1", completed: false },
+            { id: "playlist-2", title: "Playlist 2", completed: false },
           ],
           expanded: false
         },
@@ -417,7 +412,7 @@ const CourseLearn = () => {
       };
     }
 
-    if (selectedChapter === "playlists") {
+    if (selectedChapter === "playlists" || selectedChapter === "playlist-1" || selectedChapter === "playlist-2") {
       return {
         title: "Company Specific Playlists",
         content: (
@@ -573,7 +568,6 @@ const CourseLearn = () => {
           <button
             onClick={() => {
               setCurrentView('course');
-              setSelectedChapter('playlists');
             }}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
