@@ -252,7 +252,7 @@ const CourseLearn = () => {
                 </div>
               </div>
 
-              <hr className="border-t my-4" style={{ borderColor: '#c34aff' }} />
+              <hr className="border-t border-border/30 my-4" />
 
               <div className="mt-4 space-y-4">
                 <p className="text-white font-medium text-lg">
