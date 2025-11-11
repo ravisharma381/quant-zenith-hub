@@ -18,34 +18,6 @@ const MyCourses = () => {
       price: "$149",
       image: "/placeholder.svg",
       gradient: "from-orange-400 to-yellow-500"
-    },
-    {
-      id: 2,
-      title: "Machine Learning for Finance",
-      instructor: "Sarah Chen",
-      description: "Apply cutting-edge machine learning techniques to financial modeling, algorithmic trading, and market prediction. Learn neural networks, ensemble methods, and deep learning frameworks for quantitative analysis.",
-      level: "Advanced",
-      duration: "28.4 total hours",
-      students: 35000,
-      rating: 4.6,
-      reviews: "3.5K ratings",
-      price: "$299",
-      image: "/placeholder.svg",
-      gradient: "from-purple-500 to-blue-600"
-    },
-    {
-      id: 3,
-      title: "Risk Management & Portfolio Theory",
-      instructor: "Prof. David Kim",
-      description: "Advanced portfolio optimization techniques and comprehensive risk modeling strategies. Learn modern portfolio theory, value-at-risk calculations, stress testing, and sophisticated hedging methodologies for institutional portfolios.",
-      level: "Intermediate",
-      duration: "47.1 total hours",
-      students: 219000,
-      rating: 4.6,
-      reviews: "219K ratings",
-      price: "$199",
-      image: "/placeholder.svg",
-      gradient: "from-pink-500 to-purple-600"
     }
   ];
 

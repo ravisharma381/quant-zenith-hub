@@ -19,77 +19,53 @@ const Courses = () => {
       reviews: "451K ratings",
       price: "$149",
       image: "/placeholder.svg",
-      gradient: "from-orange-400 to-yellow-500"
+      gradient: "from-orange-400 to-yellow-500",
+      available: true
     },
     {
       id: 2,
       title: "Machine Learning for Finance",
-      instructor: "Sarah Chen",
-      description: "Apply cutting-edge machine learning techniques to financial modeling, algorithmic trading, and market prediction. Learn neural networks, ensemble methods, and deep learning frameworks for quantitative analysis.",
+      instructor: "Dr. Sarah Chen",
+      description: "Apply cutting-edge machine learning techniques to financial modeling, algorithmic trading, and market prediction. Learn neural networks, ensemble methods, and deep learning frameworks.",
       level: "Advanced",
-      duration: "28.4 total hours",
-      students: 35000,
-      rating: 4.6,
-      reviews: "3.5K ratings",
-      price: "$299",
+      duration: "35.5 total hours",
+      students: 0,
+      rating: 0,
+      reviews: "",
+      price: "$249",
       image: "/placeholder.svg",
-      gradient: "from-purple-500 to-blue-600"
+      gradient: "from-purple-500 to-blue-600",
+      available: false
     },
     {
       id: 3,
-      title: "Risk Management & Portfolio Theory",
-      instructor: "Prof. David Kim",
-      description: "Advanced portfolio optimization techniques and comprehensive risk modeling strategies. Learn modern portfolio theory, value-at-risk calculations, stress testing, and sophisticated hedging methodologies for institutional portfolios.",
-      level: "Intermediate",
-      duration: "47.1 total hours",
-      students: 219000,
-      rating: 4.6,
-      reviews: "219K ratings",
-      price: "$199",
+      title: "Deep Learning for Finance",
+      instructor: "Prof. Alex Thompson",
+      description: "Master deep learning architectures for financial applications including LSTMs, transformers, and neural networks for time series prediction, portfolio optimization, and risk assessment.",
+      level: "Advanced",
+      duration: "40.2 total hours",
+      students: 0,
+      rating: 0,
+      reviews: "",
+      price: "$299",
       image: "/placeholder.svg",
-      gradient: "from-pink-500 to-purple-600"
+      gradient: "from-cyan-400 to-purple-500",
+      available: false
     },
     {
       id: 4,
-      title: "Derivatives Pricing Models",
-      instructor: "Dr. Elena Petrov",
-      description: "Deep dive into advanced derivatives pricing including Black-Scholes framework, Monte Carlo simulations, binomial trees, and exotic options valuation. Master volatility modeling and Greeks for professional trading.",
+      title: "Reinforcement Learning for Finance",
+      instructor: "Dr. Emma Wilson",
+      description: "Learn to apply reinforcement learning algorithms to algorithmic trading, portfolio management, and market making. Master Q-learning, policy gradients, and multi-agent systems.",
       level: "Advanced",
-      duration: "32.8 total hours",
-      students: 87000,
-      rating: 4.8,
-      reviews: "87K ratings",
+      duration: "38.8 total hours",
+      students: 0,
+      rating: 0,
+      reviews: "",
       price: "$349",
       image: "/placeholder.svg",
-      gradient: "from-green-400 to-blue-500"
-    },
-    {
-      id: 5,
-      title: "Machine Learning for Finance",
-      instructor: "Alex Thompson",
-      description: "Apply machine learning algorithms to solve complex financial problems. Learn predictive modeling, sentiment analysis, algorithmic trading strategies, and risk assessment using Python and advanced ML frameworks.",
-      level: "Intermediate",
-      duration: "41.2 total hours",
-      students: 156000,
-      rating: 4.7,
-      reviews: "156K ratings",
-      price: "$249",
-      image: "/placeholder.svg",
-      gradient: "from-cyan-400 to-purple-500"
-    },
-    {
-      id: 6,
-      title: "Fixed Income Securities",
-      instructor: "Dr. James Wilson",
-      description: "Comprehensive analysis of bonds, yield curves, duration, convexity, and credit risk assessment. Master fixed income valuation techniques and understand interest rate derivatives for portfolio management.",
-      level: "Intermediate",
-      duration: "36.5 total hours",
-      students: 94000,
-      rating: 4.5,
-      reviews: "94K ratings",
-      price: "$179",
-      image: "/placeholder.svg",
-      gradient: "from-indigo-400 to-pink-500"
+      gradient: "from-green-400 to-blue-500",
+      available: false
     }
   ];
 
@@ -118,10 +94,9 @@ const Courses = () => {
           {courses.map((course) => (
             <div 
               key={course.id} 
-              className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 cursor-pointer group flex flex-col md:flex-row"
+              className={`bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row ${course.available ? 'cursor-pointer' : 'cursor-default'}`}
               onClick={() => {
-                if (course.id === 1) navigate('/course/quant-interview-masterclass');
-                if (course.id === 2) navigate('/course/machine-learning-for-finance');
+                if (course.available && course.id === 1) navigate('/course/quant-interview-masterclass');
               }}
             >
               {/* Gradient Header with Instructor Photo */}
@@ -147,16 +122,18 @@ const Courses = () => {
                   </p>
                   
                   {/* Rating and Stats */}
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                      <span className="font-medium text-foreground">{course.rating}</span>
+                  {course.available && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-400 mr-1" />
+                        <span className="font-medium text-foreground">{course.rating}</span>
+                      </div>
+                      <span className="text-muted-foreground">|</span>
+                      <span className="text-muted-foreground">{course.reviews}</span>
+                      <span className="text-muted-foreground">|</span>
+                      <span className="text-muted-foreground">{course.duration}</span>
                     </div>
-                    <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.reviews}</span>
-                    <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.duration}</span>
-                  </div>
+                  )}
                 </div>
                 
                 {/* Bottom Section */}
@@ -169,9 +146,15 @@ const Courses = () => {
                   </div>
                   
                   {/* View Course Button */}
-                  <Button className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    View Course
-                  </Button>
+                  {course.available ? (
+                    <Button className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      View Course
+                    </Button>
+                  ) : (
+                    <Badge className="bg-muted text-muted-foreground border-border" variant="outline">
+                      Coming Soon
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
