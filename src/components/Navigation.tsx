@@ -5,13 +5,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
-import { auth } from "@/firebase/config";
 import { useToast } from "@/hooks/use-toast";
 import { AvatarImage } from "@radix-ui/react-avatar";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, userProfile } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
 
@@ -106,6 +105,15 @@ const Navigation = () => {
 
           {/* Desktop Auth Buttons / User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Admin */}
+            {userProfile?.role === "admin" && <div className="relative group">
+              <Link
+                to='/admin/courses'
+                className={"text-cyan-400 text-base font-medium transition-colors hover:text-primary"}
+              >
+                Admin
+              </Link>
+            </div>}
             {loading && <span className="h-8 w-8" />}
             {user && !loading && (
               <div className="relative group">

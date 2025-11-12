@@ -5,6 +5,14 @@ import { defineSecret } from "firebase-functions/params";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { FieldValue } from "firebase-admin/firestore";
 import * as crypto from "crypto";
+import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from "firebase-functions/firestore";
+
+interface TopicMeta {
+  topicId: string;
+  title: string;
+  type: "layout" | "question" | "playlist";
+  order: number;
+}
 
 setGlobalOptions({ region: "asia-south1", timeoutSeconds: 30, memory: "256MiB" });
 if (!admin.apps.length) {
@@ -166,3 +174,70 @@ export const razorpayWebhook = onRequest(
     }
   }
 );
+
+/**
+ * ✅ When a topic is created → push metadata into chapter.topicMeta
+ */
+export const onTopicCreated = onDocumentCreated("topics/{topicId}", async (event) => {
+  const topic = event.data?.data();
+  if (!topic || !topic.chapterId) return;
+
+  const chapterRef = db.collection("chapters").doc(topic.chapterId);
+  const chapterSnap = await chapterRef.get();
+
+  if (!chapterSnap.exists) return;
+
+  const metaEntry = {
+    topicId: event.params.topicId,
+    title: topic.title,
+    type: topic.type,
+    order: topic.order ?? 0,
+  };
+
+  await chapterRef.update({
+    topicMeta: admin.firestore.FieldValue.arrayUnion(metaEntry),
+    totalTopics: admin.firestore.FieldValue.increment(1),
+  });
+});
+
+/**
+ * ✅ When a topic is updated → sync title/type/order in chapter.topicMeta
+ */
+export const onTopicUpdated = onDocumentUpdated("topics/{topicId}", async (event) => {
+  const after = event.data?.after.data();
+  if (!after || !after.chapterId) return;
+
+  const chapterRef = db.collection("chapters").doc(after.chapterId);
+  const chapterSnap = await chapterRef.get();
+  if (!chapterSnap.exists) return;
+
+  const topicMeta = chapterSnap.data()?.topicMeta || [];
+  const updatedMeta = topicMeta.map((meta: TopicMeta) =>
+    meta.topicId === event.params.topicId
+      ? { ...meta, title: after.title, type: after.type, order: after.order ?? 0 }
+      : meta
+  );
+
+  await chapterRef.update({ topicMeta: updatedMeta });
+});
+
+/**
+ * ✅ When a topic is deleted → remove it from chapter.topicMeta
+ */
+export const onTopicDeleted = onDocumentDeleted("topics/{topicId}", async (event) => {
+  const topic = event.data?.data();
+  if (!topic || !topic.chapterId) return;
+
+  const chapterRef = db.collection("chapters").doc(topic.chapterId);
+  const chapterSnap = await chapterRef.get();
+  if (!chapterSnap.exists) return;
+
+  const topicMeta = chapterSnap.data()?.topicMeta || [];
+  const filteredMeta = topicMeta.filter((meta: TopicMeta) => meta.topicId !== event.params.topicId);
+
+  await chapterRef.update({
+    topicMeta: filteredMeta,
+    totalTopics: admin.firestore.FieldValue.increment(-1),
+  });
+});
+

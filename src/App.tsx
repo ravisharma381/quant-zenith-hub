@@ -31,6 +31,13 @@ import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import AuthProvider from "./context/AuthContext";
+import AdminCourses from "./pages/Admin/AdminCourses";
+import AdminRoute from "./pages/Admin/AdminRoute";
+import Chapters from "./pages/Admin/Chapters/Chapters";
+import AdminTopics from "./pages/Admin/Chapters/Topics/Topics";
+import AdminBuilder from "./pages/Admin/Chapters/Topics/Builder";
+import AdminPlaylists from "./pages/Admin/Playlists/AdminPlaylists";
+import AdminChapters from "./pages/Admin/Chapters/Chapters";
 
 const App = () => (
   <AuthProvider>
@@ -69,6 +76,46 @@ const App = () => (
                   <CourseCheckout />
                 </ProtectedRoute>
               </Layout>}
+            />
+            <Route path="/admin/courses"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <AdminCourses />
+                  </AdminRoute>
+                </Layout>}
+            />
+            <Route path="/admin/builder"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <AdminBuilder />
+                  </AdminRoute>
+                </Layout>}
+            />
+            <Route path="/admin/courses/:courseId"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <AdminChapters />
+                  </AdminRoute>
+                </Layout>}
+            />
+            <Route path="/admin/course/:courseId/playlists"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <AdminPlaylists />
+                  </AdminRoute>
+                </Layout>}
+            />
+            <Route path="/admin/course/:courseId/chapter/:chapterId/topics"
+              element={
+                <Layout>
+                  <AdminRoute>
+                    <AdminTopics />
+                  </AdminRoute>
+                </Layout>}
             />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
