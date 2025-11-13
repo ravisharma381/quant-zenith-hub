@@ -81,7 +81,7 @@ const ProblemDetail = () => {
             </TabsList>
             
             <div className="flex items-center gap-4">
-              <Badge className={getDifficultyColor(problem.difficulty)}>
+              <Badge className={`${getDifficultyColor(problem.difficulty)} hidden md:flex text-center items-center justify-center`}>
                 Lvl {problem.difficulty}/10
               </Badge>
               <div className="flex items-center gap-2">
