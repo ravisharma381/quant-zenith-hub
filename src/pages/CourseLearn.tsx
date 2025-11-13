@@ -242,7 +242,8 @@ const CourseLearn = () => {
                   
                   <Button 
                     onClick={handleSubmit}
-                    className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
+                    variant="clean"
+                    className="bg-purple-500 hover:bg-purple-600 hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] text-white font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
                   >
                     <Send className="h-4 w-4" />
                     Submit
