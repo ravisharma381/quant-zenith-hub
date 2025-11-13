@@ -685,8 +685,18 @@ const CourseLearn = () => {
           {/* Left Sidebar */}
           {sidebarVisible && (
             <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
+              {/* Close button for mobile */}
+              <div className="flex justify-end px-4 pt-4 md:hidden">
+                <button
+                  onClick={() => setSidebarVisible(false)}
+                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+              </div>
+              
               {/* Search Bar */}
-              <div className="px-6 mb-1 mt-6 flex-shrink-0">
+              <div className="px-6 mb-1 mt-2 md:mt-6 flex-shrink-0">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -814,7 +824,10 @@ const CourseLearn = () => {
           )}
 
             {/* Main Content */}
-          <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
+          <div className={cn(
+            "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
+            sidebarVisible && "hidden md:block"
+          )}>
             {/* Controls above lesson title */}
             <div className={cn(
               "pt-6 pb-4",
@@ -825,9 +838,9 @@ const CourseLearn = () => {
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => setSidebarVisible(!sidebarVisible)}
-                      className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                      className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors md:inline-flex"
                     >
-                      <Menu className="h-4 w-4" />
+                      <Menu className="h-5 w-5 md:h-4 md:w-4" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
