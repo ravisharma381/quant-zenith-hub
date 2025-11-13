@@ -129,9 +129,9 @@ const Courses = () => {
                         <span className="font-medium text-foreground">{course.rating}</span>
                       </div>
                       <span className="text-muted-foreground">|</span>
-                      <span className="text-muted-foreground">{course.reviews}</span>
+                      <span className="text-muted-foreground">100+ chapters</span>
                       <span className="text-muted-foreground">|</span>
-                      <span className="text-muted-foreground">{course.duration}</span>
+                      <span className="text-muted-foreground">1000+ problems</span>
                     </div>
                   )}
                 </div>
