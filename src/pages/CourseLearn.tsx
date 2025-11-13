@@ -326,19 +326,19 @@ const CourseLearn = () => {
         content: (
           <div className="max-w-4xl mx-auto">
             <Tabs defaultValue="problem" className="w-full">
-              <div className="flex items-center justify-between mb-6">
-                <TabsList className="grid w-48 grid-cols-2">
+              <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+                <TabsList className="grid w-48 grid-cols-2 shrink-0">
                   <TabsTrigger value="problem">Problem</TabsTrigger>
                   <TabsTrigger value="solution">Solution</TabsTrigger>
                 </TabsList>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4 flex-wrap">
                   <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border hidden md:flex text-center`}>
                     Lvl {problemData.difficulty}/10
                   </Badge>
                   
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Asked in:</span>
+                    <span className="text-sm text-muted-foreground hidden sm:inline">Asked in:</span>
                     <div className="flex gap-2">
                       {problemData.askedIn.map((company, index) => (
                         <LogoWithSkeleton 
