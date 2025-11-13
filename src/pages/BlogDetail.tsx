@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, User, Share2, Facebook, Twitter, Linkedin, Mail } from "lucide-react";
+import { Calendar, Share2, Facebook, Twitter, Linkedin, Mail } from "lucide-react";
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -11,7 +11,6 @@ const BlogDetail = () => {
     id: 1,
     title: "The Future of Quantitative Finance: AI and Machine Learning",
     category: "Technology",
-    author: "Dr. Sarah Chen",
     publishDate: "2024-01-15",
     content: `
 Despite being one of the most secretive industries in the world, quantitative finance comes to light in the various conferences, competitions, and events held throughout the year. These events bring quants from all over the world to work together on challenging problems and disseminate learnings and knowledge to one another. Not only are such events great for learning, but they also pose special opportunities to network with industry leaders who can help you accelerate your career.
@@ -49,10 +48,6 @@ In this article, we cover a handful of the most prominent quant conferences, com
         {/* Meta Information */}
         <div className="border-t-2 border-b-2 border-border py-4 mb-8">
           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center">
-              <User className="w-4 h-4 mr-2" />
-              {blogPost.author}
-            </div>
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
               {formatDate(blogPost.publishDate)}
