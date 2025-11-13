@@ -118,7 +118,10 @@ const CourseLearn = () => {
   );
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+  const [sidebarVisible, setSidebarVisible] = useState<boolean>(() => {
+    // Hide sidebar by default on mobile (screen width < 768px)
+    return window.innerWidth >= 768;
+  });
   const [currentView, setCurrentView] = useState<'course' | 'playlists' | 'company'>('course');
   const [selectedCompany, setSelectedCompany] = useState<string>('');
 
@@ -670,10 +673,18 @@ const CourseLearn = () => {
         <Navigation />
         
         
-        <div className="flex min-h-[calc(100vh-80px)]">
+        <div className="flex min-h-[calc(100vh-80px)] relative">
+          {/* Mobile backdrop */}
+          {sidebarVisible && (
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setSidebarVisible(false)}
+            />
+          )}
+          
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col">
+            <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
               {/* Search Bar */}
               <div className="px-6 mb-1 mt-6 flex-shrink-0">
                 <div className="relative">
@@ -707,6 +718,10 @@ const CourseLearn = () => {
                             onClick={() => {
                               setSelectedChapter(chapter.id);
                               setCurrentView('course');
+                              // Close sidebar on mobile after selecting a chapter
+                              if (window.innerWidth < 768) {
+                                setSidebarVisible(false);
+                              }
                             }}
                           >
                             <div className="relative">
@@ -761,6 +776,10 @@ const CourseLearn = () => {
                                 onClick={() => {
                                   setSelectedChapter(chapter.id);
                                   setCurrentView('course');
+                                  // Close sidebar on mobile after selecting a chapter
+                                  if (window.innerWidth < 768) {
+                                    setSidebarVisible(false);
+                                  }
                                 }}
                               >
                                 <div className="relative">
@@ -799,7 +818,7 @@ const CourseLearn = () => {
             {/* Controls above lesson title */}
             <div className={cn(
               "pt-6 pb-4",
-              sidebarVisible ? "px-6" : "px-16"
+              sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
             )}>
               <div className="flex items-center gap-2 mb-4">
                 <Tooltip>
@@ -867,7 +886,7 @@ const CourseLearn = () => {
             <div className="min-h-[calc(100vh-100px)] select-none bg-black">
               <div className={cn(
                 "pb-6 pt-8 bg-black",
-                sidebarVisible ? "px-6" : "px-16"
+                sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
               )}>
                 <div className={cn(
                   "mx-auto bg-black",
