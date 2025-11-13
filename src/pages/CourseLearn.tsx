@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft, Share } from "lucide-react";
@@ -34,7 +34,7 @@ interface Section {
 }
 
 const CourseLearn = () => {
-  const { courseId } = useParams();
+  const { courseId, chapterId } = useParams();
   const navigate = useNavigate();
   
   // Course data matching the screenshot structure
@@ -116,12 +116,22 @@ const CourseLearn = () => {
   const [sections, setSections] = useState<Section[]>(
     courseData[courseId as keyof typeof courseData]?.sections || []
   );
-  const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
+  const [selectedChapter, setSelectedChapter] = useState<string>(chapterId || "fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(() => {
     // Hide sidebar by default on mobile (screen width < 768px)
     return window.innerWidth >= 768;
   });
+
+  // Update selected chapter when URL changes
+  useEffect(() => {
+    if (chapterId) {
+      setSelectedChapter(chapterId);
+    } else {
+      // Redirect to first chapter if no chapterId
+      navigate(`/course/${courseId}/learn/fundamentals`, { replace: true });
+    }
+  }, [chapterId, courseId, navigate]);
   const [currentView, setCurrentView] = useState<'course' | 'playlists' | 'company'>('course');
   const [selectedCompany, setSelectedCompany] = useState<string>('');
 
@@ -190,7 +200,7 @@ const CourseLearn = () => {
         content: (
           <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
             {/* Video Section - Right after heading */}
-            <div className="w-full">
+            <div className="w-[85%] mx-auto">
               <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
                 <video 
                   className="w-full h-full object-cover"
@@ -210,7 +220,7 @@ const CourseLearn = () => {
             </p>
 
             {/* Image Section - Center aligned, white background, no rounded corners */}
-            <div className="w-1/2 mx-auto flex flex-col items-center">
+            <div className="w-[42.5%] mx-auto flex flex-col items-center">
               <div className="relative w-full aspect-video bg-white overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"
@@ -686,13 +696,15 @@ const CourseLearn = () => {
 
   const goToPreviousChapter = () => {
     if (canGoPrevious) {
-      setSelectedChapter(allChapters[currentChapterIndex - 1].id);
+      const prevChapterId = allChapters[currentChapterIndex - 1].id;
+      navigate(`/course/${courseId}/learn/${prevChapterId}`);
     }
   };
 
   const goToNextChapter = () => {
     if (canGoNext) {
-      setSelectedChapter(allChapters[currentChapterIndex + 1].id);
+      const nextChapterId = allChapters[currentChapterIndex + 1].id;
+      navigate(`/course/${courseId}/learn/${nextChapterId}`);
     }
   };
 
@@ -755,7 +767,7 @@ const CourseLearn = () => {
                                 : "text-white hover:bg-gray-800"
                             )}
                             onClick={() => {
-                              setSelectedChapter(chapter.id);
+                              navigate(`/course/${courseId}/learn/${chapter.id}`);
                               setCurrentView('course');
                               // Close sidebar on mobile after selecting a chapter
                               if (window.innerWidth < 768) {
@@ -813,7 +825,7 @@ const CourseLearn = () => {
                                     : "text-white hover:bg-gray-800"
                                 )}
                                 onClick={() => {
-                                  setSelectedChapter(chapter.id);
+                                  navigate(`/course/${courseId}/learn/${chapter.id}`);
                                   setCurrentView('course');
                                   // Close sidebar on mobile after selecting a chapter
                                   if (window.innerWidth < 768) {

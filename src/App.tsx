@@ -58,7 +58,7 @@ const App = () => (
             <Route path="/course/quant-interview-masterclass/checkout" element={<Layout><CourseCheckout /></Layout>} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
-            <Route path="/course/:courseId/learn" element={<CourseLearn />} />
+            <Route path="/course/:courseId/learn/:chapterId?" element={<CourseLearn />} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
