@@ -56,16 +56,11 @@ const CourseLearn = () => {
           expanded: true
         },
         {
-          id: "probability-theory",
-          title: "Probability Theory",
+          id: "playlists-section",
+          title: "Playlists",
           chapters: [
-            { id: "sample-spaces", title: "Sample Spaces and Events", completed: false },
-            { id: "conditional-probability", title: "Conditional Probability", completed: false },
-            { id: "independence", title: "Independence", completed: false },
-            { id: "bayes-theorem", title: "Bayes' Theorem", completed: false },
-            { id: "law-total-probability", title: "Law of Total Probability", completed: false },
-            { id: "counting-methods", title: "Advanced Counting Methods", completed: false },
-            { id: "probability-distributions", title: "Basic Probability Distributions", completed: false },
+            { id: "playlist-1", title: "Playlist 1", completed: false },
+            { id: "playlist-2", title: "Playlist 2", completed: false },
           ],
           expanded: false
         },
@@ -123,7 +118,10 @@ const CourseLearn = () => {
   );
   const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+  const [sidebarVisible, setSidebarVisible] = useState<boolean>(() => {
+    // Hide sidebar by default on mobile (screen width < 768px)
+    return window.innerWidth >= 768;
+  });
   const [currentView, setCurrentView] = useState<'course' | 'playlists' | 'company'>('course');
   const [selectedCompany, setSelectedCompany] = useState<string>('');
 
@@ -157,15 +155,24 @@ const CourseLearn = () => {
 
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
+  const [shakeKey, setShakeKey] = useState(0);
 
 
   const handleSubmit = () => {
-    const correctAnswer = "3";
+    let correctAnswer = "";
+    
+    if (selectedChapter === "fundamentals") {
+      correctAnswer = "4";
+    } else if (selectedChapter === "multiplication") {
+      correctAnswer = "3";
+    }
+    
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
       fireRandomCelebration();
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
+      setShakeKey(prev => prev + 1);
     }
   };
 
@@ -205,6 +212,67 @@ const CourseLearn = () => {
               an experiment, and a sample point as an item inside that box that is possible to be selected as 
               a result of the experiment. Conventionally, we denote the sample space of a certain experiment
             </p>
+
+            <div className="border-l-4 border-purple-500 bg-purple-500/10 p-6 rounded-r-lg">
+              <p className="text-purple-400 font-medium mb-3 text-lg">
+                Problem (Coin Flip Sample Space):
+              </p>
+              <p className="text-white leading-relaxed text-lg mb-4">
+                Consider the experiment of flipping a fair coin twice. How many outcomes are in the sample space? 
+                Enter your answer as a single number.
+              </p>
+              
+              <div className="space-y-4 mb-4">
+                <div className="flex gap-4 items-center">
+                  <Input
+                    key={shakeKey}
+                    type="text"
+                    placeholder="Enter your answer"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 ${
+                      feedback.type === 'wrong' 
+                        ? 'border-red-500 animate-shake focus:border-red-500' 
+                        : feedback.type === 'correct'
+                        ? 'border-green-500 focus:border-green-500'
+                        : 'focus:border-purple-500'
+                    }`}
+                  />
+                  
+                  <Button 
+                    onClick={handleSubmit}
+                    variant="clean"
+                    className="bg-purple-500 hover:bg-purple-600 hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] text-white font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
+                  >
+                    <Send className="h-4 w-4" />
+                    Submit
+                  </Button>
+                </div>
+              </div>
+
+              <hr className="border-t border-border/30 my-4" />
+
+              <div className="mt-4 space-y-4">
+                <p className="text-white font-medium text-lg">
+                  SOLUTION:
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  The answer is 4.
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  Explanation: When flipping a coin twice, each flip can result in either Heads (H) or Tails (T). 
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  The complete sample space is: {"{HH, HT, TH, TT}"}
+                </p>
+                <p className="text-white leading-relaxed text-lg">
+                  This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different 
+                  outcomes because the order matters - the first represents heads on the first flip and tails 
+                  on the second, while the second represents the opposite sequence.
+                </p>
+              </div>
+            </div>
           </div>
         )
       };
@@ -292,9 +360,12 @@ const CourseLearn = () => {
                   
                   <div className="h-6 flex items-center">
                     {feedback.type && (
-                      <div className={`text-sm font-medium ${
-                        feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
-                      }`}>
+                      <div 
+                        key={shakeKey}
+                        className={`text-sm font-medium ${
+                          feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
+                        }`}
+                      >
                         {feedback.message}
                       </div>
                     )}
@@ -345,7 +416,7 @@ const CourseLearn = () => {
       };
     }
 
-    if (selectedChapter === "playlists") {
+    if (selectedChapter === "playlists" || selectedChapter === "playlist-1" || selectedChapter === "playlist-2") {
       return {
         title: "Company Specific Playlists",
         content: (
@@ -462,27 +533,27 @@ const CourseLearn = () => {
           id: "level-1",
           title: "Level 1",
           problems: [
-            { id: 1, title: "4Head I" },
-            { id: 2, title: "Coinsecutive II" },
-            { id: 3, title: "St. Petersburg I" },
-            { id: 4, title: "60 Heads I" }
+            { id: 1, title: "4Head I", solved: true },
+            { id: 2, title: "Coinsecutive II", solved: false },
+            { id: 3, title: "St. Petersburg I", solved: true },
+            { id: 4, title: "60 Heads I", solved: false }
           ]
         },
         {
           id: "level-2", 
           title: "Level 2",
           problems: [
-            { id: 5, title: "Coin Bias Detection" },
-            { id: 6, title: "Expected Flips to HTHTH" },
-            { id: 7, title: "Gambler's Ruin Variant" }
+            { id: 5, title: "Coin Bias Detection", solved: false },
+            { id: 6, title: "Expected Flips to HTHTH", solved: true },
+            { id: 7, title: "Gambler's Ruin Variant", solved: false }
           ]
         },
         {
           id: "level-3",
           title: "Level 3", 
           problems: [
-            { id: 8, title: "Optimal Stopping Coin" },
-            { id: 9, title: "Secretary Problem Coins" }
+            { id: 8, title: "Optimal Stopping Coin", solved: false },
+            { id: 9, title: "Secretary Problem Coins", solved: false }
           ]
         }
       ]
@@ -501,7 +572,6 @@ const CourseLearn = () => {
           <button
             onClick={() => {
               setCurrentView('course');
-              setSelectedChapter('playlists');
             }}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
@@ -539,20 +609,21 @@ const CourseLearn = () => {
                       {topic.problems.map((problem, index) => (
                         <div key={problem.id} className="hover:bg-green-500/10 transition-colors cursor-pointer">
                           <div className="px-6 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="relative">
-                                <div className="w-4 h-4 border-2 border-gray-400 rounded-full bg-transparent flex items-center justify-center cursor-pointer hover:border-gray-300 transition-colors">
-                                  {/* Empty circle for completion state */}
-                                </div>
-                              </div>
+                            <div className="flex items-center justify-between">
                               <div className="flex-1">
                                 <h4 className="text-sm font-normal text-foreground">
                                   {problem.title}
                                 </h4>
                               </div>
-                              <div className="flex items-center gap-4">
-                                <Badge variant="outline" className="text-green-400 border-green-400/30 text-xs">
-                                  Level {topic.title.split(' ')[1]}
+                              <div className="flex items-center justify-center w-28">
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs ${problem.solved 
+                                    ? "text-green-400 border-green-400/30" 
+                                    : "text-red-400 border-red-400/30"
+                                  }`}
+                                >
+                                  {problem.solved ? "Solved" : "Not Solved"}
                                 </Badge>
                               </div>
                             </div>
@@ -603,12 +674,30 @@ const CourseLearn = () => {
         <Navigation />
         
         
-        <div className="flex min-h-[calc(100vh-80px)]">
+        <div className="flex min-h-[calc(100vh-80px)] relative">
+          {/* Mobile backdrop */}
+          {sidebarVisible && (
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setSidebarVisible(false)}
+            />
+          )}
+          
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800 min-h-full flex flex-col">
+            <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
+              {/* Close button for mobile */}
+              <div className="flex justify-end px-4 pt-4 md:hidden">
+                <button
+                  onClick={() => setSidebarVisible(false)}
+                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+              </div>
+              
               {/* Search Bar */}
-              <div className="px-6 mb-1 mt-6 flex-shrink-0">
+              <div className="px-6 mb-1 mt-2 md:mt-6 flex-shrink-0">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -622,7 +711,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <ScrollArea className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto custom-scrollbar">
                 <div className="p-6">
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
@@ -640,6 +729,10 @@ const CourseLearn = () => {
                             onClick={() => {
                               setSelectedChapter(chapter.id);
                               setCurrentView('course');
+                              // Close sidebar on mobile after selecting a chapter
+                              if (window.innerWidth < 768) {
+                                setSidebarVisible(false);
+                              }
                             }}
                           >
                             <div className="relative">
@@ -694,6 +787,10 @@ const CourseLearn = () => {
                                 onClick={() => {
                                   setSelectedChapter(chapter.id);
                                   setCurrentView('course');
+                                  // Close sidebar on mobile after selecting a chapter
+                                  if (window.innerWidth < 768) {
+                                    setSidebarVisible(false);
+                                  }
                                 }}
                               >
                                 <div className="relative">
@@ -723,25 +820,28 @@ const CourseLearn = () => {
                     ))
                   )}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
 
             {/* Main Content */}
-          <div className="flex-1 bg-black">
+          <div className={cn(
+            "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
+            sidebarVisible && "hidden md:block"
+          )}>
             {/* Controls above lesson title */}
             <div className={cn(
               "pt-6 pb-4",
-              sidebarVisible ? "px-6" : "px-16"
+              sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
             )}>
               <div className="flex items-center gap-2 mb-4">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => setSidebarVisible(!sidebarVisible)}
-                      className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                      className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors md:inline-flex"
                     >
-                      <Menu className="h-4 w-4" />
+                      <Menu className="h-5 w-5 md:h-4 md:w-4" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="bg-gray-900 border-gray-700">
@@ -797,13 +897,13 @@ const CourseLearn = () => {
             </div>
 
             {/* Content */}
-            <div className="h-[calc(100vh-100px)] select-none">
+            <div className="min-h-[calc(100vh-100px)] select-none bg-black">
               <div className={cn(
-                "pb-6 pt-8",
-                sidebarVisible ? "px-6" : "px-16"
+                "pb-6 pt-8 bg-black",
+                sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
               )}>
                 <div className={cn(
-                  "mx-auto",
+                  "mx-auto bg-black",
                   sidebarVisible ? "max-w-5xl" : "max-w-6xl"
                 )}>
                   {selectedContent.content}

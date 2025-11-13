@@ -65,7 +65,6 @@ const MyCourses = () => {
             Continue your learning journey
           </p>
         </div>
-
         {
           loading && <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
             <div className="flex flex-col items-center gap-6">
@@ -84,7 +83,7 @@ const MyCourses = () => {
         }
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="space-y-6">
           {myCourses.map((course) => {
             return (
               <CourseCard key={course.id} course={course} isEnrolled={true} />

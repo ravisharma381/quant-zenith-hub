@@ -17,6 +17,7 @@ const ProblemDetail = () => {
   const { id } = useParams();
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
+  const [shakeKey, setShakeKey] = useState(0);
 
   // Mock problem data - in real app this would come from API
   const problem = {
@@ -58,6 +59,7 @@ const ProblemDetail = () => {
       fireRandomCelebration();
     } else {
       setFeedback({ type: 'wrong', message: "The answer is wrong" });
+      setShakeKey(prev => prev + 1);
     }
   };
 
@@ -79,7 +81,7 @@ const ProblemDetail = () => {
             </TabsList>
             
             <div className="flex items-center gap-4">
-              <Badge className={getDifficultyColor(problem.difficulty)}>
+              <Badge className={`${getDifficultyColor(problem.difficulty)} hidden md:flex text-center items-center justify-center`}>
                 Lvl {problem.difficulty}/10
               </Badge>
               <div className="flex items-center gap-2">
@@ -135,9 +137,12 @@ const ProblemDetail = () => {
               {/* Fixed height container for feedback to prevent layout shift */}
               <div className="h-6 flex items-center">
                 {feedback.type && (
-                  <div className={`text-sm font-medium ${
-                    feedback.type === 'correct' ? 'text-green-400' : 'text-red-400'
-                  }`}>
+                  <div 
+                    key={shakeKey}
+                    className={`text-sm font-medium ${
+                      feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
+                    }`}
+                  >
                     {feedback.message}
                   </div>
                 )}

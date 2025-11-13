@@ -204,8 +204,16 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-4 mb-4">
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setIsOpen(false)}
+            />
+            
+            {/* Menu */}
+            <div className="fixed top-16 left-0 right-0 z-50 md:hidden px-4 py-4">
+              <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-auto">
               {/* Main Navigation Items */}
               <Link
                 to="/problems"
@@ -343,7 +351,8 @@ const Navigation = () => {
                 </>
               )}
             </div>
-          </div>
+            </div>
+          </>
         )}
       </div>
     </nav>

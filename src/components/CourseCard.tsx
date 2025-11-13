@@ -14,70 +14,64 @@ const CourseCard = ({ course, isEnrolled }) => {
             default: return "bg-muted text-muted-foreground";
         }
     };
+
     return (
         <div
             key={course.id}
-            className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer group"
+            className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row"
             onClick={() => navigate(`/course/${course.slug}`)}
         >
             {/* Gradient Header with Instructor Photo */}
-            <div className="h-52 relative flex items-center justify-center overflow-hidden rounded-2xl">
+            <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
                 <img
                     src={course.thumbnailURL}
                     alt={course.title}
-                    className="h-full w-full"
+                    className="w-full h-full object-fill"
                 />
             </div>
 
-
             {/* Content */}
-            <div className="p-6 space-y-4">
-                <div>
-                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+            <div className="p-6 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                    <h3 className="text-xl font-bold text-foreground">
                         {course.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{course.author}</p>
-                </div>
 
-                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                    {course.description}
-                </p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        {course.description}
+                    </p>
 
-                {/* Rating and Stats */}
-                <div className="flex items-center gap-2 text-sm">
-                    <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                        <span className="font-medium text-foreground">{course.rating}</span>
+                    {/* Rating and Stats */}
+                    <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center">
+                            <Star className="w-4 h-4 text-yellow-400 mr-1" />
+                            <span className="font-medium text-foreground">{course.rating}</span>
+                        </div>
+                        <span className="text-muted-foreground">|</span>
+                        <span className="text-muted-foreground">100+ chapters</span>
+                        <span className="text-muted-foreground">|</span>
+                        <span className="text-muted-foreground">1200+ problems</span>
                     </div>
-                    <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.noOfRatings}</span>
-                    <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.courseDuration}</span>
                 </div>
 
-                {/* Level Badge */}
-                <div className="flex items-center justify-between">
-                    <Badge className={getLevelColor(course.level)} variant="outline">
-                        {course.level}
-                    </Badge>
-                    <span className="text-lg font-bold text-primary">{`${course.currencySymbol} ${course.price.yearly}`}</span>
+                {/* Bottom Section */}
+                <div className="flex items-center mt-4 pt-4 border-t border-border">
+                    {/* Start Learning Button */}
+                    <Button
+                        className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(
+                                isEnrolled
+                                    ? `/course/${course.slug}/learn`
+                                    : `/course/${course.slug}/checkout`,
+                            )
+                        }
+                        }
+                    >
+                        {isEnrolled ? "Start Learning" : "Enroll Now"}
+                    </Button>
                 </div>
-
-                {/* Enroll Button */}
-                <Button
-                    className="w-full mt-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(
-                            isEnrolled
-                                ? `/course/${course.slug}/learn`
-                                : `/course/${course.slug}/checkout`,
-                        )
-                    }
-                    }
-                >
-                    {isEnrolled ? "Continue Learning" : "Enroll Now"}
-                </Button>
             </div>
         </div>
     )
