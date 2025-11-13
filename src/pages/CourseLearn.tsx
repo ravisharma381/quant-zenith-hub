@@ -718,9 +718,9 @@ const CourseLearn = () => {
               <div className="flex justify-end px-4 pt-4 md:hidden">
                 <button
                   onClick={() => setSidebarVisible(false)}
-                  className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
+                  className="px-3 py-2 text-sm text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md transition-colors"
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  View Chapter
                 </button>
               </div>
               
