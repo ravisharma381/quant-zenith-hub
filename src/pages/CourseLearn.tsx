@@ -195,6 +195,34 @@ const CourseLearn = () => {
               about this process. This leads us to the idea of experiments and their outcomes.
             </p>
             
+            {/* Video Section */}
+            <div className="w-full">
+              <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
+                <video 
+                  className="w-full h-full object-cover"
+                  controls
+                  poster="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+                >
+                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            {/* Image Section */}
+            <div className="w-1/2">
+              <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb"
+                  alt="Sample space visualization"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-gray-400 text-sm italic mt-2">
+                Fig 1: Sample space
+              </p>
+            </div>
+            
             <div className="border-l-4 border-[hsl(122_97%_50%)] bg-[hsl(122_97%_50%_/_0.1)] p-6 rounded-r-lg">
               <p className="text-[hsl(122_97%_50%)] font-medium mb-3 text-lg">
                 Definition (Experiment, Sample Point, and Sample Space):
