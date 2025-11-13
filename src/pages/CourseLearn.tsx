@@ -333,7 +333,7 @@ const CourseLearn = () => {
                 </TabsList>
                 
                 <div className="flex items-center gap-4">
-                  <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border hidden md:flex`}>
+                  <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border hidden md:flex text-center`}>
                     Lvl {problemData.difficulty}/10
                   </Badge>
                   
