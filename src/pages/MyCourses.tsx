@@ -77,20 +77,20 @@ const MyCourses = () => {
                       <span className="font-medium text-foreground">{course.rating}</span>
                     </div>
                     <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.reviews}</span>
+                    <span className="text-muted-foreground">100+ chapters</span>
                     <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">{course.duration}</span>
+                    <span className="text-muted-foreground">1000+ problems</span>
                   </div>
                 </div>
                 
                 {/* Bottom Section */}
                 <div className="flex items-center mt-4 pt-4 border-t border-border">
-                  {/* View Course Button */}
+                  {/* Start Learning Button */}
                   <Button 
                     className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                     onClick={(e) => e.preventDefault()}
                   >
-                    View Course
+                    Start Learning
                   </Button>
                 </div>
               </div>
