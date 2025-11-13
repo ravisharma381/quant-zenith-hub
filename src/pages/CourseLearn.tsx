@@ -673,7 +673,7 @@ const CourseLearn = () => {
         <div className="flex min-h-[calc(100vh-80px)]">
           {/* Left Sidebar */}
           {sidebarVisible && (
-            <div className="w-96 bg-black border-r border-gray-800 min-h-full flex flex-col">
+            <div className="w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col">
               {/* Search Bar */}
               <div className="px-6 mb-1 mt-6 flex-shrink-0">
                 <div className="relative">
@@ -689,7 +689,7 @@ const CourseLearn = () => {
               </div>
 
               {/* Sections */}
-              <ScrollArea className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto custom-scrollbar">
                 <div className="p-6">
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
@@ -790,12 +790,12 @@ const CourseLearn = () => {
                     ))
                   )}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           )}
 
             {/* Main Content */}
-          <div className="flex-1 bg-black">
+          <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
             {/* Controls above lesson title */}
             <div className={cn(
               "pt-6 pb-4",
