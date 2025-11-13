@@ -189,13 +189,7 @@ const CourseLearn = () => {
         title: "Fundamental Definitions",
         content: (
           <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
-            <p>
-              What is probability? It's a really abstract question to ask. To assign a probability to some event, 
-              we must know the process/action we are performing and what we are interested in measuring 
-              about this process. This leads us to the idea of experiments and their outcomes.
-            </p>
-            
-            {/* Video Section */}
+            {/* Video Section - Right after heading */}
             <div className="w-full">
               <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
                 <video 
@@ -209,16 +203,22 @@ const CourseLearn = () => {
               </div>
             </div>
 
-            {/* Image Section */}
-            <div className="w-1/2">
-              <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
+            <p>
+              What is probability? It's a really abstract question to ask. To assign a probability to some event, 
+              we must know the process/action we are performing and what we are interested in measuring 
+              about this process. This leads us to the idea of experiments and their outcomes.
+            </p>
+
+            {/* Image Section - Center aligned, white background, no rounded corners */}
+            <div className="w-1/2 mx-auto flex flex-col items-center">
+              <div className="relative w-full aspect-video bg-white overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb"
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"
                   alt="Sample space visualization"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
-              <p className="text-gray-400 text-sm italic mt-2">
+              <p className="text-gray-400 text-sm italic mt-2 text-center">
                 Fig 1: Sample space
               </p>
             </div>
