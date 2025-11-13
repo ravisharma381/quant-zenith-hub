@@ -32,6 +32,7 @@ interface AuthContextType {
     loading: boolean;
     loginWithGoogle: () => Promise<void>;
     logout: () => Promise<void>;
+    setRerender: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -40,12 +41,14 @@ export const AuthContext = createContext<AuthContextType>({
     loading: true,
     loginWithGoogle: async () => { },
     logout: async () => { },
+    setRerender: () => true,
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<FirebaseUser | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [rerender, setRerender] = useState(true);
 
     // 🔹 1️⃣ Handle redirect result once per page load
     useEffect(() => {
@@ -65,54 +68,57 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
     // 🔹 2️⃣ Listen to auth state changes
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-            if (firebaseUser) {
-                setUser(firebaseUser);
+        if (rerender) {
+            const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+                if (firebaseUser) {
+                    setUser(firebaseUser);
 
-                const userRef = doc(db, "users", firebaseUser.uid);
-                const userSnap = await getDoc(userRef);
+                    const userRef = doc(db, "users", firebaseUser.uid);
+                    const userSnap = await getDoc(userRef);
 
-                if (!userSnap.exists()) {
-                    await setDoc(userRef, {
-                        name: firebaseUser.displayName,
-                        email: firebaseUser.email,
-                        photoURL: firebaseUser.photoURL,
-                        provider: firebaseUser.providerData[0]?.providerId || "unknown",
-                        role: "user",
-                        purchasedCourses: [],
-                        createdAt: serverTimestamp(),
-                        lastLoginAt: serverTimestamp(),
+                    if (!userSnap.exists()) {
+                        await setDoc(userRef, {
+                            name: firebaseUser.displayName,
+                            email: firebaseUser.email,
+                            photoURL: firebaseUser.photoURL,
+                            provider: firebaseUser.providerData[0]?.providerId || "unknown",
+                            role: "user",
+                            purchasedCourses: [],
+                            createdAt: serverTimestamp(),
+                            lastLoginAt: serverTimestamp(),
+                        });
+                    } else {
+                        await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
+                    }
+
+                    const profileSnap = await getDoc(userRef);
+                    const data = profileSnap.data() as Omit<UserProfile, "id">;
+
+                    // ✅ Fetch slugs for purchased course IDs
+                    let purchasedSlugs: string[] = [];
+                    if (data.purchasedCourses?.length) {
+                        const validIds = data.purchasedCourses.filter(Boolean);
+                        const q = query(collection(db, "courses"), where(documentId(), "in", validIds.slice(0, 10)));
+                        const snapshot = await getDocs(q);
+                        purchasedSlugs = snapshot.docs.map((doc: any) => doc.data().slug as string);
+                    }
+
+                    setUserProfile({
+                        id: profileSnap.id,
+                        ...data,
+                        purchasedSlugs, // ✅ store derived field
                     });
                 } else {
-                    await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
+                    setUser(null);
+                    setUserProfile(null);
                 }
+                setLoading(false);
+                setRerender(false);
+            });
 
-                const profileSnap = await getDoc(userRef);
-                const data = profileSnap.data() as Omit<UserProfile, "id">;
-
-                // ✅ Fetch slugs for purchased course IDs
-                let purchasedSlugs: string[] = [];
-                if (data.purchasedCourses?.length) {
-                    const validIds = data.purchasedCourses.filter(Boolean);
-                    const q = query(collection(db, "courses"), where(documentId(), "in", validIds.slice(0, 10)));
-                    const snapshot = await getDocs(q);
-                    purchasedSlugs = snapshot.docs.map((doc: any) => doc.data().slug as string);
-                }
-
-                setUserProfile({
-                    id: profileSnap.id,
-                    ...data,
-                    purchasedSlugs, // ✅ store derived field
-                });
-            } else {
-                setUser(null);
-                setUserProfile(null);
-            }
-            setLoading(false);
-        });
-
-        return unsubscribe;
-    }, []);
+            return unsubscribe;
+        }
+    }, [rerender]);
 
 
     // 🔹 3️⃣ Login with Google (with persistence)
@@ -125,10 +131,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 await signInWithPopup(auth, provider);
             } else {
                 // Forproduction
-                await setPersistence(auth, browserLocalPersistence);
-                await signInWithRedirect(auth, provider);
                 // await setPersistence(auth, browserLocalPersistence);
                 // await signInWithRedirect(auth, provider);
+                await signInWithPopup(auth, provider);
             }
 
 
@@ -150,7 +155,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     };
 
     return (
-        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout }}>
+        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender }}>
             {children}
         </AuthContext.Provider>
     );

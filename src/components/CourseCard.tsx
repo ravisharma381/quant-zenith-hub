@@ -22,12 +22,21 @@ const CourseCard = ({ course, isEnrolled }) => {
             onClick={() => navigate(`/course/${course.slug}`)}
         >
             {/* Gradient Header with Instructor Photo */}
-            <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
+            {/* <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
                 <img
                     src={course.thumbnailURL}
                     alt={course.title}
                     className="w-full h-full object-fill"
                 />
+            </div> */}
+            <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">
+                            {course.author.split(' ').map(n => n[0]).join('')}
+                        </span>
+                    </div>
+                </div>
             </div>
 
             {/* Content */}

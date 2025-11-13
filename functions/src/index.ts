@@ -14,7 +14,7 @@ interface TopicMeta {
   order: number;
 }
 
-setGlobalOptions({ region: "asia-south1", timeoutSeconds: 30, memory: "256MiB" });
+setGlobalOptions({ region: "asia-south1", timeoutSeconds: 50, memory: "256MiB" });
 if (!admin.apps.length) {
   admin.initializeApp();
 }

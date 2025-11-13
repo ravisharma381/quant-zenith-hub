@@ -11,7 +11,7 @@ import { collection, query, where, getDocs, doc, getDoc } from "firebase/firesto
 import { Course } from "./Courses";
 
 const CourseCheckout = () => {
-  const { user } = useAuth();
+  const { user, setRerender } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -143,6 +143,7 @@ const CourseCheckout = () => {
           theme: { color: "#25FB2B" },
           handler: (response: any) => {
             console.log("Payment success:", response);
+            setRerender(true);
             navigate("/course/quant-interview-masterclass/learn");
             toast({
               title: "Payment successful",
