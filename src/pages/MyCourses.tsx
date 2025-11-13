@@ -84,14 +84,7 @@ const MyCourses = () => {
                 </div>
                 
                 {/* Bottom Section */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-                  <div className="flex items-center gap-3">
-                    <Badge className={getLevelColor(course.level)} variant="outline">
-                      {course.level}
-                    </Badge>
-                    <span className="text-lg font-bold text-primary">{course.price}</span>
-                  </div>
-                  
+                <div className="flex items-center mt-4 pt-4 border-t border-border">
                   {/* View Course Button */}
                   <Button 
                     className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
