@@ -79,7 +79,7 @@ const MyCourses = () => {
                     <span className="text-muted-foreground">|</span>
                     <span className="text-muted-foreground">100+ chapters</span>
                     <span className="text-muted-foreground">|</span>
-                    <span className="text-muted-foreground">1000+ problems</span>
+                    <span className="text-muted-foreground">1200+ problems</span>
                   </div>
                 </div>
                 
