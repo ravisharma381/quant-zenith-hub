@@ -1,3 +1,4 @@
+// TopicModal.tsx (modified)
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -29,7 +30,7 @@ export interface TopicFormData {
     title: string;
     type: "layout" | "question" | "playlist";
     order: number;
-    htmlContent?: string;
+    jsonContent?: string;
     question?: string;
     answer?: string;
     hint1?: string;
@@ -41,11 +42,7 @@ export interface TopicFormData {
     isPublished?: boolean;
 }
 
-interface Playlist {
-    id: string;
-    heading: string;
-    subheading: string;
-}
+interface Playlist { id: string; heading: string; subheading: string; }
 
 interface TopicModalProps {
     open: boolean;
@@ -55,19 +52,13 @@ interface TopicModalProps {
     playlists: Playlist[];
 }
 
-const TopicModal: React.FC<TopicModalProps> = ({
-    open,
-    onOpenChange,
-    onSubmit,
-    initialData,
-    playlists,
-}) => {
+const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData, playlists }) => {
     const { courseId, chapterId } = useParams<{ courseId: string; chapterId: string }>();
     const [title, setTitle] = useState("");
     const [type, setType] = useState<"layout" | "question" | "playlist">("layout");
     const [order, setOrder] = useState<number>(0);
     const [level, setLevel] = useState("1");
-    const [htmlContent, setHtmlContent] = useState("");
+    const [jsonContent, setJsonContent] = useState("");
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [hint1, setHint1] = useState("");
@@ -77,14 +68,13 @@ const TopicModal: React.FC<TopicModalProps> = ({
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
     const { toast } = useToast();
 
-    // 🔹 preload for editing
     useEffect(() => {
         if (initialData) {
-            setTitle(initialData.title);
-            setType(initialData.type);
+            setTitle(initialData.title || "");
+            setType(initialData.type || "layout");
             setOrder(initialData.order ?? 0);
             setLevel(initialData.level ?? "1");
-            setHtmlContent(initialData.htmlContent ?? "");
+            setJsonContent(initialData.jsonContent ?? "");
             setQuestion(initialData.question ?? "");
             setAnswer(initialData.answer ?? "");
             setHint1(initialData.hint1 ?? "");
@@ -97,7 +87,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
             setType("layout");
             setOrder(0);
             setLevel("1");
-            setHtmlContent("");
+            setJsonContent("");
             setQuestion("");
             setAnswer("");
             setHint1("");
@@ -108,15 +98,40 @@ const TopicModal: React.FC<TopicModalProps> = ({
         }
     }, [initialData]);
 
-    // 🔹 askedIn field controls
     const handleAddAskedIn = () => setAskedIn([...askedIn, { name: "", logoURL: "" }]);
     const handleAskedInChange = (index: number, field: string, value: string) => {
         const updated = [...askedIn];
         updated[index] = { ...updated[index], [field]: value };
         setAskedIn(updated);
     };
-    const handleRemoveAskedIn = (index: number) =>
-        setAskedIn(askedIn.filter((_, i) => i !== index));
+    const handleRemoveAskedIn = (index: number) => setAskedIn(askedIn.filter((_, i) => i !== index));
+
+    const openBuilder = () => {
+        const builderUrl = `${window.location.origin}/admin/builder`;
+        // open builder in new tab and pass current json to prefill
+        const newWindow = window.open(builderUrl, "_blank");
+        if (!newWindow) {
+            // fallback: open same tab
+            window.location.href = builderUrl;
+            return;
+        }
+        // We can't reliably set location.state for new window; use postMessage
+        // send json after 500ms to allow the new window to set up
+        setTimeout(() => {
+            newWindow.postMessage({ __prefillJSON: jsonContent || "" }, window.location.origin);
+        }, 600);
+    };
+
+    useEffect(() => {
+        function onMessage(e: MessageEvent) {
+            if (e.origin !== window.location.origin) return;
+            if (e.data?.__updatedJSON) {
+                setJsonContent(e.data.__updatedJSON);
+            }
+        }
+        window.addEventListener("message", onMessage);
+        return () => window.removeEventListener("message", onMessage);
+    }, []);
 
     const handleSubmit = () => {
         if (!title || !courseId || !chapterId) {
@@ -128,14 +143,28 @@ const TopicModal: React.FC<TopicModalProps> = ({
             return;
         }
 
+        // basic JSON validation when type === layout
+        if (type === "layout" && jsonContent) {
+            try {
+                JSON.parse(jsonContent);
+            } catch (err) {
+                toast({
+                    title: "Invalid JSON",
+                    description: "Layout JSON is invalid — fix it before saving.",
+                    variant: "destructive",
+                });
+                return;
+            }
+        }
+
         const topicData: TopicFormData = {
             id: initialData?.id,
-            courseId,
-            chapterId,
+            courseId: courseId!,
+            chapterId: chapterId!,
             title,
             type,
             order,
-            ...(type === "layout" && { htmlContent }),
+            ...(type === "layout" && { jsonContent }),
             ...(type === "question" && {
                 question,
                 answer,
@@ -159,9 +188,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
                 <DialogHeader>
                     <DialogTitle>{initialData ? "Edit Topic" : "Add Topic"}</DialogTitle>
                     <DialogDescription>
-                        {initialData
-                            ? "Update topic details below."
-                            : "Fill details to create a new topic."}
+                        {initialData ? "Update topic details below." : "Fill details to create a new topic."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -187,35 +214,25 @@ const TopicModal: React.FC<TopicModalProps> = ({
 
                     <div>
                         <Label>Order</Label>
-                        <Input
-                            type="number"
-                            min={0}
-                            value={order}
-                            onChange={(e) => setOrder(parseInt(e.target.value, 10))}
-                        />
+                        <Input type="number" min={0} value={order} onChange={(e) => setOrder(parseInt(e.target.value || "0", 10))} />
                     </div>
 
                     {type === "layout" && (
                         <div>
                             <div className="flex items-center justify-between mb-2">
-                                <Label>HTML Builder</Label>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                        const builderUrl = `${window.location.origin}/admin/builder`;
-                                        const newWindow = window.open(builderUrl, "_blank");
-                                        if (newWindow) newWindow.opener = null;
-                                    }}
-                                >
-                                    <Maximize2 className="h-4 w-4 mr-1" /> Open Builder
-                                </Button>
+                                <Label>JSON Layout</Label>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="sm" onClick={openBuilder}>
+                                        <Maximize2 className="h-4 w-4 mr-1" /> Open Builder
+                                    </Button>
+                                </div>
                             </div>
                             <Textarea
-                                rows={8}
-                                placeholder="<div>Custom layout...</div>"
-                                value={htmlContent}
-                                onChange={(e) => setHtmlContent(e.target.value)}
+                                rows={10}
+                                value={jsonContent}
+                                onChange={(e) => setJsonContent(e.target.value)}
+                                placeholder={`{\n  "title":"...",\n  "blocks":[ /* ... */ ]\n}`}
+                                className="font-mono text-sm"
                             />
                         </div>
                     )}
@@ -224,11 +241,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
                         <>
                             <div>
                                 <Label>Question</Label>
-                                <Textarea
-                                    rows={3}
-                                    value={question}
-                                    onChange={(e) => setQuestion(e.target.value)}
-                                />
+                                <Textarea rows={3} value={question} onChange={(e) => setQuestion(e.target.value)} />
                             </div>
                             <div>
                                 <Label>Answer</Label>
@@ -246,60 +259,29 @@ const TopicModal: React.FC<TopicModalProps> = ({
                             </div>
                             <div>
                                 <Label>Solution</Label>
-                                <Textarea
-                                    rows={4}
-                                    value={solution}
-                                    onChange={(e) => setSolution(e.target.value)}
-                                />
+                                <Textarea rows={4} value={solution} onChange={(e) => setSolution(e.target.value)} />
                             </div>
                             <div>
                                 <Label>Level</Label>
                                 <Select value={level} onValueChange={setLevel}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select level" />
-                                    </SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder="Select level" /></SelectTrigger>
                                     <SelectContent>
-                                        {Array.from({ length: 10 }, (_, i) => (
-                                            <SelectItem key={i + 1} value={(i + 1).toString()}>
-                                                {i + 1}
-                                            </SelectItem>
-                                        ))}
+                                        {Array.from({ length: 10 }, (_, i) => <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
                             </div>
 
-                            {/* 🏢 Asked In Section */}
                             <div>
                                 <Label>Asked In (Companies)</Label>
                                 <div className="space-y-3">
                                     {askedIn.map((a, i) => (
                                         <div key={i} className="grid grid-cols-2 gap-2 items-center">
-                                            <Input
-                                                placeholder="Company name"
-                                                value={a.name}
-                                                onChange={(e) =>
-                                                    handleAskedInChange(i, "name", e.target.value)
-                                                }
-                                            />
-                                            <Input
-                                                placeholder="Logo URL"
-                                                value={a.logoURL}
-                                                onChange={(e) =>
-                                                    handleAskedInChange(i, "logoURL", e.target.value)
-                                                }
-                                            />
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => handleRemoveAskedIn(i)}
-                                            >
-                                                Remove
-                                            </Button>
+                                            <Input placeholder="Company name" value={a.name} onChange={(e) => handleAskedInChange(i, "name", e.target.value)} />
+                                            <Input placeholder="Logo URL" value={a.logoURL} onChange={(e) => handleAskedInChange(i, "logoURL", e.target.value)} />
+                                            <Button variant="ghost" size="sm" onClick={() => handleRemoveAskedIn(i)}>Remove</Button>
                                         </div>
                                     ))}
-                                    <Button variant="outline" size="sm" onClick={handleAddAskedIn}>
-                                        + Add Company
-                                    </Button>
+                                    <Button variant="outline" size="sm" onClick={handleAddAskedIn}>+ Add Company</Button>
                                 </div>
                             </div>
                         </>
@@ -308,18 +290,11 @@ const TopicModal: React.FC<TopicModalProps> = ({
                     {type === "playlist" && (
                         <div>
                             <Label>Playlists</Label>
-                            <MultiSelect
-                                options={playlists.map((p) => ({ label: p.heading, value: p.id }))}
-                                value={playlistIds}
-                                onChange={setPlaylistIds}
-                                placeholder="Select playlists"
-                            />
+                            <MultiSelect options={playlists.map((p) => ({ label: p.heading, value: p.id }))} value={playlistIds} onChange={setPlaylistIds} placeholder="Select playlists" />
                         </div>
                     )}
 
-                    <Button onClick={handleSubmit} className="w-full">
-                        {initialData ? "Save Changes" : "Add Topic"}
-                    </Button>
+                    <Button onClick={handleSubmit} className="w-full">{initialData ? "Save Changes" : "Add Topic"}</Button>
                 </div>
             </DialogContent>
         </Dialog>

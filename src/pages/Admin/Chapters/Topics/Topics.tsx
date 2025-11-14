@@ -29,7 +29,7 @@ export interface TopicFormData {
     title: string;
     type: "layout" | "question" | "playlist";
     order: number;
-    htmlContent?: string;
+    jsonContent?: string;
     question?: string;
     answer?: string;
     hint1?: string;
@@ -88,7 +88,6 @@ const AdminTopics: React.FC = () => {
         fetchPlaylists();
     }, [courseId]);
 
-    console.log(playlists);
 
 
     // ✅ Save handler
