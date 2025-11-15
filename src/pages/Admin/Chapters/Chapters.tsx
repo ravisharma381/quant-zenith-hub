@@ -56,6 +56,8 @@ const AdminChapters: React.FC = () => {
     });
     const { toast } = useToast();
     const navigate = useNavigate();
+    console.log(chapters);
+
 
     // 🔹 Fetch chapters
     useEffect(() => {

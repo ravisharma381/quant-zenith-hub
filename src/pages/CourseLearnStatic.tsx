@@ -34,9 +34,10 @@ interface Section {
 }
 
 const CourseLearn = () => {
-  const { courseId } = useParams();
+  // const { courseId } = useParams();
+  const courseId = 'quant-interview-masterclass'
   const navigate = useNavigate();
-  
+
   // Course data matching the screenshot structure
   const courseData = {
     "quant-interview-masterclass": {
@@ -131,24 +132,24 @@ const CourseLearn = () => {
   }
 
   const toggleSection = (sectionId: string) => {
-    setSections(sections.map(section => 
-      section.id === sectionId 
+    setSections(sections.map(section =>
+      section.id === sectionId
         ? { ...section, expanded: !section.expanded }
         : section
     ));
   };
 
   const toggleChapterCompletion = (sectionId: string, chapterId: string) => {
-    setSections(sections.map(section => 
-      section.id === sectionId 
+    setSections(sections.map(section =>
+      section.id === sectionId
         ? {
-            ...section, 
-            chapters: section.chapters.map(chapter =>
-              chapter.id === chapterId
-                ? { ...chapter, completed: !chapter.completed }
-                : chapter
-            )
-          }
+          ...section,
+          chapters: section.chapters.map(chapter =>
+            chapter.id === chapterId
+              ? { ...chapter, completed: !chapter.completed }
+              : chapter
+          )
+        }
         : section
     ));
   };
@@ -160,13 +161,13 @@ const CourseLearn = () => {
 
   const handleSubmit = () => {
     let correctAnswer = "";
-    
+
     if (selectedChapter === "fundamentals") {
       correctAnswer = "4";
     } else if (selectedChapter === "multiplication") {
       correctAnswer = "3";
     }
-    
+
     if (answer.trim() === correctAnswer) {
       setFeedback({ type: 'correct', message: "Correct answer!" });
       fireRandomCelebration();
@@ -190,26 +191,26 @@ const CourseLearn = () => {
         content: (
           <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
             <p>
-              What is probability? It's a really abstract question to ask. To assign a probability to some event, 
-              we must know the process/action we are performing and what we are interested in measuring 
+              What is probability? It's a really abstract question to ask. To assign a probability to some event,
+              we must know the process/action we are performing and what we are interested in measuring
               about this process. This leads us to the idea of experiments and their outcomes.
             </p>
-            
+
             <div className="border-l-4 border-[hsl(122_97%_50%)] bg-[hsl(122_97%_50%_/_0.1)] p-6 rounded-r-lg">
               <p className="text-[hsl(122_97%_50%)] font-medium mb-3 text-lg">
                 Definition (Experiment, Sample Point, and Sample Space):
               </p>
               <p className="text-white leading-relaxed text-lg">
-                An experiment is a repeatable process of observation that produces individual outcomes. 
-                In probability, these outcomes are called <span className="text-yellow-400 font-medium">sample points</span>. 
+                An experiment is a repeatable process of observation that produces individual outcomes.
+                In probability, these outcomes are called <span className="text-yellow-400 font-medium">sample points</span>.
                 The collection of all possible sample points (outcomes) of an experiment is called the{" "}
                 <span className="text-yellow-400 font-medium">sample space</span>.
               </p>
             </div>
 
             <p>
-              You can think of a sample space as a large box that contains every single possible outcome of 
-              an experiment, and a sample point as an item inside that box that is possible to be selected as 
+              You can think of a sample space as a large box that contains every single possible outcome of
+              an experiment, and a sample point as an item inside that box that is possible to be selected as
               a result of the experiment. Conventionally, we denote the sample space of a certain experiment
             </p>
 
@@ -218,10 +219,10 @@ const CourseLearn = () => {
                 Problem (Coin Flip Sample Space):
               </p>
               <p className="text-white leading-relaxed text-lg mb-4">
-                Consider the experiment of flipping a fair coin twice. How many outcomes are in the sample space? 
+                Consider the experiment of flipping a fair coin twice. How many outcomes are in the sample space?
                 Enter your answer as a single number.
               </p>
-              
+
               <div className="space-y-4 mb-4">
                 <div className="flex gap-4 items-center">
                   <Input
@@ -231,16 +232,15 @@ const CourseLearn = () => {
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 ${
-                      feedback.type === 'wrong' 
-                        ? 'border-red-500 animate-shake focus:border-red-500' 
-                        : feedback.type === 'correct'
+                    className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 ${feedback.type === 'wrong'
+                      ? 'border-red-500 animate-shake focus:border-red-500'
+                      : feedback.type === 'correct'
                         ? 'border-green-500 focus:border-green-500'
                         : 'focus:border-purple-500'
-                    }`}
+                      }`}
                   />
-                  
-                  <Button 
+
+                  <Button
                     onClick={handleSubmit}
                     variant="clean"
                     className="bg-purple-500 hover:bg-purple-600 hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] text-white font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
@@ -261,14 +261,14 @@ const CourseLearn = () => {
                   The answer is 4.
                 </p>
                 <p className="text-white leading-relaxed text-lg">
-                  Explanation: When flipping a coin twice, each flip can result in either Heads (H) or Tails (T). 
+                  Explanation: When flipping a coin twice, each flip can result in either Heads (H) or Tails (T).
                 </p>
                 <p className="text-white leading-relaxed text-lg">
                   The complete sample space is: {"{HH, HT, TH, TT}"}
                 </p>
                 <p className="text-white leading-relaxed text-lg">
-                  This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different 
-                  outcomes because the order matters - the first represents heads on the first flip and tails 
+                  This gives us 4 distinct outcomes in total. Notice that HT and TH are considered different
+                  outcomes because the order matters - the first represents heads on the first flip and tails
                   on the second, while the second represents the opposite sequence.
                 </p>
               </div>
@@ -277,7 +277,7 @@ const CourseLearn = () => {
         )
       };
     }
-    
+
     if (selectedChapter === "multiplication") {
       const getDifficultyColor = (difficulty: number) => {
         if (difficulty <= 3) return "bg-green-500/20 text-green-400 border-green-500/50";
@@ -303,26 +303,26 @@ const CourseLearn = () => {
                   <TabsTrigger value="problem">Problem</TabsTrigger>
                   <TabsTrigger value="solution">Solution</TabsTrigger>
                 </TabsList>
-                
+
                 <div className="flex items-center gap-4">
                   <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border`}>
                     Lvl {problemData.difficulty}/10
                   </Badge>
-                  
+
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">Asked in:</span>
                     <div className="flex gap-2">
                       {problemData.askedIn.map((company, index) => (
-                        <LogoWithSkeleton 
+                        <LogoWithSkeleton
                           key={index}
-                          src={company.logo} 
+                          src={company.logo}
                           alt={`${company.name} logo`}
                           companyName={company.name}
                         />
                       ))}
                     </div>
                   </div>
-                  
+
                   <Button variant="ghost" size="icon">
                     <Share className="h-5 w-5" />
                   </Button>
@@ -348,8 +348,8 @@ const CourseLearn = () => {
                       onKeyDown={handleKeyDown}
                       className="flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[hsl(122_97%_50%)]"
                     />
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleSubmit}
                       className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
                     >
@@ -357,14 +357,13 @@ const CourseLearn = () => {
                       Submit
                     </Button>
                   </div>
-                  
+
                   <div className="h-6 flex items-center">
                     {feedback.type && (
-                      <div 
+                      <div
                         key={shakeKey}
-                        className={`text-sm font-medium ${
-                          feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
-                        }`}
+                        className={`text-sm font-medium ${feedback.type === 'correct' ? 'text-green-400' : 'text-red-400 animate-shake'
+                          }`}
                       >
                         {feedback.message}
                       </div>
@@ -384,7 +383,7 @@ const CourseLearn = () => {
                         Think about what configurations of heads/tails are possible after any number of pair flips.
                       </AccordionContent>
                     </AccordionItem>
-                    
+
                     <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
                       <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                         Hint 2
@@ -393,7 +392,7 @@ const CourseLearn = () => {
                         Consider the parity constraints - turning over pairs preserves certain properties of the configuration.
                       </AccordionContent>
                     </AccordionItem>
-                    
+
                     <AccordionItem value="solution" className="border border-border rounded-lg px-4">
                       <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                         Solution
@@ -453,7 +452,7 @@ const CourseLearn = () => {
         )
       };
     }
-    
+
     return {
       title: "Select a Chapter",
       content: <p className="text-gray-400 text-lg">Select a chapter from the sidebar to view its content.</p>
@@ -463,7 +462,7 @@ const CourseLearn = () => {
   // Filter chapters based on search term
   const filteredSections = sections.map(section => ({
     ...section,
-    chapters: section.chapters.filter(chapter => 
+    chapters: section.chapters.filter(chapter =>
       chapter.title.toLowerCase().includes(searchTerm.toLowerCase())
     )
   })).filter(section => section.chapters.length > 0 || searchTerm === "");
@@ -477,7 +476,7 @@ const CourseLearn = () => {
       description: "Bias the coin flip of recruiting in your favor!"
     },
     {
-      id: "cards-40", 
+      id: "cards-40",
       name: "Cards",
       number: "40",
       description: "Learn to count cards."
@@ -491,7 +490,7 @@ const CourseLearn = () => {
     {
       id: "advanced-50",
       name: "Advanced",
-      number: "50", 
+      number: "50",
       description: "The best place to finish your probability journey!"
     },
     {
@@ -527,7 +526,7 @@ const CourseLearn = () => {
   ];
 
   const getCompanyTopics = (companyId: string) => {
-    const topicsMap: {[key: string]: any} = {
+    const topicsMap: { [key: string]: any } = {
       "coin-75": [
         {
           id: "level-1",
@@ -540,7 +539,7 @@ const CourseLearn = () => {
           ]
         },
         {
-          id: "level-2", 
+          id: "level-2",
           title: "Level 2",
           problems: [
             { id: 5, title: "Coin Bias Detection", solved: false },
@@ -550,7 +549,7 @@ const CourseLearn = () => {
         },
         {
           id: "level-3",
-          title: "Level 3", 
+          title: "Level 3",
           problems: [
             { id: 8, title: "Optimal Stopping Coin", solved: false },
             { id: 9, title: "Secretary Problem Coins", solved: false }
@@ -565,7 +564,7 @@ const CourseLearn = () => {
   const renderCompanyView = () => {
     const company = companies.find(c => c.id === selectedCompany);
     const topics = getCompanyTopics(selectedCompany);
-    
+
     return (
       <div className="space-y-8">
         <div className="flex items-center gap-4 mb-8">
@@ -587,7 +586,7 @@ const CourseLearn = () => {
               <span className="text-6xl font-bold text-primary">{company?.number}</span>
             </div>
           </div>
-          
+
           {/* About content - 75% width */}
           <div className="flex-1">
             <p className="text-muted-foreground leading-relaxed">
@@ -616,12 +615,12 @@ const CourseLearn = () => {
                                 </h4>
                               </div>
                               <div className="flex items-center justify-center w-28">
-                                <Badge 
-                                  variant="outline" 
-                                  className={`text-xs ${problem.solved 
-                                    ? "text-green-400 border-green-400/30" 
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${problem.solved
+                                    ? "text-green-400 border-green-400/30"
                                     : "text-red-400 border-red-400/30"
-                                  }`}
+                                    }`}
                                 >
                                   {problem.solved ? "Solved" : "Not Solved"}
                                 </Badge>
@@ -672,17 +671,17 @@ const CourseLearn = () => {
     <TooltipProvider delayDuration={0}>
       <div className="min-h-screen bg-black">
         <Navigation />
-        
-        
+
+
         <div className="flex min-h-[calc(100vh-80px)] relative">
           {/* Mobile backdrop */}
           {sidebarVisible && (
-            <div 
+            <div
               className="fixed inset-0 bg-black/50 z-40 md:hidden"
               onClick={() => setSidebarVisible(false)}
             />
           )}
-          
+
           {/* Left Sidebar */}
           {sidebarVisible && (
             <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
@@ -695,7 +694,7 @@ const CourseLearn = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </button>
               </div>
-              
+
               {/* Search Bar */}
               <div className="px-6 mb-1 mt-2 md:mt-6 flex-shrink-0">
                 <div className="relative">
@@ -716,14 +715,14 @@ const CourseLearn = () => {
                   {searchTerm ? (
                     // When searching, show only matching chapters without section headers
                     <div className="space-y-1">
-                      {filteredSections.flatMap(section => 
+                      {filteredSections.flatMap(section =>
                         section.chapters.map((chapter) => (
                           <div
                             key={chapter.id}
                             className={cn(
                               "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
-                              selectedChapter === chapter.id 
-                                ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                              selectedChapter === chapter.id
+                                ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]"
                                 : "text-white hover:bg-gray-800"
                             )}
                             onClick={() => {
@@ -736,11 +735,11 @@ const CourseLearn = () => {
                             }}
                           >
                             <div className="relative">
-                              <div 
+                              <div
                                 className={cn(
                                   "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                                  chapter.completed 
-                                    ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                  chapter.completed
+                                    ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]"
                                     : "border-gray-400"
                                 )}
                                 onClick={(e) => {
@@ -762,8 +761,8 @@ const CourseLearn = () => {
                     // When not searching, show normal section structure
                     filteredSections.map((section) => (
                       <div key={section.id} className="mb-6">
-                        <Collapsible 
-                          open={section.expanded} 
+                        <Collapsible
+                          open={section.expanded}
                           onOpenChange={() => toggleSection(section.id)}
                         >
                           <CollapsibleTrigger className="flex items-center justify-between w-full text-left py-2">
@@ -780,8 +779,8 @@ const CourseLearn = () => {
                                 key={chapter.id}
                                 className={cn(
                                   "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg mb-1",
-                                  selectedChapter === chapter.id 
-                                    ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]" 
+                                  selectedChapter === chapter.id
+                                    ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]"
                                     : "text-white hover:bg-gray-800"
                                 )}
                                 onClick={() => {
@@ -794,11 +793,11 @@ const CourseLearn = () => {
                                 }}
                               >
                                 <div className="relative">
-                                  <div 
+                                  <div
                                     className={cn(
                                       "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                                      chapter.completed 
-                                        ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]" 
+                                      chapter.completed
+                                        ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]"
                                         : "border-gray-400"
                                     )}
                                     onClick={(e) => {
@@ -824,7 +823,7 @@ const CourseLearn = () => {
             </div>
           )}
 
-            {/* Main Content */}
+          {/* Main Content */}
           <div className={cn(
             "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
             sidebarVisible && "hidden md:block"
@@ -889,7 +888,7 @@ const CourseLearn = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              
+
               {/* Header */}
               {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
                 <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>

@@ -49,7 +49,7 @@ const AdminTopics: React.FC = () => {
     const [editingTopic, setEditingTopic] = useState<TopicFormData | null>(null);
     const { toast } = useToast();
     const navigate = useNavigate();
-
+    console.log(topics)
     // ✅ Fetch topics
     useEffect(() => {
         if (!courseId || !chapterId) return;

@@ -19,7 +19,7 @@ import CourseDetail from "./pages/CourseDetail";
 import CourseCheckout from "./pages/CourseCheckout";
 import MLCourseDetail from "./pages/MLCourseDetail";
 import MLCourseEnroll from "./pages/MLCourseEnroll";
-import CourseLearn from "./pages/CourseLearn";
+import CourseLearnStatic from "./pages/CourseLearnStatic";
 import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
@@ -33,11 +33,11 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import AuthProvider from "./context/AuthContext";
 import AdminCourses from "./pages/Admin/AdminCourses";
 import AdminRoute from "./pages/Admin/AdminRoute";
-import Chapters from "./pages/Admin/Chapters/Chapters";
 import AdminTopics from "./pages/Admin/Chapters/Topics/Topics";
 import AdminBuilder from "./pages/Admin/Chapters/Topics/Builder";
 import AdminPlaylists from "./pages/Admin/Playlists/AdminPlaylists";
 import AdminChapters from "./pages/Admin/Chapters/Chapters";
+import CourseLearn from "./pages/CourseLearn";
 
 const App = () => (
   <AuthProvider>
@@ -119,6 +119,7 @@ const App = () => (
             />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
+            <Route path="/course/static" element={<CourseLearnStatic />} />
             <Route path="/course/:courseId/learn" element={<CourseLearn />} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />

@@ -152,7 +152,7 @@ const Callout = ({
     let style: any = {
         borderLeftWidth: "4px",
         padding: "1.25rem",
-        borderRadius: "0.5rem"
+        borderRadius: "0 0.5rem 0.5rem 0"
     };
 
     // ---- CUSTOM COLOR MODE ----
@@ -210,12 +210,12 @@ const Callout = ({
 
 
 /* --- Main Renderer --- */
-const Renderer = ({ doc }: { doc: any }) => {
+const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
     const blocks = doc.blocks || [];
-    console.log(doc.isChildren);
+    console.log(isChildren);
 
     return (
-        <div className={`${doc?.isChildren ? '' : 'max-w-3xl mx-auto px-4'}`}>
+        <div className={`${isChildren ? '' : 'max-w-4xl mx-auto px-4'}`}>
             {doc.title && (
                 <h1 className="text-4xl font-bold text-white mb-6">{doc.title}</h1>
             )}
@@ -271,7 +271,7 @@ const Renderer = ({ doc }: { doc: any }) => {
                         case "callout":
                             return (
                                 <Callout key={i} color={b.color} customColor={b.customColor} heading={b.heading} text={b.text}>
-                                    {b.children && <Renderer doc={{ blocks: b.children, isChildren: true }} />}
+                                    {b.children && <Renderer isChildren={true} doc={{ blocks: b.children }} />}
                                 </Callout>
                             );
 
