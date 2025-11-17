@@ -21,6 +21,7 @@ interface MultiSelectProps {
     options: Option[];
     value: string[];
     onChange: (value: string[]) => void;
+    onSearch?: (text: string) => void; // NEW
     placeholder?: string;
     disabled?: boolean;
 }
@@ -31,6 +32,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     onChange,
     placeholder = "Select items...",
     disabled,
+    onSearch
 }) => {
     const [open, setOpen] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -86,11 +88,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 </PopoverTrigger>
 
                 <PopoverContent className="w-[300px] p-0">
-                    <Command shouldFilter={true}>
+                    <Command shouldFilter={false}>
                         <CommandInput
                             ref={inputRef}
                             placeholder="Search..."
                             className="h-9"
+                            onValueChange={(text) => onSearch?.(text)}
                         />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>

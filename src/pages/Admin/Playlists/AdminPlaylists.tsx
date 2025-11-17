@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, limit, startAfter, startAt, endAt, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,9 +33,21 @@ interface Topic {
 const AdminPlaylists: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [topicSearch, setTopicSearch] = useState("");
     const [topics, setTopics] = useState<Topic[]>([]);
     const [open, setOpen] = useState(false);
     const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
+
+    const [search, setSearch] = useState("");
+    const [totalCount, setTotalCount] = useState(0);
+
+    // pagination
+    const PAGE_SIZE = 10;
+    const [lastDoc, setLastDoc] = useState<any>(null);
+    const [firstDoc, setFirstDoc] = useState<any>(null);
+    const [pageStack, setPageStack] = useState<any[]>([]);
+    const [hasNext, setHasNext] = useState(true);
+
     const { toast } = useToast();
     const navigate = useNavigate();
 
@@ -49,33 +61,157 @@ const AdminPlaylists: React.FC = () => {
         sortOrder: 0,
         subheading: ''
     });
-    console.log(courseId);
 
     // 🔹 Fetch all playlists for this course
     useEffect(() => {
+        if (!courseId) return;
+
         const fetchPlaylists = async () => {
-            const q = query(collection(db, "playlists"), where("courseId", "==", courseId));
+            // total count
+            const countSnap = await getDocs(
+                query(collection(db, "playlists"), where("courseId", "==", courseId))
+            );
+            setTotalCount(countSnap.size);
+
+            // If searching, load ALL for the course and filter client-side
+            if (search.trim() !== "") {
+                const snap = await getDocs(
+                    query(
+                        collection(db, "playlists"),
+                        where("courseId", "==", courseId),
+                        orderBy("heading")
+                    )
+                );
+
+                const filtered: any = snap.docs
+                    .map((d) => ({ id: d.id, ...d.data() }))
+                    .filter((p: any) =>
+                        p.heading.toLowerCase().includes(search.toLowerCase())
+                    );
+
+                setPlaylists(filtered);
+                setHasNext(false);
+                return;
+            }
+
+            // Normal paginated fetch
+            const q = query(
+                collection(db, "playlists"),
+                where("courseId", "==", courseId),
+                orderBy("createdAt", "desc"),
+                limit(PAGE_SIZE)
+            );
+
             const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                setPlaylists([]);
+                setHasNext(false);
+                return;
+            }
+
+            setFirstDoc(snapshot.docs[0]);
+            setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+
+            // handle last page
+            setHasNext(snapshot.docs.length === PAGE_SIZE);
+
             const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Playlist[];
-            setPlaylists(data.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)));
+            setPlaylists(data);
         };
+
         fetchPlaylists();
-    }, [courseId]);
+    }, [courseId, search]);
+
 
     // 🔹 Fetch topics of type 'question' for multi-select
-    useEffect(() => {
-        const fetchTopics = async () => {
-            try {
-                const q = query(collection(db, "topics"), where("courseId", "==", courseId), where("type", "==", "question"));
-                const snapshot = await getDocs(q);
-                const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Topic[];
-                setTopics(data);
-            } catch (error) {
-                console.error("Error fetching topics:", error);
-            }
-        };
-        fetchTopics();
-    }, [courseId]);
+    const fetchTopicsBySearch = async (text: string) => {
+        setTopicSearch(text);
+
+        // if search is empty, show nothing
+        if (text.trim() === "") {
+            setTopics([]);
+            return;
+        }
+
+        const q = query(
+            collection(db, "topics"),
+            where("courseId", "==", courseId),
+            where("type", "==", "question"),
+            orderBy("title"),
+            startAt(text),
+            endAt(text + "\uf8ff"),
+            limit(20) // fetch only the top 20 matching results
+        );
+
+        const snap = await getDocs(q);
+        console.log(snap.docs);
+
+        const results = snap.docs.map((d) => ({
+            id: d.id,
+            ...d.data()
+        })) as Topic[];
+
+        setTopics(results);
+        console.log(results);
+    };
+
+
+    const nextPage = async () => {
+        if (!lastDoc) return;
+
+        const q = query(
+            collection(db, "playlists"),
+            where("courseId", "==", courseId),
+            orderBy("createdAt", "desc"),
+            startAfter(lastDoc),
+            limit(PAGE_SIZE)
+        );
+
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            setHasNext(false);
+            return;
+        }
+
+        setPageStack((prev) => [...prev, firstDoc]);
+        setFirstDoc(snap.docs[0]);
+        setLastDoc(snap.docs[snap.docs.length - 1]);
+
+        setHasNext(snap.docs.length === PAGE_SIZE);
+
+        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Playlist[];
+        setPlaylists(data);
+    };
+
+    const prevPage = async () => {
+        if (pageStack.length === 0) return;
+
+        const prevStart = pageStack[pageStack.length - 1];
+        setPageStack((p) => p.slice(0, -1));
+
+        const q = query(
+            collection(db, "playlists"),
+            where("courseId", "==", courseId),
+            orderBy("createdAt", "desc"),
+            startAt(prevStart),
+            limit(PAGE_SIZE)
+        );
+
+        const snap = await getDocs(q);
+
+        if (snap.empty) return;
+
+        setFirstDoc(snap.docs[0]);
+        setLastDoc(snap.docs[snap.docs.length - 1]);
+
+        setHasNext(true);
+
+        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Playlist[];
+        setPlaylists(data);
+    };
+
+
 
     // 🔹 Save (Add or Update)
     const handleSave = async () => {
@@ -89,7 +225,7 @@ const AdminPlaylists: React.FC = () => {
                 );
                 toast({ title: "Playlist updated successfully" });
             } else {
-                const docRef = await addDoc(collection(db, "playlists"), data);
+                const docRef = await addDoc(collection(db, "playlists"), { ...data, createdAt: serverTimestamp(), });
                 setPlaylists((prev) => [...prev, { id: docRef.id, ...data }]);
                 toast({ title: "Playlist created successfully" });
             }
@@ -157,6 +293,15 @@ const AdminPlaylists: React.FC = () => {
                         <PlusCircle className="w-4 h-4" /> Add Playlist
                     </Button>
                 </div>
+                <div className="mb-4 flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">Total Playlists: <b>{totalCount}</b></p>
+                    <Input
+                        placeholder="Search playlists..."
+                        className="w-64"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
 
                 {/* Playlist Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -198,6 +343,15 @@ const AdminPlaylists: React.FC = () => {
                         </Card>
                     ))}
                 </div>
+                <div className="flex items-center justify-center gap-3 mt-6">
+                    <Button variant="outline" disabled={pageStack.length === 0 || search.trim() !== ""} onClick={prevPage}>
+                        Previous
+                    </Button>
+                    <Button variant="outline" disabled={!hasNext || search.trim() !== ""} onClick={nextPage}>
+                        Next
+                    </Button>
+                </div>
+
             </div>
 
             {/* Create/Edit Playlist Modal */}
@@ -255,6 +409,7 @@ const AdminPlaylists: React.FC = () => {
                                 options={topics.map((t) => ({ label: t.title, value: t.id }))}
                                 value={formData.topicIds}
                                 onChange={(vals) => setFormData({ ...formData, topicIds: vals })}
+                                onSearch={(text) => fetchTopicsBySearch(text)}
                                 placeholder="Select Topics"
                             />
                         </div>

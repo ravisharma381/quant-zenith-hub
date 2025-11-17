@@ -22,6 +22,8 @@ import {
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { collection, endAt, getDocs, limit, orderBy, query, startAt, where } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 export interface TopicFormData {
     id?: string;
@@ -49,10 +51,9 @@ interface TopicModalProps {
     onOpenChange: (open: boolean) => void;
     onSubmit: (data: TopicFormData) => void;
     initialData?: TopicFormData;
-    playlists: Playlist[];
 }
 
-const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData, playlists }) => {
+const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData }) => {
     const { courseId, chapterId } = useParams<{ courseId: string; chapterId: string }>();
     const [title, setTitle] = useState("");
     const [type, setType] = useState<"layout" | "question" | "playlist">("layout");
@@ -66,6 +67,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [solution, setSolution] = useState("");
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
+    const [playlistOptions, setPlaylistOptions] = useState<{ label: string; value: string }[]>([]);
+
     const { toast } = useToast();
 
     useEffect(() => {
@@ -97,6 +100,38 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setAskedIn([]);
         }
     }, [initialData]);
+
+    const fetchPlaylistsBySearch = async (text: string) => {
+        if (!courseId) return;
+        if (text.trim() === "") {
+            setPlaylistOptions([]);
+            return;
+        }
+
+        const q = query(
+            collection(db, "playlists"),
+            where("courseId", "==", courseId),
+            orderBy("heading"),
+            startAt(text),
+            endAt(text + "\uf8ff"),
+            limit(20)
+        );
+
+        const snap = await getDocs(q);
+
+        const results = snap.docs.map((d) => {
+            const data = d.data() as Playlist;
+            return {
+                label: data.heading,
+                value: d.id
+            };
+        });
+
+        console.log(results);
+
+        setPlaylistOptions(results);
+    };
+
 
     const handleAddAskedIn = () => setAskedIn([...askedIn, { name: "", logoURL: "" }]);
     const handleAskedInChange = (index: number, field: string, value: string) => {
@@ -290,7 +325,13 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                     {type === "playlist" && (
                         <div>
                             <Label>Playlists</Label>
-                            <MultiSelect options={playlists.map((p) => ({ label: p.heading, value: p.id }))} value={playlistIds} onChange={setPlaylistIds} placeholder="Select playlists" />
+                            <MultiSelect
+                                options={playlistOptions}
+                                value={playlistIds}
+                                onChange={setPlaylistIds}
+                                onSearch={fetchPlaylistsBySearch}
+                                placeholder="Search playlists..."
+                            />
                         </div>
                     )}
 

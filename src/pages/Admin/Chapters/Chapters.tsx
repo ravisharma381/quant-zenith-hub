@@ -8,6 +8,11 @@ import {
     updateDoc,
     deleteDoc,
     doc,
+    orderBy,
+    limit,
+    startAt,
+    startAfter,
+    serverTimestamp,
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { Button } from "@/components/ui/button";
@@ -54,22 +59,76 @@ const AdminChapters: React.FC = () => {
         isPublished: true,
         topicMeta: [],
     });
+    const [search, setSearch] = useState("");
+    const [totalCount, setTotalCount] = useState(0);
+
+    // pagination
+    const PAGE_SIZE = 10;
+    const [lastDoc, setLastDoc] = useState<any>(null);
+    const [firstDoc, setFirstDoc] = useState<any>(null);
+    const [pageStack, setPageStack] = useState<any[]>([]);
     const { toast } = useToast();
     const navigate = useNavigate();
-    console.log(chapters);
 
 
     // 🔹 Fetch chapters
     useEffect(() => {
+        if (!courseId) return;
+
         const fetchChapters = async () => {
-            if (!courseId) return;
-            const q = query(collection(db, "chapters"), where("courseId", "==", courseId));
+            // Count total results (only once per load or search)
+            const countSnap = await getDocs(
+                query(collection(db, "chapters"), where("courseId", "==", courseId))
+            );
+            setTotalCount(countSnap.size);
+
+            let q = query(
+                collection(db, "chapters"),
+                where("courseId", "==", courseId),
+                orderBy("createdAt", "desc"),
+                limit(PAGE_SIZE)
+            );
+
+            // search filter (case-insensitive substring match on title)
+            if (search.trim() !== "") {
+                const snap = await getDocs(
+                    query(
+                        collection(db, "chapters"),
+                        where("courseId", "==", courseId),
+                        orderBy("title")
+                    )
+                );
+
+                const filtered: any = snap.docs
+                    .map((d) => ({ id: d.id, ...d.data() }))
+                    .filter((c: any) =>
+                        c.title.toLowerCase().includes(search.toLowerCase())
+                    );
+
+                setChapters(filtered);
+                setLastDoc(null);
+                return;
+            }
+
+            // Normal paginated fetch
             const snapshot = await getDocs(q);
-            const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Chapter[];
-            setChapters(data.sort((a, b) => a.order - b.order));
+
+            if (snapshot.docs.length > 0) {
+                setFirstDoc(snapshot.docs[0]);
+                setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+            }
+
+            const data = snapshot.docs.map((d) => ({
+                id: d.id,
+                ...d.data(),
+            })) as Chapter[];
+
+            setChapters(data);
         };
+
         fetchChapters();
-    }, [courseId]);
+    }, [courseId, search]);
+
 
     // 🔹 Reset form on modal close/open (clean add mode)
     const handleOpenChange = (state: boolean) => {
@@ -98,7 +157,7 @@ const AdminChapters: React.FC = () => {
                 );
                 toast({ title: "✅ Chapter updated successfully" });
             } else {
-                const docRef = await addDoc(collection(db, "chapters"), data);
+                const docRef = await addDoc(collection(db, "chapters"), { ...data, createdAt: serverTimestamp(), });
                 setChapters((prev) => [...prev, { id: docRef.id, ...data }]);
                 toast({ title: "🎉 Chapter created successfully" });
             }
@@ -132,6 +191,53 @@ const AdminChapters: React.FC = () => {
         setFormData(chapter);
         setOpen(true);
     };
+
+    const nextPage = async () => {
+        if (!lastDoc) return;
+
+        const q = query(
+            collection(db, "chapters"),
+            where("courseId", "==", courseId),
+            orderBy("createdAt", "desc"),
+            startAfter(lastDoc),
+            limit(PAGE_SIZE)
+        );
+
+        const snap = await getDocs(q);
+        if (snap.empty) return;
+
+        setPageStack((prev) => [...prev, firstDoc]);
+        setFirstDoc(snap.docs[0]);
+        setLastDoc(snap.docs[snap.docs.length - 1]);
+
+        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Chapter[];
+        setChapters(data);
+    };
+
+    const prevPage = async () => {
+        if (pageStack.length === 0) return;
+
+        const prevStart = pageStack[pageStack.length - 1];
+        setPageStack((p) => p.slice(0, -1));
+
+        const q = query(
+            collection(db, "chapters"),
+            where("courseId", "==", courseId),
+            orderBy("createdAt", "desc"),
+            startAt(prevStart),
+            limit(PAGE_SIZE)
+        );
+
+        const snap = await getDocs(q);
+        if (snap.empty) return;
+
+        setFirstDoc(snap.docs[0]);
+        setLastDoc(snap.docs[snap.docs.length - 1]);
+
+        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Chapter[];
+        setChapters(data);
+    };
+
 
     return (
         <div className="min-h-screen bg-background p-6">
@@ -174,6 +280,20 @@ const AdminChapters: React.FC = () => {
                             <PlusCircle className="w-4 h-4" /> Add Chapter
                         </Button>
                     </div>
+                </div>
+                <div className="mb-4 flex items-center justify-between">
+                    <div>
+                        <p className="text-sm text-muted-foreground">
+                            Total Chapters: <b>{totalCount}</b>
+                        </p>
+                    </div>
+
+                    <Input
+                        placeholder="Search chapters..."
+                        className="w-64"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                 </div>
 
                 {/* Chapter Cards */}
@@ -232,6 +352,15 @@ const AdminChapters: React.FC = () => {
                             </CardContent>
                         </Card>
                     ))}
+                </div>
+                <div className="flex items-center justify-center gap-3 mt-6">
+                    <Button variant="outline" disabled={pageStack.length === 0} onClick={prevPage}>
+                        Previous
+                    </Button>
+
+                    <Button variant="outline" disabled={!lastDoc} onClick={nextPage}>
+                        Next
+                    </Button>
                 </div>
             </div>
 

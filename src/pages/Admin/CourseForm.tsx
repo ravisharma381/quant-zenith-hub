@@ -23,6 +23,7 @@ export interface CourseFormData {
     gradient: string;               // e.g. "from-orange-400 to-yellow-500"
     isPublished: boolean;
     thumbnailURL?: string;
+    isComingSoon?: boolean;
 }
 
 interface CourseFormProps {
@@ -54,6 +55,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
             gradient: "from-blue-500 to-purple-500",
             isPublished: false,
             thumbnailURL: "",
+            isComingSoon: false
         }
     );
 
@@ -295,6 +297,13 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
                 <Switch
                     checked={formData.isPublished}
                     onCheckedChange={(checked) => setFormData((p) => ({ ...p, isPublished: checked }))}
+                />
+            </div>
+            <div className="flex items-center justify-between pt-2">
+                <Label>IS coming Soon (make sure Publish is true)</Label>
+                <Switch
+                    checked={formData.isComingSoon}
+                    onCheckedChange={(checked) => setFormData((p) => ({ ...p, isComingSoon: checked }))}
                 />
             </div>
 
