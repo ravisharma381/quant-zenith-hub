@@ -117,7 +117,7 @@ const SolutionBlock = ({ steps }: { steps: string[] }) => (
     <div className=" rounded-lg space-y-3">
         <h3 className="text-white text-lg font-semibold">SOLUTION</h3>
         {steps.map((step, i) => (
-            <p key={i} className="text-gray-300">
+            <p key={i} className="text-white text-lg">
                 {renderRichText(step)}
             </p>
         ))}
@@ -185,19 +185,19 @@ const Callout = ({
     return (
         <div style={style}>
             {heading && (
-                <h3 style={{ color: style.borderLeftColor }} className={`text-xl font-semibold text-white mb-1`}>
+                <span style={{ color: style.borderLeftColor }} className={`font-medium mb-3 text-lg`}>
                     {renderRichText(heading)}
-                </h3>
+                </span>
             )}
 
             {subheading && (
-                <p className="text-gray-400 text-sm mb-2">
+                <p className="text-gray-300 text-lg leading-relaxed mb-2">
                     {renderRichText(subheading)}
                 </p>
             )}
 
             {text && (
-                <p className="text-gray-300 mb-3">
+                <p className="text-white leading-relaxed text-lg">
                     {renderRichText(text)}
                 </p>
             )}
@@ -212,10 +212,8 @@ const Callout = ({
 /* --- Main Renderer --- */
 const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
     const blocks = doc.blocks || [];
-    console.log(isChildren);
-
     return (
-        <div className={`${isChildren ? '' : 'max-w-4xl mx-auto px-4'}`}>
+        <div className={`${isChildren ? '' : ''}`}>
             {doc.title && (
                 <h1 className="text-4xl font-bold text-white mb-6">{doc.title}</h1>
             )}
@@ -225,13 +223,13 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                     switch (b.type) {
                         case "subheading":
                             return (
-                                <h3 key={i} className="text-2xl font-semibold text-white">
+                                <h3 key={i} className={`text-2xl font-semibold text-white`}>
                                     {renderRichText(b.text)}
                                 </h3>
                             );
                         case "paragraph":
                             return (
-                                <p key={i} className="text-lg whitespace-pre-line">
+                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-gray-300'} whitespace-pre-line`}>
                                     {renderRichText(b.text)}
                                 </p>
                             );
@@ -261,10 +259,12 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
 
                         case "video":
                             return (
-                                <div key={i} className="w-full rounded-lg overflow-hidden">
-                                    <video controls poster={b.poster} className="w-full rounded-lg">
-                                        <source src={b.url} type="video/mp4" />
-                                    </video>
+                                <div key={i} className="w-[85%] mx-auto">
+                                    <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
+                                        <video controls poster={b.poster} className="w-full h-full object-cover">
+                                            <source src={b.url} type="video/mp4" />
+                                        </video>
+                                    </div>
                                 </div>
                             );
 
@@ -299,7 +299,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                     }
                 })}
             </div>
-        </div>
+        </div >
     );
 };
 

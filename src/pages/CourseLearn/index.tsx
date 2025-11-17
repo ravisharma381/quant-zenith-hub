@@ -1,6 +1,6 @@
 // CourseLearnPage.tsx
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navigation from "@/components/Navigation";
 import { db } from "@/firebase/config";
@@ -16,7 +16,8 @@ import CourseSidebar from "./CourseSidebar";
 import CourseContent from "./CourseContent";
 
 const CourseLearnPage: React.FC = () => {
-    const { courseId: routeCourseId } = useParams<{ courseId?: string }>();
+    const { courseId: routeCourseId, topicId: routeTopicId } =
+        useParams<{ courseId?: string; topicId?: string }>();
 
     const [loading, setLoading] = useState(true);
 
@@ -24,6 +25,7 @@ const CourseLearnPage: React.FC = () => {
     const [chapters, setChapters] = useState<any[]>([]);
     const [topicMeta, setTopicMeta] = useState<any[]>([]);
     const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     // 🔥 UI state (sidebar)
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(
@@ -77,11 +79,14 @@ const CourseLearnPage: React.FC = () => {
                             chapterTitle: ch.title
                         }))
                     )
-                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
                 setTopicMeta(flattened);
 
-                setSelectedTopicId(flattened[0]?.topicId ?? null);
+                if (routeTopicId) {
+                    setSelectedTopicId(routeTopicId);
+                } else {
+                    setSelectedTopicId(flattened[0]?.topicId ?? null);
+                }
             } catch (err) {
                 console.error("Error loading chapters:", err);
                 if (mounted) {
@@ -100,8 +105,11 @@ const CourseLearnPage: React.FC = () => {
         };
     }, [routeCourseId]);
 
-    // list of topicIds (for prev/next)
-    const allTopicIds = useMemo(() => topicMeta.map((t) => t.topicId), [topicMeta]);
+    useEffect(() => {
+        if (routeTopicId) {
+            setSelectedTopicId(routeTopicId);
+        }
+    }, [routeTopicId]);
 
     // -----------------------------
     // RENDER
@@ -110,10 +118,25 @@ const CourseLearnPage: React.FC = () => {
         return (
             <div className="min-h-screen bg-black text-white">
                 <Navigation />
-                <div className="p-8">Loading chapters…</div>
+                <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+                    <div className="flex flex-col items-center gap-6">
+                        {/* Scaling Circle */}
+                        <div className="relative">
+                            <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                            <div className="w-12 h-12 rounded-full bg-primary"></div>
+                        </div>
+
+                        {/* Loading Text */}
+                        <p className="text-muted-foreground text-lg font-medium">
+                            Loading Chapters...
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     }
+    console.log(topicMeta);
+
 
     if (chapters.length === 0) {
         return (
@@ -143,23 +166,22 @@ const CourseLearnPage: React.FC = () => {
                        SIDEBAR (collapsible)
                     ============================= */}
                     {sidebarOpen && (
-                        <div className="w-full md:w-80 bg-black border-r border-gray-800 h-[calc(100vh-80px)] fixed md:relative z-50 md:z-auto">
-                            <CourseSidebar
-                                chapters={chapters}
-                                topicMeta={topicMeta}
-                                selectedTopicId={selectedTopicId}
-                                onSelectTopic={(id) => {
-                                    setSelectedTopicId(id);
-                                    if (window.innerWidth < 768) toggleSidebar(); // auto-close on mobile
-                                }}
-                            />
-                        </div>
+                        <CourseSidebar
+                            chapters={chapters}
+                            topicMeta={topicMeta}
+                            selectedTopicId={selectedTopicId}
+                            toggleSidebar={toggleSidebar}
+                            onSelectTopic={(id) => {
+                                navigate(`/course/${routeCourseId}/learn/${id}`);
+                                if (window.innerWidth < 768) toggleSidebar(); // auto-close on mobile
+                            }}
+                        />
                     )}
 
                     {/* ============================
                        MAIN CONTENT
                     ============================= */}
-                    <div className={`flex-1 ${sidebarOpen ? "hidden md:block" : ""}`}>
+                    <div id="main-scroll" className={`flex-1 ${sidebarOpen ? "hidden md:block" : ""}`}>
                         <CourseContent
                             topicMeta={topicMeta}
                             topicId={selectedTopicId}

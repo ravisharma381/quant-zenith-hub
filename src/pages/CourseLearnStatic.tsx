@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight, Search, Menu, ChevronLeft, Send, ArrowLeft, Share } from "lucide-react";
@@ -34,8 +34,7 @@ interface Section {
 }
 
 const CourseLearn = () => {
-  // const { courseId } = useParams();
-  const courseId = 'quant-interview-masterclass'
+  const { courseId, chapterId } = useParams();
   const navigate = useNavigate();
 
   // Course data matching the screenshot structure
@@ -117,12 +116,22 @@ const CourseLearn = () => {
   const [sections, setSections] = useState<Section[]>(
     courseData[courseId as keyof typeof courseData]?.sections || []
   );
-  const [selectedChapter, setSelectedChapter] = useState<string>("fundamentals");
+  const [selectedChapter, setSelectedChapter] = useState<string>(chapterId || "fundamentals");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(() => {
     // Hide sidebar by default on mobile (screen width < 768px)
     return window.innerWidth >= 768;
   });
+
+  // Update selected chapter when URL changes
+  useEffect(() => {
+    if (chapterId) {
+      setSelectedChapter('1');
+    } else {
+      // Redirect to first chapter if no chapterId
+      navigate(`/course/${courseId}/learn/fundamentals`, { replace: true });
+    }
+  }, [chapterId, courseId, navigate]);
   const [currentView, setCurrentView] = useState<'course' | 'playlists' | 'company'>('course');
   const [selectedCompany, setSelectedCompany] = useState<string>('');
 
@@ -190,11 +199,39 @@ const CourseLearn = () => {
         title: "Fundamental Definitions",
         content: (
           <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
+            {/* Video Section - Right after heading */}
+            <div className="w-[85%] mx-auto">
+              <div className="relative w-full aspect-video bg-gray-800 rounded-lg overflow-hidden">
+                <video
+                  className="w-full h-full object-cover"
+                  controls
+                  poster="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+                >
+                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
             <p>
               What is probability? It's a really abstract question to ask. To assign a probability to some event,
               we must know the process/action we are performing and what we are interested in measuring
               about this process. This leads us to the idea of experiments and their outcomes.
             </p>
+
+            {/* Image Section - Center aligned, white background, no rounded corners */}
+            <div className="w-[42.5%] mx-auto flex flex-col items-center">
+              <div className="relative w-full aspect-video bg-white overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"
+                  alt="Sample space visualization"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <p className="text-gray-400 text-sm italic mt-2 text-center">
+                Fig 1: Sample space
+              </p>
+            </div>
 
             <div className="border-l-4 border-[hsl(122_97%_50%)] bg-[hsl(122_97%_50%_/_0.1)] p-6 rounded-r-lg">
               <p className="text-[hsl(122_97%_50%)] font-medium mb-3 text-lg">
@@ -298,19 +335,19 @@ const CourseLearn = () => {
         content: (
           <div className="max-w-4xl mx-auto">
             <Tabs defaultValue="problem" className="w-full">
-              <div className="flex items-center justify-between mb-6">
-                <TabsList className="grid w-48 grid-cols-2">
+              <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+                <TabsList className="grid w-48 grid-cols-2 shrink-0">
                   <TabsTrigger value="problem">Problem</TabsTrigger>
                   <TabsTrigger value="solution">Solution</TabsTrigger>
                 </TabsList>
 
-                <div className="flex items-center gap-4">
-                  <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border`}>
+                <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+                  <Badge className={`${getDifficultyColor(problemData.difficulty)} px-3 py-1 border hidden lg:flex text-center`}>
                     Lvl {problemData.difficulty}/10
                   </Badge>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Asked in:</span>
+                    <span className="text-sm text-muted-foreground hidden sm:inline">Asked in:</span>
                     <div className="flex gap-2">
                       {problemData.askedIn.map((company, index) => (
                         <LogoWithSkeleton
@@ -657,13 +694,15 @@ const CourseLearn = () => {
 
   const goToPreviousChapter = () => {
     if (canGoPrevious) {
-      setSelectedChapter(allChapters[currentChapterIndex - 1].id);
+      const prevChapterId = allChapters[currentChapterIndex - 1].id;
+      navigate(`/course/${courseId}/learn/${prevChapterId}`);
     }
   };
 
   const goToNextChapter = () => {
     if (canGoNext) {
-      setSelectedChapter(allChapters[currentChapterIndex + 1].id);
+      const nextChapterId = allChapters[currentChapterIndex + 1].id;
+      navigate(`/course/${courseId}/learn/${nextChapterId}`);
     }
   };
 
@@ -726,7 +765,7 @@ const CourseLearn = () => {
                                 : "text-white hover:bg-gray-800"
                             )}
                             onClick={() => {
-                              setSelectedChapter(chapter.id);
+                              navigate(`/course/${courseId}/learn/${chapter.id}`);
                               setCurrentView('course');
                               // Close sidebar on mobile after selecting a chapter
                               if (window.innerWidth < 768) {
@@ -784,7 +823,7 @@ const CourseLearn = () => {
                                     : "text-white hover:bg-gray-800"
                                 )}
                                 onClick={() => {
-                                  setSelectedChapter(chapter.id);
+                                  navigate(`/course/${courseId}/learn/${chapter.id}`);
                                   setCurrentView('course');
                                   // Close sidebar on mobile after selecting a chapter
                                   if (window.innerWidth < 768) {

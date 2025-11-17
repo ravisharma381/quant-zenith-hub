@@ -8,7 +8,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import QuestionLayout from "./QuestionLayout";
 
 import Renderer from "../Admin/Chapters/Topics/Renderer";
-import { fireRandomCelebration } from "@/lib/confetti";
+import PlaylistGrid from "./Playlist";
+import PlaylistDetail from "./Playlist/PlaylistDetail";
+import { useNavigate, useParams } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 
 interface Props {
@@ -39,6 +42,8 @@ const CourseContent: React.FC<Props> = ({
     }>({ type: null, message: "" });
 
     const [shakeKey, setShakeKey] = useState(0);
+    const { playlistId } = useParams();
+    const navigate = useNavigate();
 
     // -----------------------------
     // FETCH TOPIC
@@ -90,7 +95,6 @@ const CourseContent: React.FC<Props> = ({
     // -----------------------------
     // QUESTION HELPERS
     // -----------------------------
-    const correctAnswer = (topic?.answer ?? "").toString().trim();
     const level = Number(topic?.level ?? 1);
 
     const getLevelColor = (lvl: number) => {
@@ -100,26 +104,33 @@ const CourseContent: React.FC<Props> = ({
     };
     const levelClass = getLevelColor(level);
 
-    const submitAnswer = () => {
-        if (answerInput.trim() === correctAnswer) {
-            setFeedback({ type: "correct", message: "Correct answer!" });
-            fireRandomCelebration();
-        } else {
-            setFeedback({ type: "wrong", message: "Wrong answer" });
-            setShakeKey(k => k + 1);
-            navigator.vibrate?.(200);
-        }
-    };
-
     // -----------------------------
     // EARLY STATES
     // -----------------------------
-    if (!topicId || loading) {
+    if (!topicId) {
         return (
             <div className="flex-1 bg-black text-white p-8">
-                <p className="text-gray-400">{loading ? "Loading..." : "Select a topic"}</p>
+                <p className="text-gray-400">Select a topic</p>
             </div>
         );
+    }
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+                <div className="flex flex-col items-center gap-6">
+                    {/* Scaling Circle */}
+                    <div className="relative">
+                        <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                        <div className="w-12 h-12 rounded-full bg-primary"></div>
+                    </div>
+
+                    {/* Loading Text */}
+                    <p className="text-muted-foreground text-lg font-medium">
+                        Loading Topic...
+                    </p>
+                </div>
+            </div>
+        )
     }
 
     if (!topic) {
@@ -138,13 +149,18 @@ const CourseContent: React.FC<Props> = ({
     const maxWidthClass = sidebarOpen ? "max-w-4xl md:max-w-5xl" : "max-w-6xl md:max-w-7xl";
 
     return (
-        <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
-
+        <div className={cn(
+            "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
+            sidebarOpen && "hidden md:block"
+        )}>
             {/* TOP BAR */}
-            <div className={`pt-6 pb-4 ${paddingClass}`}>
-                <div className="flex items-center gap-2 mb-4">
+            <div className={cn(
+                "pt-6 pb-4",
+                sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
+            )}>
 
-                    {/* Sidebar toggle */}
+                {/* Sidebar toggle */}
+                <div className="flex items-center gap-2 mb-4">
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
@@ -193,29 +209,42 @@ const CourseContent: React.FC<Props> = ({
                         <TooltipContent side="bottom"><p>Next topic</p></TooltipContent>
                     </Tooltip>
                 </div>
-
-                {topic.type === "question" && (
-                    <h1 className="text-4xl font-bold text-white">{topic.title}</h1>
-                )}
             </div>
 
             {/* CONTENT */}
-            <div className={`pb-6 pt-8 ${paddingClass}`}>
-                <div className={`${maxWidthClass} mx-auto`}>
+            <div className="min-h-[calc(100vh-100px)] select-none bg-black">
+                <div className={cn(
+                    "pb-6 pt-8 bg-black",
+                    sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
+                )}>
+                    <div className={cn(
+                        "mx-auto bg-black",
+                        sidebarOpen ? "max-w-5xl" : "max-w-6xl"
+                    )}>
+                        {/* LAYOUT TOPIC */}
+                        {topic.type === "layout" && (
+                            <Renderer doc={typeof topic.jsonContent === "string" ? JSON.parse(topic.jsonContent) : topic.jsonContent} />
+                        )}
 
-                    {/* LAYOUT TOPIC */}
-                    {topic.type === "layout" && (
-                        <Renderer doc={typeof topic.jsonContent === "string" ? JSON.parse(topic.jsonContent) : topic.jsonContent} />
-                    )}
-
-                    {/* QUESTION TOPIC */}
-                    {topic.type === "question" && <QuestionLayout topic={topic} />}
+                        {/* QUESTION TOPIC */}
+                        {topic.type === "question" && <QuestionLayout topic={topic} />}
 
 
-                    {/* PLAYLIST */}
-                    {topic.type === "playlist" && (
-                        <p className="text-gray-400">Playlist view TBD…</p>
-                    )}
+                        {/* PLAYLIST */}
+                        {topic.type === "playlist" && (
+                            <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto">
+                                <div className={`${paddingClass} ${maxWidthClass} mx-auto py-6`}>
+                                    {playlistId ?
+                                        <PlaylistDetail
+                                            playlistId={playlistId}
+                                            onBack={() => navigate(-1)}
+                                        />
+                                        : <PlaylistGrid
+                                            playlistIds={topic.playlistIds || []} />}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

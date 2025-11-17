@@ -112,10 +112,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                                 value={answer}
                                 onChange={(e) => setAnswer(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 
-                                    ${feedback.type === "wrong" ? "border-red-500 animate-shake" : ""}
-                                    ${feedback.type === "correct" ? "border-green-500" : ""}
-                                `}
+                                className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 `}
                             />
 
                             <Button

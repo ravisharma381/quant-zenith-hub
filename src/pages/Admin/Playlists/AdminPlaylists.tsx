@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { X, Pencil, PlusCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { MultiSelect } from "@/components/ui/multi-select-topic";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface Playlist {
@@ -253,8 +253,9 @@ const AdminPlaylists: React.FC = () => {
                             <Label>Linked Topics</Label>
                             <MultiSelect
                                 options={topics.map((t) => ({ label: t.title, value: t.id }))}
-                                selected={formData.topicIds}
+                                value={formData.topicIds}
                                 onChange={(vals) => setFormData({ ...formData, topicIds: vals })}
+                                placeholder="Select Topics"
                             />
                         </div>
 

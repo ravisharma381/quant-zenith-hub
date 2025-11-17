@@ -38,6 +38,7 @@ import AdminBuilder from "./pages/Admin/Chapters/Topics/Builder";
 import AdminPlaylists from "./pages/Admin/Playlists/AdminPlaylists";
 import AdminChapters from "./pages/Admin/Chapters/Chapters";
 import CourseLearn from "./pages/CourseLearn";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => (
   <AuthProvider>
@@ -46,6 +47,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Layout><Index /></Layout>} />
             <Route path="/problems" element={<Layout><Problems /></Layout>} />
@@ -117,10 +119,10 @@ const App = () => (
                   </AdminRoute>
                 </Layout>}
             />
+            <Route path="/course/:courseId/learn/:topicId?/playlist?/:playlistId?" element={<CourseLearn />} />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/course/static" element={<CourseLearnStatic />} />
-            <Route path="/course/:courseId/learn" element={<CourseLearn />} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
