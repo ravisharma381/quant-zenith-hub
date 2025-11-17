@@ -54,7 +54,24 @@ const PlaylistGrid: React.FC<{ playlistIds: string[] }> = ({ playlistIds = [] })
         }
     };
 
-    if (loading) return <div className="text-gray-400">Loading playlists…</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+                <div className="flex flex-col items-center gap-6">
+                    {/* Scaling Circle */}
+                    <div className="relative">
+                        <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                        <div className="w-12 h-12 rounded-full bg-primary"></div>
+                    </div>
+
+                    {/* Loading Text */}
+                    <p className="text-muted-foreground text-lg font-medium">
+                        Loading Playlists...
+                    </p>
+                </div>
+            </div>
+        )
+    }
     if (error) return <div className="text-red-400">{error}</div>;
     if (playlists.length === 0) return <div className="text-gray-400">No playlists attached.</div>;
 
