@@ -6,11 +6,18 @@ import { db } from "@/firebase/config";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import RendererTopicSkeleton from "../TopicSkeleton";
 
-const PlaylistGrid: React.FC<{ playlistIds: string[] }> = ({ playlistIds = [] }) => {
+interface playlistProps {
+    playlistIds: string[];
+    onBack?: () => void;
+    loading: boolean;
+    setLoading: (loading: boolean) => void;
+}
+
+const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setLoading }) => {
     const navigate = useNavigate();
     const { courseId, topicId } = useParams<{ courseId?: string; topicId?: string }>();
-    const [loading, setLoading] = useState(true);
     const [playlists, setPlaylists] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
 
@@ -56,19 +63,11 @@ const PlaylistGrid: React.FC<{ playlistIds: string[] }> = ({ playlistIds = [] })
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
-                <div className="flex flex-col items-center gap-6">
-                    {/* Scaling Circle */}
-                    <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
-                        <div className="w-12 h-12 rounded-full bg-primary"></div>
-                    </div>
-
-                    {/* Loading Text */}
-                    <p className="text-muted-foreground text-lg font-medium">
-                        Loading Playlists...
-                    </p>
-                </div>
+            <div
+                className="absolute left-12 right-0 top-8"
+            // className="pt-12 pb-4 px-4 md:px-6"
+            >
+                <RendererTopicSkeleton />
             </div>
         )
     }

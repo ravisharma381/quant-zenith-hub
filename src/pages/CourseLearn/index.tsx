@@ -181,7 +181,7 @@ const CourseLearnPage: React.FC = () => {
                     {/* ============================
                        MAIN CONTENT
                     ============================= */}
-                    <div id="main-scroll" className={`flex-1 ${sidebarOpen ? "hidden md:block" : ""}`}>
+                    <div id="main-scroll" className={`flex-1 relative ${sidebarOpen ? "hidden md:block" : ""}`}>
                         <CourseContent
                             topicMeta={topicMeta}
                             topicId={selectedTopicId}

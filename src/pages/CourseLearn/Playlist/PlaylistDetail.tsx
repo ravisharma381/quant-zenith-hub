@@ -8,6 +8,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
+import RendererTopicSkeleton from "../TopicSkeleton";
 
 interface playlistProps {
     playlistId: string | null,
@@ -105,7 +106,11 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
         }
     };
 
-    if (loading) return <div className="text-gray-400 p-4">Loading playlist…</div>;
+    if (loading) return (
+        <div className="">
+            <RendererTopicSkeleton />
+        </div>
+    );
     if (error) return <div className="text-red-400 p-4">{error}</div>;
     if (!playlist) return <div className="text-gray-400 p-4">Playlist not found.</div>;
 

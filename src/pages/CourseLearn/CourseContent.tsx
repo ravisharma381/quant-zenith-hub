@@ -12,6 +12,7 @@ import PlaylistGrid from "./Playlist";
 import PlaylistDetail from "./Playlist/PlaylistDetail";
 import { useNavigate, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import RendererTopicSkeleton from "./TopicSkeleton";
 
 
 interface Props {
@@ -31,6 +32,7 @@ const CourseContent: React.FC<Props> = ({
 }) => {
     const [topic, setTopic] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
+    const [playlistLoading, setPlaylistLoading] = useState(true);
 
     // -----------------------------
     // QUESTION HOOKS (must remain here)
@@ -116,19 +118,11 @@ const CourseContent: React.FC<Props> = ({
     }
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
-                <div className="flex flex-col items-center gap-6">
-                    {/* Scaling Circle */}
-                    <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
-                        <div className="w-12 h-12 rounded-full bg-primary"></div>
-                    </div>
-
-                    {/* Loading Text */}
-                    <p className="text-muted-foreground text-lg font-medium">
-                        Loading Topic...
-                    </p>
-                </div>
+            <div
+                className="absolute left-12 right-0 top-8"
+            // className="pt-12 pb-4 px-4 md:px-6"
+            >
+                <RendererTopicSkeleton />
             </div>
         )
     }
@@ -141,12 +135,12 @@ const CourseContent: React.FC<Props> = ({
             </div>
         );
     }
+    console.log(playlistLoading);
 
     // -----------------------------
     // LAYOUT
     // -----------------------------
-    const paddingClass = sidebarOpen ? "px-4 md:px-8" : "px-4 md:px-20";
-    const maxWidthClass = sidebarOpen ? "max-w-4xl md:max-w-5xl" : "max-w-6xl md:max-w-7xl";
+    const paddingClass = sidebarOpen ? "px-2 md:px-4" : "px-2 md:px-10";
 
     return (
         <div className={cn(
@@ -154,13 +148,13 @@ const CourseContent: React.FC<Props> = ({
             sidebarOpen && "hidden md:block"
         )}>
             {/* TOP BAR */}
-            <div className={cn(
+            {(topic.type !== 'playlist' || !playlistLoading) && <div className={cn(
                 "pt-6 pb-4",
                 sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
             )}>
 
                 {/* Sidebar toggle */}
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-1">
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
@@ -209,12 +203,12 @@ const CourseContent: React.FC<Props> = ({
                         <TooltipContent side="bottom"><p>Next topic</p></TooltipContent>
                     </Tooltip>
                 </div>
-            </div>
+            </div>}
 
             {/* CONTENT */}
             <div className="min-h-[calc(100vh-100px)] select-none bg-black">
                 <div className={cn(
-                    "pb-6 pt-8 bg-black",
+                    "pb-6 pt-2 bg-black",
                     sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
                 )}>
                     <div className={cn(
@@ -233,14 +227,17 @@ const CourseContent: React.FC<Props> = ({
                         {/* PLAYLIST */}
                         {topic.type === "playlist" && (
                             <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto">
-                                <div className={`${paddingClass} ${maxWidthClass} mx-auto py-6`}>
+                                <div className={`${paddingClass} mx-auto py-6`}>
                                     {playlistId ?
                                         <PlaylistDetail
                                             playlistId={playlistId}
                                             onBack={() => navigate(-1)}
                                         />
                                         : <PlaylistGrid
-                                            playlistIds={topic.playlistIds || []} />}
+                                            playlistIds={topic.playlistIds || []}
+                                            loading={playlistLoading}
+                                            setLoading={setPlaylistLoading}
+                                        />}
                                 </div>
                             </div>
                         )}
