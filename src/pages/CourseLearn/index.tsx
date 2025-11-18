@@ -14,6 +14,7 @@ import {
 
 import CourseSidebar from "./CourseSidebar";
 import CourseContent from "./CourseContent";
+import { Button } from "@/components/ui/button";
 
 const CourseLearnPage: React.FC = () => {
     const { courseId: routeCourseId, topicId: routeTopicId } =
@@ -135,7 +136,6 @@ const CourseLearnPage: React.FC = () => {
             </div>
         );
     }
-    console.log(topicMeta);
 
 
     if (chapters.length === 0) {
@@ -143,6 +143,7 @@ const CourseLearnPage: React.FC = () => {
             <div className="min-h-screen bg-black text-white">
                 <Navigation />
                 <div className="p-8">No chapter found in this course.</div>
+                <Button onClick={() => navigate('/courses')}>Purchase To Continue</Button>
             </div>
         );
     }

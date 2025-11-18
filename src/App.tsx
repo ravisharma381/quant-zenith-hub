@@ -19,7 +19,6 @@ import CourseDetail from "./pages/CourseDetail";
 import CourseCheckout from "./pages/CourseCheckout";
 import MLCourseDetail from "./pages/MLCourseDetail";
 import MLCourseEnroll from "./pages/MLCourseEnroll";
-import CourseLearnStatic from "./pages/CourseLearnStatic";
 import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
@@ -119,10 +118,13 @@ const App = () => (
                   </AdminRoute>
                 </Layout>}
             />
-            <Route path="/course/:courseId/learn/:topicId?/playlist?/:playlistId?" element={<CourseLearn />} />
+            <Route path="/course/:courseId/learn/:topicId?/playlist?/:playlistId?" element={
+              <ProtectedRoute>
+                <CourseLearn />
+              </ProtectedRoute>
+            } />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
-            <Route path="/course/static" element={<CourseLearnStatic />} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />

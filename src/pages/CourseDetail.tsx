@@ -14,6 +14,7 @@ const CourseDetail = () => {
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
   const { userProfile } = useAuth();
   const slug = window.location.pathname.split("/course/")[1];
+  const courseId = 'pxeKbx6V6C2IeBy1UnWm';
 
   const isBought = userProfile?.purchasedSlugs?.includes(slug);
 
@@ -177,7 +178,7 @@ const CourseDetail = () => {
                     className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
                     onClick={() => navigate(
                       isBought
-                        ? `/course/${slug}/learn`
+                        ? `/course/${courseId}/learn`
                         : `/course/${slug}/checkout`,
                     )}
                   >

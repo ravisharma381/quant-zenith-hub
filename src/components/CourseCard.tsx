@@ -18,8 +18,8 @@ const CourseCard = ({ course, isEnrolled }) => {
     return (
         <div
             key={course.id}
-            className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row"
-            onClick={() => navigate(`/course/${course.id}`)}
+            className="cursor-pointer bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row"
+            onClick={() => course.isComingSoon ? null : navigate(`/course/${course.slug}`)}
         >
             {/* Gradient Header with Instructor Photo */}
             {/* <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
@@ -51,7 +51,7 @@ const CourseCard = ({ course, isEnrolled }) => {
                     </p>
 
                     {/* Rating and Stats */}
-                    <div className="flex items-center gap-2 text-sm">
+                    {course.isComingSoon && <div className="flex items-center gap-2 text-sm">
                         <div className="flex items-center">
                             <Star className="w-4 h-4 text-yellow-400 mr-1" />
                             <span className="font-medium text-foreground">{course.rating}</span>
@@ -60,26 +60,30 @@ const CourseCard = ({ course, isEnrolled }) => {
                         <span className="text-muted-foreground">100+ chapters</span>
                         <span className="text-muted-foreground">|</span>
                         <span className="text-muted-foreground">1200+ problems</span>
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Bottom Section */}
                 <div className="flex items-center mt-4 pt-4 border-t border-border">
                     {/* Start Learning Button */}
-                    <Button
-                        className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(
-                                isEnrolled
-                                    ? `/course/${course.id}/learn`
-                                    : `/course/${course.slug}/checkout`,
-                            )
-                        }
-                        }
-                    >
-                        {isEnrolled ? "Start Learning" : "Enroll Now"}
-                    </Button>
+                    {course.isComingSoon ?
+                        <Badge className="bg-muted text-muted-foreground border-border" variant="outline">
+                            Coming Soon
+                        </Badge>
+                        : <Button
+                            className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(
+                                    isEnrolled
+                                        ? `/course/${course.id}/learn`
+                                        : `/course/${course.slug}/checkout`,
+                                )
+                            }
+                            }
+                        >
+                            {isEnrolled ? "Start Learning" : "Enroll Now"}
+                        </Button>}
                 </div>
             </div>
         </div>

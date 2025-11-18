@@ -97,14 +97,6 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
         return sortedKeys.map(k => ({ level: k, items: g[k] }));
     }, [topics]);
 
-    const openTopic = (id: string) => {
-        // open in same tab; if you want new tab use window.open(url, "_blank")
-        if (courseId && topicId) {
-            navigate(`/course/${courseId}/learn/${id}`);
-        } else {
-            navigate(`/learn/${id}`);
-        }
-    };
 
     if (loading) return (
         <div className="">

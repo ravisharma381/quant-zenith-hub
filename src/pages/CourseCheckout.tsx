@@ -144,7 +144,7 @@ const CourseCheckout = () => {
           handler: (response: any) => {
             console.log("Payment success:", response);
             setRerender(true);
-            navigate("/course/quant-interview-masterclass/learn");
+            navigate(`/course/${course?.id}/learn`, { replace: true });
             toast({
               title: "Payment successful",
               description: "Your Payment has been successful.",
