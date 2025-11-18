@@ -51,7 +51,7 @@ const CourseCard = ({ course, isEnrolled }) => {
                     </p>
 
                     {/* Rating and Stats */}
-                    {course.isComingSoon && <div className="flex items-center gap-2 text-sm">
+                    {!course.isComingSoon && <div className="flex items-center gap-2 text-sm">
                         <div className="flex items-center">
                             <Star className="w-4 h-4 text-yellow-400 mr-1" />
                             <span className="font-medium text-foreground">{course.rating}</span>
