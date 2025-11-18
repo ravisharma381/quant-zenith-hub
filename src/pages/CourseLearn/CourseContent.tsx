@@ -226,7 +226,7 @@ const CourseContent: React.FC<Props> = ({
 
                         {/* PLAYLIST */}
                         {topic.type === "playlist" && (
-                            <div className="flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto">
+                            <div className="flex-1 bg-black h-[calc(100vh-80px)]">
                                 <div className={`${paddingClass} mx-auto py-6`}>
                                     {playlistId ?
                                         <PlaylistDetail
