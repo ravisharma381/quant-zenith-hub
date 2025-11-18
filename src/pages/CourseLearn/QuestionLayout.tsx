@@ -127,6 +127,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                         <div className="h-6 flex items-center">
                             {feedback.type && (
                                 <div
+                                    key={shakeKey}
                                     className={`text-sm font-medium ${feedback.type === "correct"
                                         ? "text-green-400"
                                         : "text-red-400 animate-shake"
