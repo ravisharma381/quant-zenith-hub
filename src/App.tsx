@@ -38,6 +38,7 @@ import AdminPlaylists from "./pages/Admin/Playlists/AdminPlaylists";
 import AdminChapters from "./pages/Admin/Chapters/Chapters";
 import CourseLearn from "./pages/CourseLearn";
 import ScrollToTop from "./components/ScrollToTop";
+import ContactUs from "./Contact";
 
 const App = () => (
   <AuthProvider>
@@ -123,13 +124,24 @@ const App = () => (
                 <CourseLearn />
               </ProtectedRoute>
             } />
+            <Route path="/billing" element={
+              <Layout>
+                <ProtectedRoute>
+                  <Billing />
+                </ProtectedRoute>
+              </Layout>
+            } />
+            <Route path="/contact" element={
+              <Layout>
+                <ContactUs />
+              </Layout>
+            } />
             <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
             <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
-            <Route path="/billing" element={<Layout><Billing /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
