@@ -143,10 +143,11 @@ const CourseContent: React.FC<Props> = ({
     const paddingClass = sidebarOpen ? "px-2 md:px-4" : "px-2 md:px-10";
 
     return (
-        <div className={cn(
-            "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
-            sidebarOpen && "hidden md:block"
-        )}>
+        <div
+            className={cn(
+                "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
+                sidebarOpen && "hidden md:block"
+            )}>
             {/* TOP BAR */}
             {(topic.type !== 'playlist' || !playlistLoading) && <div className={cn(
                 "pt-6 pb-4",

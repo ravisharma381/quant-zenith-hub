@@ -5,11 +5,11 @@ export default function ScrollToTopSmart() {
     const location = useLocation();
 
     useLayoutEffect(() => {
-        // scroll window
         window.scrollTo(0, 0);
 
-        // scroll ALL scrollable elements
         document.querySelectorAll('*').forEach((el: any) => {
+            if (el.classList?.contains('no-scroll-reset')) return;
+
             const style = window.getComputedStyle(el);
             const canScroll = /(auto|scroll)/.test(style.overflowY);
 

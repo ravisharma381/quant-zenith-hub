@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
     const [expanded, setExpanded] = useState<Record<string, boolean>>({});
     const [completed, setCompleted] = useState<Record<string, boolean>>({});
     const [search, setSearch] = useState("");
+    const sidebarRef = useRef<HTMLDivElement>(null);
 
     const toggle = (id: string) =>
         setExpanded(p => ({ ...p, [id]: !(p[id] ?? true) }));
@@ -29,6 +30,29 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
     const filterMatch = (str: string) =>
         str.toLowerCase().includes(search.toLowerCase());
+
+    useEffect(() => {
+        if (!selectedTopicId || !sidebarRef.current) return;
+
+        const container = sidebarRef.current;
+        const el = container.querySelector(`[data-topic-id="${selectedTopicId}"]`);
+        if (!el) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+
+        // Calculate position relative to container
+        const offset = elRect.top - containerRect.top;
+
+        // Scroll so that selected item is ~25% from top (smooth UX)
+        const targetScroll = container.scrollTop + offset - container.clientHeight * 0.25;
+
+        container.scrollTo({
+            top: targetScroll,
+            behavior: "smooth",
+        });
+    }, [selectedTopicId]);
+
 
     return (
         <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
@@ -54,7 +78,9 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div
+                ref={sidebarRef}
+                className="flex-1 overflow-y-auto custom-scrollbar no-scroll-reset">
                 <div className="p-6">
                     {chapters.map((chapter) => {
                         const topics = (chapter.topicMeta || []).filter((t: any) =>
@@ -87,6 +113,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
                                             return (
                                                 <div
+                                                    data-topic-id={topic.topicId}
                                                     key={topic.topicId}
                                                     className={cn(
                                                         "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",

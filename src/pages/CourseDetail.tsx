@@ -136,9 +136,13 @@ const CourseDetail = () => {
               </div>
               <Button
                 className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
-                onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
+                onClick={() => navigate(
+                  isBought
+                    ? `/course/${courseId}/learn`
+                    : `/course/${slug}/checkout`,
+                )}
               >
-                Enroll Now
+                {isBought ? "Continue Learning" : 'Enroll Now'}
               </Button>
             </div>
           </div>
@@ -290,9 +294,13 @@ const CourseDetail = () => {
           <Button
             size="lg"
             className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
-            onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
+            onClick={() => navigate(
+              isBought
+                ? `/course/${courseId}/learn`
+                : `/course/${slug}/checkout`,
+            )}
           >
-            Start Your Journey Today
+            {isBought ? "Continue Learning" : 'Start Your Journey Today'}
           </Button>
         </div>
       </div>
