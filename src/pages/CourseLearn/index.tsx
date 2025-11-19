@@ -9,8 +9,10 @@ import {
     query,
     where,
     getDocs,
-    orderBy
+    orderBy,
+    doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp
 } from "firebase/firestore";
+import { useAuth } from "@/hooks/useAuth";
 
 import CourseSidebar from "./CourseSidebar";
 import CourseContent from "./CourseContent";
@@ -26,7 +28,12 @@ const CourseLearnPage: React.FC = () => {
     const [chapters, setChapters] = useState<any[]>([]);
     const [topicMeta, setTopicMeta] = useState<any[]>([]);
     const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+    const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
+    const [pendingChanges, setPendingChanges] = useState<Set<string>>(new Set());
+    const [writeTimer, setWriteTimer] = useState<NodeJS.Timeout | null>(null);
+
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     // 🔥 UI state (sidebar)
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(
@@ -39,7 +46,7 @@ const CourseLearnPage: React.FC = () => {
     // FETCH CHAPTERS + TOPICS
     // -----------------------------
     useEffect(() => {
-        if (!routeCourseId) return;
+        if (!routeCourseId || !user) return;
 
         let mounted = true;
 
@@ -47,6 +54,9 @@ const CourseLearnPage: React.FC = () => {
             setLoading(true);
 
             try {
+                // ---------------------------
+                // 1. Fetch chapters
+                // ---------------------------
                 const q = query(
                     collection(db, "chapters"),
                     where("courseId", "==", routeCourseId),
@@ -71,23 +81,47 @@ const CourseLearnPage: React.FC = () => {
 
                 setChapters(chapterList);
 
-                // Flatten topicMeta for sidebar + prev/next navigation
-                const flattened = chapterList
-                    .flatMap((ch: any) =>
-                        (ch.topicMeta || []).map((t: any) => ({
-                            ...t,
-                            chapterId: ch.id,
-                            chapterTitle: ch.title
-                        }))
-                    )
+                const flattened = chapterList.flatMap((ch: any) =>
+                    (ch.topicMeta || []).map((t: any) => ({
+                        ...t,
+                        chapterId: ch.id,
+                        chapterTitle: ch.title
+                    }))
+                );
 
                 setTopicMeta(flattened);
 
+                // ---------------------------
+                // 2. Load Progress (1 read)
+                // ---------------------------
+                const pid = `${user.uid}_${routeCourseId}`;
+
+                const progressRef = doc(db, "progress", pid);
+                const progressSnap = await getDoc(progressRef);
+
+                if (!progressSnap.exists()) {
+                    await setDoc(progressRef, {
+                        progressId: pid,
+                        userId: user.uid,
+                        courseId: routeCourseId,
+                        completedTopics: [],
+                        updatedAt: serverTimestamp()
+                    });
+                    setCompletedSet(new Set<string>());
+                } else {
+                    const arr = progressSnap.data()?.completedTopics || [];
+                    setCompletedSet(new Set<string>(arr));
+                }
+
+                // ---------------------------
+                // 3. Decide initial topic
+                // ---------------------------
                 if (routeTopicId) {
                     setSelectedTopicId(routeTopicId);
                 } else {
                     setSelectedTopicId(flattened[0]?.topicId ?? null);
                 }
+
             } catch (err) {
                 console.error("Error loading chapters:", err);
                 if (mounted) {
@@ -101,16 +135,57 @@ const CourseLearnPage: React.FC = () => {
         };
 
         load();
-        return () => {
-            mounted = false;
-        };
-    }, [routeCourseId]);
+        return () => { mounted = false; };
+    }, [routeCourseId, user]);
+
 
     useEffect(() => {
         if (routeTopicId) {
             setSelectedTopicId(routeTopicId);
         }
     }, [routeTopicId]);
+
+    const flushProgressUpdates = async (finalSet: Set<string>) => {
+        const progressId = `${user.uid}_${routeCourseId}`;
+        const progressRef = doc(db, "progress", progressId);
+
+        await setDoc(progressRef, {
+            userId: user.uid,
+            courseId: routeCourseId,
+            completedTopics: Array.from(finalSet),
+            updatedAt: serverTimestamp(),
+        }, { merge: true });
+
+        // Clear buffer
+        setPendingChanges(new Set());
+    };
+
+
+    const onToggleComplete = (topicId: string) => {
+        if (!user || !routeCourseId) return;
+
+        const newSet = new Set(completedSet);
+
+        if (newSet.has(topicId)) newSet.delete(topicId);
+        else newSet.add(topicId);
+
+        // UI updates immediately
+        setCompletedSet(newSet);
+
+        // Mark change in buffer
+        const updatedBuffer = new Set(pendingChanges);
+        updatedBuffer.add(topicId);
+        setPendingChanges(updatedBuffer);
+
+        // reset existing timer
+        if (writeTimer) clearTimeout(writeTimer);
+
+        // schedule a batched write
+        const t = setTimeout(() => flushProgressUpdates(newSet), 500);
+        setWriteTimer(t);
+    };
+
+
 
     // -----------------------------
     // RENDER
@@ -176,6 +251,8 @@ const CourseLearnPage: React.FC = () => {
                                 navigate(`/course/${routeCourseId}/learn/${id}`);
                                 if (window.innerWidth < 768) toggleSidebar(); // auto-close on mobile
                             }}
+                            completedSet={completedSet}
+                            onToggleComplete={onToggleComplete}
                         />
                     )}
 

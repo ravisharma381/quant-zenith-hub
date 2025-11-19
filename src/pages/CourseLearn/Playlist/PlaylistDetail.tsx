@@ -49,7 +49,6 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
                 const pdata: any = { id: psnap.id, ...psnap.data() };
                 if (!mounted) return;
                 setPlaylist(pdata);
-                console.log(pdata);
 
                 const topicIds = Array.isArray(pdata.topicIds) ? pdata.topicIds.filter(Boolean) : [];
 
@@ -63,7 +62,6 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
                         map[d.id] = { id: d.id, ...d.data() };
                     });
                 }
-                console.log(map);
 
                 if (!mounted) return;
                 setTopicsMap(map);

@@ -40,7 +40,6 @@ const Login: React.FC = () => {
   const location = useLocation();
 
   const from = (location.state as { from?: Location })?.from?.pathname || "/";
-  console.log(from);
 
   useEffect(() => {
     if (user && !loading) {

@@ -71,8 +71,6 @@ const CourseCheckout = () => {
             const userSnap = await getDoc(userRef);
 
             if (userSnap.exists()) {
-              console.log('userSnap.data()', userSnap.data());
-
               const data = userSnap.data();
               const purchased = data?.purchasedCourses || [];
               const alreadyEnrolled = purchased.includes(fetchedCourse.id);

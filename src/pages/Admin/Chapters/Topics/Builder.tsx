@@ -90,12 +90,9 @@ const AdminBuilder: React.FC = () => {
         try { return JSON.parse(initial); } catch { return null; }
     });
 
-    console.log(initial);
-
 
     const onChange = (v: string) => {
         setJsonText(v);
-        console.log(v);
 
         try {
             const p = JSON.parse(v);
@@ -109,7 +106,6 @@ const AdminBuilder: React.FC = () => {
         await navigator.clipboard.writeText(jsonText);
         alert("Copied JSON to clipboard!");
     };
-    console.log(parsed);
 
 
     return (

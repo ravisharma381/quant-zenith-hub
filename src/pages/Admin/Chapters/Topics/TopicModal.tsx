@@ -127,8 +127,6 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             };
         });
 
-        console.log(results);
-
         setPlaylistOptions(results);
     };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -9,27 +9,34 @@ interface SidebarProps {
     selectedTopicId: string | null;
     onSelectTopic: (id: string) => void;
     toggleSidebar: () => void;
+    completedSet: Set<string>;
+    onToggleComplete: (topicId: string) => void;
 }
 
 const CourseSidebar: React.FC<SidebarProps> = ({
     chapters,
     selectedTopicId,
     onSelectTopic,
-    toggleSidebar
+    toggleSidebar,
+    completedSet,
+    onToggleComplete
+
 }) => {
     const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-    const [completed, setCompleted] = useState<Record<string, boolean>>({});
     const [search, setSearch] = useState("");
     const sidebarRef = useRef<HTMLDivElement>(null);
 
     const toggle = (id: string) =>
         setExpanded(p => ({ ...p, [id]: !(p[id] ?? true) }));
 
-    const toggleComplete = (topicId: string) =>
-        setCompleted((p) => ({ ...p, [topicId]: !p[topicId] }));
+    const toggleComplete = (topicId: string) => {
+        onToggleComplete(topicId); // Only send id
+    };
 
-    const filterMatch = (str: string) =>
-        str.toLowerCase().includes(search.toLowerCase());
+    const filterMatch = useCallback(
+        (str: string) => str.toLowerCase().includes(search.toLowerCase()),
+        [search]
+    );
 
     useEffect(() => {
         if (!selectedTopicId || !sidebarRef.current) return;
@@ -50,6 +57,16 @@ const CourseSidebar: React.FC<SidebarProps> = ({
         container.scrollTo({
             top: targetScroll,
             behavior: "smooth",
+        });
+    }, [selectedTopicId]);
+
+    useEffect(() => {
+        if (!selectedTopicId) return;
+
+        chapters.forEach((chapter) => {
+            if (chapter.topicMeta?.some((t: any) => t.topicId === selectedTopicId)) {
+                setExpanded(prev => ({ ...prev, [chapter.id]: true }));
+            }
         });
     }, [selectedTopicId]);
 
@@ -110,6 +127,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                                     <div className="mt-2 space-y-1 pl-2">
                                         {topics.map((topic: any) => {
                                             const active = selectedTopicId === topic.topicId;
+                                            const isCompleted = completedSet.has(topic.topicId);
 
                                             return (
                                                 <div
@@ -131,12 +149,12 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                                                         }}
                                                         className={cn(
                                                             "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
-                                                            completed[topic.topicId]
+                                                            isCompleted
                                                                 ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]"
                                                                 : "border-gray-500"
                                                         )}
                                                     >
-                                                        {completed[topic.topicId] && (
+                                                        {isCompleted && (
                                                             <span className="text-black text-xs font-bold">✓</span>
                                                         )}
                                                     </div>

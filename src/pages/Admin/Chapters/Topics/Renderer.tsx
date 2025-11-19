@@ -165,7 +165,6 @@ const Callout = ({
 
         style.borderLeftColor = `rgb(${r}, ${g}, ${b})`;
         style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
-        // console.log(style);
     }
 
 

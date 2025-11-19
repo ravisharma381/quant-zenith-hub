@@ -71,8 +71,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         if (rerender) {
             const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
                 if (firebaseUser) {
-                    setUser(firebaseUser);
-
                     const userRef = doc(db, "users", firebaseUser.uid);
                     const userSnap = await getDoc(userRef);
 
@@ -102,7 +100,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         const snapshot = await getDocs(q);
                         purchasedSlugs = snapshot.docs.map((doc: any) => doc.data().slug as string);
                     }
-
+                    setUser(firebaseUser);
                     setUserProfile({
                         id: profileSnap.id,
                         ...data,
@@ -135,6 +133,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 // await signInWithRedirect(auth, provider);
                 await signInWithPopup(auth, provider);
             }
+            setRerender(true);
 
 
         } catch (err) {

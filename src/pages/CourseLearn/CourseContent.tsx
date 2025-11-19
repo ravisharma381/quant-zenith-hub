@@ -135,7 +135,6 @@ const CourseContent: React.FC<Props> = ({
             </div>
         );
     }
-    console.log(playlistLoading);
 
     // -----------------------------
     // LAYOUT

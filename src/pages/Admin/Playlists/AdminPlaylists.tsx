@@ -145,7 +145,6 @@ const AdminPlaylists: React.FC = () => {
         );
 
         const snap = await getDocs(q);
-        console.log(snap.docs);
 
         const results = snap.docs.map((d) => ({
             id: d.id,
@@ -153,7 +152,6 @@ const AdminPlaylists: React.FC = () => {
         })) as Topic[];
 
         setTopics(results);
-        console.log(results);
     };
 
 
