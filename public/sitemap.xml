@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+
+  <!-- Home -->
+  <url>
+    <loc>https://quantprof-backend-9cb17.web.app/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Public pages -->
+  <url><loc>https://quantprof-backend-9cb17.web.app/problems</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/courses</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/blogs</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/contact</loc></url>
+
+  <!-- Static course marketing pages -->
+  <url><loc>https://quantprof-backend-9cb17.web.app/course/quant-interview-masterclass</loc></url>
+  <!-- <url><loc>https://quantprof-backend-9cb17.web.app/course/machine-learning-for-finance</loc></url> -->
+
+  <!-- Games -->
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/arithmetic-pro</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/sequences-pro</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/probability-master</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/memory-sequences</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/optiver-80</loc></url>
+  <url><loc>https://quantprof-backend-9cb17.web.app/games/sokoban</loc></url>
+
+  <!-- Playlists -->
+  <!-- <url><loc>https://quantprof-backend-9cb17.web.app/playlists</loc></url> -->
+
+</urlset>

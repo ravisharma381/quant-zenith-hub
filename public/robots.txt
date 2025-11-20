@@ -1,14 +1,24 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
+# Block private pages
+Disallow: /login
+Disallow: /signup
+Disallow: /billing
+Disallow: /my-courses
+Disallow: /course/*/learn
+Disallow: /admin/
+Disallow: /course/*/checkout
+
+# Allow public pages
 Allow: /
+Allow: /problems
+Allow: /problems/
+Allow: /games/
+Allow: /games/*
+Allow: /courses
+Allow: /course/
+Allow: /blogs
+Allow: /blogs/
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://quantprof-backend-9cb17.web.app/sitemap.xml
