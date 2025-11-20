@@ -21,6 +21,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
         type: null,
         message: "",
     });
+    const [copied, setCopied] = useState(false);
 
     // ---- ANSWER CHECK ----
     const correct = (topic.answer ?? "").toString().trim();
@@ -34,6 +35,14 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
             setShakeKey(k => k + 1);
             navigator.vibrate?.(200);
         }
+    };
+
+    const handleShare = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+        } catch (_) { }
     };
 
     const handleKeyDown = (e: any) => {
@@ -86,9 +95,17 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                             </div>
                         )}
 
-                        <Button variant="ghost" size="icon">
-                            <Share className="h-5 w-5" />
-                        </Button>
+                        <div className="relative">
+                            <Button variant="ghost" size="icon" onClick={handleShare}>
+                                <Share className="h-5 w-5" />
+                            </Button>
+
+                            {copied && (
+                                <div className="absolute top-10 right-0 text-xs bg-black/80 px-2 py-1 rounded shadow text-white">
+                                    Copied!
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
