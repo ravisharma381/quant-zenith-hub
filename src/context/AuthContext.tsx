@@ -122,6 +122,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     // 🔹 3️⃣ Login with Google (with persistence)
     const loginWithGoogle = async () => {
         try {
+            setLoading(true);
             const provider = new GoogleAuthProvider();
             if (import.meta.env.DEV) {
                 // await setPersistence(auth, browserLocalPersistence);

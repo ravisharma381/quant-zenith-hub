@@ -49,25 +49,14 @@ const Login: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     await loginWithGoogle();
-    // Simulate API call
-    // setTimeout(() => {
-    //   localStorage.setItem('mockLoggedIn', 'true');
-    //   navigate('/');
-    //   toast({
-    //     title: "Welcome back!",
-    //     description: "You have successfully signed in.",
-    //   });
-    // }, 1500);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    handleGoogleSignIn();
-  };
 
   return (
-    <div className="min-h-screen flex">
-      <div className="w-1/2 bg-background flex items-center justify-center p-8">
+    <div className="min-h-screen flex flex-col md:flex-row">
+
+      {/* Left Side */}
+      <div className="w-full md:w-1/2 bg-background flex items-center justify-center p-6 md:p-8">
         <div className="w-full max-w-md space-y-8">
           <div>
             <Link
@@ -97,26 +86,11 @@ const Login: React.FC = () => {
                 <span className="mr-2 font-bold">G</span>
                 {loading ? "Signing in..." : "Sign in with Google"}
               </Button>
-
-              <Button
-                variant="secondary"
-                className="w-full h-12"
-                onClick={handleSubmit}
-                disabled={loading}
-              >
-                <Github className="mr-2 h-5 w-5" />
-                {loading ? "Signing in..." : "Sign in with GitHub"}
-              </Button>
             </div>
 
             <div className="text-center">
-              <span className="text-muted-foreground">
-                Not registered yet?
-              </span>
-              <Link
-                to="/signup"
-                className="text-primary hover:underline ml-1"
-              >
+              <span className="text-muted-foreground">Not registered yet?</span>
+              <Link to="/signup" className="text-primary hover:underline ml-1">
                 Create an account.
               </Link>
             </div>
@@ -124,13 +98,13 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Right Side - Welcome Message */}
-      <div className="w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 flex items-center justify-center p-8">
+      {/* Right Side */}
+      <div className="w-full md:w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 flex items-center justify-center p-10 md:p-8 mt-8 md:mt-0">
         <div className="text-center text-white space-y-6">
-          <h2 className="text-4xl font-bold">
+          <h2 className="text-3xl md:text-4xl font-bold">
             Welcome Back To Quantprof.org
           </h2>
-          <p className="text-xl text-white/90">
+          <p className="text-lg md:text-xl text-white/90">
             Sign into your account and get ready for your next interview!
           </p>
         </div>
