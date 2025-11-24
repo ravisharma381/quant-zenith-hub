@@ -24,10 +24,21 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
     const [copied, setCopied] = useState(false);
 
     // ---- ANSWER CHECK ----
-    const correct = (topic.answer ?? "").toString().trim();
+    const isCorrect = () => {
+        const topicAnswer = (topic.answer ?? "").toString().trim();
+        if (!isNaN(Number(answer))) {
+            const marginOfError = 0.02;
+            const acceptedRange = [Number(topicAnswer) * (1 - marginOfError), Number(topicAnswer) * (1 + marginOfError)];
+
+            const userInput = Number(answer.trim());
+            return userInput >= acceptedRange[0] && userInput <= acceptedRange[1];
+        }
+
+        return answer === topicAnswer;
+    }
 
     const handleSubmit = () => {
-        if (answer.trim() === correct) {
+        if (isCorrect()) {
             setFeedback({ type: "correct", message: "Correct answer!" });
             fireRandomCelebration();
         } else {
@@ -120,7 +131,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                     </div>
 
                     {/* Answer input */}
-                    <div className="space-y-4 mt-12">
+                    {topic.answer !== '' && <div className="space-y-4 mt-12">
                         <div className="flex gap-4 items-center">
                             <Input
                                 key={shakeKey}
@@ -154,7 +165,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </div>}
                 </TabsContent>
 
                 {/* ---------------- SOLUTION TAB ---------------- */}
