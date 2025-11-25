@@ -43,7 +43,7 @@ const AccordionBlock = ({ items }: { items: { title: string; content: string }[]
                     </button>
 
                     {openIndex === idx && (
-                        <div className="px-4 pb-4 text-gray-300 leading-relaxed">
+                        <div className="px-4 pb-4 text-white leading-relaxed">
                             {renderRichText(item.content)}
                         </div>
                     )}
@@ -190,7 +190,7 @@ const Callout = ({
             )}
 
             {subheading && (
-                <p className="text-gray-300 text-lg leading-relaxed mb-2">
+                <p className="text-white text-lg leading-relaxed mb-2">
                     {renderRichText(subheading)}
                 </p>
             )}
@@ -217,7 +217,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                 <h1 className="text-4xl font-bold text-white mb-6">{doc.title}</h1>
             )}
 
-            <div className="space-y-10 text-gray-300 leading-relaxed">
+            <div className="space-y-10 text-white leading-relaxed">
                 {blocks.map((b: any, i: number) => {
                     switch (b.type) {
                         case "subheading":
@@ -228,7 +228,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                             );
                         case "paragraph":
                             return (
-                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-gray-300'} whitespace-pre-line`}>
+                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-white'} whitespace-pre-line`}>
                                     {renderRichText(b.text)}
                                 </p>
                             );
