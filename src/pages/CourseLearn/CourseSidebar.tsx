@@ -27,7 +27,12 @@ const CourseSidebar: React.FC<SidebarProps> = ({
     const sidebarRef = useRef<HTMLDivElement>(null);
 
     const toggle = (id: string) =>
-        setExpanded(p => ({ ...p, [id]: !(p[id] ?? true) }));
+        setExpanded(prev => {
+            const currentlyOpen = Object.keys(prev).find(key => prev[key]);
+            if (currentlyOpen === id) return {};
+            return { [id]: true };
+        });
+
 
     const toggleComplete = (topicId: string) => {
         onToggleComplete(topicId); // Only send id
@@ -62,13 +67,13 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
     useEffect(() => {
         if (!selectedTopicId) return;
-
-        chapters.forEach((chapter) => {
+        for (const chapter of chapters) {
             if (chapter.topicMeta?.some((t: any) => t.topicId === selectedTopicId)) {
-                setExpanded(prev => ({ ...prev, [chapter.id]: true }));
+                setExpanded({ [chapter.id]: true });
+                return;
             }
-        });
-    }, [selectedTopicId]);
+        }
+    }, [selectedTopicId, chapters]);
 
 
     return (
@@ -106,7 +111,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
                         if (topics.length === 0) return null;
 
-                        const isOpen = expanded[chapter.id] ?? true;
+                        const isOpen = expanded[chapter.id] ?? false;
 
                         return (
                             <div key={chapter.id}>
