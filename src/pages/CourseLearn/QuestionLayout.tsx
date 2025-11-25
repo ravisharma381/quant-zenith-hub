@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Share, Send } from "lucide-react";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useState } from "react";
@@ -33,9 +32,8 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
             const userInput = Number(answer.trim());
             return userInput >= acceptedRange[0] && userInput <= acceptedRange[1];
         }
-
         return answer === topicAnswer;
-    }
+    };
 
     const handleSubmit = () => {
         if (isCorrect()) {
@@ -60,40 +58,43 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
         if (e.key === "Enter") handleSubmit();
     };
 
-    // ---- DIFFICULTY COLOR ----
     const level = Number(topic.level ?? 1);
 
     const getDifficultyColor = (difficulty: number) => {
-        if (difficulty <= 3) return "bg-green-500/20 text-green-400 border-green-500/50";
-        if (difficulty <= 6) return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
-        return "bg-red-500/20 text-red-400 border-red-500/50";
+        if (difficulty <= 3)
+            return "bg-green-500/20 text-green-400 border-green-500/30";
+        if (difficulty <= 6)
+            return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+        return "bg-red-500/20 text-red-400 border-red-500/30";
     };
 
     const difficultyClass = getDifficultyColor(level);
 
     return (
         <div className="max-w-4xl mx-auto">
+
             <Tabs defaultValue="problem" className="w-full">
 
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex items-center justify-between mb-6">
-                    <TabsList className="grid w-48 grid-cols-2">
+                    <TabsList className="grid w-48 grid-cols-2 bg-muted/40 border border-border">
                         <TabsTrigger value="problem">Problem</TabsTrigger>
                         <TabsTrigger value="solution">Solution</TabsTrigger>
                     </TabsList>
 
                     <div className="flex items-center gap-4">
 
-                        {/* Difficulty */}
-                        <Badge className={`${difficultyClass} px-3 py-1 border`}>
+                        <Badge
+                            className={`${difficultyClass} px-3 py-1 border text-sm font-medium hidden md:flex`}
+                        >
                             Lvl {level}/10
                         </Badge>
 
-                        {/* Asked In */}
-                        {Array.isArray(topic.askedIn) && topic.askedIn.length > 0 && (
+                        {/* Asked In logos */}
+                        {Array.isArray(topic.askedIn) && (
                             <div className="flex items-center gap-2">
                                 <span className="text-sm text-muted-foreground">Asked in:</span>
-                                <div className="flex gap-2">
+                                <div className="flex gap-1 md:gap-2">
                                     {topic.askedIn.map((c: any, idx: number) => (
                                         <LogoWithSkeleton
                                             key={idx}
@@ -106,11 +107,11 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                             </div>
                         )}
 
+                        {/* Share */}
                         <div className="relative">
                             <Button variant="ghost" size="icon" onClick={handleShare}>
                                 <Share className="h-5 w-5" />
                             </Button>
-
                             {copied && (
                                 <div className="absolute top-10 right-0 text-xs bg-black/80 px-2 py-1 rounded shadow text-white">
                                     Copied!
@@ -120,60 +121,67 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                     </div>
                 </div>
 
-                {/* ---------------- PROBLEM TAB ---------------- */}
+                {/* PROBLEM TAB */}
                 <TabsContent value="problem" className="space-y-6">
 
-                    {/* Problem text */}
+                    {/* Problem description */}
                     <div className="prose prose-invert max-w-none">
-                        <p className="text-white leading-relaxed whitespace-pre-line">
+                        <p className="text-white leading-relaxed whitespace-pre-line text-base">
                             {topic.question}
                         </p>
                     </div>
 
-                    {/* Answer input */}
-                    {topic.answer !== '' && <div className="space-y-4 mt-12">
-                        <div className="flex gap-4 items-center">
-                            <Input
-                                key={shakeKey}
-                                type="text"
-                                placeholder="Place answer here"
-                                value={answer}
-                                onChange={(e) => setAnswer(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 `}
-                            />
+                    {/* Answer Input */}
+                    {topic.answer !== "" && (
+                        <div className="space-y-4 mt-12">
 
-                            <Button
-                                onClick={handleSubmit}
-                                className="bg-[hsl(122_97%_50%)] hover:bg-[hsl(122_97%_45%)] text-black font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg transition-all duration-300"
-                            >
-                                <Send className="h-4 w-4" />
-                                Submit
-                            </Button>
-                        </div>
-
-                        <div className="h-6 flex items-center">
-                            {feedback.type && (
-                                <div
+                            <div className="flex gap-4 items-center">
+                                <Input
                                     key={shakeKey}
-                                    className={`text-sm font-medium ${feedback.type === "correct"
-                                        ? "text-green-400"
-                                        : "text-red-400 animate-shake"
-                                        }`}
+                                    type="text"
+                                    placeholder="Place answer here"
+                                    value={answer}
+                                    onChange={(e) => setAnswer(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    className="flex-1 h-[46px] border-2 bg-background px-3 text-base
+                             focus-visible:ring-0 focus-visible:ring-offset-0"
+                                />
+
+                                <Button
+                                    onClick={handleSubmit}
+                                    className="bg-primary hover:bg-primary-glow text-primary-foreground font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg hover:shadow-primary/20"
                                 >
-                                    {feedback.message}
-                                </div>
-                            )}
+                                    <Send className="h-4 w-4" />
+                                    Submit
+                                </Button>
+                            </div>
+
+                            <div className="h-6 flex items-center">
+                                {feedback.type && (
+                                    <div
+                                        key={shakeKey}
+                                        className={`text-sm font-medium ${feedback.type === "correct"
+                                            ? "text-green-400"
+                                            : "text-red-400 animate-shake"
+                                            }`}
+                                    >
+                                        {feedback.message}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>}
+                    )}
                 </TabsContent>
 
-                {/* ---------------- SOLUTION TAB ---------------- */}
+                {/* SOLUTION TAB */}
                 <TabsContent value="solution" className="space-y-6">
                     <Accordion type="single" collapsible className="w-full space-y-4">
 
                         {topic.hint1 && (
-                            <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
+                            <AccordionItem
+                                value="hint1"
+                                className="border border-border rounded-lg px-4 bg-card/20"
+                            >
                                 <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                     Hint 1
                                 </AccordionTrigger>
@@ -184,7 +192,10 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                         )}
 
                         {topic.hint2 && (
-                            <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
+                            <AccordionItem
+                                value="hint2"
+                                className="border border-border rounded-lg px-4 bg-card/20"
+                            >
                                 <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                     Hint 2
                                 </AccordionTrigger>
@@ -194,7 +205,10 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                             </AccordionItem>
                         )}
 
-                        <AccordionItem value="solution" className="border border-border rounded-lg px-4">
+                        <AccordionItem
+                            value="solution"
+                            className="border border-border rounded-lg px-4 bg-card/20"
+                        >
                             <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                 Solution
                             </AccordionTrigger>
@@ -202,10 +216,13 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                                 {topic.solution}
                             </AccordionContent>
                         </AccordionItem>
+
                     </Accordion>
                 </TabsContent>
+
             </Tabs>
         </div>
     );
 };
-export default QuestionLayout
+
+export default QuestionLayout;

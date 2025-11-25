@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from "react-router-dom";
-
 import { ArrowLeft } from "lucide-react";
 import problems from "@/statics/problems";
 import QuestionLayout from "./CourseLearn/QuestionLayout";
@@ -21,7 +20,7 @@ const ProblemDetail = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl py-10 space-y-8">
+    <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
 
       {/* -------- BACK BUTTON -------- */}
       <button
