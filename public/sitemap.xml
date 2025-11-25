@@ -6,30 +6,30 @@
 
   <!-- Home -->
   <url>
-    <loc>https://quantprof-backend-9cb17.web.app/</loc>
+    <loc>https://quantprof.org/</loc>
     <priority>1.0</priority>
   </url>
 
   <!-- Public pages -->
-  <url><loc>https://quantprof-backend-9cb17.web.app/problems</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/courses</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/blogs</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/contact</loc></url>
+  <url><loc>https://quantprof.org/problems</loc></url>
+  <url><loc>https://quantprof.org/games</loc></url>
+  <url><loc>https://quantprof.org/courses</loc></url>
+  <url><loc>https://quantprof.org/blogs</loc></url>
+  <url><loc>https://quantprof.org/contact</loc></url>
 
   <!-- Static course marketing pages -->
-  <url><loc>https://quantprof-backend-9cb17.web.app/course/quant-interview-masterclass</loc></url>
-  <!-- <url><loc>https://quantprof-backend-9cb17.web.app/course/machine-learning-for-finance</loc></url> -->
+  <url><loc>https://quantprof.org/course/quant-interview-masterclass</loc></url>
+  <!-- <url><loc>https://quantprof.org/course/machine-learning-for-finance</loc></url> -->
 
   <!-- Games -->
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/arithmetic-pro</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/sequences-pro</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/probability-master</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/memory-sequences</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/optiver-80</loc></url>
-  <url><loc>https://quantprof-backend-9cb17.web.app/games/sokoban</loc></url>
+  <url><loc>https://quantprof.org/games/arithmetic-pro</loc></url>
+  <url><loc>https://quantprof.org/games/sequences-pro</loc></url>
+  <url><loc>https://quantprof.org/games/probability-master</loc></url>
+  <url><loc>https://quantprof.org/games/memory-sequences</loc></url>
+  <url><loc>https://quantprof.org/games/optiver-80</loc></url>
+  <url><loc>https://quantprof.org/games/sokoban</loc></url>
 
   <!-- Playlists -->
-  <!-- <url><loc>https://quantprof-backend-9cb17.web.app/playlists</loc></url> -->
+  <!-- <url><loc>https://quantprof.org/playlists</loc></url> -->
 
 </urlset>

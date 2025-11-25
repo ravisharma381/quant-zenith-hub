@@ -21,4 +21,4 @@ Allow: /blogs/
 Allow: /contact
 
 # Sitemap location
-Sitemap: https://quantprof-backend-9cb17.web.app/sitemap.xml
+Sitemap: https://quantprof.org/sitemap.xml
