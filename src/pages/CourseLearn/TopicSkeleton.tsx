@@ -35,15 +35,15 @@ const RendererTopicSkeleton = () => {
                 <SkeletonBlock lines={4} />
 
                 {/* Image */}
-                <div className="w-full flex justify-center my-6">
+                {/* <div className="w-full flex justify-center my-6">
                     <div className="animate-pulse bg-gray-700/30 rounded-lg h-64 w-3/4"></div>
-                </div>
+                </div> */}
 
                 {/* Input Question */}
-                <div className="flex gap-4">
+                {/* <div className="flex gap-4">
                     <div className="animate-pulse bg-gray-700/40 h-11 w-full rounded-md"></div>
                     <div className="animate-pulse bg-gray-700/40 h-11 w-24 rounded-md"></div>
-                </div>
+                </div> */}
 
                 {/* More Paragraphs */}
                 <SkeletonBlock lines={4} />

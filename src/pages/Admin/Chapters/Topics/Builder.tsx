@@ -76,11 +76,7 @@ const sampleJSON = {
                 },
                 {
                     "type": "solution",
-                    "steps": [
-                        "The answer is 4.",
-                        "Each flip is Heads or Tails.",
-                        "Sample space: $$\\{HH, HT, TH, TT\\}$$"
-                    ]
+                    "step": "Each flip is Heads or Tails.\n Hi\n hello $a^2$"
                 }
             ]
         }
