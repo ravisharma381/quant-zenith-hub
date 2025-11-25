@@ -8,6 +8,67 @@ import { Input } from "@/components/ui/input";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 
+/* --- KaTeX for math rendering --- */
+import TeX from "@matejmazur/react-katex";
+import "katex/dist/katex.min.css";
+
+function renderRichCMS(text?: string | null) {
+    if (!text) return null;
+
+    // normalize single quotes → double
+    let normalized = text.replace(/(\b(class(Name)?)\s*=\s*)'([^']*)'/gi, `$1"$4"`);
+
+    // convert class= → className=
+    normalized = normalized.replace(/\bclass=/gi, "className=");
+
+    const tokenRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$|<img\b[^>]*>)/g;
+    const parts = normalized.split(tokenRegex).filter(Boolean);
+
+    return parts.map((part, idx) => {
+
+        // Block math
+        if (part.startsWith("$$") && part.endsWith("$$")) {
+            return (
+                <div key={idx} className="my-4">
+                    <TeX block>{part.slice(2, -2)}</TeX>
+                </div>
+            );
+        }
+
+        // Inline math
+        if (part.startsWith("$") && part.endsWith("$")) {
+            return <TeX key={idx}>{part.slice(1, -1)}</TeX>;
+        }
+
+        // Images
+        if (part.trim().startsWith("<img")) {
+            const src = (part.match(/src="([^"]+)"/i) || [])[1] || "";
+            const cls = (part.match(/className="([^"]*)"/i) || [])[1] || "";
+            const alt = (part.match(/alt="([^"]*)"/i) || [])[1] || "";
+            const caption = (part.match(/caption="([^"]*)"/i) || [])[1] || "";
+
+            return (
+                <div key={idx} className="my-2 flex flex-col items-center text-center">
+                    <img src={src} alt={alt} className={`max-w-${cls || 'sm'}`} />
+                    {caption && (
+                        <div className="text-sm text-gray-400 mt-2 whitespace-pre-line">
+                            {caption}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Plain inline text
+        return (
+            <span key={idx} className="whitespace-pre-line">
+                {part}
+            </span>
+        );
+    });
+}
+
+
 const QuestionLayout = ({ topic }: { topic: any }) => {
 
     // ---- STATES ----
@@ -126,9 +187,9 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
 
                     {/* Problem description */}
                     <div className="prose prose-invert max-w-none">
-                        <p className="text-white leading-relaxed whitespace-pre-line text-base">
-                            {topic.question}
-                        </p>
+                        <div className="text-white leading-relaxed whitespace-pre-line text-base">
+                            {renderRichCMS(topic.question)}
+                        </div>
                     </div>
 
                     {/* Answer Input */}
@@ -177,34 +238,30 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                 <TabsContent value="solution" className="space-y-6">
                     <Accordion type="single" collapsible className="w-full space-y-4">
 
-                        {topic.hint1 && (
-                            <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
-                                <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
-                                    Hint 1
-                                </AccordionTrigger>
-                                <AccordionContent className="text-white leading-relaxed">
-                                    {topic.hint1}
-                                </AccordionContent>
-                            </AccordionItem>
-                        )}
+                        { /* Render up to 5 hints, same style as before */}
+                        {Array.from({ length: 5 }).map((_, i) => {
+                            const hintKey = `hint${i + 1}`;
+                            const hintVal = topic[hintKey];
+                            if (!hintVal) return null;
 
-                        {topic.hint2 && (
-                            <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
-                                <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
-                                    Hint 2
-                                </AccordionTrigger>
-                                <AccordionContent className="text-white leading-relaxed">
-                                    {topic.hint2}
-                                </AccordionContent>
-                            </AccordionItem>
-                        )}
+                            return (
+                                <AccordionItem key={hintKey} value={hintKey} className="border border-border rounded-lg px-4">
+                                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
+                                        {`Hint ${i + 1}`}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="text-white leading-relaxed">
+                                        {renderRichCMS(hintVal)}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            );
+                        })}
 
                         <AccordionItem value="solution" className="border border-border rounded-lg px-4">
                             <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                 Solution
                             </AccordionTrigger>
-                            <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
-                                {topic.solution}
+                            <AccordionContent className="text-white leading-relaxed">
+                                {renderRichCMS(topic.solution)}
                             </AccordionContent>
                         </AccordionItem>
 
@@ -215,5 +272,4 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
         </div>
     );
 };
-
 export default QuestionLayout;

@@ -40,6 +40,9 @@ export interface TopicFormData {
     answer?: string;
     hint1?: string;
     hint2?: string;
+    hint3?: string;
+    hint4?: string;
+    hint5?: string;
     solution?: string;
     level?: string;
     playlistIds?: string[];

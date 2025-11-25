@@ -37,6 +37,9 @@ export interface TopicFormData {
     answer?: string;
     hint1?: string;
     hint2?: string;
+    hint3?: string;
+    hint4?: string;
+    hint5?: string;
     solution?: string;
     level?: string;
     playlistIds?: string[];
@@ -64,6 +67,9 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [answer, setAnswer] = useState("");
     const [hint1, setHint1] = useState("");
     const [hint2, setHint2] = useState("");
+    const [hint3, setHint3] = useState("");
+    const [hint4, setHint4] = useState("");
+    const [hint5, setHint5] = useState("");
     const [solution, setSolution] = useState("");
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
@@ -82,6 +88,9 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setAnswer(initialData.answer ?? "");
             setHint1(initialData.hint1 ?? "");
             setHint2(initialData.hint2 ?? "");
+            setHint3(initialData.hint3 ?? "");
+            setHint4(initialData.hint4 ?? "");
+            setHint5(initialData.hint5 ?? "");
             setSolution(initialData.solution ?? "");
             setPlaylistIds(initialData.playlistIds ?? []);
             setAskedIn(initialData.askedIn ?? []);
@@ -95,6 +104,9 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setAnswer("");
             setHint1("");
             setHint2("");
+            setHint3("");
+            setHint4("");
+            setHint5("");
             setSolution("");
             setPlaylistIds([]);
             setAskedIn([]);
@@ -203,6 +215,9 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                 answer,
                 hint1,
                 hint2,
+                hint3,
+                hint4,
+                hint5,
                 solution,
                 level,
                 askedIn: askedIn.filter((a) => a.name.trim() && a.logoURL.trim()),
@@ -283,11 +298,23 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Label>Hint 1</Label>
-                                    <Input value={hint1} onChange={(e) => setHint1(e.target.value)} />
+                                    <Textarea rows={3} value={hint1} onChange={(e) => setHint1(e.target.value)} />
                                 </div>
                                 <div>
                                     <Label>Hint 2</Label>
-                                    <Input value={hint2} onChange={(e) => setHint2(e.target.value)} />
+                                    <Textarea rows={3} value={hint2} onChange={(e) => setHint2(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 3</Label>
+                                    <Textarea rows={3} value={hint3} onChange={(e) => setHint3(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 4</Label>
+                                    <Textarea rows={3} value={hint4} onChange={(e) => setHint4(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 5</Label>
+                                    <Textarea rows={3} value={hint5} onChange={(e) => setHint5(e.target.value)} />
                                 </div>
                             </div>
                             <div>
