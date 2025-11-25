@@ -31,11 +31,6 @@ const ProblemDetail = () => {
         Back
       </button>
 
-      {/* -------- TITLE -------- */}
-      <h1 className="text-3xl font-bold text-foreground">
-        {topic.title}
-      </h1>
-
       {/* -------- QUESTION LAYOUT -------- */}
       <QuestionLayout topic={topic} />
     </div>

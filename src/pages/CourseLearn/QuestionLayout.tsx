@@ -32,6 +32,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
             const userInput = Number(answer.trim());
             return userInput >= acceptedRange[0] && userInput <= acceptedRange[1];
         }
+
         return answer === topicAnswer;
     };
 
@@ -77,7 +78,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
 
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex items-center justify-between mb-6">
-                    <TabsList className="grid w-48 grid-cols-2 bg-muted/40 border border-border">
+                    <TabsList className="grid w-48 grid-cols-2">
                         <TabsTrigger value="problem">Problem</TabsTrigger>
                         <TabsTrigger value="solution">Solution</TabsTrigger>
                     </TabsList>
@@ -85,12 +86,12 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                     <div className="flex items-center gap-4">
 
                         <Badge
-                            className={`${difficultyClass} px-3 py-1 border text-sm font-medium hidden md:flex`}
+                            className={`${difficultyClass} hidden md:flex text-center items-center justify-center`}
                         >
                             Lvl {level}/10
                         </Badge>
 
-                        {/* Asked In logos */}
+                        {/* Asked in */}
                         {Array.isArray(topic.askedIn) && (
                             <div className="flex items-center gap-2">
                                 <span className="text-sm text-muted-foreground">Asked in:</span>
@@ -107,13 +108,12 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                             </div>
                         )}
 
-                        {/* Share */}
                         <div className="relative">
                             <Button variant="ghost" size="icon" onClick={handleShare}>
                                 <Share className="h-5 w-5" />
                             </Button>
                             {copied && (
-                                <div className="absolute top-10 right-0 text-xs bg-black/80 px-2 py-1 rounded shadow text-white">
+                                <div className="absolute top-10 right-0 text-xs bg-black/80 px-2 py-1 rounded text-white">
                                     Copied!
                                 </div>
                             )}
@@ -134,22 +134,22 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                     {/* Answer Input */}
                     {topic.answer !== "" && (
                         <div className="space-y-4 mt-12">
-
                             <div className="flex gap-4 items-center">
+
                                 <Input
                                     key={shakeKey}
-                                    type="text"
                                     placeholder="Place answer here"
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    className="flex-1 h-[46px] border-2 bg-background px-3 text-base
-                             focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="flex-1 h-[46px] border-2 border-border rounded-md bg-background
+                             px-3 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
                                 />
 
                                 <Button
                                     onClick={handleSubmit}
-                                    className="bg-primary hover:bg-primary-glow text-primary-foreground font-semibold px-6 h-[46px] flex items-center gap-2 shadow-lg hover:shadow-primary/20"
+                                    className="bg-primary hover:bg-primary/80 text-primary-foreground
+                             font-semibold px-6 h-[46px] rounded-md flex items-center gap-2 shadow-lg"
                                 >
                                     <Send className="h-4 w-4" />
                                     Submit
@@ -178,10 +178,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                     <Accordion type="single" collapsible className="w-full space-y-4">
 
                         {topic.hint1 && (
-                            <AccordionItem
-                                value="hint1"
-                                className="border border-border rounded-lg px-4 bg-card/20"
-                            >
+                            <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
                                 <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                     Hint 1
                                 </AccordionTrigger>
@@ -192,10 +189,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                         )}
 
                         {topic.hint2 && (
-                            <AccordionItem
-                                value="hint2"
-                                className="border border-border rounded-lg px-4 bg-card/20"
-                            >
+                            <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
                                 <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                     Hint 2
                                 </AccordionTrigger>
@@ -205,10 +199,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                             </AccordionItem>
                         )}
 
-                        <AccordionItem
-                            value="solution"
-                            className="border border-border rounded-lg px-4 bg-card/20"
-                        >
+                        <AccordionItem value="solution" className="border border-border rounded-lg px-4">
                             <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                 Solution
                             </AccordionTrigger>

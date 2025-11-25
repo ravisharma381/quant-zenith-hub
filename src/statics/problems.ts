@@ -14,14 +14,7 @@ const problems = [
             { name: "Citadel", logoURL: citadelLogo }
         ],
 
-        question: `You are given a European call option with:
-            - Current stock price S = 100
-            - Strike price K = 100
-            - Volatility σ = 20%
-            - Risk-free rate r = 5%
-            - Time to maturity T = 1 year
-
-            Compute the Black–Scholes price (rounded to 2 decimals).`,
+        question: `Varun has 4 fair coins. He flips all 4 at once and notes the parity of each. After seeing the outcomes, he may turn over (rather than flip) any pair of coins. Note that this means a heads becomes a tails and vice versa. Varun may not turn over a single coin without turning over another. He can iterate this process as many times as he would like. If Varun plays to maximize his expected number of heads, find the expected number of heads he will have.`,
 
         answer: "10.45",
 
