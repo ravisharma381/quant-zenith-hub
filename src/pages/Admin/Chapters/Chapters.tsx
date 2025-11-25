@@ -318,22 +318,7 @@ const AdminChapters: React.FC = () => {
                             <CardContent>
                                 {chapter.topicMeta?.length ? (
                                     <div className="border-t pt-2 mt-2">
-                                        <p className="text-sm font-medium mb-2">Topics</p>
-                                        <ul className="space-y-1 max-h-36 overflow-y-auto">
-                                            {chapter.topicMeta
-                                                .sort((a, b) => a.order - b.order)
-                                                .map((meta) => (
-                                                    <li
-                                                        key={meta.topicId}
-                                                        className="flex justify-between text-sm border-b border-border/40 pb-1"
-                                                    >
-                                                        <span className="truncate w-2/3">{meta.title}</span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {meta.type}
-                                                        </span>
-                                                    </li>
-                                                ))}
-                                        </ul>
+                                        <p className="text-sm font-medium mb-2">Topics Added</p>
                                     </div>
                                 ) : (
                                     <p className="text-xs text-muted-foreground">

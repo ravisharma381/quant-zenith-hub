@@ -11,20 +11,43 @@ import { Send } from "lucide-react";
 function renderRichText(text: string) {
     if (!text) return null;
 
-    const parts = text.split(/(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g).filter(Boolean);
+    const parts = text.split(
+        /(\$\$[\s\S]+?\$\$|\$[^$]+\$|\*[^*]+\*|`[^`]+`)/g
+    ).filter(Boolean);
 
     return parts.map((part, i) => {
-        // Display math
-        if (part.startsWith("$$") && part.endsWith("$")) {
+        // $$ block math $$
+        if (part.startsWith("$$") && part.endsWith("$$")) {
             return <TeX block key={i}>{part.slice(2, -2)}</TeX>;
         }
-        // Inline math
+
+        // $ inline math $
         if (part.startsWith("$") && part.endsWith("$")) {
             return <TeX key={i}>{part.slice(1, -1)}</TeX>;
         }
+
+        // *bold*
+        if (part.startsWith("*") && part.endsWith("*")) {
+            return (
+                <strong key={i} className="font-bold">
+                    {part.slice(1, -1)}
+                </strong>
+            );
+        }
+
+        // `italic`
+        if (part.startsWith("`") && part.endsWith("`")) {
+            return (
+                <em key={i} className="italic">
+                    {part.slice(1, -1)}
+                </em>
+            );
+        }
+
         return <span key={i}>{part}</span>;
     });
 }
+
 
 /* --- Accordion Block --- */
 const AccordionBlock = ({ items }: { items: { title: string; content: string }[] }) => {
@@ -184,7 +207,7 @@ const Callout = ({
     return (
         <div style={style}>
             {heading && (
-                <span style={{ color: style.borderLeftColor }} className={`font-medium mb-3 text-lg`}>
+                <span style={{ color: style.borderLeftColor }} className={`block font-medium mb-3 text-lg`}>
                     {renderRichText(heading)}
                 </span>
             )}
@@ -196,7 +219,7 @@ const Callout = ({
             )}
 
             {text && (
-                <p className="text-white leading-relaxed text-lg">
+                <p className="text-white leading-relaxed text-lg whitespace-pre-line">
                     {renderRichText(text)}
                 </p>
             )}
@@ -216,6 +239,12 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
             {doc.title && (
                 <h1 className="text-4xl font-bold text-white mb-6">{doc.title}</h1>
             )}
+            <style>{`
+                h3 + * {
+                    margin-top: 16px !important;
+                }
+                `}
+            </style>
 
             <div className="space-y-10 text-white leading-relaxed">
                 {blocks.map((b: any, i: number) => {

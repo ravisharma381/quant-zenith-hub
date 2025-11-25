@@ -37,7 +37,12 @@ const sampleJSON = {
         {
             "type": "callout",
             "heading": "Custom Cyan Box",
-            "text": "An experiment is a repeatable process. Display math below: $$\\int_0^1 x^2 dx = 1/3$$"
+            "text": "An experiment is a `repeatable process`. *Display* math below: $\\int_0^1 x^2 dx = 1/3$"
+        },
+        {
+            "type": "callout",
+            "heading": "Custom Cyan Box",
+            "text": "An experiment is a `repeatable process`. *Display* math below: $$\\int_0^1 x^2 dx = 1/3$$"
         },
         {
             "type": "callout",
