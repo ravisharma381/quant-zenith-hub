@@ -136,14 +136,12 @@ const InputQuestion = ({
 };
 
 /* --- Solution Block --- */
-const SolutionBlock = ({ steps }: { steps: string[] }) => (
+const SolutionBlock = ({ step }: { step: string }) => (
     <div className=" rounded-lg space-y-3">
         <h3 className="text-white text-lg font-semibold">SOLUTION</h3>
-        {steps.map((step, i) => (
-            <p key={i} className="text-white text-lg">
-                {renderRichText(step)}
-            </p>
-        ))}
+        <p className="text-white text-lg whitespace-pre-line">
+            {renderRichText(step)}
+        </p>
     </div>
 );
 
@@ -313,7 +311,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                             );
 
                         case "solution":
-                            return <SolutionBlock key={i} steps={b.steps} />;
+                            return <SolutionBlock key={i} step={b.step} />;
 
                         case "accordion":
                             return <AccordionBlock key={i} items={b.items} />;
