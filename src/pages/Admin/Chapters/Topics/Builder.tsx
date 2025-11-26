@@ -35,6 +35,79 @@ const sampleJSON = {
             "width": "sm"
         },
         {
+            "type": "subheading",
+            "text": "Bullet Examples (Allowed Types: bullet, numbered)&& (allowed Bullet Types: circle, square, dash, check, none)"
+        },
+        {
+            "type": "bullet",
+            "items": [
+                "This is a simple bullet *bold*",
+                "Inline math $a^3$",
+                "Small break here && next line"
+            ]
+        },
+        {
+            "type": "bullet",
+            "bulletType": "check",
+            "items": [
+                "Level 1 item",
+                "Level 1 with nested list:",
+                {
+                    "type": "bullet",
+                    "bulletType": "dash",
+                    "items": [
+                        "nested 1",
+                        "nested 2"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "numbered",
+            "items": [
+                "Step *one*",
+                "Compute $$x^3+y^3$$"
+            ]
+        },
+        {
+            "type": "bullet",
+            "items": [
+                "This is *bold*",
+                "Inline math $a^3$",
+                "Small break here && next line"
+            ]
+        },
+        {
+            "type": "bullet",
+            "bulletType": "none",
+            "items": [
+                "Bullent type none",
+                "`italic` and *bold* still work",
+                "Inline $a^2$ still works"
+            ]
+        },
+        {
+            "type": "bullet",
+            "items": [
+                "Level 1",
+                {
+                    "type": "bullet",
+                    "bulletType": "circle",
+                    "items": [
+                        "Level 2",
+                        {
+                            "type": "bullet",
+                            "bulletType": "dash",
+                            "items": [
+                                "Level 3 item A",
+                                "Level 3 item B with $x^2$ && small break"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "type": "callout",
             "heading": "Custom Cyan Box",
             "text": "An experiment is a `repeatable process`. *Display* math below: $\\int_0^1 x^2 dx = 1/3$"

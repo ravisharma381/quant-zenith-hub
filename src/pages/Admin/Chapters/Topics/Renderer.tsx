@@ -11,22 +11,42 @@ import { Send } from "lucide-react";
 function renderRichText(text: string) {
     if (!text) return null;
 
-    const parts = text.split(
-        /(\$\$[\s\S]+?\$\$|\$[^$]+\$|\*[^*]+\*|`[^`]+`)/g
+    // 1) Temporarily replace && with a token
+    const SMALL_BREAK_TOKEN = "__SMALLBREAK__";
+    const processed = text.replace(/&&/g, SMALL_BREAK_TOKEN);
+
+    // 2) Tokenize (latex block, latex inline, bold, italic, small break)
+    const parts = processed.split(
+        /(\$\$[\s\S]+?\$\$|\$[^$]+\$|\*[^*]+\*|`[^`]+`|__SMALLBREAK__)/g
     ).filter(Boolean);
 
     return parts.map((part, i) => {
-        // $$ block math $$
+
+        // Small 4px break
+        if (part === SMALL_BREAK_TOKEN) {
+            return (
+                <span
+                    key={i}
+                    style={{
+                        display: "block",
+                        height: "4px",
+                        lineHeight: "0"
+                    }}
+                />
+            );
+        }
+
+        // Block LaTeX
         if (part.startsWith("$$") && part.endsWith("$$")) {
             return <TeX block key={i}>{part.slice(2, -2)}</TeX>;
         }
 
-        // $ inline math $
+        // Inline LaTeX
         if (part.startsWith("$") && part.endsWith("$")) {
             return <TeX key={i}>{part.slice(1, -1)}</TeX>;
         }
 
-        // *bold*
+        // Bold *text*
         if (part.startsWith("*") && part.endsWith("*")) {
             return (
                 <strong key={i} className="font-bold">
@@ -35,13 +55,9 @@ function renderRichText(text: string) {
             );
         }
 
-        // `italic`
+        // Italic `text`
         if (part.startsWith("`") && part.endsWith("`")) {
-            return (
-                <em key={i} className="italic">
-                    {part.slice(1, -1)}
-                </em>
-            );
+            return <em key={i} className="italic">{part.slice(1, -1)}</em>;
         }
 
         return <span key={i}>{part}</span>;
@@ -227,6 +243,70 @@ const Callout = ({
     );
 };
 
+/* --- Universal List Renderer --- */
+const ListBlock = ({
+    items,
+    bulletType = "circle",   // "circle" | "dash" | "none" | "check"
+    ordered = false
+}: {
+    items: any[];
+    bulletType?: string;
+    ordered?: boolean;
+}) => {
+
+    return (
+        <div className="my-4">
+            {/* ORDERED LIST */}
+            {ordered ? (
+                <ol className="list-decimal pl-6 space-y-2">
+                    {items.map((item, i) => (
+                        <li key={i} className="text-white leading-relaxed">
+                            {renderRichText(item)}
+                        </li>
+                    ))}
+                </ol>
+            ) : (
+                <ul className="pl-6 space-y-2">
+                    {items.map((item, i) => {
+                        const isNestedObject = typeof item === "object";
+
+                        if (isNestedObject) {
+                            return (
+                                <li key={i} className="pl-4">
+                                    <Renderer doc={{ blocks: [item] }} isChildren={true} />
+                                </li>
+                            );
+                        }
+
+                        return (
+                            <li
+                                key={i}
+                                className={
+                                    bulletType === "circle"
+                                        ? "list-disc text-white leading-relaxed"
+                                        : bulletType === "none"
+                                            ? "list-none text-white leading-relaxed"
+                                            : bulletType === "check"
+                                                ? "list-none text-white leading-relaxed flex items-start gap-2"
+                                                : bulletType === "dash"
+                                                    ? "list-none text-white leading-relaxed flex items-start gap-2 before:content-['-'] before:mr-2 before:text-white"
+                                                    : "list-disc text-white leading-relaxed"
+                                }
+                            >
+                                {bulletType === "check" && (
+                                    <span className="text-green-400 font-bold mt-[2px]">✓</span>
+                                )}
+
+                                <span>{renderRichText(item)}</span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
+    );
+};
+
 
 
 /* --- Main Renderer --- */
@@ -315,6 +395,23 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
 
                         case "accordion":
                             return <AccordionBlock key={i} items={b.items} />;
+                        case "bullet":
+                            return (
+                                <ListBlock
+                                    key={i}
+                                    items={b.items}
+                                    bulletType={b.bulletType || "circle"}
+                                    ordered={false}
+                                />
+                            );
+                        case "numbered":
+                            return (
+                                <ListBlock
+                                    key={i}
+                                    items={b.items}
+                                    ordered={true}
+                                />
+                            );
 
                         default:
                             return (
