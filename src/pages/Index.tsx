@@ -4,10 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
-import janeStreetLogo from "@/assets/jane-street-logo.png";
-import citadelLogo from "@/assets/citadel-logo.png";
-import companyLogo from "@/assets/company-logo.png";
-import drivLogo from "@/assets/driv-logo.png";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -25,11 +21,11 @@ import {
 
 const Index = () => {
   const typewriterPhrases = [
-    "Practice real interview questions!",
-    "Pass interviews at top firms!",
-    "Play interactive games!",
-    "Learn from expert courses!",
-    "Master probability and statistics!"
+    "Practice real interview questions",
+    "Pass interviews at top firms",
+    "Play interactive games",
+    "Learn from expert courses",
+    "Master probability and statistics"
   ];
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -145,37 +141,6 @@ const Index = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Company Logos Section */}
-      <section className="py-12 md:py-16 px-4 bg-gradient-accent overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">
-            Helped land jobs at{" "}
-            <span className="text-primary">top trading firms</span>{" "}
-            around the world!
-          </h2>
-          <div className="relative">
-            <div className="flex animate-scroll-logos">
-              {[...Array(2)].map((_, setIndex) => (
-                <div key={setIndex} className="flex gap-8 px-4">
-                  <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src={janeStreetLogo} alt="Jane Street" className="max-w-full max-h-full object-contain" />
-                  </div>
-                  <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src={citadelLogo} alt="Citadel" className="max-w-full max-h-full object-contain" />
-                  </div>
-                  <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src={companyLogo} alt="Two Sigma" className="max-w-full max-h-full object-contain" />
-                  </div>
-                  <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src={drivLogo} alt="Optiver" className="max-w-full max-h-full object-contain" />
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>

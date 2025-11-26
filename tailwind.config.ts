@@ -117,14 +117,6 @@ export default {
 					'20%, 40%, 60%, 80%': {
 						transform: 'translateX(4px)'
 					}
-				},
-				'scroll-logos': {
-					'0%': {
-						transform: 'translateX(0)'
-					},
-					'100%': {
-						transform: 'translateX(-50%)'
-					}
 				}
 			},
 			animation: {
@@ -132,9 +124,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'shake': 'shake 0.5s ease-in-out',
-				'scroll-logos': 'scroll-logos 20s linear infinite'
-			}
+				'shake': 'shake 0.5s ease-in-out'
 			}
 		}
 	},
