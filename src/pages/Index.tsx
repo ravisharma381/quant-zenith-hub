@@ -21,11 +21,11 @@ import {
 
 const Index = () => {
   const typewriterPhrases = [
-    "practice real interview questions",
-    "pass interviews at top firms",
-    "play interactive games",
-    "learn from expert courses",
-    "master probability and statistics"
+    "Practice real interview questions",
+    "Pass interviews at top firms",
+    "Play interactive games",
+    "Learn from expert courses",
+    "Master probability and statistics"
   ];
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -118,10 +118,9 @@ const Index = () => {
             <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary">
               #1 Quantitative Finance Prep Platform
             </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-4 animate-fade-in leading-tight">
-              Get into{" "}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 animate-fade-in leading-tight">
               <span className="bg-gradient-hero bg-clip-text text-transparent">
-                Quant Finance
+                Get into Quant Finance
               </span>
             </h1>
             <div className="h-8 mb-8">
@@ -133,12 +132,6 @@ const Index = () => {
               <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
                 <Link to="/problems">
                   Solve a Problem
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
-                <Link to="/games">
-                  Browse Games
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
