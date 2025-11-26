@@ -1,0 +1,68 @@
+import React from "react";
+import janeStreetLogo from "@/assets/jane-street-logo.png";
+import citadelLogo from "@/assets/citadel-logo.png";
+import drivLogo from "@/assets/driv-logo.png";
+
+const CompanyLogoTicker = () => {
+  const logos = [
+    { src: janeStreetLogo, alt: "Jane Street" },
+    { src: citadelLogo, alt: "Citadel" },
+    { src: drivLogo, alt: "DRW" },
+    { src: janeStreetLogo, alt: "Jane Street" },
+    { src: citadelLogo, alt: "Citadel" },
+    { src: drivLogo, alt: "DRW" },
+  ];
+
+  return (
+    <section className="py-12 md:py-16 px-4 overflow-hidden bg-gradient-subtle">
+      <div className="container mx-auto max-w-6xl">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12">
+          Helped land jobs at{" "}
+          <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+            top trading firms
+          </span>{" "}
+          around the world!
+        </h2>
+        
+        <div className="relative">
+          <div className="logo-ticker-container">
+            <div className="logo-ticker">
+              {logos.map((logo, index) => (
+                <div
+                  key={index}
+                  className="logo-ticker-item"
+                >
+                  <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+                    <img
+                      src={logo.src}
+                      alt={logo.alt}
+                      className="max-h-16 max-w-[220px] object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="logo-ticker" aria-hidden="true">
+              {logos.map((logo, index) => (
+                <div
+                  key={`duplicate-${index}`}
+                  className="logo-ticker-item"
+                >
+                  <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+                    <img
+                      src={logo.src}
+                      alt={logo.alt}
+                      className="max-h-16 max-w-[220px] object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default CompanyLogoTicker;

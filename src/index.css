@@ -56,6 +56,34 @@
   }
 }
 
+/* Logo Ticker Animation */
+@keyframes logo-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.logo-ticker-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.logo-ticker {
+  display: flex;
+  gap: 2rem;
+  animation: logo-scroll 30s linear infinite;
+  flex-shrink: 0;
+}
+
+.logo-ticker-item {
+  flex-shrink: 0;
+}
+
 @layer base {
   * {
     @apply border-border;
