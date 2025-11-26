@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import { TypeAnimation } from 'react-type-animation';
-import platformShowcase from "@/assets/platform-showcase.png";
+import heroIllustration from "@/assets/hero-illustration.png";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -117,13 +117,13 @@ const Index = () => {
               </Button>
             </div>
 
-            {/* Right Side - Platform Showcase */}
+            {/* Right Side - Hero Illustration */}
             <div className="flex justify-center lg:justify-end">
-              <div className="w-full max-w-2xl h-[500px] lg:h-[600px] rounded-2xl overflow-hidden border-2 border-primary/30 shadow-elegant animate-fade-in">
+              <div className="w-full max-w-2xl h-[500px] lg:h-[700px] flex items-center justify-center">
                 <img 
-                  src={platformShowcase} 
-                  alt="QuantProf Platform Showcase" 
-                  className="w-full h-full object-cover"
+                  src={heroIllustration} 
+                  alt="Quant Finance Learning Illustration" 
+                  className="w-full h-full object-contain animate-fade-in"
                 />
               </div>
             </div>
