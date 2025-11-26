@@ -21,11 +21,11 @@ import {
 
 const Index = () => {
   const typewriterPhrases = [
-    "Practice real interview questions",
-    "Pass interviews at top firms",
-    "Play interactive games",
-    "Learn from expert courses",
-    "Master probability and statistics"
+    "Practice real interview questions!",
+    "Pass interviews at top firms!",
+    "Play interactive games!",
+    "Learn from expert courses!",
+    "Master probability and statistics!"
   ];
 
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -128,16 +128,10 @@ const Index = () => {
                 {displayedText}
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
+            <div className="flex justify-center animate-fade-in px-4">
               <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
                 <Link to="/problems">
-                  Solve a Problem
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
-                <Link to="/courses">
-                  Browse Courses
+                  Solve your first problem
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
@@ -258,8 +252,8 @@ const Index = () => {
                     using QuantProf.
                   </p>
                   <Button variant="premium" size="lg" className="w-full sm:w-auto" asChild>
-                    <Link to="/login">
-                      Start Your Journey
+                    <Link to="/problems">
+                      Solve your first problem
                     </Link>
                   </Button>
                 </div>
