@@ -121,7 +121,7 @@ const Index = () => {
             </Badge>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 animate-fade-in leading-tight">
               <span className="bg-gradient-hero bg-clip-text text-transparent">
-                Get into Quant Finance
+                Get into<br />Quant Finance
               </span>
             </h1>
             <div className="h-8 mb-8">
