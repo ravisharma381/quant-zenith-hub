@@ -153,7 +153,7 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
                         </Badge>
 
                         {/* Asked in */}
-                        {Array.isArray(topic.askedIn) && (
+                        {Array.isArray(topic.askedIn) && topic.askedIn.length > 0 && (
                             <div className="flex items-center gap-2">
                                 <span className="text-sm text-muted-foreground">Asked in:</span>
                                 <div className="flex gap-1 md:gap-2">
