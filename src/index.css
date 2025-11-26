@@ -76,6 +76,7 @@
 .logo-ticker {
   display: flex;
   gap: 4rem;
+  padding-right: 4rem;
   animation: logo-scroll 30s linear infinite;
   flex-shrink: 0;
 }
