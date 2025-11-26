@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
+import CompanyLogoTicker from "@/components/CompanyLogoTicker";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -180,6 +181,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Company Logo Ticker */}
+      <CompanyLogoTicker />
 
       {/* Benefits Section */}
       <section className="py-12 md:py-20 bg-gradient-accent px-4">
