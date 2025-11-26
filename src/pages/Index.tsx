@@ -116,7 +116,7 @@ const Index = () => {
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center">
             <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary">
-              #1 Quantitative Finance Prep Platform
+              #1 Quant Interview Prep Platform
             </Badge>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 animate-fade-in leading-tight">
               <span className="bg-gradient-hero bg-clip-text text-transparent">
@@ -129,13 +129,13 @@ const Index = () => {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
-              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
+              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
                 <Link to="/problems">
                   Solve a Problem
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
+              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
                 <Link to="/courses">
                   Browse Courses
                   <ArrowRight className="w-5 h-5 ml-2" />
