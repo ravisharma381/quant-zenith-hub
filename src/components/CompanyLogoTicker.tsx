@@ -30,7 +30,7 @@ const CompanyLogoTicker = () => {
               {logos.map((logo, index) => (
               <div
                 key={index}
-                className="logo-ticker-item mr-8"
+                className="logo-ticker-item mr-12"
               >
                 <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 w-[280px]">
                     <img
@@ -46,7 +46,7 @@ const CompanyLogoTicker = () => {
               {logos.map((logo, index) => (
               <div
                 key={`duplicate-${index}`}
-                className="logo-ticker-item mr-8"
+                className="logo-ticker-item mr-12"
               >
                 <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 w-[280px]">
                     <img
