@@ -28,11 +28,11 @@ const CompanyLogoTicker = () => {
           <div className="logo-ticker-container">
             <div className="logo-ticker">
               {logos.map((logo, index) => (
-                <div
-                  key={index}
-                  className="logo-ticker-item"
-                >
-                  <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+              <div
+                key={index}
+                className="logo-ticker-item mr-8"
+              >
+                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
@@ -44,11 +44,11 @@ const CompanyLogoTicker = () => {
             </div>
             <div className="logo-ticker" aria-hidden="true">
               {logos.map((logo, index) => (
-                <div
-                  key={`duplicate-${index}`}
-                  className="logo-ticker-item"
-                >
-                  <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+              <div
+                key={`duplicate-${index}`}
+                className="logo-ticker-item mr-8"
+              >
+                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
