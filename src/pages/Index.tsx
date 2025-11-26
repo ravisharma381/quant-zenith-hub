@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +20,42 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const typewriterPhrases = [
+    "practice real interview questions",
+    "pass interviews at top firms",
+    "play interactive games",
+    "learn from expert courses",
+    "master probability and statistics"
+  ];
+
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = typewriterPhrases[currentPhraseIndex];
+    const typingSpeed = isDeleting ? 30 : 80;
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayedText.length < currentPhrase.length) {
+          setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        if (displayedText.length > 0) {
+          setDisplayedText(currentPhrase.slice(0, displayedText.length - 1));
+        } else {
+          setIsDeleting(false);
+          setCurrentPhraseIndex((prev) => (prev + 1) % typewriterPhrases.length);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, currentPhraseIndex]);
+
   const features = [
     {
       icon: <TrendingUp className="w-8 h-8 text-primary" />,
@@ -79,29 +115,37 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center">
-            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30">
+            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary">
               #1 Quantitative Finance Prep Platform
             </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-6 animate-fade-in leading-tight">
-              Master{" "}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-4 animate-fade-in leading-tight">
+              Get into{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">
-                Quantitative Finance
+                Quant Finance
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 animate-fade-in px-4">
-              Prepare for quantitative finance interviews and advance your career with interactive problems, 
-              expert-led courses, and real-world simulations.
-            </p>
+            <div className="h-8 mb-8">
+              <p className="text-xl md:text-2xl text-primary font-medium">
+                {displayedText}
+              </p>
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
               <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
                 <Link to="/problems">
-                  Start Practicing
+                  Solve a Problem
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 w-full sm:w-auto" asChild>
+              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
+                <Link to="/games">
+                  Browse Games
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
                 <Link to="/courses">
                   Browse Courses
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
             </div>
