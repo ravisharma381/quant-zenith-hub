@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
+import janeStreetLogo from "@/assets/jane-street-logo.png";
+import citadelLogo from "@/assets/citadel-logo.png";
+import companyLogo from "@/assets/company-logo.png";
+import drivLogo from "@/assets/driv-logo.png";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -159,16 +163,16 @@ const Index = () => {
               {[...Array(2)].map((_, setIndex) => (
                 <div key={setIndex} className="flex gap-8 px-4">
                   <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src="/src/assets/jane-street-logo.png" alt="Jane Street" className="max-w-full max-h-full object-contain" />
+                    <img src={janeStreetLogo} alt="Jane Street" className="max-w-full max-h-full object-contain" />
                   </div>
                   <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src="/src/assets/citadel-logo.png" alt="Citadel" className="max-w-full max-h-full object-contain" />
+                    <img src={citadelLogo} alt="Citadel" className="max-w-full max-h-full object-contain" />
                   </div>
                   <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src="/src/assets/company-logo.png" alt="Two Sigma" className="max-w-full max-h-full object-contain" />
+                    <img src={companyLogo} alt="Two Sigma" className="max-w-full max-h-full object-contain" />
                   </div>
                   <div className="flex-shrink-0 w-48 h-24 bg-card rounded-lg flex items-center justify-center p-6">
-                    <img src="/src/assets/driv-logo.png" alt="Optiver" className="max-w-full max-h-full object-contain" />
+                    <img src={drivLogo} alt="Optiver" className="max-w-full max-h-full object-contain" />
                   </div>
                 </div>
               ))}
