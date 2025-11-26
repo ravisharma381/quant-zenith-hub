@@ -34,7 +34,7 @@ const Index = () => {
 
   useEffect(() => {
     const currentPhrase = typewriterPhrases[currentPhraseIndex];
-    const typingSpeed = isDeleting ? 30 : 80;
+    const typingSpeed = isDeleting ? 20 : 50;
 
     const timeout = setTimeout(() => {
       if (!isDeleting) {
@@ -120,29 +120,29 @@ const Index = () => {
             </Badge>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-4 animate-fade-in leading-tight">
               Get into{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-hero bg-clip-text text-transparent">
                 Quant Finance
               </span>
             </h1>
             <div className="h-8 mb-8">
-              <p className="text-xl md:text-2xl text-primary font-medium">
+              <p className="text-xl md:text-2xl text-white font-medium">
                 {displayedText}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
+              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
                 <Link to="/problems">
                   Solve a Problem
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
+              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
                 <Link to="/games">
                   Browse Games
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
+              <Button size="lg" className="text-lg px-8 w-full sm:w-auto bg-white text-black hover:bg-white/90" asChild>
                 <Link to="/courses">
                   Browse Courses
                   <ArrowRight className="w-5 h-5 ml-2" />
