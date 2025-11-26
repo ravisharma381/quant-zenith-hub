@@ -114,7 +114,15 @@ const Navigation = () => {
                 Admin
               </Link>
             </div>}
-            {loading && <span className="h-8 w-8" />}
+            {loading && (
+              <div className="flex items-center gap-2">
+                {/* Login button skeleton */}
+                <div className="w-[70px] h-8 rounded-md bg-gray-700/40 animate-pulse" />
+
+                {/* Signup button skeleton */}
+                <div className="w-[80px] h-8 rounded-md bg-gray-700/40 animate-pulse" />
+              </div>
+            )}
             {user && !loading && (
               <div className="relative group">
                 <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
