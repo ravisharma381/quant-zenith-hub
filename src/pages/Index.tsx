@@ -83,24 +83,29 @@ const Index = () => {
             {/* Left Side - Main Content */}
             <div className="text-left">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 animate-fade-in leading-tight">
-                Ace your{" "}
+                Get into{" "}
                 <span className="bg-gradient-primary bg-clip-text text-transparent">
-                  Quant Interview
+                  Quant Finance
                 </span>
               </h1>
               <div className="text-lg md:text-xl text-muted-foreground mb-4">
                 <TypeAnimation
                   sequence={[
-                    'Pass interviews at Jane Street, Citadel, Two Sigma, and more.',
-                    3000,
-                    'Pass interviews at Goldman Sachs, JPMorgan, Morgan Stanley, and more.',
-                    3000,
-                    'Pass interviews at Optiver, Susquehanna, Hudson River Trading, and more.',
-                    3000,
+                    'Practice real interview questions.',
+                    2000,
+                    'Get ahead with expert-created courses.',
+                    2000,
+                    'Master probability and statistics.',
+                    2000,
+                    'Pass interviews at Jane Street, Citadel, Two Sigma.',
+                    2000,
+                    'Learn through interactive games and challenges.',
+                    2000,
                   ]}
                   wrapper="p"
-                  speed={50}
+                  speed={70}
                   repeat={Infinity}
+                  cursor={false}
                   className="min-h-[3.5rem] flex items-center"
                 />
               </div>
