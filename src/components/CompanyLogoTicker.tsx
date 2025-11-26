@@ -32,7 +32,7 @@ const CompanyLogoTicker = () => {
                 key={index}
                 className="logo-ticker-item mr-8"
               >
-                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 w-[280px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
@@ -48,7 +48,7 @@ const CompanyLogoTicker = () => {
                 key={`duplicate-${index}`}
                 className="logo-ticker-item mr-8"
               >
-                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 min-w-[280px]">
+                <div className="bg-muted/50 rounded-xl p-8 flex items-center justify-center h-32 w-[280px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
