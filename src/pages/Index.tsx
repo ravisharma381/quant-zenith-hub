@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
+import { TypeAnimation } from 'react-type-animation';
 import { 
   TrendingUp, 
   BookOpen, 
@@ -78,32 +79,52 @@ const Index = () => {
       <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-6xl relative z-10">
-          <div className="text-center">
-            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30">
-              #1 Quantitative Finance Prep Platform
-            </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-6 animate-fade-in leading-tight">
-              Master{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                Quantitative Finance
-              </span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 animate-fade-in px-4">
-              Prepare for quantitative finance interviews and advance your career with interactive problems, 
-              expert-led courses, and real-world simulations.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in px-4">
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Side - Main Content */}
+            <div className="text-left">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 animate-fade-in leading-tight">
+                Ace your{" "}
+                <span className="bg-gradient-primary bg-clip-text text-transparent">
+                  Quant Interview
+                </span>
+              </h1>
+              <div className="text-lg md:text-xl text-muted-foreground mb-4">
+                <TypeAnimation
+                  sequence={[
+                    'Pass interviews at Jane Street, Citadel, Two Sigma, and more.',
+                    3000,
+                    'Pass interviews at Goldman Sachs, JPMorgan, Morgan Stanley, and more.',
+                    3000,
+                    'Pass interviews at Optiver, Susquehanna, Hudson River Trading, and more.',
+                    3000,
+                  ]}
+                  wrapper="p"
+                  speed={50}
+                  repeat={Infinity}
+                  className="min-h-[3.5rem] flex items-center"
+                />
+              </div>
+              <Button size="lg" variant="premium" className="text-lg px-10 py-6 rounded-full mt-4" asChild>
                 <Link to="/problems">
-                  Start Practicing
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  Solve Your First Problem
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 w-full sm:w-auto" asChild>
-                <Link to="/courses">
-                  Browse Courses
-                </Link>
-              </Button>
+            </div>
+
+            {/* Right Side - CTA Card */}
+            <div className="flex justify-center lg:justify-end">
+              <Card className="p-8 bg-card/80 backdrop-blur-sm border-2 border-border/50 w-full max-w-md">
+                <div className="text-center">
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 italic">
+                    Start Your Quant<br />Prep Today!
+                  </h2>
+                  <Button size="lg" variant="premium" className="text-lg px-10 py-6 rounded-full w-full" asChild>
+                    <Link to="/problems">
+                      Try Your First Question
+                    </Link>
+                  </Button>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
