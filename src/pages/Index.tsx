@@ -112,7 +112,7 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 bg-gradient-dark overflow-hidden">
+      <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 bg-gradient-dark overflow-hidden dot-pattern">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
