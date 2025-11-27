@@ -118,7 +118,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side - Text Content */}
             <div className="text-center lg:text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-bold mb-4 animate-fade-in leading-tight">
                 <span className="bg-gradient-hero bg-clip-text text-transparent">
                   Get into<br />Quant Finance
                 </span>
@@ -129,7 +129,7 @@ const Index = () => {
                 </p>
               </div>
               <div className="flex justify-center lg:justify-start animate-fade-in">
-                <Button size="lg" variant="premium" className="text-lg px-8" asChild>
+                <Button size="lg" variant="premium" className="text-base lg:text-lg px-6 lg:px-8" asChild>
                   <Link to="/problems">
                     Solve your first problem
                     <ArrowRight className="w-5 h-5 ml-2" />
@@ -193,7 +193,7 @@ const Index = () => {
                         Task Distribution
                       </Badge>
                     </div>
-                    <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)]">
+                    <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none">
                       Submit
                     </Button>
                   </div>
