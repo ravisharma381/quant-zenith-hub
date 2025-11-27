@@ -117,18 +117,18 @@ const Index = () => {
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side - Text Content */}
-            <div className="text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in leading-tight">
+            <div className="text-center lg:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in leading-tight">
                 <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Get into Quant Finance
+                  Get into<br />Quant Finance
                 </span>
               </h1>
-              <div className="h-8 mb-8">
+              <div className="h-8 mb-6">
                 <p className="text-xl md:text-2xl text-white font-medium">
                   {displayedText}
                 </p>
               </div>
-              <div className="flex animate-fade-in">
+              <div className="flex justify-center lg:justify-start animate-fade-in">
                 <Button size="lg" variant="premium" className="text-lg px-8" asChild>
                   <Link to="/problems">
                     Solve your first problem
