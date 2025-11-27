@@ -129,7 +129,7 @@ const Index = () => {
                 </p>
               </div>
               <div className="flex justify-center lg:justify-start animate-fade-in">
-                <Button size="lg" variant="premium" className="text-base lg:text-lg px-6 lg:px-8" asChild>
+                <Button size="lg" variant="premium" className="text-base lg:text-lg px-6 lg:px-8 shadow-none hover:shadow-none" asChild>
                   <Link to="/problems">
                     Solve your first problem
                     <ArrowRight className="w-5 h-5 ml-2" />
