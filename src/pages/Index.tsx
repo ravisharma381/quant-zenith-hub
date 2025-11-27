@@ -114,28 +114,91 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
-        <div className="container mx-auto max-w-6xl relative z-10">
-          <div className="text-center">
-            <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary">
-              #1 Quant Interview Prep Platform
-            </Badge>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 animate-fade-in leading-tight">
-              <span className="bg-gradient-hero bg-clip-text text-transparent">
-                Get into Quant Finance
-              </span>
-            </h1>
-            <div className="h-8 mb-8">
-              <p className="text-xl md:text-2xl text-white font-medium">
-                {displayedText}
-              </p>
+        <div className="container mx-auto max-w-7xl relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Side - Text Content */}
+            <div className="text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in leading-tight">
+                <span className="bg-gradient-hero bg-clip-text text-transparent">
+                  Get into Quant Finance
+                </span>
+              </h1>
+              <div className="h-8 mb-8">
+                <p className="text-xl md:text-2xl text-white font-medium">
+                  {displayedText}
+                </p>
+              </div>
+              <div className="flex animate-fade-in">
+                <Button size="lg" variant="premium" className="text-lg px-8" asChild>
+                  <Link to="/problems">
+                    Solve your first problem
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+              </div>
             </div>
-            <div className="flex justify-center animate-fade-in px-4">
-              <Button size="lg" variant="premium" className="text-lg px-8 w-full sm:w-auto" asChild>
-                <Link to="/problems">
-                  Solve your first problem
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
+
+            {/* Right Side - Problem Card */}
+            <div className="animate-fade-in">
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 overflow-hidden">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <CardTitle className="text-2xl font-bold text-foreground">
+                      Nearest Diagonal I
+                    </CardTitle>
+                  </div>
+                  <Badge className="w-fit bg-[hsl(142,76%,36%)] text-white hover:bg-[hsl(142,76%,36%)] border-none">
+                    Easy
+                  </Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <CardDescription className="text-base text-muted-foreground leading-relaxed">
+                    A point is selected uniformly at random from the unit square. Find the expected distance of the point from the <span className="italic">y = x</span> line.
+                  </CardDescription>
+                  
+                  {/* Multiple Choice Options */}
+                  <div className="space-y-3">
+                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
+                      <span className="text-foreground font-mono text-lg">
+                        <sup>1</sup>⁄<sub>3</sub>
+                      </span>
+                    </button>
+                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
+                      <span className="text-foreground font-mono text-lg">
+                        <sup>1</sup>⁄<sub>3√2</sub>
+                      </span>
+                    </button>
+                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
+                      <span className="text-foreground font-mono text-lg">
+                        <sup>1</sup>⁄<sub>6</sub>
+                      </span>
+                    </button>
+                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
+                      <span className="text-foreground font-mono text-lg">
+                        <sup>1</sup>⁄<sub>6√2</sub>
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Bottom Section with Tags and Submit */}
+                  <div className="flex flex-wrap items-center justify-between gap-4 pt-4">
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="text-xs text-red-500 border-red-500">
+                        Expected Value/LOTUS
+                      </Badge>
+                      <Badge variant="outline" className="text-xs text-green-500 border-green-500">
+                        Uniform
+                      </Badge>
+                      <Badge variant="outline" className="text-xs text-purple-500 border-purple-500">
+                        Task Distribution
+                      </Badge>
+                    </div>
+                    <Button variant="premium" size="lg">
+                      Submit
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
