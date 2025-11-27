@@ -112,7 +112,7 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 px-4 bg-gradient-dark overflow-hidden">
+      <section className="relative py-8 md:py-12 px-4 bg-gradient-dark overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -193,7 +193,7 @@ const Index = () => {
                         Task Distribution
                       </Badge>
                     </div>
-                    <Button variant="premium" size="lg">
+                    <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)]">
                       Submit
                     </Button>
                   </div>
