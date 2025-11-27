@@ -260,7 +260,7 @@ const ListBlock = ({
             {ordered ? (
                 <ol className="list-decimal pl-6 space-y-2">
                     {items.map((item, i) => (
-                        <li key={i} className="text-white leading-relaxed">
+                        <li key={i} className="text-white leading-relaxed text-lg">
                             {renderRichText(item)}
                         </li>
                     ))}
@@ -272,7 +272,7 @@ const ListBlock = ({
 
                         if (isNestedObject) {
                             return (
-                                <li key={i} className="pl-4">
+                                <li key={i} className="pl-4 text-lg">
                                     <Renderer doc={{ blocks: [item] }} isChildren={true} />
                                 </li>
                             );
@@ -294,10 +294,10 @@ const ListBlock = ({
                                 }
                             >
                                 {bulletType === "check" && (
-                                    <span className="text-green-400 font-bold mt-[2px]">✓</span>
+                                    <span className="text-green-400 font-bold mt-[2px] text-lg">✓</span>
                                 )}
 
-                                <span>{renderRichText(item)}</span>
+                                <span className="text-lg">{renderRichText(item)}</span>
                             </li>
                         );
                     })}
