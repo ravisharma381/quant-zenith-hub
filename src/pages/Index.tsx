@@ -258,7 +258,7 @@ const Index = () => {
               </h2>
               <div className="space-y-4 md:space-y-6">
                 <div className="flex items-start gap-3 md:gap-4">
-                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-purple-500 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                       Real Interview Questions
@@ -270,7 +270,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 md:gap-4">
-                  <Zap className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+                  <Zap className="w-5 h-5 md:w-6 md:h-6 text-purple-500 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                       Interactive Learning
@@ -282,7 +282,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 md:gap-4">
-                  <Target className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+                  <Target className="w-5 h-5 md:w-6 md:h-6 text-purple-500 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                       Personalized Learning Path
@@ -294,7 +294,7 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 md:gap-4">
-                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-purple-500 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
                       Expert Guidance
@@ -310,7 +310,7 @@ const Index = () => {
             <div className="relative mt-8 lg:mt-0">
               <Card className="p-6 md:p-8 bg-card/80 backdrop-blur-sm">
                 <div className="text-center">
-                  <Trophy className="w-12 h-12 md:w-16 md:h-16 text-primary mx-auto mb-4 md:mb-6" />
+                  <Trophy className="w-12 h-12 md:w-16 md:h-16 text-purple-500 mx-auto mb-4 md:mb-6" />
                   <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
                     Join the Elite
                   </h3>
@@ -318,7 +318,7 @@ const Index = () => {
                     Over 10,000 professionals have successfully landed positions at top firms 
                     using QuantProf.
                   </p>
-                  <Button variant="premium" size="lg" className="w-full sm:w-auto" asChild>
+                  <Button variant="default" size="lg" className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white" asChild>
                     <Link to="/problems">
                       Solve your first problem
                     </Link>
