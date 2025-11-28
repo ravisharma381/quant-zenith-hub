@@ -14,7 +14,7 @@ const CompanyLogoTicker = () => {
   ];
 
   return (
-    <section className="pt-6 pb-12 md:pt-8 md:pb-16 px-4 overflow-hidden bg-gradient-subtle">
+    <section className="pt-3 pb-12 md:pt-4 md:pb-16 px-4 overflow-hidden bg-gradient-subtle">
       <div className="container mx-auto max-w-6xl">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12">
           Helped land jobs at{" "}
