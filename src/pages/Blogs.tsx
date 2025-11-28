@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Calendar, Clock, User, TrendingUp, Bookmark } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -76,8 +77,8 @@ const Blogs = () => {
 
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -94,76 +95,82 @@ const Blogs = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Blog</h1>
-          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            An all-in-one quant blog teaching quantitative finance concepts, featuring quant interview guides, and detailing the latest industry news.
-          </p>
-        </div>
+    <>
+      <Helmet>
+        <title>Quant Blogs & Guides | Trading, Finance & Interview Prep</title>
+        <meta name="description" content="Read expert articles on quant finance, trading strategies, interview preparation, and brainteasers." />
+      </Helmet>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Blog</h1>
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+              An all-in-one quant blog teaching quantitative finance concepts, featuring quant interview guides, and detailing the latest industry news.
+            </p>
+          </div>
 
-        {/* All Blog Posts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post) => (
-            <Card 
-              key={post.id} 
-              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer"
-              onClick={() => {
-                if (post.id === 1) {
-                  window.location.href = '/blogs/first';
-                }
-              }}
-            >
-              <div className="aspect-video bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
-              <CardHeader>
-                <Badge variant="outline" className="text-xs w-fit mb-2">
-                  {post.category}
-                </Badge>
-                <CardTitle className="text-lg font-semibold text-foreground leading-tight">
-                  {post.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {post.tags.slice(0, 2).map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                  <span className="flex items-center">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {formatDate(post.publishDate)}
-                  </span>
-                  <span className="flex items-center">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {post.readTime}
-                  </span>
-                </div>
-                <Button 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (post.id === 1) {
-                      window.location.href = '/blogs/first';
-                    }
-                  }}
-                >
-                  Read More
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+          {/* All Blog Posts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogPosts.map((post) => (
+              <Card
+                key={post.id}
+                className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer"
+                onClick={() => {
+                  if (post.id === 1) {
+                    window.location.href = '/blogs/first';
+                  }
+                }}
+              >
+                <div className="aspect-video bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
+                <CardHeader>
+                  <Badge variant="outline" className="text-xs w-fit mb-2">
+                    {post.category}
+                  </Badge>
+                  <CardTitle className="text-lg font-semibold text-foreground leading-tight">
+                    {post.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {post.tags.slice(0, 2).map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
+                    <span className="flex items-center">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {formatDate(post.publishDate)}
+                    </span>
+                    <span className="flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {post.readTime}
+                    </span>
+                  </div>
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (post.id === 1) {
+                        window.location.href = '/blogs/first';
+                      }
+                    }}
+                  >
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

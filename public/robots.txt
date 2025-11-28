@@ -1,5 +1,5 @@
 User-agent: *
-# Block private pages
+# Block private / user-only pages
 Disallow: /login
 Disallow: /signup
 Disallow: /billing
@@ -8,17 +8,22 @@ Disallow: /course/*/learn
 Disallow: /admin/
 Disallow: /course/*/checkout
 
-# Allow public pages
+# Allow public content pages
 Allow: /
 Allow: /problems
 Allow: /problems/
-Allow: /games/
-Allow: /games/*
+Allow: /problems/*
+Allow: /course/quant-interview-masterclass
 Allow: /courses
+Allow: /courses/
 Allow: /course/
 Allow: /blogs
 Allow: /blogs/
+Allow: /blogs/*
+Allow: /games
+Allow: /games/
+Allow: /games/*
 Allow: /contact
 
-# Sitemap location
+# Sitemap
 Sitemap: https://quantprof.org/sitemap.xml

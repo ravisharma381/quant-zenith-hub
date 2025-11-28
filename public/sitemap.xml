@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset 
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml"
->
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <!-- Home -->
   <url>
     <loc>https://quantprof.org/</loc>
     <priority>1.0</priority>
+    <changefreq>daily</changefreq>
   </url>
 
-  <!-- Public pages -->
-  <url><loc>https://quantprof.org/problems</loc></url>
+  <!-- Top Quant Interview Page (High SEO importance) -->
+  <url>
+    <loc>https://quantprof.org/quant-interview-questions</loc>
+    <priority>0.95</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Problems (Quant questions) -->
+  <url>
+    <loc>https://quantprof.org/problems</loc>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Games (mental math + trading) -->
   <url><loc>https://quantprof.org/games</loc></url>
-  <url><loc>https://quantprof.org/courses</loc></url>
-  <url><loc>https://quantprof.org/blogs</loc></url>
-  <url><loc>https://quantprof.org/contact</loc></url>
-
-  <!-- Static course marketing pages -->
-  <url><loc>https://quantprof.org/course/quant-interview-masterclass</loc></url>
-  <!-- <url><loc>https://quantprof.org/course/machine-learning-for-finance</loc></url> -->
-
-  <!-- Games -->
   <url><loc>https://quantprof.org/games/arithmetic-pro</loc></url>
   <url><loc>https://quantprof.org/games/sequences-pro</loc></url>
   <url><loc>https://quantprof.org/games/probability-master</loc></url>
@@ -29,7 +32,25 @@
   <url><loc>https://quantprof.org/games/optiver-80</loc></url>
   <url><loc>https://quantprof.org/games/sokoban</loc></url>
 
-  <!-- Playlists -->
-  <!-- <url><loc>https://quantprof.org/playlists</loc></url> -->
+  <!-- Courses -->
+  <url>
+    <loc>https://quantprof.org/courses</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Individual course landing pages -->
+  <url>
+    <loc>https://quantprof.org/course/quant-interview-masterclass</loc>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Blogs -->
+  <url>
+    <loc>https://quantprof.org/blogs</loc>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Contact -->
+  <url><loc>https://quantprof.org/contact</loc></url>
 
 </urlset>

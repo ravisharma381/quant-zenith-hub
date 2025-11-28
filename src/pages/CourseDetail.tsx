@@ -7,6 +7,7 @@ import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Pla
 import { useNavigate } from "react-router-dom";
 import FeatureRow from "@/components/FeatureRow";
 import { useAuth } from "@/context/AuthContext";
+import { Helmet } from "react-helmet-async";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
@@ -119,192 +120,212 @@ const CourseDetail = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Sticky Enrollment Bar */}
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : '-translate-y-full'
-        }`}>
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Quant Interview Masterclass</h2>
-              <p className="text-sm text-muted-foreground">Master quantitative finance interviews</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                <span className="text-sm font-medium text-foreground">4.9/5</span>
+    <>
+      <Helmet>
+        <title>Quant Interview Questions | Probability, Puzzles & Trading Problems</title>
+
+        <meta
+          name="description"
+          content="Practice the most common quant interview questions asked at Jane Street, Optiver, HRT, IMC, Citadel and top trading firms. Includes probability problems, mental math, market making scenarios and brainteasers."
+        />
+
+        <link rel="canonical" href="https://quantprof.org/quant-interview-questions" />
+
+        <meta property="og:title" content="Top Quant Interview Questions (2025)" />
+        <meta
+          property="og:description"
+          content="Solve real quant interview questions with step-by-step solutions. Probability puzzles, expected value problems, bid/ask scenarios and HFT brainteasers."
+        />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://quantprof.org/quant-interview-questions" />
+      </Helmet>
+      <div className="min-h-screen bg-background">
+        {/* Sticky Enrollment Bar */}
+        <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : '-translate-y-full'
+          }`}>
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Quant Interview Masterclass</h2>
+                <p className="text-sm text-muted-foreground">Master quantitative finance interviews</p>
               </div>
-              <Button
-                className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
-                onClick={() => navigate(
-                  isBought
-                    ? `/course/${courseId}/learn`
-                    : `/course/${slug}/checkout`,
-                )}
-              >
-                {isBought ? "Continue Learning" : 'Enroll Now'}
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-sm font-medium text-foreground">4.9/5</span>
+                </div>
+                <Button
+                  className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
+                  onClick={() => navigate(
+                    isBought
+                      ? `/course/${courseId}/learn`
+                      : `/course/${slug}/checkout`,
+                  )}
+                >
+                  {isBought ? "Continue Learning" : 'Enroll Now'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
+        {/* Hero Section */}
+        <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
+          <div className="container mx-auto px-4 py-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* Left Side - Course Info */}
+                <div>
+                  <h1 className="text-5xl font-bold text-foreground mb-6">
+                    Quant Interview Masterclass
+                  </h1>
+                  <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                    Master quantitative finance interviews with our comprehensive course designed by industry experts
+                  </p>
+
+                  {/* Features List */}
+                  <div className="space-y-4 mb-8">
+                    {features.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-4 h-4 text-background" />
+                        </div>
+                        <span className="text-foreground">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA and Rating */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <Button
+                      ref={enrollButtonRef}
+                      size="lg"
+                      className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
+                      onClick={() => navigate(
+                        isBought
+                          ? `/course/${courseId}/learn`
+                          : `/course/${slug}/checkout`,
+                      )}
+                    >
+                      {isBought ? "Continue Learning" : "Enroll Me Now"}
+                    </Button>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className="ml-1 font-medium text-foreground">4.9/5</span>
+                      </div>
+                      <span className="text-muted-foreground">from 500+ students</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side - Course Preview */}
+                <div className="flex justify-center">
+                  <div className="w-full max-w-lg">
+                    <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
+                      <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
+                        <Play className="w-10 h-10 text-background ml-1" />
+                      </div>
+                    </div>
+                    <div className="text-center mt-6">
+                      <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
+                      <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Features Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Side - Course Info */}
-              <div>
-                <h1 className="text-5xl font-bold text-foreground mb-6">
-                  Quant Interview Masterclass
-                </h1>
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                  Master quantitative finance interviews with our comprehensive course designed by industry experts
-                </p>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
+              <p className="text-lg text-muted-foreground">
+                Discover what makes our course the ultimate preparation for quantitative finance success
+              </p>
+            </div>
 
-                {/* Features List */}
-                <div className="space-y-4 mb-8">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                        <Check className="w-4 h-4 text-background" />
-                      </div>
-                      <span className="text-foreground">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* CTA and Rating */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <Button
-                    ref={enrollButtonRef}
-                    size="lg"
-                    className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                    onClick={() => navigate(
-                      isBought
-                        ? `/course/${courseId}/learn`
-                        : `/course/${slug}/checkout`,
-                    )}
-                  >
-                    {isBought ? "Continue Learning" : "Enroll Me Now"}
-                  </Button>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                      <span className="ml-1 font-medium text-foreground">4.9/5</span>
-                    </div>
-                    <span className="text-muted-foreground">from 500+ students</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Side - Course Preview */}
-              <div className="flex justify-center">
-                <div className="w-full max-w-lg">
-                  <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
-                    <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-                      <Play className="w-10 h-10 text-background ml-1" />
-                    </div>
-                  </div>
-                  <div className="text-center mt-6">
-                    <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
-                    <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-8">
+              {courseFeatures.map((feature, index) => (
+                <FeatureRow
+                  key={index}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  index={index}
+                  theme="primary"
+                />
+              ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Features Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
-            <p className="text-lg text-muted-foreground">
-              Discover what makes our course the ultimate preparation for quantitative finance success
-            </p>
+        {/* What You'll Master Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-foreground mb-4">What You'll Master</h2>
+              <p className="text-lg text-muted-foreground">
+                Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {masterTopics.map((topic, index) => (
+                <Card key={index} className="border-border hover:border-primary/50 transition-colors h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                      <topic.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{topic.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
+        </div>
 
-          <div className="space-y-8">
-            {courseFeatures.map((feature, index) => (
-              <FeatureRow
-                key={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                index={index}
-                theme="primary"
-              />
-            ))}
+        {/* FAQ Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold text-foreground text-center mb-12">Frequently Asked Questions</h2>
+
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, index) => (
+                <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
+                  <AccordionTrigger className="text-left text-foreground hover:text-primary [&[data-state=open]]:text-primary [&>svg]:text-white">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+
+        {/* Final CTA */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto text-center">
+            <Button
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
+              onClick={() => navigate(
+                isBought
+                  ? `/course/${courseId}/learn`
+                  : `/course/${slug}/checkout`,
+              )}
+            >
+              {isBought ? "Continue Learning" : 'Start Your Journey Today'}
+            </Button>
           </div>
         </div>
       </div>
-
-      {/* What You'll Master Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">What You'll Master</h2>
-            <p className="text-lg text-muted-foreground">
-              Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {masterTopics.map((topic, index) => (
-              <Card key={index} className="border-border hover:border-primary/50 transition-colors h-full">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                    <topic.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{topic.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-foreground text-center mb-12">Frequently Asked Questions</h2>
-
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
-                <AccordionTrigger className="text-left text-foreground hover:text-primary [&[data-state=open]]:text-primary [&>svg]:text-white">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </div>
-
-      {/* Final CTA */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <Button
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
-            onClick={() => navigate(
-              isBought
-                ? `/course/${courseId}/learn`
-                : `/course/${slug}/checkout`,
-            )}
-          >
-            {isBought ? "Continue Learning" : 'Start Your Journey Today'}
-          </Button>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
