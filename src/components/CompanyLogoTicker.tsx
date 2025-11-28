@@ -32,11 +32,11 @@ const CompanyLogoTicker = () => {
                 key={index}
                 className="logo-ticker-item"
               >
-                <div className="bg-muted/50 rounded-xl p-4 flex items-center justify-center h-32 w-[280px]">
+                <div className="bg-muted/50 rounded-xl px-12 py-6 flex items-center justify-center min-w-[320px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
-                      className="max-h-24 max-w-[260px] object-contain opacity-70 hover:opacity-100 transition-opacity"
+                      className="h-20 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
                     />
                   </div>
                 </div>
@@ -48,11 +48,11 @@ const CompanyLogoTicker = () => {
                 key={`duplicate-${index}`}
                 className="logo-ticker-item"
               >
-                <div className="bg-muted/50 rounded-xl p-4 flex items-center justify-center h-32 w-[280px]">
+                <div className="bg-muted/50 rounded-xl px-12 py-6 flex items-center justify-center min-w-[320px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
-                      className="max-h-24 max-w-[260px] object-contain opacity-70 hover:opacity-100 transition-opacity"
+                      className="h-20 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
                     />
                   </div>
                 </div>
