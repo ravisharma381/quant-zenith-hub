@@ -18,7 +18,7 @@ const CompanyLogoTicker = () => {
       <div className="container mx-auto max-w-6xl">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12">
           Helped land jobs at{" "}
-          <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
             top trading firms
           </span>{" "}
           around the world!
