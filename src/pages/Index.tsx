@@ -206,7 +206,7 @@ const Index = () => {
 
 
       {/* Features Section */}
-      <section className="pt-12 pb-7 md:pt-20 md:pb-9 px-4">
+      <section className="pt-12 pb-7 md:pt-20 md:pb-9 px-4" style={{ backgroundColor: '#2596be' }}>
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
