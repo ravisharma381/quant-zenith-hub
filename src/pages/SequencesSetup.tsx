@@ -55,13 +55,13 @@ const SequencesSetup = () => {
 
           <section>
             <h2 className="text-sm text-muted-foreground mb-2 text-center">Choose Duration</h2>
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-2 md:gap-3 justify-center">
               {[60, 120, 180].map((s) => (
                 <Button
                   key={s}
                   variant="outline"
                   onClick={() => setSelectedDuration(s as 60 | 120 | 180)}
-                  className="flex-1"
+                  className="flex-1 text-xs md:text-sm px-2 md:px-4"
                   style={selectedDuration === s ? { 
                     backgroundColor: 'hsl(270, 95%, 60%, 0.15)', 
                     color: 'hsl(270, 95%, 60%)', 
@@ -69,7 +69,7 @@ const SequencesSetup = () => {
                     boxShadow: '0 0 0 1px hsl(270, 95%, 60%, 0.3)'
                   } : {}}
                 >
-                  {s === 60 ? (<><Zap className="w-4 h-4 mr-2" /> Bullet - 1 min</>) : s === 120 ? (<><Timer className="w-4 h-4 mr-2" /> Blitz - 2 min</>) : (<><Rocket className="w-4 h-4 mr-2" /> Rapid - 3 min</>)}
+                  {s === 60 ? (<><Zap className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Bullet - </span>1 min</>) : s === 120 ? (<><Timer className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Blitz - </span>2 min</>) : (<><Rocket className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Rapid - </span>3 min</>)}
                 </Button>
               ))}
             </div>
