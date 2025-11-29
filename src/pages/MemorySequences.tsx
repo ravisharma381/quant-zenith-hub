@@ -228,49 +228,61 @@ const MemorySequences = () => {
             )}
 
             {gameState === 'input' && (
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-foreground mb-4">
-                  Enter the sequence
-                </h2>
-                <div className="flex items-center justify-center gap-4 mb-8">
-                  <div className="text-lg text-muted-foreground">Time left:</div>
-                  <Badge variant={timeLeft <= 10 ? "destructive" : "secondary"} className="text-lg px-3 py-1">
-                    {timeLeft}s
-                  </Badge>
+              <div className="min-h-[60vh] flex flex-col items-center justify-center relative">
+                {/* Timer - Top Right */}
+                <div 
+                  className="absolute top-0 right-0 px-4 py-2 rounded-lg border-2 font-mono text-xl font-bold"
+                  style={{
+                    borderColor: 'hsl(180,83%,57%)',
+                    color: timeLeft <= 10 ? 'hsl(var(--destructive))' : 'hsl(180,83%,57%)'
+                  }}
+                >
+                  {timeLeft}s
                 </div>
-                
-                {/* Input Display */}
-                <div className="flex justify-center mb-8">
-                  <div className="inline-flex gap-3">
-                    {Array.from({ length: sequence.length }).map((_, index) => (
-                      <div
-                        key={index}
-                        className={`aspect-square w-16 h-16 rounded-lg border-2 flex items-center justify-center text-2xl font-bold ${
-                          index < userInput.length
-                            ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)]'
-                            : index === userInput.length
-                            ? 'bg-muted border-[hsl(180,83%,57%)] text-muted-foreground animate-pulse'
-                            : 'bg-muted border-border text-muted-foreground'
-                        }`}
-                      >
-                        {userInput[index] || ''}
+
+                {/* Input Display - Centered */}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-12">
+                      Enter the sequence
+                    </h2>
+                    
+                    <div className="flex justify-center mb-12">
+                      <div className="inline-flex gap-3">
+                        {Array.from({ length: sequence.length }).map((_, index) => (
+                          <div
+                            key={index}
+                            className={`aspect-square w-16 h-16 rounded-lg border-2 flex items-center justify-center text-2xl font-bold ${
+                              index < userInput.length
+                                ? 'bg-[hsl(180,83%,57%)]/20 border-[hsl(180,83%,57%)] text-[hsl(180,83%,57%)]'
+                                : index === userInput.length
+                                ? 'bg-muted border-[hsl(180,83%,57%)] text-muted-foreground animate-pulse'
+                                : 'bg-muted border-border text-muted-foreground'
+                            }`}
+                          >
+                            {userInput[index] || ''}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+
+                    <p className="text-muted-foreground mb-6 text-lg">
+                      Use your keyboard to enter the numbers (0-9)
+                    </p>
+                    
+                    <Button
+                      onClick={handleSubmit}
+                      className="bg-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(180,83%,57%)]/90 px-8 py-6 text-lg"
+                      disabled={userInput.length !== sequence.length}
+                    >
+                      Submit (Enter)
+                    </Button>
                   </div>
                 </div>
 
-                <p className="text-muted-foreground mb-6">
-                  Use your keyboard to enter the numbers (0-9)
-                </p>
-                
-                <div className="flex justify-center">
-                  <Button
-                    onClick={handleSubmit}
-                    className="bg-[hsl(180,83%,57%)] text-[hsl(220,13%,8%)] hover:bg-[hsl(180,83%,57%)]/90 px-8"
-                    disabled={userInput.length !== sequence.length}
-                  >
-                    Submit (Enter)
-                  </Button>
+                {/* Score - Bottom Center */}
+                <div className="absolute bottom-0 text-2xl font-bold text-foreground">
+                  Score: {score}
                 </div>
               </div>
             )}
