@@ -175,62 +175,25 @@ const Optiver80 = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="container mx-auto max-w-2xl">
-        {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-8">
-          <div className="justify-self-start">
-            <Button variant="ghost" onClick={() => navigate('/games')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-          </div>
-          <div 
-            className="justify-self-center text-2xl font-bold text-center"
-            style={{ color: themeColors.primary }}
-          >
-            {score}/80
-          </div>
-          <div className="justify-self-end flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span 
-              className={`${timeLeft <= 10 ? 'animate-pulse' : ''} font-mono text-lg`}
-              style={{ color: timeLeft <= 10 ? themeColors.primary : 'inherit' }}
-            >
-              {timeLeft}s
-            </span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative">
+      {/* Timer - Top Right */}
+      <div 
+        className={`absolute top-6 right-6 px-4 py-2 rounded-lg border-2 font-mono text-xl font-bold ${timeLeft <= 10 ? 'animate-pulse' : ''}`}
+        style={{
+          borderColor: themeColors.primary,
+          color: themeColors.primary
+        }}
+      >
+        {timeLeft}s
+      </div>
 
-        {/* Progress */}
-        <div className="mb-8">
+      {/* Question - Centered */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
           <div 
-            className="w-full h-2 rounded-full"
-            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
+            className="text-6xl md:text-8xl font-bold mb-8"
+            style={{ color: 'hsl(var(--foreground))' }}
           >
-            <div 
-              className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
-              style={{ 
-                width: `${(80 - timeLeft) / 80 * 100}%`,
-                backgroundColor: themeColors.primary
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-sm text-muted-foreground mt-2">
-            <span>Target: 60+ correct</span>
-            <span>Questions: {questionsAnswered}</span>
-          </div>
-        </div>
-
-        {/* Question */}
-        <div 
-          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
-          style={{
-            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
-          }}
-        >
-          <div className="text-4xl font-bold text-foreground mb-8">
             {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
           </div>
           
@@ -239,25 +202,35 @@ const Optiver80 = () => {
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-center text-2xl md:text-3xl h-16 max-w-md mx-auto border-2 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-transparent"
               style={{
-                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
-                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
+                borderColor: themeColors.primary,
+                color: 'hsl(var(--foreground))'
               }}
-              placeholder="Answer"
+              placeholder="Your answer"
               autoFocus
             />
-            {(() => { const theme = getGameTheme(3); return (
-              <Button 
-                type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles}`}
-                disabled={!userAnswer}
-              >
-                Submit
-              </Button>
-            )})()}
+            <Button 
+              type="submit" 
+              className="px-8 py-6 text-lg"
+              style={{
+                backgroundColor: themeColors.primary,
+                color: themeColors.primaryForeground
+              }}
+              disabled={!userAnswer}
+            >
+              Submit
+            </Button>
           </form>
         </div>
+      </div>
+
+      {/* Score - Bottom Center */}
+      <div 
+        className="absolute bottom-8 text-2xl font-bold"
+        style={{ color: 'hsl(var(--foreground))' }}
+      >
+        Score: {score}/80
       </div>
     </div>
   );
