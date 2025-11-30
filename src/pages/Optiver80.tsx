@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
+import CountdownTimer from "@/components/CountdownTimer";
 
 const Optiver80 = () => {
   const navigate = useNavigate();
@@ -91,24 +92,12 @@ const Optiver80 = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Zap 
-              className="w-12 h-12 mr-4" 
-              style={{ color: themeColors.primary }}
-            />
-            <h1 className="text-4xl font-bold text-foreground">Optiver 80 in 80</h1>
-          </div>
-          <div 
-            className="text-8xl font-bold mb-4 animate-pulse"
-            style={{ color: themeColors.primary }}
-          >
-            {countdown || "GO!"}
-          </div>
-          <p className="text-muted-foreground">80 questions in 80 seconds - Can you make it?</p>
-        </div>
-      </div>
+      <CountdownTimer
+        countdown={countdown}
+        color={themeColors.primary}
+        title="Optiver 80 in 80"
+        subtitle="80 questions in 80 seconds - Can you make it?"
+      />
     );
   }
 
