@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
+import CountdownTimer from "@/components/CountdownTimer";
 
 const SequencesPro = () => {
   const navigate = useNavigate();
@@ -108,18 +109,12 @@ const SequencesPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Sequences Pro</h1>
-          <div 
-            className="text-8xl font-bold mb-4 animate-pulse"
-            style={{ color: themeColors.primary }}
-          >
-            {countdown || "GO!"}
-          </div>
-          <p className="text-muted-foreground">Find the pattern and complete the sequence!</p>
-        </div>
-      </div>
+      <CountdownTimer 
+        countdown={countdown}
+        color={themeColors.primary}
+        title="Sequences Pro"
+        subtitle="Find the pattern and complete the sequence!"
+      />
     );
   }
 

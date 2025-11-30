@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Clock, Zap, Timer, Rocket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
+import CountdownTimer from "@/components/CountdownTimer";
 
 const ArithmeticPro = () => {
   const navigate = useNavigate();
@@ -201,18 +202,12 @@ const ArithmeticPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Quant Arithmetic Zetamac</h1>
-          <div 
-            className="text-8xl font-bold mb-4 animate-pulse"
-            style={{ color: themeColors.primary }}
-          >
-            {countdown || "GO!"}
-          </div>
-          <p className="text-muted-foreground">Get ready for rapid-fire mental math!</p>
-        </div>
-      </div>
+      <CountdownTimer
+        countdown={countdown}
+        color={themeColors.primary}
+        title="Quant Arithmetic Zetamac"
+        subtitle="Get ready for rapid-fire mental math!"
+      />
     );
   }
 
