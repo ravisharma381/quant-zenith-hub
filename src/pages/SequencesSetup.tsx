@@ -29,7 +29,7 @@ const SequencesSetup = () => {
 
   return (
     <div className="min-h-screen bg-background flex justify-center pt-12 pb-12">
-      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-4 border" style={{ borderColor: theme.primary }}>
+      <div className="w-full max-w-2xl bg-card rounded-2xl px-8 pt-8 pb-6 border" style={{ borderColor: theme.primary }}>
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-foreground">Sequences Pro</h1>
           <p className="text-muted-foreground mt-2">Configure your challenge, then race the clock to find the next term in each sequence.</p>
