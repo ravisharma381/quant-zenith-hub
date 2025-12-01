@@ -74,12 +74,15 @@ const ArithmeticPro = () => {
   }, [selectedDifficulty, selectedOps]);
 
   useEffect(() => {
-    if (gameState === 'countdown' && countdown > 0) {
+    if (gameState === 'countdown' && countdown > 1) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (gameState === 'countdown' && countdown === 0) {
-      setGameState('playing');
-      generateQuestion();
+    } else if (gameState === 'countdown' && countdown === 1) {
+      const timer = setTimeout(() => {
+        setGameState('playing');
+        generateQuestion();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [gameState, countdown, generateQuestion]);
 
