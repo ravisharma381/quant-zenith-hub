@@ -5,12 +5,14 @@ interface CountdownTimerProps {
   color: string;
   title?: string;
   subtitle?: string;
+  totalDuration?: number;
 }
 
-const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title, subtitle }) => {
+const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title, subtitle, totalDuration = 3 }) => {
   const radius = 80;
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
+  const animationDuration = totalDuration * 1000; // Convert to milliseconds
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
@@ -45,9 +47,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={0}
-              className="transition-all duration-1000 ease-linear"
               style={{
-                animation: countdown > 0 ? 'countdown-shrink 1s linear infinite' : 'none'
+                animation: countdown > 0 ? `countdown-shrink ${animationDuration}ms linear` : 'none'
               }}
             />
           </svg>
