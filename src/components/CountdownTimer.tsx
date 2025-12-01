@@ -1,46 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 interface CountdownTimerProps {
   countdown: number;
-  totalDuration: number;
   color: string;
   title?: string;
   subtitle?: string;
 }
 
-const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuration, color, title, subtitle }) => {
+const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title, subtitle }) => {
   const radius = 80;
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
-  
-  const [subProgress, setSubProgress] = useState(0);
-  
-  // Smooth sub-second animation
-  useEffect(() => {
-    setSubProgress(0);
-    
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / 1000, 1);
-      setSubProgress(progress);
-      
-      if (progress >= 1) {
-        clearInterval(interval);
-      }
-    }, 16);
-    
-    return () => clearInterval(interval);
-  }, [countdown]);
-  
-  // Calculate overall progress based on countdown position
-  // countdown=3 → 0/3 = 0% progress (full ring)
-  // countdown=2 → 1/3 = 33% progress (66% remaining)
-  // countdown=1 → 2/3 = 66% progress (33% remaining)
-  // countdown=0 → 3/3 = 100% progress (empty ring)
-  const elapsedSeconds = totalDuration - countdown;
-  const overallProgress = (elapsedSeconds + subProgress) / totalDuration;
-  const strokeDashoffset = circumference * overallProgress;
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
@@ -74,8 +44,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={0}
               className="transition-all duration-1000 ease-linear"
+              style={{
+                animation: countdown > 0 ? 'countdown-shrink 1s linear infinite' : 'none'
+              }}
             />
           </svg>
           
@@ -84,11 +57,22 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
             className="absolute text-8xl font-bold"
             style={{ color }}
           >
-            {countdown}
+            {countdown || "GO!"}
           </div>
         </div>
         
         {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
+        
+        <style>{`
+          @keyframes countdown-shrink {
+            from {
+              stroke-dashoffset: 0;
+            }
+            to {
+              stroke-dashoffset: ${circumference};
+            }
+          }
+        `}</style>
       </div>
     </div>
   );
