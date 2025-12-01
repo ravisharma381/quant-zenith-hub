@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface CountdownTimerProps {
   countdown: number;
@@ -13,11 +13,31 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   
-  // Calculate elapsed time and progress
-  // When countdown=3, elapsed=0 (start), when countdown=0, elapsed=3 (end)
-  const elapsed = totalDuration - countdown;
-  const progress = elapsed / totalDuration; // 0 to 1
-  const strokeDashoffset = circumference * progress; // Start at 0 (full ring), end at circumference (empty ring)
+  // Track sub-second progress for smooth animation within each second
+  const [subProgress, setSubProgress] = useState(0);
+  
+  // Reset progress when countdown changes (new second starts)
+  useEffect(() => {
+    setSubProgress(0);
+    
+    // Animate progress within this second (0 to 1 over 1000ms)
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / 1000, 1); // 0 to 1 over 1 second
+      setSubProgress(progress);
+      
+      if (progress >= 1) {
+        clearInterval(interval);
+      }
+    }, 16); // ~60fps for smooth animation
+    
+    return () => clearInterval(interval);
+  }, [countdown]);
+  
+  // Ring shrinks from full to empty within each second
+  // progress 0 = full ring (offset 0), progress 1 = empty ring (offset circumference)
+  const strokeDashoffset = circumference * subProgress;
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
