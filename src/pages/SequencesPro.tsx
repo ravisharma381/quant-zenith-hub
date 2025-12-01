@@ -72,12 +72,15 @@ const SequencesPro = () => {
   }, []);
 
   useEffect(() => {
-    if (gameState === 'countdown' && countdown > 0) {
+    if (gameState === 'countdown' && countdown > 1) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (gameState === 'countdown' && countdown === 0) {
-      setGameState('playing');
-      generateSequence();
+    } else if (gameState === 'countdown' && countdown === 1) {
+      const timer = setTimeout(() => {
+        setGameState('playing');
+        generateSequence();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [gameState, countdown, generateSequence]);
 
