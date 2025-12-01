@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 interface CountdownTimerProps {
   countdown: number;
@@ -13,28 +13,34 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   
-  const [progress, setProgress] = useState(0);
-  const startTimeRef = useRef<number>(Date.now());
+  const [subProgress, setSubProgress] = useState(0);
   
-  // Single continuous animation from 0 to 1 over totalDuration seconds
+  // Smooth sub-second animation
   useEffect(() => {
-    startTimeRef.current = Date.now();
+    setSubProgress(0);
     
+    const startTime = Date.now();
     const interval = setInterval(() => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const newProgress = Math.min(elapsed / (totalDuration * 1000), 1);
-      setProgress(newProgress);
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / 1000, 1);
+      setSubProgress(progress);
       
-      if (newProgress >= 1) {
+      if (progress >= 1) {
         clearInterval(interval);
       }
-    }, 16); // ~60fps for smooth animation
+    }, 16);
     
     return () => clearInterval(interval);
-  }, [totalDuration]);
+  }, [countdown]);
   
-  // Ring shrinks continuously: 0 (full) to circumference (empty)
-  const strokeDashoffset = circumference * progress;
+  // Calculate overall progress based on countdown position
+  // countdown=3 → 0/3 = 0% progress (full ring)
+  // countdown=2 → 1/3 = 33% progress (66% remaining)
+  // countdown=1 → 2/3 = 66% progress (33% remaining)
+  // countdown=0 → 3/3 = 100% progress (empty ring)
+  const elapsedSeconds = totalDuration - countdown;
+  const overallProgress = (elapsedSeconds + subProgress) / totalDuration;
+  const strokeDashoffset = circumference * overallProgress;
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
