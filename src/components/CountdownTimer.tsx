@@ -13,14 +13,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   
-  // Track sub-second progress for smooth animation within each second
+  // Track sub-second progress for smooth animation
   const [subProgress, setSubProgress] = useState(0);
   
-  // Reset progress when countdown changes (new second starts)
+  // Animate smooth progress within each second
   useEffect(() => {
     setSubProgress(0);
     
-    // Animate progress within this second (0 to 1 over 1000ms)
     const startTime = Date.now();
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
@@ -30,14 +29,19 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
       if (progress >= 1) {
         clearInterval(interval);
       }
-    }, 16); // ~60fps for smooth animation
+    }, 16); // ~60fps
     
     return () => clearInterval(interval);
   }, [countdown]);
   
-  // Ring shrinks from full to empty within each second
-  // progress 0 = full ring (offset 0), progress 1 = empty ring (offset circumference)
-  const strokeDashoffset = circumference * subProgress;
+  // Calculate total progress: combines countdown position + sub-second animation
+  // countdown=3, subProgress=0 → totalElapsed=0 (100% full)
+  // countdown=3, subProgress=1 → totalElapsed=1 (66% full)
+  // countdown=2, subProgress=1 → totalElapsed=2 (33% full)
+  // countdown=1, subProgress=1 → totalElapsed=3 (0% empty)
+  const totalElapsed = (totalDuration - countdown) + subProgress;
+  const overallProgress = totalElapsed / totalDuration; // 0 to 1 over entire duration
+  const strokeDashoffset = circumference * overallProgress;
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
