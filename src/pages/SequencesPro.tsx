@@ -111,6 +111,7 @@ const SequencesPro = () => {
     return (
       <CountdownTimer 
         countdown={countdown}
+        totalDuration={3}
         color={themeColors.primary}
         title="Sequences Pro"
         subtitle="Find the pattern and complete the sequence!"

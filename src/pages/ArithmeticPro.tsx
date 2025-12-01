@@ -204,6 +204,7 @@ const ArithmeticPro = () => {
     return (
       <CountdownTimer
         countdown={countdown}
+        totalDuration={3}
         color={themeColors.primary}
         title="Quant Arithmetic Zetamac"
         subtitle="Get ready for rapid-fire mental math!"
