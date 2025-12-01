@@ -13,9 +13,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   
-  // Calculate progress: ring should complete once over entire duration
-  const progress = countdown / totalDuration;
-  const strokeDashoffset = circumference * (1 - progress);
+  // Calculate elapsed time and progress
+  // When countdown=3, elapsed=0 (start), when countdown=0, elapsed=3 (end)
+  const elapsed = totalDuration - countdown;
+  const progress = elapsed / totalDuration; // 0 to 1
+  const strokeDashoffset = circumference * progress; // Start at 0 (full ring), end at circumference (empty ring)
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
