@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface CountdownTimerProps {
   countdown: number;
@@ -13,35 +13,28 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuratio
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   
-  // Track sub-second progress for smooth animation
-  const [subProgress, setSubProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const startTimeRef = useRef<number>(Date.now());
   
-  // Animate smooth progress within each second
+  // Single continuous animation from 0 to 1 over totalDuration seconds
   useEffect(() => {
-    setSubProgress(0);
+    startTimeRef.current = Date.now();
     
-    const startTime = Date.now();
     const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / 1000, 1); // 0 to 1 over 1 second
-      setSubProgress(progress);
+      const elapsed = Date.now() - startTimeRef.current;
+      const newProgress = Math.min(elapsed / (totalDuration * 1000), 1);
+      setProgress(newProgress);
       
-      if (progress >= 1) {
+      if (newProgress >= 1) {
         clearInterval(interval);
       }
-    }, 16); // ~60fps
+    }, 16); // ~60fps for smooth animation
     
     return () => clearInterval(interval);
-  }, [countdown]);
+  }, [totalDuration]);
   
-  // Calculate total progress: combines countdown position + sub-second animation
-  // countdown=3, subProgress=0 → totalElapsed=0 (100% full)
-  // countdown=3, subProgress=1 → totalElapsed=1 (66% full)
-  // countdown=2, subProgress=1 → totalElapsed=2 (33% full)
-  // countdown=1, subProgress=1 → totalElapsed=3 (0% empty)
-  const totalElapsed = (totalDuration - countdown) + subProgress;
-  const overallProgress = totalElapsed / totalDuration; // 0 to 1 over entire duration
-  const strokeDashoffset = circumference * overallProgress;
+  // Ring shrinks continuously: 0 (full) to circumference (empty)
+  const strokeDashoffset = circumference * progress;
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
