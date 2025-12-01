@@ -94,6 +94,7 @@ const Optiver80 = () => {
     return (
       <CountdownTimer
         countdown={countdown}
+        totalDuration={3}
         color={themeColors.primary}
         title="Optiver 80 in 80"
         subtitle="80 questions in 80 seconds - Can you make it?"

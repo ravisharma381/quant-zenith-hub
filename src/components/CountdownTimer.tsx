@@ -2,15 +2,20 @@ import React from "react";
 
 interface CountdownTimerProps {
   countdown: number;
+  totalDuration: number;
   color: string;
   title?: string;
   subtitle?: string;
 }
 
-const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title, subtitle }) => {
+const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, totalDuration, color, title, subtitle }) => {
   const radius = 80;
   const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
+  
+  // Calculate progress: ring should complete once over entire duration
+  const progress = countdown / totalDuration;
+  const strokeDashoffset = circumference * (1 - progress);
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
@@ -44,11 +49,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               strokeDasharray={circumference}
-              strokeDashoffset={0}
+              strokeDashoffset={strokeDashoffset}
               className="transition-all duration-1000 ease-linear"
-              style={{
-                animation: countdown > 0 ? 'countdown-shrink 1s linear infinite' : 'none'
-              }}
             />
           </svg>
           
@@ -57,22 +59,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ countdown, color, title
             className="absolute text-8xl font-bold"
             style={{ color }}
           >
-            {countdown || "GO!"}
+            {countdown}
           </div>
         </div>
         
         {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
-        
-        <style>{`
-          @keyframes countdown-shrink {
-            from {
-              stroke-dashoffset: 0;
-            }
-            to {
-              stroke-dashoffset: ${circumference};
-            }
-          }
-        `}</style>
       </div>
     </div>
   );
