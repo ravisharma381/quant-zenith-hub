@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Calendar, Clock, User, TrendingUp, Bookmark } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
+import blogAiMl from "@/assets/blog-ai-ml.png";
+import blogVolatility from "@/assets/blog-volatility.png";
+import blogBacktesting from "@/assets/blog-backtesting.png";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +20,8 @@ const Blogs = () => {
       publishDate: "2024-01-15",
       readTime: "8 min read",
       featured: true,
-      tags: ["AI", "Machine Learning", "Future"]
+      tags: ["AI", "Machine Learning", "Future"],
+      image: blogAiMl
     },
     {
       id: 2,
@@ -28,7 +31,8 @@ const Blogs = () => {
       publishDate: "2024-01-12",
       readTime: "12 min read",
       featured: false,
-      tags: ["Volatility", "Risk", "Markets"]
+      tags: ["Volatility", "Risk", "Markets"],
+      image: blogVolatility
     },
     {
       id: 3,
@@ -38,7 +42,8 @@ const Blogs = () => {
       publishDate: "2024-01-10",
       readTime: "15 min read",
       featured: true,
-      tags: ["Backtesting", "Trading", "Strategy"]
+      tags: ["Backtesting", "Trading", "Strategy"],
+      image: blogBacktesting
     }
   ];
 
@@ -78,7 +83,7 @@ const Blogs = () => {
                 }
               }}
             >
-              <div className="h-48 bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
+              <img src={post.image} alt={post.title} className="h-48 w-full object-cover rounded-t-lg" />
               <CardHeader>
                 <Badge variant="outline" className="text-xs w-fit mb-2">
                   {post.category}
