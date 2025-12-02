@@ -2,15 +2,29 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Clock } from "lucide-react";
 import blogAiMl from "@/assets/blog-ai-ml.png";
 import blogVolatility from "@/assets/blog-volatility.png";
 import blogBacktesting from "@/assets/blog-backtesting.png";
 
-const Blogs = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+const BlogImage = ({ src, alt }: { src: string; alt: string }) => {
+  const [loaded, setLoaded] = useState(false);
+  
+  return (
+    <div className="relative h-48 w-full">
+      {!loaded && <Skeleton className="absolute inset-0 rounded-t-lg" />}
+      <img 
+        src={src} 
+        alt={alt} 
+        className={`h-48 w-full object-cover rounded-t-lg transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
+  );
+};
 
+const Blogs = () => {
   const blogPosts = [
     {
       id: 1,
@@ -47,19 +61,6 @@ const Blogs = () => {
     }
   ];
 
-  const categories = ["All", "Technology", "Risk Management", "Algorithmic Trading", "Investment", "Cryptocurrency", "Portfolio Management"];
-
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const featuredPosts = filteredPosts.filter(post => post.featured);
-  const regularPosts = filteredPosts.filter(post => !post.featured);
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -76,14 +77,14 @@ const Blogs = () => {
           {blogPosts.map((post) => (
             <Card 
               key={post.id} 
-              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer flex flex-col"
+              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer flex flex-col h-full"
               onClick={() => {
                 if (post.id === 1) {
                   window.location.href = '/blogs/first';
                 }
               }}
             >
-              <img src={post.image} alt={post.title} className="h-48 w-full object-cover rounded-t-lg" />
+              <BlogImage src={post.image} alt={post.title} />
               <CardHeader>
                 <Badge variant="outline" className="text-xs w-fit mb-2">
                   {post.category}
@@ -92,7 +93,7 @@ const Blogs = () => {
                   {post.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex flex-col flex-grow">
                 <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
                   {post.excerpt}
                 </p>
@@ -113,18 +114,20 @@ const Blogs = () => {
                     {post.readTime}
                   </span>
                 </div>
-                <Button 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (post.id === 1) {
-                      window.location.href = '/blogs/first';
-                    }
-                  }}
-                >
-                  Read More
-                </Button>
+                <div className="mt-auto">
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (post.id === 1) {
+                        window.location.href = '/blogs/first';
+                      }
+                    }}
+                  >
+                    Read More
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
