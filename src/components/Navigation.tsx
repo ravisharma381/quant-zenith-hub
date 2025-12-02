@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -95,6 +95,18 @@ const Navigation = () => {
                 </div>
               </div>
             </div>
+
+            <Link
+              to="/contact"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                isActive("/contact")
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              Contact
+            </Link>
           </div>
 
           {/* Desktop Auth Buttons / User Avatar */}
@@ -242,6 +254,20 @@ const Navigation = () => {
                 <div>
                   <div className="font-medium text-foreground">All Courses</div>
                   <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
+                </div>
+              </Link>
+              
+              <Link 
+                to="/contact" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <Mail className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">Contact</div>
+                  <div className="text-sm text-muted-foreground">Get in touch with us</div>
                 </div>
               </Link>
               
