@@ -26,6 +26,7 @@ import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Billing from "./pages/Billing";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Playlists from "./pages/Playlists";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
             <Route path="/billing" element={<Layout><Billing /></Layout>} />
+            <Route path="/contact" element={<Layout><Contact /></Layout>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
