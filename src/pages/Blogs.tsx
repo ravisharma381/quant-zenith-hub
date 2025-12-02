@@ -39,36 +39,6 @@ const Blogs = () => {
       readTime: "15 min read",
       featured: true,
       tags: ["Backtesting", "Trading", "Strategy"]
-    },
-    {
-      id: 4,
-      title: "ESG Integration in Quantitative Investment Strategies",
-      excerpt: "How environmental, social, and governance factors are being incorporated into systematic investment approaches.",
-      category: "Investment",
-      publishDate: "2024-01-08",
-      readTime: "10 min read",
-      featured: false,
-      tags: ["ESG", "Investment", "Strategy"]
-    },
-    {
-      id: 5,
-      title: "Cryptocurrency Market Microstructure Analysis",
-      excerpt: "Examining the unique characteristics of crypto markets and their implications for quantitative strategies.",
-      category: "Cryptocurrency",
-      publishDate: "2024-01-05",
-      readTime: "11 min read",
-      featured: false,
-      tags: ["Crypto", "Microstructure", "Analysis"]
-    },
-    {
-      id: 6,
-      title: "Advanced Portfolio Optimization Techniques",
-      excerpt: "Moving beyond mean-variance optimization to explore robust and alternative portfolio construction methods.",
-      category: "Portfolio Management",
-      publishDate: "2024-01-03",
-      readTime: "14 min read",
-      featured: false,
-      tags: ["Portfolio", "Optimization", "Advanced"]
     }
   ];
 
@@ -96,27 +66,19 @@ const Blogs = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Blog</h1>
-          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            An all-in-one quant blog teaching quantitative finance concepts, featuring quant interview guides, and detailing the latest industry news.
-          </p>
-        </div>
-
         {/* All Blog Posts */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogPosts.map((post) => (
             <Card 
               key={post.id} 
-              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer"
+              className="bg-card hover:shadow-card transition-all duration-300 hover:scale-105 border-border cursor-pointer flex flex-col"
               onClick={() => {
                 if (post.id === 1) {
                   window.location.href = '/blogs/first';
                 }
               }}
             >
-              <div className="aspect-video bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
+              <div className="h-48 bg-gradient-to-br from-muted to-background rounded-t-lg"></div>
               <CardHeader>
                 <Badge variant="outline" className="text-xs w-fit mb-2">
                   {post.category}
