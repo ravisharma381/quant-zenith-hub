@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, Clock, Zap } from "lucide-react";
+import { ArrowLeft, Trophy, Clock, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
 import CountdownTimer from "@/components/CountdownTimer";
@@ -167,89 +166,60 @@ const Optiver80 = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="container mx-auto max-w-2xl">
-        {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-8">
-          <div className="justify-self-start">
-            <Button variant="ghost" onClick={() => navigate('/games')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <div className="px-4 md:px-8 py-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 text-foreground">
+            <Star className="w-5 h-5" />
+            <span className="font-medium">{score} points</span>
           </div>
-          <div 
-            className="justify-self-center text-2xl font-bold text-center"
-            style={{ color: themeColors.primary }}
-          >
-            {score}/80
-          </div>
-          <div className="justify-self-end flex items-center">
-            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span 
-              className={`${timeLeft <= 10 ? 'animate-pulse' : ''} font-mono text-lg`}
-              style={{ color: timeLeft <= 10 ? themeColors.primary : 'inherit' }}
-            >
-              {timeLeft}s
+          <div className="flex items-center gap-2 text-foreground">
+            <Clock className="w-5 h-5" />
+            <span className={`font-medium ${timeLeft <= 10 ? 'text-destructive animate-pulse' : ''}`}>
+              {timeLeft} seconds
             </span>
           </div>
-        </div>
-
-        {/* Progress */}
-        <div className="mb-8">
-          <div 
-            className="w-full h-2 rounded-full"
-            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
-          >
-            <div 
-              className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
-              style={{ 
-                width: `${(80 - timeLeft) / 80 * 100}%`,
-                backgroundColor: themeColors.primary
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-sm text-muted-foreground mt-2">
-            <span>Target: 60+ correct</span>
-            <span>Questions: {questionsAnswered}</span>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => window.location.reload()}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <RotateCcw className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button 
+              onClick={() => navigate('/games')}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <Undo2 className="w-5 h-5 text-muted-foreground" />
+            </button>
           </div>
         </div>
-
-        {/* Question */}
-        <div 
-          className="bg-card rounded-xl p-12 text-center border-2 transition-all duration-300"
-          style={{
-            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
-          }}
-        >
-          <div className="text-4xl font-bold text-foreground mb-8">
-            {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
-          </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              type="number"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-xl h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              style={{
-                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
-                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
-              }}
-              placeholder="Answer"
-              autoFocus
-            />
-            {(() => { const theme = getGameTheme(3); return (
-              <Button 
-                type="submit" 
-                className={`mx-auto px-8 ${theme.buttonStyles}`}
-                disabled={!userAnswer}
-              >
-                Submit
-              </Button>
-            )})()}
-          </form>
-        </div>
+      </div>
+      
+      {/* Separator */}
+      <div className="border-t border-border/50" />
+      
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center px-4">
+        <form onSubmit={handleSubmit} className="flex items-center gap-4">
+          <span className="text-5xl md:text-7xl font-light text-foreground tracking-wide">
+            {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} =
+          </span>
+          <Input
+            type="number"
+            value={userAnswer}
+            onChange={(e) => setUserAnswer(e.target.value)}
+            className="w-24 md:w-32 h-16 md:h-20 text-3xl md:text-4xl text-center bg-transparent border-2 border-muted-foreground/30 rounded-md [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-muted-foreground/50"
+            autoFocus
+          />
+        </form>
+      </div>
+      
+      {/* Footer */}
+      <div className="border-t border-border/50" />
+      <div className="px-4 py-4 text-center">
+        <span className="text-muted-foreground text-sm">OpenQuant Optiver 80 Game</span>
       </div>
     </div>
   );
