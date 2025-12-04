@@ -199,7 +199,7 @@ const Optiver80 = () => {
         <div className="border-t border-border/50" />
         
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center px-4 py-16 md:py-24">
+        <div className="flex-1 flex items-center justify-center px-4 py-12 md:py-16">
           <form onSubmit={handleSubmit} className="flex items-center gap-4">
             <span className="text-5xl md:text-7xl font-light text-foreground tracking-wide">
               {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} =
