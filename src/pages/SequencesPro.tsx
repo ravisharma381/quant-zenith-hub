@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ArrowLeft, Trophy, Clock, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
@@ -163,10 +162,10 @@ const SequencesPro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="px-4 md:px-8 py-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-card rounded-lg border border-border flex flex-col">
+        {/* Header */}
+        <div className="px-4 md:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-foreground">
             <Star className="w-5 h-5" />
             <span className="font-medium">{score} points</span>
@@ -190,32 +189,33 @@ const SequencesPro = () => {
             </button>
           </div>
         </div>
-      </div>
-      
-      {/* Separator */}
-      <div className="border-t border-border/50" />
-      
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="text-lg text-muted-foreground mb-6">What comes next?</div>
-        <form onSubmit={handleSubmit} className="flex items-center gap-4">
-          <span className="text-4xl md:text-6xl font-light text-foreground tracking-wide font-mono">
-            {currentSequence.sequence.join(', ')}, 
-          </span>
-          <Input
-            type="number"
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-            className="w-24 md:w-32 h-14 md:h-16 text-2xl md:text-3xl text-center bg-transparent border-2 border-muted-foreground/30 rounded-md [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-muted-foreground/50"
-            autoFocus
-          />
-        </form>
-      </div>
-      
-      {/* Footer */}
-      <div className="border-t border-border/50" />
-      <div className="px-4 py-4 text-center">
-        <span className="text-muted-foreground text-sm">OpenQuant Sequences Game</span>
+        
+        {/* Separator */}
+        <div className="border-t border-border/50" />
+        
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-24">
+          <div className="text-lg text-muted-foreground mb-6">What comes next?</div>
+          <form onSubmit={handleSubmit} className="flex items-center gap-4">
+            <span className="text-4xl md:text-6xl font-light text-foreground tracking-wide font-mono">
+              {currentSequence.sequence.join(', ')}, 
+            </span>
+            <input
+              type="number"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              className="w-24 md:w-32 h-14 md:h-16 text-2xl md:text-3xl text-center bg-transparent rounded-md [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none"
+              style={{ border: `2px solid ${themeColors.primary}` }}
+              autoFocus
+            />
+          </form>
+        </div>
+        
+        {/* Footer */}
+        <div className="border-t border-border/50" />
+        <div className="px-4 py-4 text-center">
+          <span className="text-muted-foreground text-sm">Sequences Pro</span>
+        </div>
       </div>
     </div>
   );
