@@ -162,7 +162,7 @@ const SequencesPro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex justify-center pt-4 px-4">
       <div className="w-full max-w-4xl bg-card rounded-lg border border-border flex flex-col">
         {/* Header */}
         <div className="px-4 md:px-6 py-4 flex items-center justify-between">
