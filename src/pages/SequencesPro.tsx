@@ -195,7 +195,7 @@ const SequencesPro = () => {
         <div className="border-t border-border/50" />
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 md:py-8">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-16">
           <div className="text-lg text-muted-foreground mb-6">What comes next?</div>
           <form onSubmit={handleSubmit} className="flex items-center gap-4">
             <span className="text-4xl md:text-6xl font-light text-foreground tracking-wide font-mono">
