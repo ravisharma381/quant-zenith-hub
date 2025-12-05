@@ -143,7 +143,8 @@ const SequencesPro = () => {
           <div className="space-y-4">
             <Button 
               onClick={() => window.location.reload()} 
-              className="w-full"
+              variant="clean"
+              className="w-full h-10 px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"
               style={{ 
                 backgroundColor: themeColors.primary,
                 color: themeColors.primaryForeground
