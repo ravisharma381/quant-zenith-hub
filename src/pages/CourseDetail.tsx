@@ -132,7 +132,7 @@ const CourseDetail = () => {
                 className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
                 onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
               >
-                Enroll Now
+                Get Premium
               </Button>
             </div>
           </div>
@@ -172,7 +172,7 @@ const CourseDetail = () => {
                   className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
                   onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
                 >
-                  Enroll Me Now
+                  Get Premium
                 </Button>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center">
