@@ -151,7 +151,7 @@ const Problems = () => {
           >
             {page}
             {isPageLocked(page) && (
-              <Lock className="absolute -top-1 -right-1 h-3 w-3 text-muted-foreground" />
+              <Lock className="absolute -top-1 -right-1 h-3 w-3 text-purple-500" />
             )}
           </PaginationLink>
         </PaginationItem>
@@ -175,7 +175,7 @@ const Problems = () => {
           className="relative opacity-70"
         >
           {TOTAL_PAGES}
-          <Lock className="absolute -top-1 -right-1 h-3 w-3 text-muted-foreground" />
+          <Lock className="absolute -top-1 -right-1 h-3 w-3 text-purple-500" />
         </PaginationLink>
       </PaginationItem>
     );
@@ -328,7 +328,7 @@ const Problems = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-primary" />
+              <Lock className="h-5 w-5 text-purple-500" />
               Upgrade to Premium
             </DialogTitle>
             <DialogDescription>
