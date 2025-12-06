@@ -130,7 +130,7 @@ const CourseDetail = () => {
               </div>
               <Button 
                 className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
-                onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
+                onClick={() => navigate("/premium")}
               >
                 Get Premium
               </Button>
@@ -170,7 +170,7 @@ const CourseDetail = () => {
                   ref={enrollButtonRef}
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                  onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
+                  onClick={() => navigate("/premium")}
                 >
                   Get Premium
                 </Button>

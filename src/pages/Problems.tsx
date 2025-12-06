@@ -339,7 +339,7 @@ const Problems = () => {
             <Button variant="outline" onClick={() => setShowUpgradeDialog(false)}>
               Maybe Later
             </Button>
-            <Button onClick={() => navigate('/billing')}>
+            <Button onClick={() => navigate('/premium')}>
               Upgrade Now
             </Button>
           </div>

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Navigation = () => {
@@ -106,6 +106,18 @@ const Navigation = () => {
               )}
             >
               Contact
+            </Link>
+
+            <Link
+              to="/premium"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-purple-300",
+                isActive("/premium")
+                  ? "text-purple-400"
+                  : "text-purple-400"
+              )}
+            >
+              Premium
             </Link>
           </div>
 
@@ -268,6 +280,20 @@ const Navigation = () => {
                 <div>
                   <div className="font-medium text-foreground">Contact</div>
                   <div className="text-sm text-muted-foreground">Get in touch with us</div>
+                </div>
+              </Link>
+
+              <Link 
+                to="/premium" 
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="mt-1">
+                  <Crown className="w-5 h-5 text-purple-400 group-hover/item:text-purple-300" />
+                </div>
+                <div>
+                  <div className="font-medium text-purple-400">Premium</div>
+                  <div className="text-sm text-muted-foreground">Unlock all features</div>
                 </div>
               </Link>
               
