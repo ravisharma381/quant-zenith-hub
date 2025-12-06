@@ -4,6 +4,24 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Lock } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
@@ -15,51 +33,48 @@ const Problems = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
-  const problems = [
-    {
-      id: 1,
-      title: "Black-Scholes Options Pricing",
-      difficulty: 5,
-      topic: "Derivatives",
-      askedIn: [janeStreetLogo, citadelLogo]
-    },
-    {
-      id: 2,
-      title: "Portfolio Risk Calculation",
-      difficulty: 8,
-      topic: "Risk Management",
-      askedIn: [citadelLogo, drivLogo, companyLogo]
-    },
-    {
-      id: 3,
-      title: "Time Series Analysis",
-      difficulty: 2,
-      topic: "Statistics",
-      askedIn: [janeStreetLogo]
-    },
-    {
-      id: 4,
-      title: "Monte Carlo Simulation",
-      difficulty: 6,
-      topic: "Quantitative Methods",
-      askedIn: [citadelLogo, drivLogo]
-    },
-    {
-      id: 5,
-      title: "CAPM Beta Calculation",
-      difficulty: 3,
-      topic: "Asset Pricing",
-      askedIn: [janeStreetLogo, citadelLogo, drivLogo]
-    },
-    {
-      id: 6,
-      title: "Yield Curve Construction",
-      difficulty: 9,
-      topic: "Fixed Income",
-      askedIn: [companyLogo]
-    }
-  ];
+  const TOTAL_PAGES = 60;
+  const PROBLEMS_PER_PAGE = 20;
+  const FREE_PAGES = 3; // Pages 1-3 are free, 4-60 are locked
+
+  // Generate 1200 problems (60 pages × 20 problems each)
+  const allProblems = Array.from({ length: TOTAL_PAGES * PROBLEMS_PER_PAGE }, (_, i) => {
+    const topics = ["Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
+    const logos = [janeStreetLogo, citadelLogo, drivLogo, companyLogo];
+    const problemTitles = [
+      "Black-Scholes Options Pricing",
+      "Portfolio Risk Calculation",
+      "Time Series Analysis",
+      "Monte Carlo Simulation",
+      "CAPM Beta Calculation",
+      "Yield Curve Construction",
+      "VaR Estimation",
+      "Greeks Calculation",
+      "Credit Risk Modeling",
+      "Volatility Surface Construction",
+      "Interest Rate Swap Pricing",
+      "FX Forward Pricing",
+      "Bond Duration Analysis",
+      "Sharpe Ratio Optimization",
+      "Factor Model Construction",
+      "Covariance Matrix Estimation",
+      "Exotic Options Pricing",
+      "Stochastic Volatility Models",
+      "Jump Diffusion Models",
+      "Copula Methods"
+    ];
+    
+    return {
+      id: i + 1,
+      title: problemTitles[i % problemTitles.length],
+      difficulty: (i % 10) + 1,
+      topic: topics[i % topics.length],
+      askedIn: logos.slice(0, (i % 3) + 1)
+    };
+  });
 
   const topics = ["All", "Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
   const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"];
@@ -94,13 +109,79 @@ const Problems = () => {
     return 'Company';
   };
 
-  const filteredProblems = problems.filter(problem => {
+  // Filter all problems first
+  const filteredProblems = allProblems.filter(problem => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
     const matchesDifficulty = selectedDifficulty === "All" || 
       `Level ${problem.difficulty}` === selectedDifficulty;
     return matchesSearch && matchesTopic && matchesDifficulty;
   });
+
+  // Get problems for current page
+  const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
+  const currentProblems = filteredProblems.slice(startIndex, startIndex + PROBLEMS_PER_PAGE);
+
+  const handlePageClick = (page: number) => {
+    if (page > FREE_PAGES) {
+      setShowUpgradeDialog(true);
+    } else {
+      setCurrentPage(page);
+    }
+  };
+
+  const isPageLocked = (page: number) => page > FREE_PAGES;
+
+  // Generate pagination items
+  const renderPaginationItems = () => {
+    const items = [];
+    const showPages = [1, 2, 3, 4, 5];
+    
+    showPages.forEach((page) => {
+      items.push(
+        <PaginationItem key={page}>
+          <PaginationLink
+            href="#"
+            isActive={currentPage === page}
+            onClick={(e) => {
+              e.preventDefault();
+              handlePageClick(page);
+            }}
+            className={`relative ${isPageLocked(page) ? 'opacity-70' : ''}`}
+          >
+            {page}
+            {isPageLocked(page) && (
+              <Lock className="absolute -top-1 -right-1 h-3 w-3 text-muted-foreground" />
+            )}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    });
+
+    items.push(
+      <PaginationItem key="ellipsis">
+        <PaginationEllipsis />
+      </PaginationItem>
+    );
+
+    items.push(
+      <PaginationItem key={TOTAL_PAGES}>
+        <PaginationLink
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            handlePageClick(TOTAL_PAGES);
+          }}
+          className="relative opacity-70"
+        >
+          {TOTAL_PAGES}
+          <Lock className="absolute -top-1 -right-1 h-3 w-3 text-muted-foreground" />
+        </PaginationLink>
+      </PaginationItem>
+    );
+
+    return items;
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -157,7 +238,7 @@ const Problems = () => {
           
           {/* Table Body */}
           <div className="divide-y divide-border">
-            {filteredProblems.map((problem) => (
+            {currentProblems.map((problem) => (
               <div 
                 key={problem.id} 
                 className="p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
@@ -208,7 +289,62 @@ const Problems = () => {
             ))}
           </div>
         </div>
+
+        {/* Pagination */}
+        <div className="mt-6">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) handlePageClick(currentPage - 1);
+                  }}
+                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+              {renderPaginationItems()}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < FREE_PAGES) {
+                      handlePageClick(currentPage + 1);
+                    } else {
+                      setShowUpgradeDialog(true);
+                    }
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
+
+      {/* Upgrade Dialog */}
+      <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-primary" />
+              Upgrade to Premium
+            </DialogTitle>
+            <DialogDescription>
+              This content is locked. Upgrade to Premium to access all 1200+ problems and unlock your full potential in quant finance interviews.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-3 mt-4">
+            <Button variant="outline" onClick={() => setShowUpgradeDialog(false)}>
+              Maybe Later
+            </Button>
+            <Button onClick={() => navigate('/billing')}>
+              Upgrade Now
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
