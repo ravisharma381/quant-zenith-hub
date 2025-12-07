@@ -248,7 +248,10 @@ const Problems = () => {
                   <div className="col-span-1 flex items-center">
                     <span className="text-muted-foreground">{problem.id}</span>
                   </div>
-                  <div className="col-span-4 md:col-span-4 flex items-center">
+                  <div className="col-span-4 md:col-span-4 flex items-center gap-2">
+                    {problem.id === 60 && (
+                      <Lock className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                    )}
                     <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                       {problem.title}
                     </h3>
