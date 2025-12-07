@@ -53,48 +53,17 @@ const Navigation = () => {
               </Link>
             ))}
             
-            {/* Courses Dropdown - Hover based */}
-            <div className="relative group">
-              <span className={cn(
-                "text-base font-medium transition-colors hover:text-primary flex items-center gap-1 cursor-default",
-                (isActive("/courses") || isActive("/my-courses"))
+            <Link
+              to="/courses"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                isActive("/courses")
                   ? "text-primary"
                   : "text-muted-foreground"
-              )}>
-                Courses
-                <ChevronDown className="w-3 h-3" />
-              </span>
-              
-              {/* Dropdown Content with screenshot styling */}
-              <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
-                  <Link 
-                    to="/my-courses" 
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">My Courses</div>
-                      <div className="text-sm text-muted-foreground">Continue your learning journey</div>
-                    </div>
-                  </Link>
-                  <Link 
-                    to="/courses" 
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <BookOpen className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">All Courses</div>
-                      <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
+              )}
+            >
+              Courses
+            </Link>
 
             <Link
               to="/contact"
