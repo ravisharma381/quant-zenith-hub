@@ -3,39 +3,41 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Lightbulb, Lock, Gamepad2, Tag, BookOpen, Sparkles } from "lucide-react";
+import { Crown, Lightbulb, Lock, Gamepad2, Tag, BookOpen, Sparkles, Check } from "lucide-react";
 
 const Premium = () => {
   const plans = [
     {
-      name: "Monthly",
-      description: "Enjoy full access to all premium features with the flexibility of monthly billing. Ideal for short-term use or trying things out. Billing occurs monthly.",
-      originalPrice: "$49.99",
-      price: "$34.99",
-      period: "/month",
-      buttonColor: "bg-muted hover:bg-muted/80",
-      borderColor: "border-purple-500/50",
-      featured: false,
-    },
-    {
-      name: "Recruiting",
-      description: "Perfect for students and job-seekers focused on intensive prep. Includes 4 months of full access. Billing occurs every 4 months.",
-      originalPrice: "$39.99",
-      price: "$29.99",
-      period: "/month",
+      name: "Yearly",
+      description: "Our most popular plan grants access to all premium features.",
+      originalPrice: "$360",
+      price: "$199",
+      period: "/year",
       buttonColor: "bg-purple-600 hover:bg-purple-700",
       borderColor: "border-purple-500",
-      featured: false,
+      featured: true,
+      features: [
+        { text: "Everything in the monthly plan", bold: "monthly plan" },
+        { text: "Save > 45% compared to monthly", bold: "Save > 45%" },
+        { text: "24/7 Support with priority feature requests from the dev team", bold: "24/7 Support" },
+        { text: "Cheaper than a nice lunch 🍔", bold: null },
+      ],
     },
     {
-      name: "Annual",
-      description: "Enjoy uninterrupted access to all premium features for a full year—our best value plan lets you save 40% compared to monthly option. Billing occurs annually.",
-      originalPrice: "$29.99",
-      price: "$19.99",
-      period: "/month",
-      buttonColor: "bg-orange-500 hover:bg-orange-600",
-      borderColor: "border-orange-500",
-      featured: true,
+      name: "Lifetime",
+      description: "Get lifetime access to all premium features with a one-time payment.",
+      originalPrice: "$599",
+      price: "$399",
+      period: " one-time",
+      buttonColor: "bg-foreground hover:bg-foreground/90",
+      borderColor: "border-border",
+      featured: false,
+      features: [
+        { text: "1200+ Quant Interview Questions", bold: "1200+" },
+        { text: "Company playlists for top quant firms", bold: "top quant firms" },
+        { text: "Detailed solutions to every question", bold: "solutions" },
+        { text: "Lifetime updates included", bold: "Lifetime updates" },
+      ],
     },
   ];
 
@@ -113,37 +115,56 @@ const Premium = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden`}
+              className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl`}
             >
-              {plan.featured && (
-                <Badge className="absolute top-4 right-4 bg-orange-500 text-white border-0">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Best Value
-                </Badge>
-              )}
-              <CardContent className="p-6">
-                <h3 className={`text-3xl font-bold mb-4 ${plan.featured ? 'text-orange-400' : 'text-purple-400'}`}>
-                  {plan.name}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-6 min-h-[100px]">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <h3 className={`text-3xl font-bold ${plan.featured ? 'text-foreground' : 'text-foreground'}`}>
+                    {plan.name}
+                  </h3>
+                  {plan.featured && (
+                    <Badge className="bg-purple-100 text-purple-700 border-0 text-xs px-2 py-1">
+                      🎉 Most Popular
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-muted-foreground text-sm mb-6">
                   {plan.description}
                 </p>
                 <div className="mb-6">
-                  <span className="text-muted-foreground line-through text-sm">{plan.originalPrice}/month</span>
+                  <span className="text-muted-foreground line-through text-sm">{plan.originalPrice}</span>
                   <div className="flex items-baseline">
-                    <span className="text-3xl font-bold text-foreground">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
+                    <span className="text-4xl font-bold text-foreground">{plan.price}</span>
+                    <span className="text-muted-foreground ml-1">{plan.period}</span>
                   </div>
                 </div>
                 <Button 
-                  className={`w-full ${plan.buttonColor} text-foreground font-semibold`}
+                  className={`w-full ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg mb-6`}
                 >
-                  Subscribe Now
+                  Get Started
                 </Button>
+                <div className="space-y-3">
+                  {plan.features.map((feature, featureIndex) => (
+                    <div key={featureIndex} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground">
+                        {feature.bold ? (
+                          <>
+                            {feature.text.split(feature.bold)[0]}
+                            <span className="font-semibold text-foreground">{feature.bold}</span>
+                            {feature.text.split(feature.bold)[1]}
+                          </>
+                        ) : (
+                          feature.text
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           ))}
