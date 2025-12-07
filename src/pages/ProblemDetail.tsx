@@ -176,35 +176,54 @@ const ProblemDetail = () => {
 
           <TabsContent value="solution" className="space-y-6">
             <div>
-              <h1 className="text-2xl font-bold text-foreground mb-4">{problem.title}</h1>
-              <Accordion type="single" collapsible className="w-full space-y-4">
-                <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
-                    Hint 1
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white leading-relaxed">
-                    {problem.hint1}
-                  </AccordionContent>
-                </AccordionItem>
-                
-                <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
-                    Hint 2
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white leading-relaxed">
-                    {problem.hint2}
-                  </AccordionContent>
-                </AccordionItem>
-                
-                <AccordionItem value="solution" className="border border-border rounded-lg px-4">
-                  <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
-                    Solution
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
-                    {problem.solution}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                {problem.title}
+                {isPremiumProblem && <Lock className="h-5 w-5 text-purple-500" />}
+              </h1>
+              
+              {isPremiumProblem ? (
+                <div className="bg-card border border-border rounded-lg p-8 text-center">
+                  <h2 className="text-2xl font-bold text-foreground mb-4">Unlock Premium Access</h2>
+                  <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+                    Upgrade to Premium to gain access to this exclusive content. With Premium, you'll delve deeper into the knowledge base and enjoy a seamless learning experience. Upgrade now to expand your horizons!
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/premium')}
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8"
+                  >
+                    Upgrade to Premium
+                  </Button>
+                </div>
+              ) : (
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  <AccordionItem value="hint1" className="border border-border rounded-lg px-4">
+                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                      Hint 1
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white leading-relaxed">
+                      {problem.hint1}
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="hint2" className="border border-border rounded-lg px-4">
+                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                      Hint 2
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white leading-relaxed">
+                      {problem.hint2}
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="solution" className="border border-border rounded-lg px-4">
+                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                      Solution
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
+                      {problem.solution}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              )}
             </div>
           </TabsContent>
         </Tabs>
