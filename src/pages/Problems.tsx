@@ -80,7 +80,7 @@ const Problems = () => {
               "@type": "ListItem",
               position: index + 1,
               name: p.title,
-              url: `https://yourdomain.com/problems/${p.id}`
+              url: `https://qunatprof.org/problems/${p.id}`
             }))
           })}
         </script>

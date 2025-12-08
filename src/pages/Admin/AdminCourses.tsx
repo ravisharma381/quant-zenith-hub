@@ -179,8 +179,14 @@ const AdminCourses: React.FC = () => {
                                             className="w-full h-40 object-cover rounded-t-md"
                                         />
                                     ) : (
-                                        <div className="h-40 bg-muted flex items-center justify-center text-muted-foreground">
-                                            No Thumbnail
+                                        <div className={`w-full h-40 bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>
+                                            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                                    <span className="text-white font-bold text-lg">
+                                                        {course.author.split(' ').map(n => n[0]).join('')}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
                                 </CardHeader>

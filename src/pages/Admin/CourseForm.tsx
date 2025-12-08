@@ -24,6 +24,7 @@ export interface CourseFormData {
     isPublished: boolean;
     thumbnailURL?: string;
     isComingSoon?: boolean;
+    isProblemType: boolean;
 }
 
 interface CourseFormProps {
@@ -55,7 +56,8 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
             gradient: "from-blue-500 to-purple-500",
             isPublished: false,
             thumbnailURL: "",
-            isComingSoon: false
+            isComingSoon: false,
+            isProblemType: false
         }
     );
 
@@ -300,10 +302,17 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
                 />
             </div>
             <div className="flex items-center justify-between pt-2">
-                <Label>IS coming Soon (make sure Publish is true)</Label>
+                <Label>Is coming Soon (make sure Publish is true)</Label>
                 <Switch
                     checked={formData.isComingSoon}
                     onCheckedChange={(checked) => setFormData((p) => ({ ...p, isComingSoon: checked }))}
+                />
+            </div>
+            <div className="flex items-center justify-between pt-2">
+                <Label>Is Problem Type</Label>
+                <Switch
+                    checked={formData.isProblemType}
+                    onCheckedChange={(checked) => setFormData((p) => ({ ...p, isProblemType: checked }))}
                 />
             </div>
 

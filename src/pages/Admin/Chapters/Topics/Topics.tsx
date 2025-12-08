@@ -13,20 +13,15 @@ import {
     startAt,
     limit,
     startAfter,
+    getDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, X, PlusCircle, ArrowLeft } from "lucide-react";
+import { Pencil, X, PlusCircle, ArrowLeft, Lock, Unlock } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import TopicModal from "./TopicModal";
 import { Input } from "@/components/ui/input";
-
-interface Playlist {
-    id: string;
-    heading: string;
-    subheading: string;
-}
 
 export interface TopicFormData {
     id?: string;
@@ -47,7 +42,8 @@ export interface TopicFormData {
     level?: string;
     playlistIds?: string[];
     askedIn?: { name: string; logoURL: string }[];
-    isPublished: boolean;
+    isPublished?: boolean;
+    isPrivate: boolean;
 }
 
 const AdminTopics: React.FC = () => {
@@ -62,6 +58,7 @@ const AdminTopics: React.FC = () => {
     const [firstDoc, setFirstDoc] = useState<any>(null);
     const [totalCount, setTotalCount] = useState(0);
     const [editingTopic, setEditingTopic] = useState<TopicFormData | null>(null);
+    const [chapterTitle, setChapterTitle] = useState("");
     const { toast } = useToast();
     const navigate = useNavigate();
     // ✅ Fetch topics
@@ -132,6 +129,19 @@ const AdminTopics: React.FC = () => {
 
         fetchTopics();
     }, [courseId, chapterId, search]);
+
+    useEffect(() => {
+        const fetchChapter = async () => {
+            if (!chapterId) return;
+
+            const snap = await getDoc(doc(db, "chapters", chapterId));
+            if (snap.exists()) {
+                setChapterTitle(snap.data().title || "");
+            }
+        };
+
+        fetchChapter();
+    }, [chapterId]);
 
     const nextPage = async () => {
         if (!lastDoc) return;
@@ -278,6 +288,8 @@ const AdminTopics: React.FC = () => {
                             <p className="text-sm text-muted-foreground capitalize">
                                 {topic.type}
                             </p>
+                            {topic.isPrivate ? <Lock className="w-4 h-4 text-red-500" /> :
+                                <Unlock className="w-4 h-4 text-green-400" />}
 
                             <div className="flex justify-end gap-2 mt-4">
                                 <Button
@@ -326,6 +338,7 @@ const AdminTopics: React.FC = () => {
                 }}
                 onSubmit={handleSave}
                 initialData={editingTopic || undefined}
+                chapterTitle={chapterTitle}
             />
         </div>
     );

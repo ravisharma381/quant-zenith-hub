@@ -24,6 +24,7 @@ import { Maximize2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { collection, endAt, getDocs, limit, orderBy, query, startAt, where } from "firebase/firestore";
 import { db } from "@/firebase/config";
+import { Switch } from "@/components/ui/switch";
 
 export interface TopicFormData {
     id?: string;
@@ -45,6 +46,7 @@ export interface TopicFormData {
     playlistIds?: string[];
     askedIn?: { name: string; logoURL: string }[];
     isPublished?: boolean;
+    isPrivate: boolean;
 }
 
 interface Playlist { id: string; heading: string; subheading: string; }
@@ -54,12 +56,13 @@ interface TopicModalProps {
     onOpenChange: (open: boolean) => void;
     onSubmit: (data: TopicFormData) => void;
     initialData?: TopicFormData;
+    chapterTitle: string;
 }
 
-const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData }) => {
+const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData, chapterTitle }) => {
     const { courseId, chapterId } = useParams<{ courseId: string; chapterId: string }>();
     const [title, setTitle] = useState("");
-    const [type, setType] = useState<"layout" | "question" | "playlist">("layout");
+    const [type, setType] = useState<"layout" | "question" | "playlist">("question");
     const [order, setOrder] = useState<number>(0);
     const [level, setLevel] = useState("1");
     const [jsonContent, setJsonContent] = useState("");
@@ -74,6 +77,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
     const [playlistOptions, setPlaylistOptions] = useState<{ label: string; value: string }[]>([]);
+    const [isPrivate, setIsPrivate] = useState<boolean>(true);
 
     const { toast } = useToast();
 
@@ -94,6 +98,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setSolution(initialData.solution ?? "");
             setPlaylistIds(initialData.playlistIds ?? []);
             setAskedIn(initialData.askedIn ?? []);
+            setIsPrivate(initialData.isPrivate ?? true);
         } else {
             setTitle("");
             setType("layout");
@@ -110,6 +115,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setSolution("");
             setPlaylistIds([]);
             setAskedIn([]);
+            setIsPrivate(true);
         }
     }, [initialData]);
 
@@ -160,8 +166,6 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             window.location.href = builderUrl;
             return;
         }
-        // We can't reliably set location.state for new window; use postMessage
-        // send json after 500ms to allow the new window to set up
         setTimeout(() => {
             newWindow.postMessage({ __prefillJSON: jsonContent || "" }, window.location.origin);
         }, 600);
@@ -221,6 +225,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                 solution,
                 level,
                 askedIn: askedIn.filter((a) => a.name.trim() && a.logoURL.trim()),
+                isPrivate,
+                topic: chapterTitle,
             }),
             ...(type === "playlist" && { playlistIds }),
             isPublished: initialData?.isPublished ?? false,
@@ -287,6 +293,17 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
 
                     {type === "question" && (
                         <>
+                            <div>
+                                <Label>Topic</Label>
+                                <Input value={chapterTitle} disabled />
+                            </div>
+                            <div className="flex items-center gap-8 pt-2">
+                                <Label>is Private</Label>
+                                <Switch
+                                    checked={isPrivate}
+                                    onCheckedChange={(checked) => setIsPrivate(checked)}
+                                />
+                            </div>
                             <div>
                                 <Label>Question</Label>
                                 <Textarea rows={3} value={question} onChange={(e) => setQuestion(e.target.value)} />
