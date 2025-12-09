@@ -184,6 +184,9 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
 
                 {/* PROBLEM TAB */}
                 <TabsContent value="problem" className="space-y-6">
+                    <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                        {topic.title}
+                    </h1>
 
                     {/* Problem description */}
                     <div className="prose prose-invert max-w-none">
@@ -236,6 +239,9 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
 
                 {/* SOLUTION TAB */}
                 <TabsContent value="solution" className="space-y-6">
+                    <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                        {topic.title}
+                    </h1>
                     <Accordion type="single" collapsible className="w-full space-y-4">
 
                         { /* Render up to 5 hints, same style as before */}

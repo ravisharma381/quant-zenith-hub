@@ -10,8 +10,7 @@ const problems = [
         topic: "Derivatives",
         difficulty: 5,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Citadel", logoURL: citadelLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `Varun has 4 fair coins. He flips all 4 at once and notes the parity of each. After seeing the outcomes, he may turn over (rather than flip) any pair of coins. Note that this means a heads becomes a tails and vice versa. Varun may not turn over a single coin without turning over another. He can iterate this process as many times as he would like. If Varun plays to maximize his expected number of heads, find the expected number of heads he will have.`,
@@ -41,7 +40,7 @@ Call price = S·N(d1) – K·e^{-rT}·N(d2)
         topic: "Risk Management",
         difficulty: 8,
         askedIn: [
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Driv", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' }
         ],
 
         question: `A portfolio consists of two assets:
@@ -67,8 +66,7 @@ Compute the portfolio volatility.`,
         topic: "Statistics",
         difficulty: 2,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `Given an AR(1) process: Xₜ = 0.6Xₜ₋₁ + εₜ.
@@ -88,8 +86,6 @@ Is this process mean reverting?`,
         topic: "Quantitative Methods",
         difficulty: 6,
         askedIn: [
-            { name: "Citadel", logoURL: citadelLogo },
-            { name: "Driv", logoURL: drivLogo }
         ],
 
         question: `Simulate the payoff of a European call option with:
@@ -113,8 +109,7 @@ S_T = 50 · exp( (0.05 − 0.25²/2) + 0.25Z ).`
         topic: "Asset Pricing",
         difficulty: 3,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Citadel", logoURL: citadelLogo },
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `You observe the following:
@@ -136,8 +131,7 @@ Compute the CAPM beta of the asset.`,
         topic: "Fixed Income",
         difficulty: 9,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `You are given bond yields for maturities 1Y, 2Y, and 3Y.
@@ -160,8 +154,6 @@ Describe how to build a zero-coupon yield curve using bootstrapping.`,
         topic: "Derivatives",
         difficulty: 7,
         askedIn: [
-            { name: "Citadel", logoURL: citadelLogo },
-            { name: "Driv", logoURL: drivLogo }
         ],
 
         question: `In the Heston model, which parameters determine volatility mean-reversion?`,
@@ -181,8 +173,7 @@ Long-run variance = θ`
         topic: "Fixed Income",
         difficulty: 6,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `When performing PCA on yield curve changes, what do the first three components usually represent?`,
@@ -203,9 +194,7 @@ Long-run variance = θ`
         topic: "Probability",
         difficulty: 8,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Citadel", logoURL: citadelLogo },
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `For standard Brownian motion Wₜ, compute the probability that it hits level +1 before level -1.`,
@@ -224,9 +213,7 @@ Long-run variance = θ`
         topic: "Optimization",
         difficulty: 7,
         askedIn: [
-            { name: "Jane Street", logoURL: janeStreetLogo },
-            { name: "Citadel", logoURL: citadelLogo },
-            { name: "Driv", logoURL: drivLogo }
+            { name: "Jane Street", logoURL: 'https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/jane-street-logo.png?alt=media&token=ee2e487c-6fbd-4269-9899-32cbadc9b0bb' },
         ],
 
         question: `You want to minimize portfolio variance subject to:

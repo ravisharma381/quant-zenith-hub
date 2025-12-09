@@ -65,6 +65,16 @@
     @apply bg-background text-foreground font-sans;
   }
 
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+.no-spinner {
+  -moz-appearance: textfield;
+}
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
