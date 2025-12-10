@@ -15,9 +15,7 @@ import Sokoban from "./pages/Sokoban";
 import ProbabilityMaster from "./pages/ProbabilityMaster";
 import MemorySequences from "./pages/MemorySequences";
 import Courses from "./pages/Courses";
-import MyCourses from "./pages/MyCourses";
 import CourseDetail from "./pages/CourseDetail";
-import CourseCheckout from "./pages/CourseCheckout";
 import MLCourseDetail from "./pages/MLCourseDetail";
 import MLCourseEnroll from "./pages/MLCourseEnroll";
 import Blogs from "./pages/Blogs";
@@ -33,6 +31,7 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import AuthProvider from "./context/AuthContext";
 import AdminCourses from "./pages/Admin/AdminCourses";
 import AdminRoute from "./pages/Admin/AdminRoute";
+import SuperAdminRoute from "./pages/Admin/SuperAdminRoute";
 import AdminTopics from "./pages/Admin/Chapters/Topics/Topics";
 import AdminBuilder from "./pages/Admin/Chapters/Topics/Builder";
 import AdminPlaylists from "./pages/Admin/Playlists/AdminPlaylists";
@@ -43,6 +42,7 @@ import ContactUs from "./Contact";
 import Premium from "./pages/Premium";
 import AdminPricing from "./pages/Admin/AdminPricing";
 import PremiumCheckout from "./pages/PremiumCheckout";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 const App = () => (
   <HelmetProvider>
@@ -75,6 +75,14 @@ const App = () => (
                   </ProtectedRoute>
                 </Layout>}
               />
+              <Route path="/admin"
+                element={
+                  <Layout>
+                    <SuperAdminRoute>
+                      <AdminDashboard />
+                    </SuperAdminRoute>
+                  </Layout>}
+              />
               <Route path="/admin/courses"
                 element={
                   <Layout>
@@ -94,9 +102,9 @@ const App = () => (
               <Route path="/admin/pricing"
                 element={
                   <Layout>
-                    <AdminRoute>
+                    <SuperAdminRoute>
                       <AdminPricing />
-                    </AdminRoute>
+                    </SuperAdminRoute>
                   </Layout>}
               />
               <Route path="/admin/courses/:courseId"

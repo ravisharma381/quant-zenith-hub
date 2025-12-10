@@ -78,12 +78,19 @@ function computeExpiryTimestamp(
   purchasedAt: admin.firestore.Timestamp,
   planType: string
 ): string | null {
-  const ms = purchasedAt.toDate().getTime();
-  if (planType === "Monthly")
-    return new Date(ms + 30 * 24 * 60 * 60 * 1000).toISOString();
-  if (planType === "Yearly")
-    return new Date(ms + 365 * 24 * 60 * 60 * 1000).toISOString();
-  return null;
+  const date = purchasedAt.toDate(); // JS Date object
+
+  const expiry = new Date(date); // Clone date
+
+  if (planType === "Monthly") {
+    expiry.setMonth(expiry.getMonth() + 1);
+  } else if (planType === "Yearly") {
+    expiry.setFullYear(expiry.getFullYear() + 1);
+  } else {
+    return null; // Lifetime or no-expiry
+  }
+
+  return expiry.toISOString();
 }
 
 // -------------------- PAYPAL HELPERS --------------------

@@ -7,7 +7,7 @@ interface AdminRouteProps {
     children: React.ReactNode;
 }
 
-const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
+const SuperAdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     const { user, userProfile, loading } = useAuth();
 
     if (loading) {
@@ -22,11 +22,11 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
         return <Navigate to="/login" replace />;
     }
 
-    if (!['admin', 'superAdmin'].includes(userProfile?.role)) {
-        return <Navigate to="/" replace />;
+    if (!['superAdmin'].includes(userProfile?.role)) {
+        return <Navigate to="/admin/courses" replace />;
     }
 
     return <>{children}</>;
 };
 
-export default AdminRoute;
+export default SuperAdminRoute;

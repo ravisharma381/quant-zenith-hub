@@ -19,7 +19,7 @@ interface UserProfile {
     email: string;
     photoURL?: string;
     provider: string;
-    role: "user" | "admin";
+    role: "user" | "admin" | "superAdmin";
     createdAt?: any;
     lastLoginAt?: any;
     isPremium: boolean;

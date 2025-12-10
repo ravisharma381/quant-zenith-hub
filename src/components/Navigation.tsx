@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -99,12 +99,16 @@ const Navigation = () => {
           {/* Desktop Auth Buttons / User Avatar */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Admin */}
-            {userProfile?.role === "admin" && <div className="relative group">
+            {['admin', 'superAdmin'].includes(userProfile?.role) && <div className="relative group">
               <Link
-                to='/admin/courses'
-                className={"text-cyan-400 text-base font-medium transition-colors hover:text-primary"}
+                to="/admin"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md 
+             bg-cyan-900/20 text-cyan-300 border border-cyan-600/30
+             hover:bg-cyan-900/40 hover:text-white hover:border-cyan-500
+             transition-all duration-200 shadow-sm"
               >
-                Admin
+                <ShieldCheck className="w-4 h-4" />
+                <span className="font-medium">Admin</span>
               </Link>
             </div>}
             {loading && (
