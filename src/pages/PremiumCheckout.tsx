@@ -38,6 +38,7 @@ const PremiumCheckout = () => {
     const [selectedGateway, setSelectedGateway] = useState("razorpay"); // "razorpay" or "paypal"
     const [working, setWorking] = useState(false);
     const [displayPricing, setDisplayPricing] = useState<{ price?: number; originalPrice?: number } | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!planQuery) {
@@ -55,6 +56,7 @@ const PremiumCheckout = () => {
         // Optional: fetch display-only pricing from Firestore for UI (not used for payment validation).
         (async () => {
             try {
+                setLoading(true);
                 const q = query(collection(db, "pricing"), where("name", "==", found.name));
                 const snap = await getDocs(q);
                 if (!snap.empty) {
@@ -63,6 +65,8 @@ const PremiumCheckout = () => {
                 }
             } catch (err) {
                 console.warn("Failed to load display pricing", err);
+            } finally {
+                setLoading(false);
             }
         })();
     }, [planQuery, navigate]);
@@ -109,12 +113,12 @@ const PremiumCheckout = () => {
                         theme: { color: "#6b21a8" },
                         handler: (response: any) => {
                             console.log("Payment success:", response);
-                            setRerender(true);
-                            navigate(`/`, { replace: true });
                             toast({
                                 title: "Payment successful",
                                 description: "Your Payment has been successful.",
                             });
+                            setRerender(true);
+                            navigate(`/`, { replace: true });
                         },
                         modal: {
                             ondismiss: () => {
@@ -232,7 +236,7 @@ const PremiumCheckout = () => {
                             </div>
 
                             <div className="flex gap-3">
-                                <Button className="w-full" onClick={selectedGateway === "razorpay" ? handleRazorpay : handlePayPal} disabled={working}>
+                                <Button className="w-full" onClick={selectedGateway === "razorpay" ? handleRazorpay : handlePayPal} disabled={working || loading}>
                                     Continue to Payment
                                 </Button>
                                 <Button variant="outline" onClick={() => navigate("/premium")}>Change plan</Button>

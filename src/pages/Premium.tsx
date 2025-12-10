@@ -270,6 +270,7 @@ const Premium = () => {
                   <Button
                     className={`w-full ${plan.buttonColor} ${plan.featured ? "text-white" : "text-background"} font-semibold py-6 rounded-lg mb-6`}
                     onClick={() => handleGetStarted(plan.name)}
+                    disabled={loading}
                   >
                     Get Started
                   </Button>

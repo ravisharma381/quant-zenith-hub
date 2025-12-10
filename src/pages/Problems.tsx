@@ -156,11 +156,21 @@ const Problems: React.FC = () => {
           return;
         }
 
-        const countQuery = query(
-          collection(db, "topics"),
-          where("courseId", "==", PROBLEMS_COURSE_ID),
-          where("type", "==", "question")
-        );
+        let countQuery;
+        if (isSubscribed) {
+          countQuery = query(
+            collection(db, "topics"),
+            where("courseId", "==", PROBLEMS_COURSE_ID),
+            where("type", "==", "question")
+          );
+        } else {
+          countQuery = query(
+            collection(db, "topics"),
+            where("courseId", "==", PROBLEMS_COURSE_ID),
+            where("type", "==", "question"),
+            where("isPrivate", "==", false)
+          );
+        }
         const snapshot = await getCountFromServer(countQuery);
         const totalItems = snapshot.data().count || 0;
         if (!mounted) return;
@@ -239,7 +249,12 @@ const Problems: React.FC = () => {
           else if (selectedStatus === "Unsolved") docs = docs.filter((d) => !completedSet.has(d.id));
 
           const tp = Math.max(1, Math.ceil(docs.length / PROBLEMS_PER_PAGE));
-          setTotalPages(tp);
+
+          if (!isSubscribed) {
+            setTotalPages(60)
+          } else {
+            setTotalPages(tp);
+          }
 
           const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
           const pageDocs = docs.slice(startIndex, startIndex + PROBLEMS_PER_PAGE);
@@ -299,14 +314,18 @@ const Problems: React.FC = () => {
 
         // optionally refresh totalPages (non-search)
         try {
-          const countQuery = query(
-            collection(db, "topics"),
-            where("courseId", "==", PROBLEMS_COURSE_ID),
-            where("type", "==", "question")
-          );
-          const countSnap = await getCountFromServer(countQuery);
-          const totalItems = countSnap.data().count || 0;
-          setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
+          if (!isSubscribed) {
+            setTotalPages(60)
+          } else {
+            const countQuery = query(
+              collection(db, "topics"),
+              where("courseId", "==", PROBLEMS_COURSE_ID),
+              where("type", "==", "question")
+            );
+            const countSnap = await getCountFromServer(countQuery);
+            const totalItems = countSnap.data().count || 0;
+            setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
+          }
         } catch (err) {
           // ignore count errors
         }
