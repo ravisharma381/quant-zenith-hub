@@ -313,8 +313,8 @@ const Premium = () => {
             <h2 className="text-3xl font-bold text-foreground mb-2">Frequently Asked Questions</h2>
             <p className="text-muted-foreground">
               If you have any additional questions, please feel free to contact us directly at{" "}
-              <a href="mailto:team@quantprof.io" className="text-purple-400 hover:underline">
-                team@quantprof.io
+              <a href="mailto:quantprof@proton.me" className="text-purple-400 hover:underline">
+                quantprof@proton.me
               </a>
               .
             </p>

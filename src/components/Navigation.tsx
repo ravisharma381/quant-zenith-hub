@@ -184,7 +184,7 @@ const Navigation = () => {
                       </div>
                       <div>
                         <div className="font-medium text-foreground">Contact Us</div>
-                        <div className="text-sm text-muted-foreground">View our contact details</div>
+                        <div className="text-sm text-muted-foreground">Get in touch with us</div>
                       </div>
                     </Link>
                     <button
@@ -371,6 +371,19 @@ const Navigation = () => {
                     </Link>
                   </>
                 )}
+                <Link
+                  to="/contact"
+                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="mt-1">
+                    <Mail className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground">Contact</div>
+                    <div className="text-sm text-muted-foreground">Get in touch with us</div>
+                  </div>
+                </Link>
               </div>
             </div>
           </>

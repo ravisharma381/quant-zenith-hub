@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Clipboard, Check } from "lucide-react";
 import EmailSVG from "@/assets/email.svg";
 
-const EMAIL = "contact@example.com";
+const EMAIL = "quantprof@proton.me";
 const ACCENT = "#29FB32";
 
 export default function ContactUs() {
@@ -19,12 +19,12 @@ export default function ContactUs() {
     return (
         <div
             className="
-        fixed inset-0 
-        flex items-center justify-center
-        bg-background 
-        text-white
-        overflow-hidden
-      "
+                min-h-[90vh] w-full
+                flex flex-col items-center justify-center
+                bg-background text-white
+                overflow-y-auto
+                py-10
+            "
         >
 
             {/* Gradient background */}
@@ -64,15 +64,24 @@ export default function ContactUs() {
 
                 {/* Wider SVG */}
                 <div
-                    className="p-6 rounded-2xl bg-black/40 backdrop-blur-md shadow-xl"
+                    className="relative p-6 rounded-2xl bg-black/40 backdrop-blur-md shadow-xl"
                     style={{ boxShadow: `0 0 40px ${ACCENT}40` }}
                 >
-                    <img
-                        src={EmailSVG}
-                        alt="Contact Icon"
-                        className="w-[280px] md:w-[320px] h-auto"
-                    />
+                    {/* Static wrapper figure */}
+                    <div className="relative w-[280px] md:w-[320px] h-[200px] rounded-xl overflow-hidden bg-gray-800/40">
+
+                        {/* Static placeholder layer */}
+                        <div className="absolute inset-0 bg-[#1e1e1e]" />
+
+                        {/* Actual SVG on top */}
+                        <img
+                            src={EmailSVG}
+                            alt="Contact Icon"
+                            className="absolute inset-0 w-full h-full object-contain"
+                        />
+                    </div>
                 </div>
+
 
                 {/* Email & copy */}
                 <div className="flex flex-col items-center gap-4 mt-2">
