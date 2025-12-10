@@ -6,14 +6,6 @@ import { Star } from "lucide-react";
 
 const CourseCard = ({ course, isEnrolled }) => {
     const navigate = useNavigate();
-    const getLevelColor = (level: string) => {
-        switch (level) {
-            case "Beginner": return "bg-green-500/20 text-green-400 border-green-500/30";
-            case "Intermediate": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-            case "Advanced": return "bg-red-500/20 text-red-400 border-red-500/30";
-            default: return "bg-muted text-muted-foreground";
-        }
-    };
 
     return (
         <div
@@ -77,12 +69,12 @@ const CourseCard = ({ course, isEnrolled }) => {
                                 navigate(
                                     isEnrolled
                                         ? `/course/${course.id}/learn`
-                                        : `/course/${course.slug}/checkout`,
+                                        : `/premium`,
                                 )
                             }
                             }
                         >
-                            {isEnrolled ? "Start Learning" : "Enroll Now"}
+                            {isEnrolled ? "Start Learning" : "Get Premium"}
                         </Button>}
                 </div>
             </div>

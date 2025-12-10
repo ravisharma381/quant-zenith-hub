@@ -1,243 +1,687 @@
+// -------------------- IMPORTS --------------------
 import * as admin from "firebase-admin";
 import Razorpay from "razorpay";
-import { onCall, HttpsError, CallableRequest, onRequest } from "firebase-functions/v2/https";
+import {
+  onCall,
+  HttpsError,
+  CallableRequest,
+  onRequest,
+} from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import { setGlobalOptions } from "firebase-functions/v2";
-import { FieldValue } from "firebase-admin/firestore";
 import * as crypto from "crypto";
-import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from "firebase-functions/firestore";
+import {
+  onDocumentCreated,
+  onDocumentDeleted,
+  onDocumentUpdated,
+} from "firebase-functions/firestore";
 
-interface TopicMeta {
+// -------------------- GLOBAL SETUP --------------------
+const BILLING_CURRENCY: "USD" | "INR" = "INR";
+setGlobalOptions({ region: "asia-south1", timeoutSeconds: 60, memory: "256MiB" });
+
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+const db = admin.firestore();
+
+// -------------------- SECRETS --------------------
+const RAZORPAY_KEY_ID = defineSecret("RAZORPAY_KEY_ID");
+const RAZORPAY_KEY_SECRET = defineSecret("RAZORPAY_KEY_SECRET");
+const RAZORPAY_WEBHOOK_SECRET = defineSecret("RAZORPAY_WEBHOOK_SECRET");
+
+const PAYPAL_CLIENT_ID = defineSecret("PAYPAL_CLIENT_ID");
+const PAYPAL_CLIENT_SECRET = defineSecret("PAYPAL_CLIENT_SECRET");
+const PAYPAL_WEBHOOK_ID = defineSecret("PAYPAL_WEBHOOK_ID");
+
+// -------------------- TYPES --------------------
+
+export interface TopicMeta {
   topicId: string;
   title: string;
   type: "layout" | "question" | "playlist";
   order: number;
 }
 
-setGlobalOptions({ region: "asia-south1", timeoutSeconds: 50, memory: "256MiB" });
-if (!admin.apps.length) {
-  admin.initializeApp();
+interface PricingDoc {
+  name: string;
+  price: number;
+  currency?: string;
 }
-const db = admin.firestore();
 
-// 🔒 1️⃣ Define secrets (connected to Secret Manager)
-const RAZORPAY_KEY_ID = defineSecret("RAZORPAY_KEY_ID");
-const RAZORPAY_KEY_SECRET = defineSecret("RAZORPAY_KEY_SECRET");
-const RAZORPAY_WEBHOOK_SECRET = defineSecret("RAZORPAY_WEBHOOK_SECRET");
+interface RazorpayPaymentEntity {
+  id: string;
+  order_id: string;
+  status: string;
+}
 
-// ----------------------------------------------------------------------
-//  CREATE ORDER
-// ----------------------------------------------------------------------
-export const createOrder = onCall(
+interface PayPalWebhookHeaders {
+  "paypal-auth-algo": string;
+  "paypal-cert-url": string;
+  "paypal-transmission-id": string;
+  "paypal-transmission-sig": string;
+  "paypal-transmission-time": string;
+}
+
+interface PayPalVerifyResponse {
+  verification_status: "SUCCESS" | "FAILURE";
+}
+
+interface PayPalOrderCreateResponse {
+  id: string;
+  links?: { href: string; rel: string; method: string }[];
+}
+
+// -------------------- HELPERS --------------------
+
+function computeExpiryTimestamp(
+  purchasedAt: admin.firestore.Timestamp,
+  planType: string
+): string | null {
+  const ms = purchasedAt.toDate().getTime();
+  if (planType === "Monthly")
+    return new Date(ms + 30 * 24 * 60 * 60 * 1000).toISOString();
+  if (planType === "Yearly")
+    return new Date(ms + 365 * 24 * 60 * 60 * 1000).toISOString();
+  return null;
+}
+
+// -------------------- PAYPAL HELPERS --------------------
+
+async function getPayPalAccessToken(): Promise<string> {
+  const clientId = PAYPAL_CLIENT_ID.value();
+  const clientSecret = PAYPAL_CLIENT_SECRET.value();
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  const resp = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${auth}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  if (!resp.ok) {
+    const txt = await resp.text();
+    throw new Error(`PayPal token error: ${resp.status} ${txt}`);
+  }
+
+  const json: unknown = await resp.json();
+  if (
+    typeof json !== "object" ||
+    json === null ||
+    !("access_token" in json)
+  ) {
+    throw new Error("Invalid PayPal token response");
+  }
+
+  return (json as { access_token: string }).access_token;
+}
+
+async function verifyPayPalWebhook(
+  headers: PayPalWebhookHeaders,
+  body: unknown
+): Promise<boolean> {
+  try {
+    const accessToken = await getPayPalAccessToken();
+    const webhookId = PAYPAL_WEBHOOK_ID.value();
+
+    const resp = await fetch(
+      "https://api-m.paypal.com/v1/notifications/verify-webhook-signature",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          auth_algo: headers["paypal-auth-algo"],
+          cert_url: headers["paypal-cert-url"],
+          transmission_id: headers["paypal-transmission-id"],
+          transmission_sig: headers["paypal-transmission-sig"],
+          transmission_time: headers["paypal-transmission-time"],
+          webhook_id: webhookId,
+          webhook_event: body,
+        }),
+      }
+    );
+
+    if (!resp.ok) return false;
+
+    const json: unknown = await resp.json();
+    if (
+      typeof json === "object" &&
+      json !== null &&
+      "verification_status" in json
+    ) {
+      return (
+        (json as PayPalVerifyResponse).verification_status === "SUCCESS"
+      );
+    }
+
+    return false;
+  } catch (err) {
+    console.error("verifyPayPalWebhook error:", err);
+    return false;
+  }
+}
+
+// -------------------- TOPIC TRIGGERS (unchanged) --------------------
+
+export const onTopicCreated = onDocumentCreated(
+  "topics/{topicId}",
+  async (event) => {
+    const topic = event.data?.data();
+    if (!topic || !topic.chapterId) return;
+
+    const chapterRef = db.collection("chapters").doc(topic.chapterId);
+    const snap = await chapterRef.get();
+    if (!snap.exists) return;
+
+    const meta: TopicMeta = {
+      topicId: event.params.topicId,
+      title: topic.title,
+      type: topic.type,
+      order: topic.order ?? 0,
+    };
+
+    await chapterRef.update({
+      topicMeta: admin.firestore.FieldValue.arrayUnion(meta),
+      totalTopics: admin.firestore.FieldValue.increment(1),
+    });
+  }
+);
+
+export const onTopicUpdated = onDocumentUpdated(
+  "topics/{topicId}",
+  async (event) => {
+    const after = event.data?.after.data();
+    if (!after || !after.chapterId) return;
+
+    const chapterRef = db.collection("chapters").doc(after.chapterId);
+    const snap = await chapterRef.get();
+    if (!snap.exists) return;
+
+    const list = (snap.data()?.topicMeta ?? []) as TopicMeta[];
+
+    const updated = list.map((meta) =>
+      meta.topicId === event.params.topicId
+        ? { ...meta, title: after.title, type: after.type, order: after.order }
+        : meta
+    );
+
+    await chapterRef.update({ topicMeta: updated });
+  }
+);
+
+export const onTopicDeleted = onDocumentDeleted(
+  "topics/{topicId}",
+  async (event) => {
+    const topic = event.data?.data();
+    if (!topic || !topic.chapterId) return;
+
+    const chapterRef = db.collection("chapters").doc(topic.chapterId);
+    const snap = await chapterRef.get();
+    if (!snap.exists) return;
+
+    const list = (snap.data()?.topicMeta ?? []) as TopicMeta[];
+    const filtered = list.filter(
+      (meta) => meta.topicId !== event.params.topicId
+    );
+
+    await chapterRef.update({
+      topicMeta: filtered,
+      totalTopics: admin.firestore.FieldValue.increment(-1),
+    });
+  }
+);
+
+// -------------------- RAZORPAY & PAYPAL FUNCTIONS (typed, no any) --------------------
+
+type TransactionDoc = {
+  userId?: string;
+  planType?: string;
+  planPrice?: number;
+  orderId?: string;
+  paymentId?: string | null;
+  amountSmallest?: number;
+  currency?: string;
+  provider?: string;
+  status?: string;
+  courseId?: string;
+  createdAt?: admin.firestore.FieldValue;
+  updatedAt?: admin.firestore.FieldValue;
+};
+
+/**
+ * createPremiumOrder (Razorpay)
+ */
+export const createPremiumOrder = onCall(
   { secrets: [RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET] },
   async (req: CallableRequest) => {
     try {
-      // 1️⃣ Ensure auth
       const uid = req.auth?.uid;
       if (!uid) throw new HttpsError("unauthenticated", "Sign in required.");
 
-      const { courseId, planType } = req.data || {};
-      if (!courseId || !planType)
-        throw new HttpsError("invalid-argument", "courseId and planType required.");
+      const input = req.data;
+      if (!input || typeof input !== "object") {
+        throw new HttpsError("invalid-argument", "Request data required.");
+      }
 
-      // 🔑 2️⃣ Load Razorpay keys securely from Secret Manager
+      const planTypeRaw = (input as { planType?: unknown }).planType;
+      if (typeof planTypeRaw !== "string") {
+        throw new HttpsError("invalid-argument", "planType must be a string.");
+      }
+      const planType = planTypeRaw;
+
+      const validPlans = ["Monthly", "Yearly", "Lifetime"];
+      if (!validPlans.includes(planType)) {
+        throw new HttpsError("invalid-argument", "Invalid planType.");
+      }
+
+      // Fetch pricing doc by `name` field
+      const pricingSnap = await db.collection("pricing").where("name", "==", planType).limit(1).get();
+      if (pricingSnap.empty) {
+        throw new HttpsError("not-found", "Pricing not found for planType.");
+      }
+
+      const pricingDoc = pricingSnap.docs[0];
+      const pricingData = pricingDoc.data();
+      if (!pricingData || typeof pricingData.price !== "number") {
+        throw new HttpsError("failed-precondition", "Invalid pricing document (missing price).");
+      }
+
+      const pricing: PricingDoc = {
+        name: pricingData.name,
+        price: pricingData.price,
+      };
+
       const key_id = RAZORPAY_KEY_ID.value();
       const key_secret = RAZORPAY_KEY_SECRET.value();
-
       const razorpay = new Razorpay({ key_id, key_secret });
 
+      const currency = BILLING_CURRENCY;
+      const amountSmallest = Math.round(pricing.price * 100);
 
-      const courseSnap = await db.collection("courses").doc(courseId).get();
-      if (!courseSnap.exists) {
-        throw new HttpsError("not-found", "Course not found.");
-      }
-
-      const courseData = courseSnap.data();
-
-      if (!courseData?.price || !courseData?.currency) {
-        throw new HttpsError("failed-precondition", "Invalid course data.");
-      }
-      // 🔹 Determine amount based on selected plan
-      const planPrice = courseData.price[planType];
-
-      if (!planPrice) {
-        throw new HttpsError("invalid-argument", "Invalid plan selected.");
-      }
-
-      // 🔹 Convert to smallest currency unit
-      const amount = Math.round(planPrice * 100);
-
-      const currency = courseData.currency;
-
-      // 4️⃣ Create order
       const order = await razorpay.orders.create({
-        amount,
+        amount: amountSmallest,
         currency,
-        receipt: `rcpt_${courseId.substring(0, 6)}_${planType}_${Date.now()}`,
-        notes: { userId: uid, courseId, planType },
+        receipt: `premium_${uid.substring(0, 6)}_${planType}_${Date.now()}`,
+        notes: { userId: uid, planType, pricingDocId: pricingDoc.id },
       });
 
-      // 5️⃣ Save pending transaction
-      const now = FieldValue.serverTimestamp();
-      await db.collection("transactions").doc(order.id).set({
+      const now = admin.firestore.FieldValue.serverTimestamp();
+
+      const txn: TransactionDoc = {
         userId: uid,
-        courseId,
         planType,
+        planPrice: pricing.price,
         orderId: order.id,
         paymentId: null,
-        amount: planPrice,
+        amountSmallest,
         currency,
         provider: "razorpay",
         status: "pending",
         createdAt: now,
         updatedAt: now,
-      });
+      };
+
+      await db.collection("transactions").doc(order.id).set(txn);
 
       return {
         ok: true,
-        data: { orderId: order.id, keyId: key_id, amount, currency, courseId, planType },
+        data: {
+          orderId: order.id,
+          keyId: key_id,
+          amount: amountSmallest,
+          currency,
+        },
       };
-    } catch (err: unknown) {
-      console.error("❌ createOrder error:", err);
-      const msg = err instanceof Error ? err.message : "Failed to create order";
-      throw new HttpsError("internal", msg);
+    } catch (err) {
+      // Convert unknown → typed error structure
+      const errorObj =
+        typeof err === "object" && err !== null ? err : { message: String(err) };
+
+      console.error(
+        "createPremiumOrder RAW ERROR:",
+        JSON.stringify(errorObj, null, 2)
+      );
+
+      // Razorpay's error format: { error: { description: string } }
+      if (
+        typeof (errorObj as { error?: unknown }).error === "object" &&
+        (errorObj as { error?: { description?: unknown } }).error !== null
+      ) {
+        const description = (errorObj as { error?: { description?: unknown } })
+          .error?.description;
+
+        if (typeof description === "string") {
+          throw new HttpsError("internal", description);
+        }
+      }
+
+      // Generic JS Error object
+      if (
+        typeof (errorObj as { message?: unknown }).message === "string"
+      ) {
+        throw new HttpsError("internal", (errorObj as { message: string }).message);
+      }
+
+      // Fallback for unexpected formats
+      throw new HttpsError("internal", JSON.stringify(errorObj));
     }
   }
 );
 
-// ----------------------------------------------------------------------
-//  RAZORPAY WEBHOOK
-// ----------------------------------------------------------------------
+/**
+ * createPayPalOrder (callable)
+ */
+export const createPayPalOrder = onCall(
+  { secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET] },
+  async (req: CallableRequest) => {
+    try {
+      const uid = req.auth?.uid;
+      if (!uid) throw new HttpsError("unauthenticated", "Sign in required.");
 
+      const input = req.data;
+      if (!input || typeof input !== "object") {
+        throw new HttpsError("invalid-argument", "Request data required.");
+      }
+
+      const planTypeRaw = (input as { planType?: unknown }).planType;
+      if (typeof planTypeRaw !== "string") {
+        throw new HttpsError("invalid-argument", "planType must be a string.");
+      }
+      const planType = planTypeRaw;
+
+      const validPlans = ["Monthly", "Yearly", "Lifetime"];
+      if (!validPlans.includes(planType)) {
+        throw new HttpsError("invalid-argument", "Invalid planType.");
+      }
+
+      const pricingSnap = await db.collection("pricing").where("name", "==", planType).limit(1).get();
+      if (pricingSnap.empty) {
+        throw new HttpsError("not-found", "Pricing not found for planType.");
+      }
+
+      const pricingDoc = pricingSnap.docs[0];
+      const pricingData = pricingDoc.data();
+      if (!pricingData || typeof pricingData.price !== "number") {
+        throw new HttpsError("failed-precondition", "Invalid pricing document (missing price).");
+      }
+
+      const pricing: PricingDoc = {
+        name: pricingData.name,
+        price: pricingData.price,
+      };
+
+      const accessToken = await getPayPalAccessToken();
+      const value = pricing.price.toFixed(2);
+      const currency = BILLING_CURRENCY
+
+      const createResp = await fetch("https://api-m.paypal.com/v2/checkout/orders", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          intent: "CAPTURE",
+          purchase_units: [
+            {
+              amount: { currency_code: currency, value },
+              description: `${planType} Premium`,
+            },
+          ],
+          application_context: {
+            brand_name: "QuantProf",
+            user_action: "PAY_NOW",
+            return_url: process.env.PAYPAL_RETURN_URL || "https://quantprof.org",
+            cancel_url: process.env.PAYPAL_CANCEL_URL || "https://quantprof.org/premium",
+          },
+        }),
+      });
+
+      if (!createResp.ok) {
+        const txt = await createResp.text();
+        console.error("PayPal order creation failed:", createResp.status, txt);
+        throw new HttpsError("internal", "Failed to create PayPal order");
+      }
+
+      const dataJson = (await createResp.json()) as PayPalOrderCreateResponse;
+      const approvalLinkObj = (dataJson.links || []).find((l) => l.rel === "approve");
+      const approvalUrl = approvalLinkObj?.href;
+      const orderId = dataJson.id;
+
+      if (!approvalUrl) {
+        console.error("No approval URL from PayPal:", dataJson);
+        throw new HttpsError("internal", "No approval URL returned by PayPal");
+      }
+
+      const now = admin.firestore.FieldValue.serverTimestamp();
+      const txn: TransactionDoc = {
+        userId: uid,
+        planType,
+        planPrice: pricing.price,
+        orderId,
+        paymentId: null,
+        amountSmallest: Math.round(pricing.price * 100),
+        currency,
+        provider: "paypal",
+        status: "pending",
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      await db.collection("transactions").doc(orderId).set(txn);
+
+      return { ok: true, data: { approvalUrl, orderId } };
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err));
+      console.error("createPayPalOrder error:", e);
+      if (e instanceof HttpsError) throw e;
+      throw new HttpsError("internal", e.message || "Failed to create PayPal order");
+    }
+  }
+);
+
+/**
+ * razorpayWebhook - HTTP endpoint
+ */
 export const razorpayWebhook = onRequest(
   { secrets: [RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET] },
   async (req, res) => {
     try {
-      // 1️⃣ Verify the webhook signature
       const webhookSecret = RAZORPAY_WEBHOOK_SECRET.value();
-      const razorpaySignature = req.headers["x-razorpay-signature"] as string;
+      const razorpaySignature = (req.headers["x-razorpay-signature"] || "") as string;
+      const bodyRaw = req.body ?? {};
+      const bodyStr = JSON.stringify(bodyRaw);
 
-      const body = JSON.stringify(req.body);
-      const expectedSignature = crypto
-        .createHmac("sha256", webhookSecret)
-        .update(body)
-        .digest("hex");
-
+      const expectedSignature = crypto.createHmac("sha256", webhookSecret).update(bodyStr).digest("hex");
       if (expectedSignature !== razorpaySignature) {
-        console.error("❌ Invalid Razorpay signature");
+        console.error("Invalid Razorpay signature");
         res.status(400).send("Invalid signature");
         return;
       }
 
-      // 2️⃣ Extract payment details
-      const payment = req.body.payload?.payment?.entity;
-      if (!payment) {
-        console.error("❌ Missing payment payload");
-        res.status(400).send("Invalid payload");
+      const paymentEntity = (bodyRaw as { payload?: { payment?: { entity?: unknown } } }).payload?.payment?.entity;
+      if (!paymentEntity || typeof paymentEntity !== "object") {
+        res.status(400).send("Missing payment payload");
         return;
       }
 
+      // Narrow paymentEntity
+      const payment = paymentEntity as Partial<RazorpayPaymentEntity> & { order_id?: string; id?: string; status?: string };
+
       const orderId = payment.order_id;
       const paymentId = payment.id;
-      const status = payment.status; // 'captured', 'failed', etc.
+      const status = payment.status;
 
-      // 3️⃣ Update Firestore transaction
+      if (!orderId) {
+        res.status(400).send("Missing order id in payload");
+        return;
+      }
+
       const txnRef = db.collection("transactions").doc(orderId);
       await txnRef.set(
         {
-          paymentId,
+          paymentId: paymentId ?? null,
           status: status === "captured" ? "success" : "failed",
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         },
         { merge: true }
       );
 
-      // 4️⃣ Add purchased course to user record if success
       if (status === "captured") {
         const txnSnap = await txnRef.get();
-        const txn = txnSnap.data();
+        const txnData = txnSnap.data() as TransactionDoc | undefined;
 
-        if (txn?.userId && txn?.courseId) {
-          const userRef = db.collection("users").doc(txn.userId);
-          await userRef.update({
-            purchasedCourses: admin.firestore.FieldValue.arrayUnion(txn.courseId),
-          });
-          console.log(`✅ Course ${txn.courseId} unlocked for user ${txn.userId}`);
+        if (!txnData) {
+          console.warn("Transaction doc missing data:", orderId);
+        } else {
+          const uid = txnData.userId;
+          if (txnData.planType && uid) {
+            const purchasedAtTs = admin.firestore.Timestamp.now();
+            const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txnData.planType);
+
+            await db.collection("users").doc(uid).set(
+              {
+                isPremium: true,
+                purchasedAt: purchasedAtTs.toDate().toISOString(),
+                expiresAt: expiresAtIso,
+                planType: txnData.planType,
+                planPrice: txnData.planPrice ?? null,
+              },
+              { merge: true }
+            );
+
+            console.log(`User ${uid} upgraded to ${txnData.planType}`);
+          }
+
+          if (txnData.courseId && txnData.userId) {
+            await db.collection("users").doc(txnData.userId).update({
+              purchasedCourses: admin.firestore.FieldValue.arrayUnion(txnData.courseId),
+            });
+            console.log(`Course ${txnData.courseId} unlocked for user ${txnData.userId}`);
+          }
         }
       }
 
-      res.status(200).send("Webhook processed successfully");
+      res.status(200).send("ok");
     } catch (err) {
-      console.error("❌ Webhook error:", err);
-      res.status(500).send("Internal Server Error");
-      return;
+      console.error("razorpayWebhook error:", err);
+      res.status(500).send("internal error");
     }
   }
 );
 
 /**
- * ✅ When a topic is created → push metadata into chapter.topicMeta
+ * paypalWebhook - HTTP endpoint
  */
-export const onTopicCreated = onDocumentCreated("topics/{topicId}", async (event) => {
-  const topic = event.data?.data();
-  if (!topic || !topic.chapterId) return;
+export const paypalWebhook = onRequest(
+  { secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_WEBHOOK_ID] },
+  async (req, res) => {
+    try {
+      // extract headers needed for PayPal verification
+      const headers: Partial<PayPalWebhookHeaders> = {
+        "paypal-auth-algo": req.headers["paypal-auth-algo"] as string,
+        "paypal-cert-url": req.headers["paypal-cert-url"] as string,
+        "paypal-transmission-id": req.headers["paypal-transmission-id"] as string,
+        "paypal-transmission-sig": req.headers["paypal-transmission-sig"] as string,
+        "paypal-transmission-time": req.headers["paypal-transmission-time"] as string,
+      };
 
-  const chapterRef = db.collection("chapters").doc(topic.chapterId);
-  const chapterSnap = await chapterRef.get();
+      const body = req.body as unknown;
 
-  if (!chapterSnap.exists) return;
+      // Verify webhook signature with PayPal
+      const ok = await verifyPayPalWebhook(headers as PayPalWebhookHeaders, body);
+      if (!ok) {
+        console.warn("Invalid PayPal webhook signature");
+        res.status(400).send("Invalid signature");
+        return;
+      }
 
-  const metaEntry = {
-    topicId: event.params.topicId,
-    title: topic.title,
-    type: topic.type,
-    order: topic.order ?? 0,
-  };
+      // Narrow body object for processing
+      if (typeof body !== "object" || body === null) {
+        res.status(400).send("Invalid body");
+        return;
+      }
 
-  await chapterRef.update({
-    topicMeta: admin.firestore.FieldValue.arrayUnion(metaEntry),
-    totalTopics: admin.firestore.FieldValue.increment(1),
-  });
-});
+      const eventType = (body as Record<string, unknown>)["event_type"] as string | undefined;
+      if (!eventType) {
+        res.status(400).send("Missing event_type");
+        return;
+      }
 
-/**
- * ✅ When a topic is updated → sync title/type/order in chapter.topicMeta
- */
-export const onTopicUpdated = onDocumentUpdated("topics/{topicId}", async (event) => {
-  const after = event.data?.after.data();
-  if (!after || !after.chapterId) return;
+      if (eventType === "CHECKOUT.ORDER.APPROVED") {
+        res.status(200).send("ignored");
+        return;
+      }
 
-  const chapterRef = db.collection("chapters").doc(after.chapterId);
-  const chapterSnap = await chapterRef.get();
-  if (!chapterSnap.exists) return;
+      if (eventType === "PAYMENT.CAPTURE.COMPLETED" || eventType === "PAYMENT.SALE.COMPLETED") {
+        const resource = (body as Record<string, unknown>)["resource"] as Record<string, unknown> | undefined;
+        if (!resource) {
+          res.status(400).send("Missing resource");
+          return;
+        }
 
-  const topicMeta = chapterSnap.data()?.topicMeta || [];
-  const updatedMeta = topicMeta.map((meta: TopicMeta) =>
-    meta.topicId === event.params.topicId
-      ? { ...meta, title: after.title, type: after.type, order: after.order ?? 0 }
-      : meta
-  );
+        // orderId may live in supplementary_data.related_ids.order_id or resource.id
+        let orderId: string | undefined;
+        try {
+          const supp = resource["supplementary_data"] as Record<string, unknown> | undefined;
+          const relatedIds = supp?.["related_ids"] as Record<string, unknown> | undefined;
+          orderId = relatedIds?.["order_id"] as string | undefined;
+        } catch {
+          orderId = undefined;
+        }
 
-  await chapterRef.update({ topicMeta: updatedMeta });
-});
+        if (!orderId) {
+          orderId = (resource["id"] as string | undefined) ?? (resource["invoice_id"] as string | undefined);
+        }
 
-/**
- * ✅ When a topic is deleted → remove it from chapter.topicMeta
- */
-export const onTopicDeleted = onDocumentDeleted("topics/{topicId}", async (event) => {
-  const topic = event.data?.data();
-  if (!topic || !topic.chapterId) return;
+        if (!orderId) {
+          console.warn("No orderId found in PayPal webhook resource", resource);
+          res.status(400).send("Missing order id");
+          return;
+        }
 
-  const chapterRef = db.collection("chapters").doc(topic.chapterId);
-  const chapterSnap = await chapterRef.get();
-  if (!chapterSnap.exists) return;
+        const txnRef = db.collection("transactions").doc(orderId);
+        await txnRef.set(
+          {
+            paymentId: (resource["id"] as string) ?? null,
+            status: "success",
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
 
-  const topicMeta = chapterSnap.data()?.topicMeta || [];
-  const filteredMeta = topicMeta.filter((meta: TopicMeta) => meta.topicId !== event.params.topicId);
+        const txnSnap = await txnRef.get();
+        const txn = txnSnap.data() as TransactionDoc | undefined;
+        if (txn && txn.userId && txn.planType) {
+          const purchasedAtTs = admin.firestore.Timestamp.now();
+          const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txn.planType);
 
-  await chapterRef.update({
-    topicMeta: filteredMeta,
-    totalTopics: admin.firestore.FieldValue.increment(-1),
-  });
-});
+          await db.collection("users").doc(txn.userId).set(
+            {
+              isPremium: true,
+              purchasedAt: purchasedAtTs.toDate().toISOString(),
+              expiresAt: expiresAtIso,
+              planType: txn.planType,
+              planPrice: txn.planPrice ?? null,
+            },
+            { merge: true }
+          );
+
+          console.log(`User ${txn.userId} upgraded to ${txn.planType} via PayPal`);
+        }
+      }
+
+      res.status(200).send("ok");
+    } catch (err) {
+      console.error("paypalWebhook error:", err);
+      res.status(500).send("internal error");
+    }
+  }
+);
 

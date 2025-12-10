@@ -17,7 +17,7 @@ const CourseDetail = () => {
   const slug = window.location.pathname.split("/course/")[1];
   const courseId = 'pxeKbx6V6C2IeBy1UnWm';
 
-  const isBought = userProfile?.purchasedSlugs?.includes(slug);
+  const isBought = userProfile?.isPremium
 
 
   const features = [

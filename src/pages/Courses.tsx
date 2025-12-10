@@ -43,13 +43,11 @@ const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const { userProfile }: any = useAuth();
-  const purchased = userProfile?.purchasedCourses || [];
-
-  const navigate = useNavigate();
+  const isPremium = userProfile?.isPremium || false;
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const q = query(collection(db, "courses"), where("isPublished", "==", true));
+      const q = query(collection(db, "courses"), where("isPublished", "==", true), where("isProblemType", "==", false));
       const snapshot = await getDocs(q);
       const list = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -101,7 +99,7 @@ const Courses = () => {
         }
         {!loading && <div className="space-y-6">
           {courses.map((course) => {
-            const isEnrolled = purchased.includes(course.id);
+            const isEnrolled = isPremium;
             return (
               <CourseCard key={course.id} course={course} isEnrolled={isEnrolled} />
             )

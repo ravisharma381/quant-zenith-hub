@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -59,48 +59,41 @@ const Navigation = () => {
               </Link>
             ))}
 
-            {/* Courses Dropdown - Hover based */}
-            <div className="relative group">
-              <span className={cn(
-                "text-base font-medium transition-colors hover:text-primary flex items-center gap-1 cursor-default",
-                (isActive("/courses") || isActive("/my-courses"))
+            <Link
+              to="/courses"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                isActive("/courses")
                   ? "text-primary"
                   : "text-muted-foreground"
-              )}>
-                Courses
-                <ChevronDown className="w-3 h-3" />
-              </span>
+              )}
+            >
+              Courses
+            </Link>
 
-              {/* Dropdown Content with screenshot styling */}
-              <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
-                  {user && <Link
-                    to="/my-courses"
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">My Courses</div>
-                      <div className="text-sm text-muted-foreground">Continue your learning journey</div>
-                    </div>
-                  </Link>}
-                  <Link
-                    to="/courses"
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <BookOpen className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">All Courses</div>
-                      <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <Link
+              to="/contact"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                isActive("/contact")
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              Contact
+            </Link>
+
+            <Link
+              to="/premium"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-purple-300",
+                isActive("/premium")
+                  ? "text-purple-400"
+                  : "text-purple-400"
+              )}
+            >
+              Premium
+            </Link>
           </div>
 
           {/* Desktop Auth Buttons / User Avatar */}
@@ -138,10 +131,22 @@ const Navigation = () => {
                     </AvatarFallback>
                   </Avatar>
                 </Button>
+                {/* Premium Crown */}
+                {userProfile?.isPremium && (
+                  <div className="absolute -top-2 -right-1 w-4 h-4 rounded-full bg-purple-600 flex items-center justify-center shadow-md">
+                    <Crown className="w-2.5 h-2.5 text-white" />
+                  </div>
+                )}
 
                 {/* User Dropdown with courses styling */}
                 <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
+                    {userProfile?.isPremium && (
+                      <div className="flex items-center gap-2 p-3 mb-1 rounded-md bg-purple-500/10 text-purple-300">
+                        <Crown className="w-4 h-4" />
+                        <span className="text-sm font-medium">Premium Member</span>
+                      </div>
+                    )}
                     <Link
                       to="/my-courses"
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
@@ -235,6 +240,12 @@ const Navigation = () => {
             <div className="fixed top-16 left-0 right-0 z-50 md:hidden px-4 py-4">
               <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-auto">
                 {/* Main Navigation Items */}
+                {userProfile?.isPremium && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-500/10 text-purple-300 mb-2">
+                    <Crown className="w-4 h-4" />
+                    <span className="text-sm font-medium">Premium Member</span>
+                  </div>
+                )}
                 <Link
                   to="/problems"
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
@@ -293,20 +304,6 @@ const Navigation = () => {
 
                 {user && (
                   <>
-                    <Link
-                      to="/my-courses"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="mt-1">
-                        <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">My Courses</div>
-                        <div className="text-sm text-muted-foreground">Continue your learning journey</div>
-                      </div>
-                    </Link>
-
                     <Link
                       to="/billing"
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"

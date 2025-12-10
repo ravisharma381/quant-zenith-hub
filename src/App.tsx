@@ -40,6 +40,9 @@ import AdminChapters from "./pages/Admin/Chapters/Chapters";
 import CourseLearn from "./pages/CourseLearn";
 import ScrollToTop from "./components/ScrollToTop";
 import ContactUs from "./Contact";
+import Premium from "./pages/Premium";
+import AdminPricing from "./pages/Admin/AdminPricing";
+import PremiumCheckout from "./pages/PremiumCheckout";
 
 const App = () => (
   <HelmetProvider>
@@ -63,21 +66,12 @@ const App = () => (
               <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} />
               <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} />
               <Route path="/courses" element={<Layout><Courses /></Layout>} />
-              <Route
-                path="/my-courses"
-                element={
-                  <Layout>
-                    <ProtectedRoute>
-                      <MyCourses />
-                    </ProtectedRoute>
-                  </Layout>
-                }
-              />
               <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
-              <Route path="/course/:slug/checkout" element={
+              <Route path="/premium" element={<Layout><Premium /></Layout>} />
+              <Route path="/checkout" element={
                 <Layout>
                   <ProtectedRoute>
-                    <CourseCheckout />
+                    <PremiumCheckout />
                   </ProtectedRoute>
                 </Layout>}
               />
@@ -94,6 +88,14 @@ const App = () => (
                   <Layout>
                     <AdminRoute>
                       <AdminBuilder />
+                    </AdminRoute>
+                  </Layout>}
+              />
+              <Route path="/admin/pricing"
+                element={
+                  <Layout>
+                    <AdminRoute>
+                      <AdminPricing />
                     </AdminRoute>
                   </Layout>}
               />

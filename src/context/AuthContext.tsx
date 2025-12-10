@@ -20,10 +20,13 @@ interface UserProfile {
     photoURL?: string;
     provider: string;
     role: "user" | "admin";
-    purchasedCourses: string[];
-    purchasedSlugs?: string[];
     createdAt?: any;
     lastLoginAt?: any;
+    isPremium: boolean;
+    purchasedAt?: string;
+    expiresAt?: string;
+    planType: string;
+    planPrice: number;
 }
 
 interface AuthContextType {
@@ -49,6 +52,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [rerender, setRerender] = useState(true);
+
+    console.log("user", user);
+    console.log("userProfile", userProfile);
 
     // 🔹 1️⃣ Handle redirect result once per page load
     useEffect(() => {
@@ -81,9 +87,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                             photoURL: firebaseUser.photoURL,
                             provider: firebaseUser.providerData[0]?.providerId || "unknown",
                             role: "user",
-                            purchasedCourses: [],
                             createdAt: serverTimestamp(),
                             lastLoginAt: serverTimestamp(),
+                            isPremium: false,
                         });
                     } else {
                         await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
@@ -91,20 +97,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
                     const profileSnap = await getDoc(userRef);
                     const data = profileSnap.data() as Omit<UserProfile, "id">;
-
-                    // ✅ Fetch slugs for purchased course IDs
-                    let purchasedSlugs: string[] = [];
-                    if (data.purchasedCourses?.length) {
-                        const validIds = data.purchasedCourses.filter(Boolean);
-                        const q = query(collection(db, "courses"), where(documentId(), "in", validIds.slice(0, 10)));
-                        const snapshot = await getDocs(q);
-                        purchasedSlugs = snapshot.docs.map((doc: any) => doc.data().slug as string);
-                    }
                     setUser(firebaseUser);
                     setUserProfile({
                         id: profileSnap.id,
                         ...data,
-                        purchasedSlugs, // ✅ store derived field
                     });
                 } else {
                     setUser(null);

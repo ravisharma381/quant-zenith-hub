@@ -47,8 +47,6 @@ const PROBLEMS_COURSE_ID = "ynRqmBdSMEUAZhh0WYLn";
 const PROBLEMS_PER_PAGE = 20;
 const SHOW_FREE_PAGES = 2;
 
-const isSubscribed = true;
-
 interface AskedInItem {
   name: string;
   logoURL: string;
@@ -68,6 +66,7 @@ interface ProblemDoc {
 const Problems: React.FC = () => {
   const navigate = useNavigate();
   const { user, userProfile } = useAuth();
+  const isSubscribed = userProfile?.isPremium === true;
 
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
