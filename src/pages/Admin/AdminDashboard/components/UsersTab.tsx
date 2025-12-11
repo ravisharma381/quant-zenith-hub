@@ -130,7 +130,6 @@ const UsersTab: React.FC = () => {
                         <SelectContent>
                             <SelectItem value="All">All</SelectItem>
                             <SelectItem value="Yes">Premium</SelectItem>
-                            <SelectItem value="No">Free</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
