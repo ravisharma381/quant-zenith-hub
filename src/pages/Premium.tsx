@@ -17,7 +17,7 @@ const planTemplates = [
     originalPrice: "$360",
     price: "$25",
     period: "/month",
-    borderColor: "border-blue-500",
+    borderColor: "border-blue-500 hover:border-blue-600",
     buttonColor: "bg-blue-600 hover:bg-blue-700",
     badgeColor: "bg-blue-100 text-blue-700",
     featured: false,
@@ -35,7 +35,7 @@ const planTemplates = [
     price: "$199",
     period: "/year",
     buttonColor: "bg-purple-600 hover:bg-purple-700",
-    borderColor: "border-purple-500",
+    borderColor: "border-purple-500 hover:border-purple-600",
     badgeColor: 'text-purple-700',
     featured: true,
     features: [
@@ -51,7 +51,7 @@ const planTemplates = [
     originalPrice: "$599",
     price: "$399",
     period: " one-time",
-    borderColor: "border-amber-500",
+    borderColor: "border-amber-500 hover:border-amber-600",
     buttonColor: "bg-amber-600 hover:bg-amber-700",
     badgeColor: "bg-amber-100 text-amber-700",
     featured: false,
@@ -200,7 +200,7 @@ const Premium = () => {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
+              className={`plan-card relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
             >
               <CardContent className="p-8 flex flex-col h-full">
                 <div>
@@ -268,7 +268,10 @@ const Premium = () => {
                 {/* Bottom: Button always aligned */}
                 <div className="mt-auto pt-4">
                   <Button
-                    className={`w-full ${plan.buttonColor} ${plan.featured ? "text-white" : "text-background"} font-semibold py-6 rounded-lg mb-6`}
+                    className={`w-full ${plan.buttonColor} ${plan.featured ? "text-white" : "text-background"} 
+                        font-semibold py-6 rounded-lg mb-6
+                        shadow-md hover:shadow-lg transition-shadow
+                        focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-none`}
                     onClick={() => handleGetStarted(plan.name)}
                     disabled={loading}
                   >

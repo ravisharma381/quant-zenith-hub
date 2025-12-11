@@ -11,6 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase/config";
 
+const providerLogos: Record<string, string> = {
+    razorpay:
+        "https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/razorpay-icon.webp?alt=media&token=705cbad0-3129-48ba-860e-cf0b99c11f29",
+    paypal:
+        "https://firebasestorage.googleapis.com/v0/b/quantprof-backend-9cb17.firebasestorage.app/o/paypal.png?alt=media&token=09d70de0-60b4-437e-8b21-d7be6b494ed9",
+};
 // You can reuse planTemplates or fetch for display. We only display.
 // Real price is fetched from backend when creating order.
 const templates = [
@@ -224,17 +230,56 @@ const PremiumCheckout = () => {
                         </CardHeader>
                         <CardContent>
                             <div className="flex gap-4 items-center mb-4">
-                                <label className={`cursor-pointer p-3 border rounded ${selectedGateway === "razorpay" ? "border-primary" : "border-border"}`}>
-                                    <input type="radio" name="gateway" checked={selectedGateway === "razorpay"} onChange={() => setSelectedGateway("razorpay")} className="mr-2" />
-                                    Razorpay
+                                {/* Razorpay */}
+                                <label
+                                    className={`cursor-pointer flex items-center gap-3 p-3 pr-4 border rounded-lg transition hover:bg-muted/10 ${selectedGateway === "razorpay" ? "border-primary" : "border-border"
+                                        }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="gateway"
+                                        checked={selectedGateway === "razorpay"}
+                                        onChange={() => setSelectedGateway("razorpay")}
+                                        className="mr-1"
+                                    />
+
+                                    {/* Logo wrapper */}
+                                    <div className="w-10 h-10 bg-white rounded-lg border border-border flex items-center justify-center overflow-hidden">
+                                        <img
+                                            src={providerLogos.razorpay}
+                                            alt="Razorpay"
+                                            className="w-8 h-8 object-contain"
+                                        />
+                                    </div>
+
+                                    <span className="text-sm">Razorpay</span>
                                 </label>
 
-                                <label className={`cursor-pointer p-3 border rounded ${selectedGateway === "paypal" ? "border-primary" : "border-border"}`}>
-                                    <input type="radio" name="gateway" checked={selectedGateway === "paypal"} onChange={() => setSelectedGateway("paypal")} className="mr-2" />
-                                    PayPal
+                                {/* PayPal */}
+                                <label
+                                    className={`cursor-pointer flex items-center gap-3 p-3 pr-4 border rounded-lg transition hover:bg-muted/10 ${selectedGateway === "paypal" ? "border-primary" : "border-border"
+                                        }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="gateway"
+                                        checked={selectedGateway === "paypal"}
+                                        onChange={() => setSelectedGateway("paypal")}
+                                        className="mr-1"
+                                    />
+
+                                    {/* Logo wrapper */}
+                                    <div className="w-10 h-10 bg-white rounded-lg border border-border flex items-center justify-center overflow-hidden">
+                                        <img
+                                            src={providerLogos.paypal}
+                                            alt="PayPal"
+                                            className="w-8 h-8 object-contain"
+                                        />
+                                    </div>
+
+                                    <span className="text-sm">PayPal</span>
                                 </label>
                             </div>
-
                             <div className="flex gap-3">
                                 <Button className="w-full" onClick={selectedGateway === "razorpay" ? handleRazorpay : handlePayPal} disabled={working || loading}>
                                     Continue to Payment

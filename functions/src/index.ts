@@ -544,34 +544,31 @@ export const razorpayWebhook = onRequest(
         const txnSnap = await txnRef.get();
         const txnData = txnSnap.data() as TransactionDoc | undefined;
 
-        if (!txnData) {
-          console.warn("Transaction doc missing data:", orderId);
-        } else {
+        if (txnData && txnData.planType && txnData.userId) {
           const uid = txnData.userId;
-          if (txnData.planType && uid) {
-            const purchasedAtTs = admin.firestore.Timestamp.now();
-            const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txnData.planType);
 
-            await db.collection("users").doc(uid).set(
-              {
-                isPremium: true,
-                purchasedAt: purchasedAtTs.toDate().toISOString(),
-                expiresAt: expiresAtIso,
-                planType: txnData.planType,
-                planPrice: txnData.planPrice ?? null,
-              },
-              { merge: true }
-            );
+          const purchasedAtTs = admin.firestore.Timestamp.now();
+          const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txnData.planType);
 
-            console.log(`User ${uid} upgraded to ${txnData.planType}`);
-          }
+          // NEW: Write expiry to transaction
+          await txnRef.set(
+            {
+              expiresAt: expiresAtIso,
+            },
+            { merge: true }
+          );
 
-          if (txnData.courseId && txnData.userId) {
-            await db.collection("users").doc(txnData.userId).update({
-              purchasedCourses: admin.firestore.FieldValue.arrayUnion(txnData.courseId),
-            });
-            console.log(`Course ${txnData.courseId} unlocked for user ${txnData.userId}`);
-          }
+          // Update user record
+          await db.collection("users").doc(uid).set(
+            {
+              isPremium: true,
+              purchasedAt: purchasedAtTs.toDate().toISOString(),
+              expiresAt: expiresAtIso,
+              planType: txnData.planType,
+              planPrice: txnData.planPrice ?? null,
+            },
+            { merge: true }
+          );
         }
       }
 
@@ -669,6 +666,15 @@ export const paypalWebhook = onRequest(
           const purchasedAtTs = admin.firestore.Timestamp.now();
           const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txn.planType);
 
+          // NEW: Write expiry to transaction schema
+          await txnRef.set(
+            {
+              expiresAt: expiresAtIso,
+            },
+            { merge: true }
+          );
+
+          // Update user record
           await db.collection("users").doc(txn.userId).set(
             {
               isPremium: true,
@@ -679,8 +685,6 @@ export const paypalWebhook = onRequest(
             },
             { merge: true }
           );
-
-          console.log(`User ${txn.userId} upgraded to ${txn.planType} via PayPal`);
         }
       }
 
