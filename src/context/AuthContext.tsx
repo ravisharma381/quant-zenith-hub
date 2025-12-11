@@ -53,9 +53,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const [loading, setLoading] = useState(true);
     const [rerender, setRerender] = useState(true);
 
-    console.log("user", user);
-    console.log("userProfile", userProfile);
-
     // 🔹 1️⃣ Handle redirect result once per page load
     useEffect(() => {
         const handleRedirect = async () => {

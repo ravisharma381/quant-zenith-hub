@@ -119,12 +119,12 @@ const PremiumCheckout = () => {
                         theme: { color: "#6b21a8" },
                         handler: (response: any) => {
                             console.log("Payment success:", response);
+                            setRerender(true);
+                            navigate(`/`, { replace: true });
                             toast({
                                 title: "Payment successful",
                                 description: "Your Payment has been successful.",
                             });
-                            setRerender(true);
-                            navigate(`/`, { replace: true });
                         },
                         modal: {
                             ondismiss: () => {

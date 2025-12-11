@@ -100,7 +100,6 @@ const Billing = () => {
         const tx = snap.docs.map((doc) => {
           const data: any = doc.data();
           const created = data.createdAt?.toDate();
-          console.log(data);
 
           const mapStatus =
             data.status === "success"
