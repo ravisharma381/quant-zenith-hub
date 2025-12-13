@@ -95,7 +95,7 @@ const ProblemDetail = () => {
         <div className="flex items-center justify-end gap-3 mb-6">
           <Button
             onClick={() => navigate('/problems')}
-            className="bg-white text-black hover:bg-white/90"
+            className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none"
           >
             Back to Problems
           </Button>
