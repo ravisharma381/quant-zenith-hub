@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Share, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
@@ -19,6 +19,7 @@ const ProblemDetail = () => {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
   const [shakeKey, setShakeKey] = useState(0);
+  const [activeTab, setActiveTab] = useState("problem");
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
@@ -119,12 +120,27 @@ const ProblemDetail = () => {
           </Button>
         </div>
 
-        <Tabs defaultValue="problem" className="w-full">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)} className="w-full">
           <div className="flex items-center justify-between mb-6">
-            <TabsList className="grid w-48 grid-cols-2">
-              <TabsTrigger value="problem">Problem</TabsTrigger>
-              <TabsTrigger value="solution">Solution</TabsTrigger>
-            </TabsList>
+            <div className="relative grid w-48 grid-cols-2 h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+              {/* Animated background slider */}
+              <div 
+                className="absolute h-8 w-[calc(50%-4px)] bg-background rounded-sm shadow-sm transition-all duration-300 ease-out"
+                style={{ left: activeTab === "problem" ? "4px" : "calc(50% + 0px)" }}
+              />
+              <button
+                onClick={() => setActiveTab("problem")}
+                className={`relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === "problem" ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                Problem
+              </button>
+              <button
+                onClick={() => setActiveTab("solution")}
+                className={`relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === "solution" ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                Solution
+              </button>
+            </div>
             
             <div className="flex items-center gap-4">
               <Badge className={`${getDifficultyColor(problem.difficulty)} hidden md:flex text-center items-center justify-center`}>
