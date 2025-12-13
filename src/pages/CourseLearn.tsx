@@ -929,23 +929,22 @@ const CourseLearn = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              
-              {/* Header */}
-              {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
-                <h1 className="text-4xl font-bold text-white">{selectedContent.title}</h1>
-              )}
             </div>
 
             {/* Content */}
             <div className="min-h-[calc(100vh-100px)] select-none bg-black">
               <div className={cn(
-                "pb-6 pt-8 bg-black",
+                "pb-6 pt-0 bg-black",
                 sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
               )}>
                 <div className={cn(
-                  "mx-auto bg-black",
+                  "mx-auto bg-[hsl(0,0%,12%)] rounded-lg p-6 md:p-8",
                   sidebarVisible ? "max-w-5xl" : "max-w-6xl"
                 )}>
+                  {/* Header inside the box */}
+                  {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
+                    <h1 className="text-4xl font-bold text-white mb-6">{selectedContent.title}</h1>
+                  )}
                   {selectedContent.content}
                 </div>
               </div>
