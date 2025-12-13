@@ -39,7 +39,14 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as { from?: Location })?.from?.pathname || "/";
+  const searchParams = new URLSearchParams(location.search);
+
+  const redirectFromQuery = searchParams.get("redirect");
+
+  const redirectFromState =
+    (location.state as { from?: Location })?.from?.pathname;
+
+  const from = redirectFromQuery || redirectFromState || "/";
 
   useEffect(() => {
     if (user && !loading) {

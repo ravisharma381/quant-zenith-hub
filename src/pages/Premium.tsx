@@ -9,6 +9,10 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "@/firebase/config";
+import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "react-router-dom";
 
 const planTemplates = [
   // {
@@ -127,8 +131,18 @@ const faqs = [
 const Premium = () => {
   const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number }>>({});
   const [loading, setLoading] = useState(true);
+  const [payInitiated, setPayInitiated] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const autoBuy = searchParams.get("autobuy");
+    if (autoBuy && user) {
+      handleGetStarted(decodeURIComponent(autoBuy));
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchPricing = async () => {
@@ -156,6 +170,45 @@ const Premium = () => {
     fetchPricing();
   }, []);
 
+  const handleGetStarted = async (planName: string) => {
+    const encodedPlan = encodeURIComponent(planName);
+
+    // Require login
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
+      return;
+    }
+
+    if (payInitiated) return;
+    setPayInitiated(planName);
+
+    try {
+      const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
+
+      const resp: any = await createPayPalOrder({
+        planType: planName,
+      });
+
+      const payload = resp?.data?.data;
+      if (!payload?.approvalUrl) {
+        throw new Error("PayPal approval URL not returned");
+      }
+
+      // Open PayPal checkout
+      window.open(payload.approvalUrl, "_blank");
+
+    } catch (err: any) {
+      console.error("PayPal checkout failed", err);
+      toast({
+        title: "Payment failed",
+        description: err?.message || "Unable to start PayPal checkout",
+        variant: "destructive",
+      });
+    } finally {
+      setPayInitiated(null);
+    }
+  };
+
   const plans = planTemplates.map((tpl) => {
     const found = pricingMap[tpl.name.toLowerCase()];
     return {
@@ -165,18 +218,6 @@ const Premium = () => {
     };
   });
 
-  const handleGetStarted = (planName: string) => {
-    const encodedPlan = encodeURIComponent(planName);
-    // If user not signed in, redirect to login with redirect back to checkout
-    if (!user) {
-      // keep redirect param URL-encoded
-      navigate(`/login?redirect=${encodeURIComponent(`/checkout?plan=${encodedPlan}`)}`);
-      return;
-    }
-
-    // user is signed in — go straight to checkout
-    navigate(`/checkout?plan=${encodedPlan}`);
-  };
 
   const SkeletonBox = ({ className = "" }) => (
     <div className={`animate-pulse bg-muted rounded-md ${className}`} />
@@ -200,15 +241,12 @@ const Premium = () => {
           {plans.map((plan, index) => (
             <Card
               key={index}
-              className={`plan-card relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
+              className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
             >
               <CardContent className="p-8 flex flex-col h-full">
                 <div>
-                  {/* Title + Badge */}
                   <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-3xl font-bold text-foreground">
-                      {plan.name}
-                    </h3>
+                    <h3 className="text-3xl font-bold text-foreground">{plan.name}</h3>
                     {plan.featured && (
                       <Badge className={`bg-purple-100 ${plan.badgeColor} border-0 text-xs px-2 py-1`}>
                         🎉 Most Popular
@@ -216,13 +254,9 @@ const Premium = () => {
                     )}
                   </div>
 
-                  {/* Description */}
-                  <p className="text-muted-foreground text-sm mb-6">
-                    {plan.description}
-                  </p>
+                  <p className="text-muted-foreground text-sm mb-6">{plan.description}</p>
 
-                  {/* Pricing */}
-                  <div className="mb-6">
+                  <div className="mb-4 h-[64px] flex flex-col justify-end">
                     {loading ? (
                       <>
                         <SkeletonBox className="h-4 w-20 mb-2" />
@@ -233,23 +267,36 @@ const Premium = () => {
                         <span className="text-muted-foreground line-through text-sm">
                           {plan.originalPrice}
                         </span>
-
                         <div className="flex items-baseline">
-                          <span className="text-4xl font-bold text-foreground">
-                            {plan.price}
-                          </span>
+                          <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                           <span className="text-muted-foreground ml-1">{plan.period}</span>
                         </div>
                       </>
                     )}
                   </div>
+
+                  <Button
+                    className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+                    !shadow-none
+                    hover:!shadow-none
+                    focus:!shadow-none
+                    focus-visible:!shadow-none
+                    active:!shadow-none
+                    !ring-0
+                    focus-visible:!ring-0
+                    focus-visible:!ring-offset-0`}
+                    disabled={loading || payInitiated !== null}
+                    onClick={() => handleGetStarted(plan.name)}
+                  >
+                    {payInitiated === plan.name ? "Redirecting to PayPal…" : "Get Started"}
+                  </Button>
                 </div>
 
-                {/* Features */}
-                <div className="space-y-3 mb-6">
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                {/* Features stay below, card height still stable */}
+                <div className="space-y-3 mt-auto">
+                  {plan.features.map((feature, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-purple-500 mt-0.5" />
                       <span className="text-sm text-muted-foreground">
                         {feature.bold ? (
                           <>
@@ -264,22 +311,9 @@ const Premium = () => {
                     </div>
                   ))}
                 </div>
-
-                {/* Bottom: Button always aligned */}
-                <div className="mt-auto pt-4">
-                  <Button
-                    className={`w-full ${plan.buttonColor} ${plan.featured ? "text-white" : "text-background"} 
-                        font-semibold py-6 rounded-lg mb-6
-                        shadow-md hover:shadow-lg transition-shadow
-                        focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-none`}
-                    onClick={() => handleGetStarted(plan.name)}
-                    disabled={loading || true}
-                  >
-                    Get Started
-                  </Button>
-                </div>
               </CardContent>
             </Card>
+
           ))}
         </div>
 

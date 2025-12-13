@@ -17,7 +17,7 @@ import {
 } from "firebase-functions/firestore";
 
 // -------------------- GLOBAL SETUP --------------------
-const BILLING_CURRENCY: "USD" | "INR" = "INR";
+const BILLING_CURRENCY: "USD" | "INR" = "USD";
 setGlobalOptions({ region: "asia-south1", timeoutSeconds: 60, memory: "256MiB" });
 
 if (!admin.apps.length) {
@@ -451,8 +451,12 @@ export const createPayPalOrder = onCall(
       });
 
       if (!createResp.ok) {
-        const txt = await createResp.text();
-        console.error("PayPal order creation failed:", createResp.status, txt);
+        const errJson = await createResp.json();
+        console.error(
+          "PayPal order creation failed:",
+          createResp.status,
+          JSON.stringify(errJson, null, 2)
+        );
         throw new HttpsError("internal", "Failed to create PayPal order");
       }
 
