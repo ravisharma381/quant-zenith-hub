@@ -148,8 +148,8 @@ const CourseDetail = () => {
         
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-7xl mx-auto">
-            <div className="max-w-3xl mx-auto text-center">
-              {/* Course Info */}
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              {/* Left Side - Course Info */}
               <div className="animate-fade-in">
                 <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
                   #1 Rated Quant Prep Course
@@ -162,14 +162,14 @@ const CourseDetail = () => {
                   </span>
                 </h1>
                 
-                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-2xl mx-auto">
+                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
                   Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                 </p>
                 
                 {/* Features List */}
-                <div className="flex flex-wrap justify-center gap-4 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                   {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 group bg-card/30 backdrop-blur-sm px-4 py-3 rounded-xl border border-border/50">
+                    <div key={index} className="flex items-center gap-3 group">
                       <div className="flex-shrink-0 w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
                         <Check className="w-4 h-4 text-primary" />
                       </div>
@@ -179,7 +179,7 @@ const CourseDetail = () => {
                 </div>
 
                 {/* CTA and Rating */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <Button 
                     ref={enrollButtonRef}
                     size="lg" 
@@ -199,6 +199,34 @@ const CourseDetail = () => {
                       <span className="text-muted-foreground ml-1">• 500+ students</span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Right Side - Course Preview Card */}
+              <div className="flex justify-center lg:justify-end">
+                <div className="w-full max-w-md">
+                  <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-500 group">
+                    <div className="relative">
+                      <div className="bg-gradient-to-br from-primary/90 via-primary/70 to-emerald-600/80 h-56 flex items-center justify-center">
+                        <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 cursor-pointer">
+                          <Play className="w-10 h-10 text-white ml-1" />
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30">
+                          Free Preview
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold text-foreground mb-2">Watch Course Preview</h3>
+                      <p className="text-muted-foreground text-sm mb-4">Get a sneak peek of what you'll learn in this masterclass</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Duration: 5 min</span>
+                        <span className="text-primary font-medium">100+ chapters</span>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             </div>
