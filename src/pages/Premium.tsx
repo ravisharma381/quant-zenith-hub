@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Lightbulb, Lock, Gamepad2, Tag, BookOpen, Sparkles, Check } from "lucide-react";
 
 const Premium = () => {
+  const navigate = useNavigate();
   const plans = [
     {
       name: "Yearly",
@@ -143,7 +145,8 @@ const Premium = () => {
                   </div>
                 </div>
                 <Button 
-                  className={`w-full ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg mb-6`}
+                  onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
+                  className={`w-full ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg mb-6 shadow-none hover:shadow-none`}
                 >
                   Get Started
                 </Button>
