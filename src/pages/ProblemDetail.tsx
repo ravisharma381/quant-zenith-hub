@@ -128,7 +128,7 @@ const ProblemDetail = () => {
                 </div>
               ) : (
               <div className="prose prose-invert max-w-none">
-                  <p className="text-white leading-relaxed whitespace-pre-line text-lg">
+                  <p className="text-white leading-snug whitespace-pre-line text-lg">
                     {problem.description}
                   </p>
                 </div>
