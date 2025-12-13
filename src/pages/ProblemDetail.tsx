@@ -94,9 +94,8 @@ const ProblemDetail = () => {
         {/* Navigation bar */}
         <div className="flex items-center justify-end gap-3 mb-6">
           <Button
-            variant="ghost"
             onClick={() => navigate('/problems')}
-            className="text-muted-foreground hover:text-foreground hover:bg-transparent"
+            className="bg-white text-black hover:bg-white/90"
           >
             Back to Problems
           </Button>
