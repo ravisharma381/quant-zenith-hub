@@ -114,8 +114,8 @@ const CourseDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Sticky Enrollment Bar */}
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${
-        showStickyBar ? 'translate-y-0' : '-translate-y-full'
+      <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ${
+        showStickyBar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
       }`}>
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
@@ -129,7 +129,7 @@ const CourseDetail = () => {
                 <span className="text-sm font-medium text-foreground">4.9/5</span>
               </div>
               <Button 
-                className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
                 onClick={() => navigate("/premium")}
               >
                 Get Premium
@@ -138,82 +138,136 @@ const CourseDetail = () => {
           </div>
         </div>
       </div>
+
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
-        <div className="container mx-auto px-4 py-16">
+      <div className="relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-purple-500/10" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Course Info */}
-            <div>
-              <h1 className="text-5xl font-bold text-foreground mb-6">
-                Quant Interview Masterclass
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Master quantitative finance interviews with our comprehensive course designed by industry experts
-              </p>
-              
-              {/* Features List */}
-              <div className="space-y-4 mb-8">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                      <Check className="w-4 h-4 text-background" />
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              {/* Left Side - Course Info */}
+              <div className="animate-fade-in">
+                <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
+                  #1 Rated Quant Prep Course
+                </Badge>
+                
+                <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+                  Quant Interview
+                  <span className="block bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+                    Masterclass
+                  </span>
+                </h1>
+                
+                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
+                  Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
+                </p>
+                
+                {/* Features List */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3 group">
+                      <div className="flex-shrink-0 w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                        <Check className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-foreground text-sm">{feature}</span>
                     </div>
-                    <span className="text-foreground">{feature}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* CTA and Rating */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Button 
-                  ref={enrollButtonRef}
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                  onClick={() => navigate("/premium")}
-                >
-                  Get Premium
-                </Button>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span className="ml-1 font-medium text-foreground">4.9/5</span>
+                {/* CTA and Rating */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                  <Button 
+                    ref={enrollButtonRef}
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 py-6 text-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                    onClick={() => navigate("/premium")}
+                  >
+                    Get Premium Access
+                  </Button>
+                  <div className="flex items-center gap-3">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                      ))}
+                    </div>
+                    <div>
+                      <span className="font-semibold text-foreground">4.9/5</span>
+                      <span className="text-muted-foreground ml-1">• 500+ students</span>
+                    </div>
                   </div>
-                  <span className="text-muted-foreground">from 500+ students</span>
                 </div>
               </div>
-            </div>
 
-            {/* Right Side - Course Preview */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-lg">
-                <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
-                  <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-                    <Play className="w-10 h-10 text-background ml-1" />
-                  </div>
-                </div>
-                <div className="text-center mt-6">
-                  <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
-                  <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
+              {/* Right Side - Course Preview Card */}
+              <div className="flex justify-center lg:justify-end">
+                <div className="w-full max-w-md">
+                  <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-500 group">
+                    <div className="relative">
+                      <div className="bg-gradient-to-br from-primary/90 via-primary/70 to-emerald-600/80 h-56 flex items-center justify-center">
+                        <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 cursor-pointer">
+                          <Play className="w-10 h-10 text-white ml-1" />
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30">
+                          Free Preview
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold text-foreground mb-2">Watch Course Preview</h3>
+                      <p className="text-muted-foreground text-sm mb-4">Get a sneak peek of what you'll learn in this masterclass</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Duration: 5 min</span>
+                        <span className="text-primary font-medium">100+ chapters</span>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Stats Section */}
+      <div className="border-y border-border/50 bg-card/30 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: "1200+", label: "Practice Problems" },
+              { value: "100+", label: "Video Chapters" },
+              { value: "500+", label: "Students Enrolled" },
+              { value: "95%", label: "Success Rate" }
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Features Section */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-24">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
-            <p className="text-lg text-muted-foreground">
+          <div className="text-center mb-20">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Why Choose Us</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              Everything You Need to
+              <span className="block text-primary">Ace Your Interview</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Discover what makes our course the ultimate preparation for quantitative finance success
             </p>
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-12">
             {courseFeatures.map((feature, index) => (
               <FeatureRow
                 key={index}
@@ -229,43 +283,54 @@ const CourseDetail = () => {
       </div>
 
       {/* What You'll Master Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">What You'll Master</h2>
-            <p className="text-lg text-muted-foreground">
-              Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {masterTopics.map((topic, index) => (
-              <Card key={index} className="border-border hover:border-primary/50 transition-colors h-full">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                    <topic.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{topic.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
+        <div className="container mx-auto px-4 py-24 relative z-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Curriculum</Badge>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">What You'll Master</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {masterTopics.map((topic, index) => (
+                <Card key={index} className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:bg-card/80 transition-all duration-300 group h-full">
+                  <CardContent className="p-8">
+                    <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-colors">
+                      <topic.icon className="w-7 h-7 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{topic.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-foreground text-center mb-12">Frequently Asked Questions</h2>
+      <div className="container mx-auto px-4 py-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">FAQ</Badge>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">Frequently Asked Questions</h2>
+          </div>
           
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
-                <AccordionTrigger className="text-left text-foreground hover:text-primary [&[data-state=open]]:text-primary [&>svg]:text-white">
+              <AccordionItem 
+                key={index} 
+                value={`item-${index}`} 
+                className="border border-border/50 rounded-xl px-6 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-colors data-[state=open]:bg-card/60"
+              >
+                <AccordionTrigger className="text-left text-foreground hover:text-primary py-6 text-lg [&[data-state=open]]:text-primary [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6">
+                <AccordionContent className="text-muted-foreground pb-6 text-base leading-relaxed">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -275,15 +340,28 @@ const CourseDetail = () => {
       </div>
 
       {/* Final CTA */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <Button 
-            size="lg" 
-            className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
-            onClick={() => navigate("/course/quant-interview-masterclass/checkout")}
-          >
-            Start Your Journey Today
-          </Button>
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-primary/20" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 py-24 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              Ready to Land Your
+              <span className="block text-primary">Dream Quant Job?</span>
+            </h2>
+            <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
+              Join 500+ successful students who landed positions at top trading firms and hedge funds.
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-12 py-7 text-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+              onClick={() => navigate("/premium")}
+            >
+              Start Your Journey Today
+            </Button>
+          </div>
         </div>
       </div>
     </div>
