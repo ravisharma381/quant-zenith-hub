@@ -938,7 +938,7 @@ const CourseLearn = () => {
                 sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
               )}>
                 <div className={cn(
-                  "mx-auto bg-[hsl(0,0%,12%)] rounded-lg px-4 md:px-6 py-6 md:py-8",
+                  "mx-auto bg-[hsl(0,0%,12%)] rounded-lg px-3 md:px-4 py-6 md:py-8",
                   sidebarVisible ? "max-w-5xl" : "max-w-6xl"
                 )}>
                   {/* Header inside the box */}
