@@ -874,7 +874,7 @@ const CourseLearn = () => {
               "pt-6 pb-4",
               sidebarVisible ? "px-4 md:px-6" : "px-4 md:px-16"
             )}>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
@@ -928,6 +928,11 @@ const CourseLearn = () => {
                     <p>Next chapter</p>
                   </TooltipContent>
                 </Tooltip>
+
+                {/* Title inline with icons */}
+                {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
+                  <h1 className="text-xl md:text-2xl font-bold text-white ml-2">{selectedContent.title}</h1>
+                )}
               </div>
             </div>
 
@@ -941,10 +946,6 @@ const CourseLearn = () => {
                   "mx-auto bg-[hsl(0,0%,12%)] rounded-lg px-3 md:px-4 py-6 md:py-8",
                   sidebarVisible ? "max-w-5xl" : "max-w-6xl"
                 )}>
-                  {/* Header inside the box */}
-                  {currentView === 'course' && typeof selectedContent === 'object' && 'title' in selectedContent && selectedContent.title && (
-                    <h1 className="text-4xl font-bold text-white mb-6">{selectedContent.title}</h1>
-                  )}
                   {selectedContent.content}
                 </div>
               </div>
