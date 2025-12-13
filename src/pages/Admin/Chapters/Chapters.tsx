@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, X, PlusCircle, ArrowLeft, ListMusic } from "lucide-react";
+import { Pencil, X, PlusCircle, ArrowLeft, ListMusic, Eye } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface TopicMeta {
@@ -255,6 +255,14 @@ const AdminChapters: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <Button
+                            variant="secondary"
+                            onClick={() => navigate(`/course/${courseId}/learn`)}
+                            className="flex items-center gap-2"
+                        >
+                            <Eye className="w-4 h-4" />
+                            View Course Preview
+                        </Button>
                         <Button
                             variant="secondary"
                             onClick={() => navigate(`/admin/course/${courseId}/playlists`)}

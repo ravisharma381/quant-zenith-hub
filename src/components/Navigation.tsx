@@ -152,18 +152,6 @@ const Navigation = () => {
                       </div>
                     )}
                     <Link
-                      to="/my-courses"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                    >
-                      <div className="mt-1">
-                        <GraduationCap className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">My Courses</div>
-                        <div className="text-sm text-muted-foreground">Continue your learning journey</div>
-                      </div>
-                    </Link>
-                    <Link
                       to="/billing"
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                     >
@@ -173,18 +161,6 @@ const Navigation = () => {
                       <div>
                         <div className="font-medium text-foreground">Billing</div>
                         <div className="text-sm text-muted-foreground">View purchase history & details</div>
-                      </div>
-                    </Link>
-                    <Link
-                      to="/contact"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                    >
-                      <div className="mt-1">
-                        <Mail className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">Contact Us</div>
-                        <div className="text-sm text-muted-foreground">Get in touch with us</div>
                       </div>
                     </Link>
                     <button
@@ -301,8 +277,21 @@ const Navigation = () => {
                     <BookOpen className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                   </div>
                   <div>
-                    <div className="font-medium text-foreground">All Courses</div>
+                    <div className="font-medium text-foreground">Courses</div>
                     <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
+                  </div>
+                </Link>
+                <Link
+                  to="/premium"
+                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="mt-1">
+                    <Crown className="w-5 h-5 text-purple-300 group-hover/item:text-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground text-purple-300">Premium</div>
+                    <div className="text-sm  text-muted-foreground">Unlock All The Tools For Quant Interview Success</div>
                   </div>
                 </Link>
 

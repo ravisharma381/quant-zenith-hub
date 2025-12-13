@@ -619,7 +619,7 @@ const Problems: React.FC = () => {
                       });
                     }}
                   >
-                    <div className="grid grid-cols-12 gap-4">
+                    <div className="grid grid-cols-12 gap-4 relative">
 
                       {/* # */}
                       <div className="col-span-1 flex items-center">
@@ -672,8 +672,8 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Asked In */}
-                      <div className="col-span-3 md:col-span-2 flex items-center justify-center">
-                        <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+                      <div className="col-span-4 md:col-span-3 flex items-center justify-center">
+                        <div className="flex flex-wrap gap-1 md:gap-2 justify-center items-center">
                           {problem.askedIn.map((logo, idx) => (
                             <LogoWithSkeleton
                               key={idx}
@@ -686,7 +686,7 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Status Icon */}
-                      <div className="col-span-1 flex items-center justify-center">
+                      <div className="absolute -right-1 md:right-4 top-1/2 -translate-y-1/2 flex items-center justify-center">
                         <TooltipProvider delayDuration={0}>
                           <Tooltip>
                             <TooltipTrigger asChild>

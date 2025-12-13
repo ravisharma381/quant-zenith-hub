@@ -11,23 +11,23 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const planTemplates = [
-  {
-    name: "Monthly",
-    description: "Gain access to our collection of over 1200+ questions.",
-    originalPrice: "$360",
-    price: "$25",
-    period: "/month",
-    borderColor: "border-blue-500 hover:border-blue-600",
-    buttonColor: "bg-blue-600 hover:bg-blue-700",
-    badgeColor: "bg-blue-100 text-blue-700",
-    featured: false,
-    features: [
-      { text: "1200+ Quant Interview Questions", bold: "1200+" },
-      { text: "Company playlists for top quant firms", bold: "top quant firms" },
-      { text: "24/7 Support with priority feature requests from the dev team", bold: "24/7 Support" },
-      { text: "Cheaper than a nice lunch 🍔", bold: null },
-    ],
-  },
+  // {
+  //   name: "Monthly",
+  //   description: "Gain access to our collection of over 1200+ questions.",
+  //   originalPrice: "$360",
+  //   price: "$25",
+  //   period: "/month",
+  //   borderColor: "border-blue-500 hover:border-blue-600",
+  //   buttonColor: "bg-blue-600 hover:bg-blue-700",
+  //   badgeColor: "bg-blue-100 text-blue-700",
+  //   featured: false,
+  //   features: [
+  //     { text: "1200+ Quant Interview Questions", bold: "1200+" },
+  //     { text: "Company playlists for top quant firms", bold: "top quant firms" },
+  //     { text: "24/7 Support with priority feature requests from the dev team", bold: "24/7 Support" },
+  //     { text: "Cheaper than a nice lunch 🍔", bold: null },
+  //   ],
+  // },
   {
     name: "Yearly",
     description: "Our most popular plan grants access to all premium features.",
@@ -196,7 +196,7 @@ const Premium = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
           {plans.map((plan, index) => (
             <Card
               key={index}
@@ -226,7 +226,7 @@ const Premium = () => {
                     {loading ? (
                       <>
                         <SkeletonBox className="h-4 w-20 mb-2" />
-                        <SkeletonBox className="h-8 w-28" />
+                        <SkeletonBox className="h-10 w-32" />
                       </>
                     ) : (
                       <>
@@ -273,7 +273,7 @@ const Premium = () => {
                         shadow-md hover:shadow-lg transition-shadow
                         focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-none`}
                     onClick={() => handleGetStarted(plan.name)}
-                    disabled={loading}
+                    disabled={loading || true}
                   >
                     Get Started
                   </Button>
