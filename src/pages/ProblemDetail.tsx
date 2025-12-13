@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Share, Send, Lock } from "lucide-react";
+import { Share, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
@@ -21,6 +21,20 @@ const ProblemDetail = () => {
   const [shakeKey, setShakeKey] = useState(0);
   
   const isPremiumProblem = Number(id) === 60;
+  const currentProblemId = Number(id) || 1;
+  const totalProblems = 1200;
+
+  const handlePrevious = () => {
+    if (currentProblemId > 1) {
+      navigate(`/problems/${currentProblemId - 1}`);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentProblemId < totalProblems) {
+      navigate(`/problems/${currentProblemId + 1}`);
+    }
+  };
 
   // Mock problem data - in real app this would come from API
   const problem = {
@@ -76,6 +90,35 @@ const ProblemDetail = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
+        {/* Navigation bar */}
+        <div className="flex items-center justify-end gap-3 mb-6">
+          <Button
+            variant="outline"
+            onClick={() => navigate('/problems')}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Back to Problems
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentProblemId <= 1}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleNext}
+            disabled={currentProblemId >= totalProblems}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+
         <Tabs defaultValue="problem" className="w-full">
           <div className="flex items-center justify-between mb-6">
             <TabsList className="grid w-48 grid-cols-2">
