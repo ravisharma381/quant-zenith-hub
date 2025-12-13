@@ -127,8 +127,8 @@ const ProblemDetail = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="prose prose-invert max-w-none">
-                  <p className="text-white leading-relaxed whitespace-pre-line">
+              <div className="prose prose-invert max-w-none">
+                  <p className="text-white leading-relaxed whitespace-pre-line text-lg">
                     {problem.description}
                   </p>
                 </div>
@@ -200,7 +200,7 @@ const ProblemDetail = () => {
                     <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                       Hint 1
                     </AccordionTrigger>
-                    <AccordionContent className="text-white leading-relaxed">
+                    <AccordionContent className="text-white leading-relaxed text-lg">
                       {problem.hint1}
                     </AccordionContent>
                   </AccordionItem>
@@ -209,7 +209,7 @@ const ProblemDetail = () => {
                     <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                       Hint 2
                     </AccordionTrigger>
-                    <AccordionContent className="text-white leading-relaxed">
+                    <AccordionContent className="text-white leading-relaxed text-lg">
                       {problem.hint2}
                     </AccordionContent>
                   </AccordionItem>
@@ -218,7 +218,7 @@ const ProblemDetail = () => {
                     <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
                       Solution
                     </AccordionTrigger>
-                    <AccordionContent className="text-white leading-relaxed whitespace-pre-line">
+                    <AccordionContent className="text-white leading-relaxed whitespace-pre-line text-lg">
                       {problem.solution}
                     </AccordionContent>
                   </AccordionItem>
