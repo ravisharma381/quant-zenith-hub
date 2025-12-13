@@ -158,23 +158,35 @@ const Index = () => {
                   {/* Multiple Choice Options */}
                   <div className="space-y-3">
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>3</sub>
+                      <span className="text-foreground text-lg inline-flex items-center">
+                        <span className="inline-flex flex-col items-center leading-none">
+                          <span className="border-b border-foreground px-1">1</span>
+                          <span className="px-1">3</span>
+                        </span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>3√2</sub>
+                      <span className="text-foreground text-lg inline-flex items-center">
+                        <span className="inline-flex flex-col items-center leading-none">
+                          <span className="border-b border-foreground px-1">1</span>
+                          <span className="px-1">3√2</span>
+                        </span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>6</sub>
+                      <span className="text-foreground text-lg inline-flex items-center">
+                        <span className="inline-flex flex-col items-center leading-none">
+                          <span className="border-b border-foreground px-1">1</span>
+                          <span className="px-1">6</span>
+                        </span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>6√2</sub>
+                      <span className="text-foreground text-lg inline-flex items-center">
+                        <span className="inline-flex flex-col items-center leading-none">
+                          <span className="border-b border-foreground px-1">1</span>
+                          <span className="px-1">6√2</span>
+                        </span>
                       </span>
                     </button>
                   </div>
