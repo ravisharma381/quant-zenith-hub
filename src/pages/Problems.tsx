@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock } from "lucide-react";
+import { Lock, CheckCircle, Circle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -67,12 +67,16 @@ const Problems = () => {
       "Copula Methods"
     ];
     
+    // Mock completion status - some problems are done
+    const isCompleted = [1, 3, 5, 7, 12, 15, 18, 22, 25, 30, 35, 40, 42, 48].includes(i + 1);
+    
     return {
       id: i + 1,
       title: problemTitles[i % problemTitles.length],
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
-      askedIn: logos.slice(0, (i % 3) + 1)
+      askedIn: logos.slice(0, (i % 3) + 1),
+      completed: isCompleted
     };
   });
 
@@ -230,10 +234,11 @@ const Problems = () => {
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
-            <div className="col-span-4 md:col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+            <div className="col-span-3 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
             <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
-            <div className="col-span-4 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
+            <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
+            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
+            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
           </div>
           
           {/* Table Body */}
@@ -248,11 +253,11 @@ const Problems = () => {
                   <div className="col-span-1 flex items-center">
                     <span className="text-muted-foreground">{problem.id}</span>
                   </div>
-                  <div className="col-span-4 md:col-span-4 flex items-center gap-2">
+                  <div className="col-span-3 md:col-span-3 flex items-center gap-2">
                     {problem.id === 60 && (
                       <Lock className="h-4 w-4 text-amber-500 flex-shrink-0" />
                     )}
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                       {problem.title}
                     </h3>
                   </div>
@@ -261,7 +266,7 @@ const Problems = () => {
                       {problem.topic}
                     </Badge>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                  <div className="col-span-2 md:col-span-2 flex items-center justify-center">
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -275,7 +280,7 @@ const Problems = () => {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <div className="col-span-4 md:col-span-3 flex items-center justify-center">
+                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
                     <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
                       {problem.askedIn.map((logo, index) => (
                         <LogoWithSkeleton
@@ -286,6 +291,13 @@ const Problems = () => {
                         />
                       ))}
                     </div>
+                  </div>
+                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                    {problem.completed ? (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    ) : (
+                      <Circle className="h-5 w-5 text-muted-foreground" />
+                    )}
                   </div>
                 </div>
               </div>
