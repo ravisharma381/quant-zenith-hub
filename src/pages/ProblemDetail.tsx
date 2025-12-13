@@ -215,7 +215,7 @@ const ProblemDetail = () => {
                   </AccordionItem>
                   
                   <AccordionItem value="solution" className="border border-border rounded-lg px-4">
-                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-red-400 data-[state=open]:text-red-400 [&>svg]:text-white">
                       Solution
                     </AccordionTrigger>
                     <AccordionContent className="text-white leading-relaxed whitespace-pre-line text-lg">
