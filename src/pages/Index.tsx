@@ -205,7 +205,7 @@ const Index = () => {
                       </Badge>
                     </div>
                     <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none">
-                      Submit
+                      Try it Out
                     </Button>
                   </div>
                 </CardContent>
