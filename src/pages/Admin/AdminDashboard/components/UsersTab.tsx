@@ -103,7 +103,7 @@ const UsersTab: React.FC = () => {
     }, [debouncedSearch, premiumFilter, planFilter]);
 
     const updateRole = async (userId: string, role: string) => {
-        await updateDoc(doc(db, "users", userId), { role });
+        await updateDoc(doc(db, "users", userId), { role, isPremium: (role === "admin" || role === "superAdmin") });
     };
 
     return (

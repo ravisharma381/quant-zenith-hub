@@ -59,6 +59,7 @@ const AdminTopics: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [editingTopic, setEditingTopic] = useState<TopicFormData | null>(null);
     const [chapterTitle, setChapterTitle] = useState("");
+    const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const navigate = useNavigate();
     // ✅ Fetch topics
@@ -201,6 +202,7 @@ const AdminTopics: React.FC = () => {
     // ✅ Save handler
     const handleSave = async (data: TopicFormData) => {
         try {
+            setLoading(true);
             const { id, ...payload } = data;
             if (id) {
                 await updateDoc(doc(db, "topics", id), payload);
@@ -217,6 +219,8 @@ const AdminTopics: React.FC = () => {
         } catch (error) {
             console.error(error);
             toast({ title: "Error saving topic", variant: "destructive" });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -339,6 +343,7 @@ const AdminTopics: React.FC = () => {
                 onSubmit={handleSave}
                 initialData={editingTopic || undefined}
                 chapterTitle={chapterTitle}
+                loading={loading}
             />
         </div>
     );

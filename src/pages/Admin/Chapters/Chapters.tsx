@@ -61,6 +61,7 @@ const AdminChapters: React.FC = () => {
     });
     const [search, setSearch] = useState("");
     const [totalCount, setTotalCount] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     // pagination
     const PAGE_SIZE = 10;
@@ -149,6 +150,7 @@ const AdminChapters: React.FC = () => {
     // 🔹 Save (Add or Update)
     const handleSave = async () => {
         try {
+            setLoading(true);
             const { id, ...data } = formData;
             if (editingChapter) {
                 await updateDoc(doc(db, "chapters", editingChapter.id!), data);
@@ -174,6 +176,8 @@ const AdminChapters: React.FC = () => {
         } catch (error) {
             console.error(error);
             toast({ title: "Error saving chapter", variant: "destructive" });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -401,7 +405,7 @@ const AdminChapters: React.FC = () => {
                     </div>
 
                     <DialogFooter>
-                        <Button onClick={handleSave}>
+                        <Button disabled={loading} onClick={handleSave}>
                             {editingChapter ? "Update" : "Create"}
                         </Button>
                     </DialogFooter>

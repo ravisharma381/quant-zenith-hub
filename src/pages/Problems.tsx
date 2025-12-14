@@ -43,7 +43,7 @@ import {
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 
-const PROBLEMS_COURSE_ID = "ynRqmBdSMEUAZhh0WYLn";
+const PROBLEMS_COURSE_ID = "ITQjmavjyTHoMnMqFb4r";
 const PROBLEMS_PER_PAGE = 20;
 const SHOW_FREE_PAGES = 2;
 

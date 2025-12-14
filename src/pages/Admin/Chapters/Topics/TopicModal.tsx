@@ -57,9 +57,10 @@ interface TopicModalProps {
     onSubmit: (data: TopicFormData) => void;
     initialData?: TopicFormData;
     chapterTitle: string;
+    loading: boolean;
 }
 
-const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData, chapterTitle }) => {
+const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, initialData, chapterTitle, loading }) => {
     const { courseId, chapterId } = useParams<{ courseId: string; chapterId: string }>();
     const [title, setTitle] = useState("");
     const [type, setType] = useState<"layout" | "question" | "playlist">("question");
@@ -377,7 +378,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                         </div>
                     )}
 
-                    <Button onClick={handleSubmit} className="w-full">{initialData ? "Save Changes" : "Add Topic"}</Button>
+                    <Button disabled={loading} onClick={handleSubmit} className="w-full">{initialData ? "Save Changes" : "Add Topic"}</Button>
                 </div>
             </DialogContent>
         </Dialog>
