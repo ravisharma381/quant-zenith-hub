@@ -444,7 +444,7 @@ export const createPayPalOrder = onCall(
           application_context: {
             brand_name: "QuantProf",
             user_action: "PAY_NOW",
-            return_url: process.env.PAYPAL_RETURN_URL || "https://quantprof.org",
+            return_url: process.env.PAYPAL_RETURN_URL || "https://quantprof.org/paypal/success",
             cancel_url: process.env.PAYPAL_CANCEL_URL || "https://quantprof.org/premium",
           },
         }),
@@ -584,6 +584,97 @@ export const razorpayWebhook = onRequest(
   }
 );
 
+export const capturePayPalOrder = onCall(
+  { secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET] },
+  async (req: CallableRequest) => {
+    const uid = req.auth?.uid;
+    if (!uid) throw new HttpsError("unauthenticated", "Sign in required.");
+
+    const { orderId } = req.data as { orderId?: string };
+    if (!orderId) throw new HttpsError("invalid-argument", "orderId required.");
+
+    const txnRef = db.collection("transactions").doc(orderId);
+    const txnSnap = await txnRef.get();
+
+    if (!txnSnap.exists) {
+      throw new HttpsError("not-found", "Transaction not found.");
+    }
+
+    const txn = txnSnap.data() as TransactionDoc;
+
+    // 🔒 Idempotency guard
+    if (txn.status === "success") {
+      return { ok: true, alreadyCaptured: true };
+    }
+
+    const accessToken = await getPayPalAccessToken();
+
+    const captureResp = await fetch(
+      `https://api-m.paypal.com/v2/checkout/orders/${orderId}/capture`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const captureJson = await captureResp.json();
+
+    if (!captureResp.ok) {
+      console.error("PayPal capture failed:", captureJson);
+      throw new HttpsError("internal", "Payment capture failed.");
+    }
+
+    // Validate capture result
+    const capture =
+      captureJson.purchase_units?.[0]?.payments?.captures?.[0];
+
+    if (!capture || capture.status !== "COMPLETED") {
+      console.error("Unexpected capture state:", captureJson);
+      throw new HttpsError("internal", "Capture not completed.");
+    }
+
+    const purchasedAt = admin.firestore.Timestamp.now();
+    if (!txn.planType) {
+      console.error("Transaction missing planType:", txn);
+      throw new HttpsError(
+        "failed-precondition",
+        "Transaction missing planType"
+      );
+    }
+    const expiresAtIso = computeExpiryTimestamp(purchasedAt, txn.planType);
+
+    // ✅ Atomic entitlement update
+    await Promise.all([
+      txnRef.set(
+        {
+          status: "success",
+          paymentId: capture.id,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          expiresAt: expiresAtIso,
+        },
+        { merge: true }
+      ),
+
+      db.collection("users").doc(uid).set(
+        {
+          isPremium: true,
+          purchasedAt: purchasedAt.toDate().toISOString(),
+          expiresAt: expiresAtIso,
+          planType: txn.planType,
+          planPrice: txn.planPrice ?? null,
+        },
+        { merge: true }
+      ),
+    ]);
+
+    return { ok: true };
+  }
+);
+
+
 /**
  * paypalWebhook - HTTP endpoint
  */
@@ -591,8 +682,8 @@ export const paypalWebhook = onRequest(
   { secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_WEBHOOK_ID] },
   async (req, res) => {
     try {
-      // extract headers needed for PayPal verification
-      const headers: Partial<PayPalWebhookHeaders> = {
+      // ---- 1. Verify PayPal signature ----
+      const headers: PayPalWebhookHeaders = {
         "paypal-auth-algo": req.headers["paypal-auth-algo"] as string,
         "paypal-cert-url": req.headers["paypal-cert-url"] as string,
         "paypal-transmission-id": req.headers["paypal-transmission-id"] as string,
@@ -600,97 +691,82 @@ export const paypalWebhook = onRequest(
         "paypal-transmission-time": req.headers["paypal-transmission-time"] as string,
       };
 
-      const body = req.body as unknown;
+      const body = req.body;
 
-      // Verify webhook signature with PayPal
-      const ok = await verifyPayPalWebhook(headers as PayPalWebhookHeaders, body);
-      if (!ok) {
+      const isValid = await verifyPayPalWebhook(headers, body);
+      if (!isValid) {
         console.warn("Invalid PayPal webhook signature");
-        res.status(400).send("Invalid signature");
+        res.status(400).send("invalid signature");
         return;
       }
 
-      // Narrow body object for processing
-      if (typeof body !== "object" || body === null) {
-        res.status(400).send("Invalid body");
+      if (!body || typeof body !== "object") {
+        res.status(400).send("invalid body");
         return;
       }
 
-      const eventType = (body as Record<string, unknown>)["event_type"] as string | undefined;
+      const eventType = (body).event_type as string | undefined;
       if (!eventType) {
-        res.status(400).send("Missing event_type");
+        res.status(400).send("missing event_type");
         return;
       }
 
+      // ---- 2. Ignore non-terminal events ----
       if (eventType === "CHECKOUT.ORDER.APPROVED") {
+        // approval ≠ capture
         res.status(200).send("ignored");
         return;
       }
 
-      if (eventType === "PAYMENT.CAPTURE.COMPLETED" || eventType === "PAYMENT.SALE.COMPLETED") {
-        const resource = (body as Record<string, unknown>)["resource"] as Record<string, unknown> | undefined;
-        if (!resource) {
-          res.status(400).send("Missing resource");
-          return;
-        }
-
-        // orderId may live in supplementary_data.related_ids.order_id or resource.id
-        let orderId: string | undefined;
-        try {
-          const supp = resource["supplementary_data"] as Record<string, unknown> | undefined;
-          const relatedIds = supp?.["related_ids"] as Record<string, unknown> | undefined;
-          orderId = relatedIds?.["order_id"] as string | undefined;
-        } catch {
-          orderId = undefined;
-        }
-
-        if (!orderId) {
-          orderId = (resource["id"] as string | undefined) ?? (resource["invoice_id"] as string | undefined);
-        }
-
-        if (!orderId) {
-          console.warn("No orderId found in PayPal webhook resource", resource);
-          res.status(400).send("Missing order id");
-          return;
-        }
-
-        const txnRef = db.collection("transactions").doc(orderId);
-        await txnRef.set(
-          {
-            paymentId: (resource["id"] as string) ?? null,
-            status: "success",
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          },
-          { merge: true }
-        );
-
-        const txnSnap = await txnRef.get();
-        const txn = txnSnap.data() as TransactionDoc | undefined;
-        if (txn && txn.userId && txn.planType) {
-          const purchasedAtTs = admin.firestore.Timestamp.now();
-          const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txn.planType);
-
-          // NEW: Write expiry to transaction schema
-          await txnRef.set(
-            {
-              expiresAt: expiresAtIso,
-            },
-            { merge: true }
-          );
-
-          // Update user record
-          await db.collection("users").doc(txn.userId).set(
-            {
-              isPremium: true,
-              purchasedAt: purchasedAtTs.toDate().toISOString(),
-              expiresAt: expiresAtIso,
-              planType: txn.planType,
-              planPrice: txn.planPrice ?? null,
-            },
-            { merge: true }
-          );
-        }
+      // ---- 3. Handle CAPTURE COMPLETED only ----
+      if (eventType !== "PAYMENT.CAPTURE.COMPLETED") {
+        res.status(200).send("ignored");
+        return;
       }
+
+      const resource = (body).resource;
+      if (!resource) {
+        res.status(400).send("missing resource");
+        return;
+      }
+
+      // ---- 4. Extract ORDER ID (ONLY valid source) ----
+      const orderId =
+        resource?.supplementary_data?.related_ids?.order_id;
+
+      if (!orderId || typeof orderId !== "string") {
+        console.warn("Missing order_id in webhook:", resource);
+        res.status(400).send("missing order_id");
+        return;
+      }
+
+      const txnRef = db.collection("transactions").doc(orderId);
+      const txnSnap = await txnRef.get();
+
+      // ---- 5. Idempotency guard ----
+      if (!txnSnap.exists) {
+        console.warn("Transaction not found for order:", orderId);
+        res.status(200).send("noop");
+        return;
+      }
+
+      const txn = txnSnap.data() as TransactionDoc;
+
+      if (txn.status === "success") {
+        // already reconciled
+        res.status(200).send("noop");
+        return;
+      }
+
+      // ---- 6. Reconcile transaction ONLY ----
+      await txnRef.set(
+        {
+          status: "success",
+          paymentId: resource.id ?? null, // capture id
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
 
       res.status(200).send("ok");
     } catch (err) {
@@ -699,4 +775,5 @@ export const paypalWebhook = onRequest(
     }
   }
 );
+
 

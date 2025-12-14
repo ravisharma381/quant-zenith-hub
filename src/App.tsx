@@ -43,6 +43,7 @@ import Premium from "./pages/Premium";
 import AdminPricing from "./pages/Admin/AdminPricing";
 import PremiumCheckout from "./pages/PremiumCheckout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import PaypalSuccess from "./pages/PaypalSuccess";
 
 const App = () => (
   <HelmetProvider>
@@ -148,6 +149,7 @@ const App = () => (
                   <ContactUs />
                 </Layout>
               } />
+              <Route path="/paypal/success" element={<PaypalSuccess />} />
               <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
               <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
               <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
