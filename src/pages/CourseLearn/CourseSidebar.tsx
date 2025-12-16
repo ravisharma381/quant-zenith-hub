@@ -43,6 +43,19 @@ const CourseSidebar: React.FC<SidebarProps> = ({
         [search]
     );
 
+    const searchActive = search.trim().length > 0;
+
+    const flatSearchResults = searchActive
+        ? chapters.flatMap((chapter) =>
+            (chapter.topicMeta || [])
+                .filter((t: any) => filterMatch(t.title))
+                .map((t: any) => ({
+                    ...t,
+                    chapterTitle: chapter.title,
+                }))
+        )
+        : [];
+
     useEffect(() => {
         if (!selectedTopicId || !sidebarRef.current) return;
 
@@ -103,7 +116,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
             <div
                 ref={sidebarRef}
                 className="flex-1 overflow-y-auto custom-scrollbar no-scroll-reset">
-                <div className="p-6">
+                {/* <div className="p-6">
                     {chapters.map((chapter) => {
                         const topics = (chapter.topicMeta || []).filter((t: any) =>
                             filterMatch(t.title)
@@ -115,7 +128,6 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
                         return (
                             <div key={chapter.id}>
-                                {/* Chapter Header */}
                                 <button
                                     className="w-full flex items-center justify-between text-left text-white py-2"
                                     onClick={() => toggle(chapter.id)}
@@ -146,7 +158,6 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                                                     )}
                                                     onClick={() => onSelectTopic(topic.topicId)}
                                                 >
-                                                    {/* Checkbox */}
                                                     <div
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -173,7 +184,132 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                             </div>
                         );
                     })}
+                </div> */}
+                <div className="p-6">
+                    {searchActive ? (
+                        <div className="space-y-1">
+                            {flatSearchResults.map((topic) => {
+                                const active = selectedTopicId === topic.topicId;
+                                const isCompleted = completedSet.has(topic.topicId);
+
+                                return (
+                                    <div
+                                        key={topic.topicId}
+                                        data-topic-id={topic.topicId}
+                                        className={cn(
+                                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg",
+                                            active
+                                                ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]"
+                                                : "text-white hover:bg-gray-800"
+                                        )}
+                                        onClick={() => onSelectTopic(topic.topicId)}
+                                    >
+                                        {/* Checkbox */}
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleComplete(topic.topicId);
+                                            }}
+                                            className={cn(
+                                                "w-5 h-5 border-2 rounded flex items-center justify-center",
+                                                isCompleted
+                                                    ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]"
+                                                    : "border-gray-500"
+                                            )}
+                                        >
+                                            {isCompleted && (
+                                                <span className="text-black text-xs font-bold">✓</span>
+                                            )}
+                                        </div>
+
+                                        <div className="flex flex-col">
+                                            <span className="text-base font-normal">{topic.title}</span>
+                                            <span className="text-xs text-gray-400">
+                                                {topic.chapterTitle}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {flatSearchResults.length === 0 && (
+                                <div className="text-gray-500 text-sm px-2">
+                                    No matching topics found
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        chapters.map((chapter) => {
+                            const topics = (chapter.topicMeta || []).filter((t: any) =>
+                                filterMatch(t.title)
+                            );
+
+                            if (topics.length === 0) return null;
+
+                            const isOpen = expanded[chapter.id] ?? false;
+
+                            return (
+                                <div key={chapter.id} className="mb-6">
+                                    {/* Chapter Header */}
+                                    <button
+                                        className="w-full flex items-center justify-between text-left text-white py-2"
+                                        onClick={() => toggle(chapter.id)}
+                                    >
+                                        <span className="font-normal text-lg">{chapter.title}</span>
+                                        {isOpen ? (
+                                            <ChevronDown className="w-5 h-5" />
+                                        ) : (
+                                            <ChevronRight className="w-5 h-5" />
+                                        )}
+                                    </button>
+
+                                    {isOpen && (
+                                        <div className="mt-2 space-y-1 pl-2">
+                                            {topics.map((topic: any) => {
+                                                const active = selectedTopicId === topic.topicId;
+                                                const isCompleted = completedSet.has(topic.topicId);
+
+                                                return (
+                                                    <div
+                                                        key={topic.topicId}
+                                                        data-topic-id={topic.topicId}
+                                                        className={cn(
+                                                            "flex items-center gap-4 p-3 cursor-pointer transition-all rounded-lg  mb-1",
+                                                            active
+                                                                ? "bg-[hsl(122_97%_50%_/_0.2)] text-[hsl(122_97%_50%)]"
+                                                                : "text-white hover:bg-gray-800"
+                                                        )}
+                                                        onClick={() => onSelectTopic(topic.topicId)}
+                                                    >
+                                                        <div
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                toggleComplete(topic.topicId);
+                                                            }}
+                                                            className={cn(
+                                                                "w-5 h-5 border-2 rounded bg-transparent flex items-center justify-center cursor-pointer",
+                                                                isCompleted
+                                                                    ? "bg-[hsl(122_97%_50%)] border-[hsl(122_97%_50%)]"
+                                                                    : "border-gray-500"
+                                                            )}
+                                                        >
+                                                            {isCompleted && (
+                                                                <span className="text-black text-xs font-bold">✓</span>
+                                                            )}
+                                                        </div>
+
+                                                        <span className="text-base font-normal">{topic.title}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
+
             </div>
         </div>
     );
