@@ -280,7 +280,7 @@ const ProblemDetail = () => {
       </div>
 
       {/* QUESTION */}
-      <QuestionLayout topic={topic} markAsCompleted={markAsCompleted} />
+      <QuestionLayout topic={topic} markAsCompleted={isSubscribed ? markAsCompleted : undefined} />
     </div>
   );
 };
