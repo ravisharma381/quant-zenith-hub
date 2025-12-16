@@ -33,6 +33,7 @@ const Problems = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
@@ -119,7 +120,10 @@ const Problems = () => {
     const matchesTopic = selectedTopic === "All" || problem.topic === selectedTopic;
     const matchesDifficulty = selectedDifficulty === "All" || 
       `Level ${problem.difficulty}` === selectedDifficulty;
-    return matchesSearch && matchesTopic && matchesDifficulty;
+    const matchesStatus = selectedStatus === "All" || 
+      (selectedStatus === "Solved" && problem.completed) ||
+      (selectedStatus === "Unsolved" && !problem.completed);
+    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
   });
 
   // Get problems for current page
@@ -192,7 +196,7 @@ const Problems = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Search</label>
             <Input
@@ -224,6 +228,19 @@ const Problems = () => {
                 {difficulties.map((difficulty) => (
                   <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Status</label>
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="Solved">Solved</SelectItem>
+                <SelectItem value="Unsolved">Unsolved</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -305,7 +322,7 @@ const Problems = () => {
                           </div>
                         </TooltipTrigger>
                         <TooltipContent side="top" align="center" sideOffset={8}>
-                          <p>{problem.completed ? "Completed" : "Not Done"}</p>
+                          <p>{problem.completed ? "Solved" : "Unsolved"}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
