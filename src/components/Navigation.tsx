@@ -24,7 +24,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
 
   const navItems = [
     { name: "Problems", path: "/problems" },
-    { name: "Games", path: "/games" },
+    // { name: "Games", path: "/games" },
     // { name: "Blogs", path: "/blogs" },
   ];
 
@@ -240,7 +240,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                   </div>
                 </Link>
 
-                <Link
+                {/* <Link
                   to="/games"
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                   onClick={() => setIsOpen(false)}
@@ -252,7 +252,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <div className="font-medium text-foreground">Games</div>
                     <div className="text-sm text-muted-foreground">Interactive challenges</div>
                   </div>
-                </Link>
+                </Link> */}
 
                 {/* <Link
                   to="/blogs"

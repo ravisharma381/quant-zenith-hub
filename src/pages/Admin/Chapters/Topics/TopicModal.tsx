@@ -42,6 +42,7 @@ export interface TopicFormData {
     hint4?: string;
     hint5?: string;
     solution?: string;
+    topic?: string;
     level?: string;
     playlistIds?: string[];
     askedIn?: { name: string; logoURL: string }[];
@@ -75,6 +76,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [hint4, setHint4] = useState("");
     const [hint5, setHint5] = useState("");
     const [solution, setSolution] = useState("");
+    const [topic, setTopic] = useState("");
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
     const [playlistOptions, setPlaylistOptions] = useState<{ label: string; value: string }[]>([]);
@@ -97,6 +99,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint4(initialData.hint4 ?? "");
             setHint5(initialData.hint5 ?? "");
             setSolution(initialData.solution ?? "");
+            setTopic(initialData.topic ?? "");
             setPlaylistIds(initialData.playlistIds ?? []);
             setAskedIn(initialData.askedIn ?? []);
             setIsPrivate(initialData.isPrivate ?? true);
@@ -113,6 +116,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint3("");
             setHint4("");
             setHint5("");
+            setTopic("");
             setSolution("");
             setPlaylistIds([]);
             setAskedIn([]);
@@ -227,7 +231,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                 level,
                 askedIn: askedIn.filter((a) => a.name.trim() && a.logoURL.trim()),
                 isPrivate,
-                topic: chapterTitle,
+                topic,
             }),
             ...(type === "playlist" && { playlistIds }),
             isPublished: initialData?.isPublished ?? false,
@@ -296,7 +300,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                         <>
                             <div>
                                 <Label>Topic</Label>
-                                <Input value={chapterTitle} disabled />
+                                <Input value={topic} onChange={(e) => setTopic(e.target.value)} />
                             </div>
                             <div className="flex items-center gap-8 pt-2">
                                 <Label>is Premium</Label>
