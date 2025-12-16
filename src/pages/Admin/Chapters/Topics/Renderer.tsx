@@ -36,9 +36,15 @@ function renderRichText(text: string) {
             );
         }
 
-        // Block LaTeX
         if (part.startsWith("$$") && part.endsWith("$$")) {
-            return <TeX block key={i}>{part.slice(2, -2)}</TeX>;
+            return <div
+                key={i}
+                className="w-full overflow-x-auto custom-scrollbar"
+            >
+                <div className="min-w-max flex justify-center">
+                    <TeX block>{part.slice(2, -2)}</TeX>
+                </div>
+            </div>
         }
 
         // Inline LaTeX
@@ -57,10 +63,10 @@ function renderRichText(text: string) {
 
         // Italic `text`
         if (part.startsWith("`") && part.endsWith("`")) {
-            return <em key={i} className="italic">{part.slice(1, -1)}</em>;
+            return <em key={i} className="italic">{part.slice(1, -1)}</em>
         }
 
-        return <span key={i}>{part}</span>;
+        return <span key={i}>{part}</span>
     });
 }
 
@@ -104,8 +110,20 @@ const InputQuestion = ({
     const [status, setStatus] = useState<"correct" | "wrong" | null>(null);
     const [shake, setShake] = useState(false);
 
+    const isCorrect = () => {
+        const expected = Number((answer ?? "").trim());
+        const user = Number(val.trim());
+
+        if (!Number.isNaN(expected) && !Number.isNaN(user)) {
+            const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
+            return Math.abs(user - expected) <= epsilon;
+        }
+
+        return val.trim() === (answer ?? "").trim();
+    };
+
     const check = () => {
-        if (val.trim() === answer.trim()) {
+        if (isCorrect()) {
             setStatus("correct");
             fireRandomCelebration();   // 🎉 CONFETTI
         } else {
@@ -335,15 +353,17 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                             );
                         case "paragraph":
                             return (
-                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-white'} whitespace-pre-line`}>
+                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-white'} whitespace-pre-line `}>
                                     {renderRichText(b.text)}
                                 </p>
                             );
 
                         case "latexBlock":
                             return (
-                                <div key={i} className="my-4">
-                                    <TeX block>{b.equation}</TeX>
+                                <div key={i} className="my-4 overflow-x-auto custom-scrollbar math-scroll">
+                                    <div className="inline-block min-w-full">
+                                        <TeX block>{b.equation}</TeX>
+                                    </div>
                                 </div>
                             );
 

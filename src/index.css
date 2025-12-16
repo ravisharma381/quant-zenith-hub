@@ -53,7 +53,7 @@
     --gradient-purple: linear-gradient(135deg, hsl(270 70% 60%), hsl(270 70% 70%));
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 70%), hsl(330 60% 55%), hsl(122 97% 50%));
     --gradient-dark: linear-gradient(180deg, hsl(220 13% 10%), hsl(220 13% 8%));
-    --gradient-accent: linear-gradient(90deg, hsl(270 70% 50% / 0.1), hsl(270 70% 50% / 0.2));
+    --gradient-accent: linear-gradient(90deg, hsl(270 70% 50% / 0.03), hsl(270 70% 50% / 0.08));
     
     --shadow-glow: 0 0 40px hsl(122 97% 50% / 0.3);
     --shadow-purple-glow: 0 0 40px hsl(270 70% 60% / 0.3);
@@ -98,19 +98,8 @@
   }
 
   body {
-    user-select: none;
     @apply bg-background text-foreground font-sans;
   }
-
-  .no-spinner::-webkit-inner-spin-button,
-  .no-spinner::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-.no-spinner {
-  -moz-appearance: textfield;
-}
 
   .line-clamp-3 {
     display: -webkit-box;
@@ -135,6 +124,9 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #8a8a8a;
+  }
+   .math-scroll {
+    mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
   }
 
   /* Firefox scrollbar */

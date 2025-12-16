@@ -69,7 +69,7 @@ function renderRichCMS(text?: string | null) {
 }
 
 
-const QuestionLayout = ({ topic }: { topic: any }) => {
+const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsCompleted?: () => void }) => {
 
     // ---- STATES ----
     const [answer, setAnswer] = useState("");
@@ -85,16 +85,20 @@ const QuestionLayout = ({ topic }: { topic: any }) => {
 
     // ---- ANSWER CHECK ----
     const isCorrect = () => {
-        const topicAnswer = (topic.answer ?? "").toString().trim();
-        if (!isNaN(Number(answer))) {
-            const marginOfError = 0.02;
-            const acceptedRange = [Number(topicAnswer) * (1 - marginOfError), Number(topicAnswer) * (1 + marginOfError)];
+        const expected = Number((topic.answer ?? "").trim());
+        const user = Number(answer.trim());
+        let value = false
 
-            const userInput = Number(answer.trim());
-            return userInput >= acceptedRange[0] && userInput <= acceptedRange[1];
+        if (!Number.isNaN(expected) && !Number.isNaN(user)) {
+            const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
+            value = Math.abs(user - expected) <= epsilon;
+        } else {
+            value = answer.trim() === (topic.answer ?? "").trim();
         }
-
-        return answer === topicAnswer;
+        if (value && markAsCompleted) {
+            markAsCompleted();
+        }
+        return value
     };
 
     const handleSubmit = () => {

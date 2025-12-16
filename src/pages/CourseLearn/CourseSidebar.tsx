@@ -77,7 +77,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
 
     return (
-        <div className="w-full md:w-96 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
+        <div className="w-full md:w-96 flex-shrink-0 bg-black border-r border-gray-800 h-[calc(100vh-80px)] flex flex-col fixed md:relative z-50 md:z-auto">
             <div className="flex justify-end px-4 pt-4 md:hidden">
                 <button
                     onClick={toggleSidebar}

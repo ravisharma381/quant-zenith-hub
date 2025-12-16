@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
-import { CheckCircle, CircleDashed, Lock } from "lucide-react";
+import { CheckCircle, Circle, Lock } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 import {
@@ -215,9 +215,9 @@ const Problems: React.FC = () => {
           }
 
           // For free pages, still restrict to non-private first pages
-          if (currentPage <= SHOW_FREE_PAGES) {
-            constraints.push(where("isPrivate", "==", false));
-          }
+          // if (currentPage <= SHOW_FREE_PAGES) {
+          //   constraints.push(where("isPrivate", "==", false));
+          // }
 
           const q = query(
             collection(db, "topics"),
@@ -280,7 +280,7 @@ const Problems: React.FC = () => {
 
         // free pages show only non-private
         if (currentPage <= SHOW_FREE_PAGES) {
-          constraints.push(where("isPrivate", "==", false));
+          // constraints.push(where("isPrivate", "==", false));
         }
 
         const q = query(
@@ -314,18 +314,14 @@ const Problems: React.FC = () => {
 
         // optionally refresh totalPages (non-search)
         try {
-          if (!isSubscribed) {
-            setTotalPages(60)
-          } else {
-            const countQuery = query(
-              collection(db, "topics"),
-              where("courseId", "==", PROBLEMS_COURSE_ID),
-              where("type", "==", "question")
-            );
-            const countSnap = await getCountFromServer(countQuery);
-            const totalItems = countSnap.data().count || 0;
-            setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
-          }
+          const countQuery = query(
+            collection(db, "topics"),
+            where("courseId", "==", PROBLEMS_COURSE_ID),
+            where("type", "==", "question")
+          );
+          const countSnap = await getCountFromServer(countQuery);
+          const totalItems = countSnap.data().count || 0;
+          setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
         } catch (err) {
           // ignore count errors
         }
@@ -437,10 +433,10 @@ const Problems: React.FC = () => {
         <div key={i} className="p-4 animate-pulse bg-muted/20">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-1 flex items-center"><div className="h-4 w-6 bg-muted rounded" /></div>
-            <div className="col-span-4 md:col-span-4 flex items-center"><div className="h-4 w-40 bg-muted rounded" /></div>
-            <div className="hidden md:block md:col-span-2 flex items-center justify-center"><div className="h-5 w-20 bg-muted rounded" /></div>
-            <div className="col-span-3 md:col-span-2 flex items-center justify-center"><div className="h-5 w-10 bg-muted rounded-full" /></div>
-            <div className="col-span-4 md:col-span-3 flex items-center justify-center"><div className="flex gap-2"><div className="h-6 w-6 bg-muted rounded-full" /><div className="h-6 w-6 bg-muted rounded-full" /><div className="h-6 w-6 bg-muted rounded-full" /></div></div>
+            <div className="col-span-3 md:col-span-3 flex items-center"><div className="h-4 w-40 bg-muted rounded" /></div>
+            <div className="hidden md:block md:col-span-2 items-center justify-center"><div className="h-5 w-20 bg-muted rounded" /></div>
+            <div className="col-span-2 md:col-span-2 flex items-center justify-center"><div className="h-5 w-10 bg-muted rounded-full" /></div>
+            <div className="col-span-2 md:col-span-2 flex items-center justify-center"><div className="flex gap-2"><div className="h-6 w-6 bg-muted rounded-full" /><div className="h-6 w-6 bg-muted rounded-full" /><div className="h-6 w-6 bg-muted rounded-full" /></div></div>
           </div>
         </div>
       ))}
@@ -461,9 +457,9 @@ const Problems: React.FC = () => {
   );
 
   // Clear filters visible?
-  const anyFilterApplied = useMemo(() => {
-    return !!(searchTerm || (selectedTopic && selectedTopic !== "All") || (selectedDifficulty && selectedDifficulty !== "All") || (selectedStatus && selectedStatus !== "All"));
-  }, [searchTerm, selectedTopic, selectedDifficulty, selectedStatus]);
+  // const anyFilterApplied = useMemo(() => {
+  //   return !!(searchTerm || (selectedTopic && selectedTopic !== "All") || (selectedDifficulty && selectedDifficulty !== "All") || (selectedStatus && selectedStatus !== "All"));
+  // }, [searchTerm, selectedTopic, selectedDifficulty, selectedStatus]);
 
   // Render
   return (
@@ -477,10 +473,10 @@ const Problems: React.FC = () => {
         <div className="max-w-7xl mx-auto">
 
           {/* Filters row: uses flex-wrap, fits in one row on normal screens, wraps on small screens */}
-          <div className="flex flex-wrap gap-4 items-end mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
 
             {/* Search */}
-            <div className="flex flex-col w-[220px]">
+            <div >
               <label className="block text-sm font-medium text-foreground mb-2">Search</label>
               <Input
                 className="w-full"
@@ -491,7 +487,7 @@ const Problems: React.FC = () => {
             </div>
 
             {/* Topic */}
-            <div className="flex flex-col w-[180px]">
+            <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
               <Select value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); setCurrentPage(1); }}>
                 <SelectTrigger><SelectValue placeholder="Select a topic" /></SelectTrigger>
@@ -502,7 +498,7 @@ const Problems: React.FC = () => {
             </div>
 
             {/* Difficulty */}
-            <div className="flex flex-col w-[160px]">
+            <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
               <Select value={selectedDifficulty} onValueChange={(v) => { setSelectedDifficulty(v); setCurrentPage(1); }}>
                 <SelectTrigger><SelectValue placeholder="Select difficulty" /></SelectTrigger>
@@ -513,7 +509,7 @@ const Problems: React.FC = () => {
             </div>
 
             {/* Status */}
-            <div className="flex flex-col w-[140px]">
+            <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Status</label>
               <Select value={selectedStatus} onValueChange={(v: any) => { setSelectedStatus(v); setCurrentPage(1); }}>
                 <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
@@ -529,7 +525,7 @@ const Problems: React.FC = () => {
             <div className="flex-1" />
 
             {/* Go to page + Clear filters aligned on right */}
-            <div className="flex items-end gap-3">
+            {/* <div className="flex items-end gap-3">
               <div className="flex flex-col">
                 <label className="block text-sm font-medium text-foreground mb-2">Go to page</label>
                 <div className="flex items-center gap-2">
@@ -570,7 +566,7 @@ const Problems: React.FC = () => {
                   </Button>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Problems Table */}
@@ -578,10 +574,11 @@ const Problems: React.FC = () => {
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
               <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
-              <div className="col-span-4 md:col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+              <div className="col-span-3 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
               <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-              <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
-              <div className="col-span-4 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
+              <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
+              <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
+              <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
             </div>
 
             {/* Table Body */}
@@ -627,7 +624,7 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Title */}
-                      <div className="col-span-4 flex items-center">
+                      <div className="col-span-3 md:col-span-3 flex items-center gap-2">
                         <div className="flex items-center gap-2">
                           <h3
                             className={`font-semibold ${locked ? "text-muted-foreground" : "text-foreground"
@@ -652,54 +649,45 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Difficulty */}
-                      <div className="col-span-3 md:col-span-2 flex items-center justify-center">
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div
-                                className={`${getDifficultyColor(
-                                  problem.difficulty
-                                )} inline-flex items-center rounded-full border px-3 md:px-5 py-0.5 text-xs md:text-sm font-semibold`}
-                              >
-                                {problem.difficulty}/10
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="center" sideOffset={8}>
-                              This problem is difficulty {problem.difficulty}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                      <div className="col-span-2 md:col-span-2 flex items-center justify-center">
+                        <div
+                          className={`${getDifficultyColor(
+                            problem.difficulty
+                          )} inline-flex items-center rounded-full border px-3 md:px-5 py-0.5 text-xs md:text-sm font-semibold`}
+                        >
+                          {problem.difficulty}/10
+                        </div>
                       </div>
 
                       {/* Asked In */}
-                      <div className="col-span-4 md:col-span-3 flex items-center justify-center">
+                      <div className="col-span-3 md:col-span-2 flex items-center justify-center">
                         <div className="flex flex-wrap gap-1 md:gap-2 justify-center items-center">
-                          {problem.askedIn.map((logo, idx) => (
+                          {problem.askedIn.length > 0 ? problem.askedIn.map((logo, idx) => (
                             <LogoWithSkeleton
                               key={idx}
                               src={logo.logoURL}
                               alt="Company logo"
                               companyName={getCompanyName(logo.name)}
                             />
-                          ))}
+                          )) : <span className="text-muted-foreground">-</span>}
                         </div>
                       </div>
 
-                      {/* Status Icon */}
-                      <div className="absolute -right-1 md:right-4 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                      <div className="col-span-3 md:col-span-2 flex items-center justify-center">
                         <TooltipProvider delayDuration={0}>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              {problem.isPrivate && !isSubscribed ? (
-                                <Lock className="h-5 w-5 text-gray-400" />
-                              ) : completedSet.has(problem.id) ? (
-                                <CheckCircle className="h-5 w-5 text-green-500" />
-                              ) : (
-                                <CircleDashed className="h-5 w-5 text-muted-foreground" />
-                              )}
+                              <div>
+                                {problem.isPrivate && !isSubscribed ? (
+                                  <Lock className="h-5 w-5 text-gray-400" />
+                                ) : completedSet.has(problem.id) ? (
+                                  <CheckCircle className="h-5 w-5 text-green-500" />
+                                ) : (
+                                  <Circle className="h-5 w-5 text-muted-foreground" />
+                                )}
+                              </div>
                             </TooltipTrigger>
-
-                            <TooltipContent side="top" align="center">
+                            <TooltipContent side="top" align="center" sideOffset={8}>
                               {problem.isPrivate && !isSubscribed
                                 ? "Premium Problem"
                                 : completedSet.has(problem.id)

@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { AvatarImage } from "@radix-ui/react-avatar";
 
-const Navigation = () => {
+const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, logout, userProfile } = useAuth();
   const location = useLocation();
@@ -25,7 +25,7 @@ const Navigation = () => {
   const navItems = [
     { name: "Problems", path: "/problems" },
     { name: "Games", path: "/games" },
-    { name: "Blogs", path: "/blogs" },
+    // { name: "Blogs", path: "/blogs" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -200,7 +200,7 @@ const Navigation = () => {
 
           {/* Mobile menu button */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => { closeSidebar?.(); setIsOpen(!isOpen) }}
             className="md:hidden text-muted-foreground hover:text-foreground"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -254,7 +254,7 @@ const Navigation = () => {
                   </div>
                 </Link>
 
-                <Link
+                {/* <Link
                   to="/blogs"
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                   onClick={() => setIsOpen(false)}
@@ -266,7 +266,7 @@ const Navigation = () => {
                     <div className="font-medium text-foreground">Blogs</div>
                     <div className="text-sm text-muted-foreground">Read insights and tips</div>
                   </div>
-                </Link>
+                </Link> */}
 
                 <Link
                   to="/courses"

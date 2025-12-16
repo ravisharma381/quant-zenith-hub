@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import CourseSidebar from "./CourseSidebar";
 import CourseContent from "./CourseContent";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const CourseLearnPage: React.FC = () => {
     const { courseId: routeCourseId, topicId: routeTopicId } =
@@ -226,7 +227,7 @@ const CourseLearnPage: React.FC = () => {
     return (
         <TooltipProvider delayDuration={0}>
             <div className="min-h-screen bg-black">
-                <Navigation />
+                <Navigation closeSidebar={() => sidebarOpen && toggleSidebar()} />
 
                 <div className="flex min-h-[calc(100vh-80px)] relative overflow-hidden">
 
@@ -259,7 +260,10 @@ const CourseLearnPage: React.FC = () => {
                     {/* ============================
                        MAIN CONTENT
                     ============================= */}
-                    <div id="main-scroll" className={`flex-1 relative ${sidebarOpen ? "hidden md:block" : ""}`}>
+                    <div id="main-scroll" className={cn(
+                        "flex-1 relative min-w-0",
+                        sidebarOpen ? "hidden md:block" : ""
+                    )}>
                         <CourseContent
                             topicMeta={topicMeta}
                             topicId={selectedTopicId}

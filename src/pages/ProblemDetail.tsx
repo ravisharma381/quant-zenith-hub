@@ -1,11 +1,12 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, CheckCircle, Circle } from "lucide-react";
+import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc, setDoc, query, where, limit, collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import QuestionLayout from "./CourseLearn/QuestionLayout";
 import ProblemDetailSkeleton from "@/components/ProblemDetailSkeleton";
+import { Button } from "@/components/ui/button";
 
 const ProblemDetail = () => {
   const { id } = useParams();
@@ -15,12 +16,16 @@ const ProblemDetail = () => {
   const location = useLocation();
   const backState = location.state;
   const isLoggedIn = !!user;
-  const isSubscribed = true;
-  // const isSubscribed = userProfile?.issubscribed === true;
+  // const isSubscribed = true;
+  const isSubscribed = userProfile?.isPremium === true;
 
   const [topic, setTopic] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [disablePrev, setDisablePrev] = useState(true);
+  const [disableNext, setDisableNext] = useState(true);
+  const [nextId, setNextId] = useState(null);
+  const [prevId, setPrevId] = useState(null);
 
   // ================================
   // FETCH PROBLEM
@@ -94,23 +99,24 @@ const ProblemDetail = () => {
   // ================================
   // MARK / UNMARK COMPLETE
   // ================================
-  const toggleComplete = async () => {
+  const markAsCompleted = async () => {
     if (!isLoggedIn) return;
     if (!topic?.courseId) return;
 
     const progressId = `${user.uid}_${topic.courseId}`;
     const progressRef = doc(db, "progress", progressId);
 
-    // 🟢 Optimistic UI update (instant)
-    setIsCompleted(prev => !prev);
+    // 🟢 Optimistic UI update (instant)   
 
     try {
       const snap = await getDoc(progressRef);
       const prevList = snap.exists() ? snap.data()?.completedProblems || [] : [];
-
-      const updated = !isCompleted
-        ? [...prevList, topic.id]
-        : prevList.filter((x: string) => x !== topic.id);
+      if (isCompleted)
+        return;
+      const updated = [...prevList, topic.id];
+      // const updated = !isCompleted
+      //   ? [...prevList, topic.id]
+      //   : prevList.filter((x: string) => x !== topic.id);
 
       await setDoc(
         progressRef,
@@ -122,14 +128,17 @@ const ProblemDetail = () => {
         },
         { merge: true }
       );
+      setIsCompleted(true);
     } catch (err) {
       console.error("Progress update failed:", err);
     }
   };
 
-  // ================================
-  // NEXT QUESTION
-  // ================================
+  useEffect(() => {
+    goToNext();
+    goToPrev();
+  }, [topic?.id]);
+
   const goToNext = async () => {
     if (!topic?.order || !topic.courseId) return;
 
@@ -142,18 +151,69 @@ const ProblemDetail = () => {
     );
 
     const snap = await getDocs(q);
-    if (snap.empty) return;
+    if (snap.empty) {
+      setDisableNext(true);
+      setNextId(null);
+      return;
+    };
 
     const next = snap.docs[0];
     const nextData = next.data();
 
-    if (nextData.isPrivate && !isSubscribed) {
+    if (!nextData) {
+      setDisableNext(true);
+      setNextId(null);
+    } else {
+      setDisableNext(false);
+      setNextId(next);
+    }
+  };
+  const goToPrev = async () => {
+    if (!topic?.order || !topic.courseId) return;
+
+    // 🔥 Correct way: query by order
+    const q = query(
+      collection(db, "topics"),
+      where("courseId", "==", topic.courseId),
+      where("order", "==", topic.order - 1),
+      limit(1)
+    );
+
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      setDisablePrev(true);
+      setPrevId(null);
+      return;
+    };
+
+    const next = snap.docs[0];
+    const nextData = next.data();
+    if (!nextData) {
+      setDisablePrev(true);
+      setPrevId(null);
+    } else {
+      setDisablePrev(false);
+      setPrevId(next);
+    }
+  };
+
+
+  const onClickNext = () => {
+    if (nextId.isPrivate && !isSubscribed) {
       navigate("/checkout");
       return;
     }
 
-    navigate(`/problems/${next.id}`);
-  };
+    navigate(`/problems/${nextId.id}`);
+  }
+  const onClickPrev = () => {
+    if (prevId.isPrivate && !isSubscribed) {
+      navigate("/checkout");
+      return;
+    }
+
+    navigate(`/problems/${prevId.id}`);
+  }
 
   // ================================
   // RENDER
@@ -171,58 +231,56 @@ const ProblemDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {/* Completed badge */}
+        {isCompleted && (
+          <div className="flex items-center gap-1 text-sm">
+            <CheckCircle className="w-4 h-4 text-green-500" />
+            <span className="text-green-400">Completed</span>
+          </div>
+        )}
 
-      {/* BACK BUTTON */}
-      <button
-        onClick={() => {
-          if (backState?.fromProblems) {
-            navigate("/problems", { state: backState });
-          } else {
-            navigate("/problems");
-          }
-        }}
-        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
-
-
-      {/* MARK COMPLETE + NEXT */}
-      {isLoggedIn && (
-        <div className="flex justify-between items-center">
-
-          {/* MARK COMPLETE */}
-          <button
-            onClick={toggleComplete}
-            className="flex items-center gap-2 text-sm px-3 py-1 rounded-md border border-border hover:bg-muted transition"
+        {/* Actions */}
+        <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
+          <Button
+            onClick={() => {
+              if (backState?.fromProblems) {
+                navigate("/problems", { state: backState });
+              } else {
+                navigate("/problems");
+              }
+            }}
+            className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none"
           >
-            {isCompleted ? (
-              <>
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span className="text-green-400">Completed</span>
-              </>
-            ) : (
-              <>
-                <Circle className="w-4 h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Mark Complete</span>
-              </>
-            )}
-          </button>
+            Back to Problems
+          </Button>
 
-          {/* NEXT BUTTON */}
-          <button
-            onClick={goToNext}
-            className="text-sm px-3 py-1 rounded-md bg-muted text-foreground hover:bg-muted/80 transition"
-          >
-            Next →
-          </button>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Button
+              variant="outline"
+              onClick={onClickPrev}
+              disabled={disablePrev}
+              className="flex-1 md:flex-none text-muted-foreground hover:text-foreground"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous
+            </Button>
 
+            <Button
+              variant="outline"
+              onClick={onClickNext}
+              disabled={disableNext}
+              className="flex-1 md:flex-none text-muted-foreground hover:text-foreground"
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
         </div>
-      )}
+      </div>
 
       {/* QUESTION */}
-      <QuestionLayout topic={topic} />
+      <QuestionLayout topic={topic} markAsCompleted={markAsCompleted} />
     </div>
   );
 };

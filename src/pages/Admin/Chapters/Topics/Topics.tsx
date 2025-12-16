@@ -75,6 +75,7 @@ const AdminTopics: React.FC = () => {
                     where("chapterId", "==", chapterId)
                 )
             );
+
             setTotalCount(countSnap.size);
 
             // If searching
@@ -104,7 +105,7 @@ const AdminTopics: React.FC = () => {
                 collection(db, "topics"),
                 where("courseId", "==", courseId),
                 where("chapterId", "==", chapterId),
-                orderBy("createdAt", "desc"),
+                orderBy("order", "asc"),
                 limit(PAGE_SIZE)
             );
 
@@ -151,7 +152,7 @@ const AdminTopics: React.FC = () => {
             collection(db, "topics"),
             where("courseId", "==", courseId),
             where("chapterId", "==", chapterId),
-            orderBy("createdAt", "desc"),
+            orderBy("order", "asc"),
             startAfter(lastDoc),
             limit(PAGE_SIZE)
         );
@@ -181,7 +182,7 @@ const AdminTopics: React.FC = () => {
             collection(db, "topics"),
             where("courseId", "==", courseId),
             where("chapterId", "==", chapterId),
-            orderBy("createdAt", "desc"),
+            orderBy("order", "asc"),
             startAt(prevStart),
             limit(PAGE_SIZE)
         );

@@ -299,7 +299,7 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                                 <Input value={chapterTitle} disabled />
                             </div>
                             <div className="flex items-center gap-8 pt-2">
-                                <Label>is Private</Label>
+                                <Label>is Premium</Label>
                                 <Switch
                                     checked={isPrivate}
                                     onCheckedChange={(checked) => setIsPrivate(checked)}
