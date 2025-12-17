@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Pencil, Trash2, ArrowLeft, PackageOpen } from "lucide-react";
 
 import CourseModal from "./CourseModal";
 import { CourseFormData } from "./CourseForm";
@@ -148,9 +148,14 @@ const AdminCourses: React.FC = () => {
                         Back
                     </Button>
                     <h1 className="text-3xl font-bold text-foreground">Courses Management</h1>
-                    <Button onClick={handleAdd} className="flex items-center gap-2">
-                        <Plus className="w-4 h-4" /> Add Course
-                    </Button>
+                    <div className="flex items-center gap-4">
+                        <Button onClick={() => navigate("/admin/image-bucket")} className="flex items-center gap-2">
+                            <PackageOpen className="w-4 h-4" /> Image Bucket
+                        </Button>
+                        <Button onClick={handleAdd} className="flex items-center gap-2">
+                            <Plus className="w-4 h-4" /> Add Course
+                        </Button>
+                    </div>
                 </div>
 
                 {/* 🔹 Courses Grid */}

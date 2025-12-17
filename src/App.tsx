@@ -44,6 +44,7 @@ import AdminPricing from "./pages/Admin/AdminPricing";
 import PremiumCheckout from "./pages/PremiumCheckout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PaypalSuccess from "./pages/PaypalSuccess";
+import ImageBucket from "./pages/Admin/ImageBucket";
 
 const App = () => (
   <HelmetProvider>
@@ -105,6 +106,14 @@ const App = () => (
                   <Layout>
                     <SuperAdminRoute>
                       <AdminPricing />
+                    </SuperAdminRoute>
+                  </Layout>}
+              />
+              <Route path="/admin/image-bucket"
+                element={
+                  <Layout>
+                    <SuperAdminRoute>
+                      <ImageBucket />
                     </SuperAdminRoute>
                   </Layout>}
               />
