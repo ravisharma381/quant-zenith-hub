@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Calculator, BarChart3 } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FeatureRow from "@/components/FeatureRow";
-
+import Autoplay from "embla-carousel-autoplay";
 const CourseDetail = () => {
   const navigate = useNavigate();
   const [showStickyBar, setShowStickyBar] = useState(false);
@@ -202,31 +203,69 @@ const CourseDetail = () => {
                 </div>
               </div>
 
-              {/* Right Side - Course Preview Card */}
+              {/* Right Side - Auto-playing Stats Carousel */}
               <div className="flex justify-center lg:justify-end">
                 <div className="w-full max-w-md">
-                  <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-500 group">
-                    <div className="relative">
-                      <div className="bg-gradient-to-br from-primary/90 via-primary/70 to-emerald-600/80 h-56 flex items-center justify-center">
-                        <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 cursor-pointer">
-                          <Play className="w-10 h-10 text-white ml-1" />
-                        </div>
-                      </div>
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-white/30">
-                          Free Preview
-                        </Badge>
-                      </div>
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-semibold text-foreground mb-2">Watch Course Preview</h3>
-                      <p className="text-muted-foreground text-sm mb-4">Get a sneak peek of what you'll learn in this masterclass</p>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Duration: 5 min</span>
-                        <span className="text-primary font-medium">100+ chapters</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <Carousel
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    plugins={[
+                      Autoplay({
+                        delay: 3000,
+                      }),
+                    ]}
+                    className="w-full"
+                  >
+                    <CarouselContent>
+                      {[
+                        {
+                          icon: FileText,
+                          stat: "1000+",
+                          title: "Practice Problems",
+                          description: "Comprehensive question bank covering all interview topics",
+                          gradient: "from-primary/90 via-primary/70 to-emerald-600/80"
+                        },
+                        {
+                          icon: Building2,
+                          stat: "50+",
+                          title: "Company Specific Problems",
+                          description: "Real questions from top trading firms and hedge funds",
+                          gradient: "from-purple-600/90 via-purple-500/70 to-indigo-600/80"
+                        },
+                        {
+                          icon: GraduationCap,
+                          stat: "100+",
+                          title: "Chapters",
+                          description: "Complete theory coverage from basics to advanced",
+                          gradient: "from-emerald-600/90 via-teal-500/70 to-cyan-600/80"
+                        },
+                        {
+                          icon: Target,
+                          stat: "95%",
+                          title: "Success Rate",
+                          description: "Students landing offers at top quant firms",
+                          gradient: "from-amber-600/90 via-orange-500/70 to-red-500/80"
+                        }
+                      ].map((item, index) => (
+                        <CarouselItem key={index}>
+                          <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-primary/10">
+                            <div className={`bg-gradient-to-br ${item.gradient} h-48 flex items-center justify-center relative`}>
+                              <div className="text-center text-white">
+                                <item.icon className="w-12 h-12 mx-auto mb-3 opacity-90" />
+                                <div className="text-5xl font-bold">{item.stat}</div>
+                              </div>
+                            </div>
+                            <CardContent className="p-6">
+                              <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
+                              <p className="text-muted-foreground text-sm">{item.description}</p>
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                  </Carousel>
                 </div>
               </div>
             </div>
