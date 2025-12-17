@@ -15,14 +15,20 @@ function renderRichText(text: string) {
     const SMALL_BREAK_TOKEN = "__SMALLBREAK__";
     const processed = text.replace(/&&/g, SMALL_BREAK_TOKEN);
 
-    // 2) Tokenize (latex block, latex inline, bold, italic, small break)
-    const parts = processed.split(
-        /(\$\$[\s\S]+?\$\$|\$[^$]+\$|\*[^*]+\*|`[^`]+`|__SMALLBREAK__)/g
-    ).filter(Boolean);
+    /**
+     * Tokenizer rules:
+     * - Match $$...$$ ONLY if $$ is NOT escaped
+     * - Match $...$ ONLY if $ is NOT escaped
+     * - Keep bold, italic, small break
+     */
+    const parts = processed
+        .split(
+            /((?<!\\)\$\$[\s\S]+?(?<!\\)\$\$|(?<!\\)\$[^$]+?(?<!\\)\$|\*[^*]+\*|`[^`]+`|__SMALLBREAK__)/g
+        )
+        .filter(Boolean);
 
     return parts.map((part, i) => {
-
-        // Small 4px break
+        // ---------- SMALL BREAK ----------
         if (part === SMALL_BREAK_TOKEN) {
             return (
                 <span
@@ -30,29 +36,32 @@ function renderRichText(text: string) {
                     style={{
                         display: "block",
                         height: "4px",
-                        lineHeight: "0"
+                        lineHeight: "0",
                     }}
                 />
             );
         }
 
+        // ---------- BLOCK LATEX ----------
         if (part.startsWith("$$") && part.endsWith("$$")) {
-            return <div
-                key={i}
-                className="w-full overflow-x-auto custom-scrollbar"
-            >
-                <div className="min-w-max flex justify-center">
-                    <TeX block>{part.slice(2, -2)}</TeX>
+            return (
+                <div
+                    key={i}
+                    className="w-full overflow-x-auto custom-scrollbar"
+                >
+                    <div className="min-w-max flex justify-center">
+                        <TeX block>{part.slice(2, -2)}</TeX>
+                    </div>
                 </div>
-            </div>
+            );
         }
 
-        // Inline LaTeX
+        // ---------- INLINE LATEX ----------
         if (part.startsWith("$") && part.endsWith("$")) {
             return <TeX key={i}>{part.slice(1, -1)}</TeX>;
         }
 
-        // Bold *text*
+        // ---------- BOLD ----------
         if (part.startsWith("*") && part.endsWith("*")) {
             return (
                 <strong key={i} className="font-bold">
@@ -61,12 +70,20 @@ function renderRichText(text: string) {
             );
         }
 
-        // Italic `text`
+        // ---------- ITALIC ----------
         if (part.startsWith("`") && part.endsWith("`")) {
-            return <em key={i} className="italic">{part.slice(1, -1)}</em>
+            return (
+                <em key={i} className="italic">
+                    {part.slice(1, -1)}
+                </em>
+            );
         }
 
-        return <span key={i}>{part}</span>
+        // ---------- PLAIN TEXT ----------
+        // Unescape \$ → $
+        const textPart = part.replace(/\\\$/g, "$");
+
+        return <span key={i}>{textPart}</span>;
     });
 }
 

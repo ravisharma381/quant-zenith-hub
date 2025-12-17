@@ -16,18 +16,30 @@ function renderRichCMS(text?: string | null) {
     if (!text) return null;
 
     // normalize single quotes → double
-    let normalized = text.replace(/(\b(class(Name)?)\s*=\s*)'([^']*)'/gi, `$1"$4"`);
+    let normalized = text.replace(
+        /(\b(class(Name)?)\s*=\s*)'([^']*)'/gi,
+        `$1"$4"`
+    );
 
     // convert class= → className=
     normalized = normalized.replace(/\bclass=/gi, "className=");
 
-    const tokenRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$|<img\b[^>]*>)/g;
+    /**
+     * IMPORTANT:
+     * - Match $$...$$ or $...$ ONLY if $ is NOT escaped
+     * - Also match <img />
+     */
+    const tokenRegex =
+        /((?<!\\)\$\$[\s\S]+?(?<!\\)\$\$|(?<!\\)\$[^$]+?(?<!\\)\$|<img\b[^>]*>)/g;
+
     const parts = normalized.split(tokenRegex).filter(Boolean);
 
     return parts.map((part, idx) => {
-
-        // Block math
-        if (part.startsWith("$$") && part.endsWith("$$")) {
+        // ---------- BLOCK MATH ----------
+        if (
+            part.startsWith("$$") &&
+            part.endsWith("$$")
+        ) {
             return (
                 <div key={idx} className="my-4">
                     <TeX block>{part.slice(2, -2)}</TeX>
@@ -35,12 +47,15 @@ function renderRichCMS(text?: string | null) {
             );
         }
 
-        // Inline math
-        if (part.startsWith("$") && part.endsWith("$")) {
+        // ---------- INLINE MATH ----------
+        if (
+            part.startsWith("$") &&
+            part.endsWith("$")
+        ) {
             return <TeX key={idx}>{part.slice(1, -1)}</TeX>;
         }
 
-        // Images
+        // ---------- IMAGE ----------
         if (part.trim().startsWith("<img")) {
             const src = (part.match(/src="([^"]+)"/i) || [])[1] || "";
             const cls = (part.match(/className="([^"]*)"/i) || [])[1] || "";
@@ -48,8 +63,15 @@ function renderRichCMS(text?: string | null) {
             const caption = (part.match(/caption="([^"]*)"/i) || [])[1] || "";
 
             return (
-                <div key={idx} className="my-2 flex flex-col items-center text-center">
-                    <img src={src} alt={alt} className={`max-w-${cls || 'sm'}`} />
+                <div
+                    key={idx}
+                    className="my-2 flex flex-col items-center text-center"
+                >
+                    <img
+                        src={src}
+                        alt={alt}
+                        className={`max-w-${cls || "sm"}`}
+                    />
                     {caption && (
                         <div className="text-sm text-gray-400 mt-2 whitespace-pre-line">
                             {caption}
@@ -59,14 +81,18 @@ function renderRichCMS(text?: string | null) {
             );
         }
 
-        // Plain inline text
+        // ---------- PLAIN TEXT ----------
+        // Unescape \$ → $
+        const textPart = part.replace(/\\\$/g, "$");
+
         return (
             <span key={idx} className="whitespace-pre-line">
-                {part}
+                {textPart}
             </span>
         );
     });
 }
+
 
 
 const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsCompleted?: () => void }) => {
