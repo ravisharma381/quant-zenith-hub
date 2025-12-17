@@ -68,7 +68,8 @@ const Index = () => {
       icon: <Gamepad2 className="w-8 h-8 text-primary" />,
       title: "Interactive Games",
       description: "Learn through engaging games and competitive challenges",
-      link: "/games"
+      link: "/games",
+      comingSoon: true
     },
     {
       icon: <BookOpen className="w-8 h-8 text-primary" />,
@@ -78,9 +79,10 @@ const Index = () => {
     },
     {
       icon: <PenTool className="w-8 h-8 text-primary" />,
-      title: "Industry Insights",
+      title: "Blogs",
       description: "Stay updated with latest trends and analysis in quant finance",
-      link: "/blogs"
+      link: "/blogs",
+      comingSoon: true
     }
   ];
 
@@ -243,12 +245,18 @@ const Index = () => {
                   <CardDescription className="mb-4 text-sm md:text-base">
                     {feature.description}
                   </CardDescription>
-                  <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
-                    <Link to={feature.link}>
-                      Explore
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Link>
-                  </Button>
+                  {feature.comingSoon ? (
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" disabled>
+                      Coming Soon
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" asChild>
+                      <Link to={feature.link}>
+                        Explore
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
