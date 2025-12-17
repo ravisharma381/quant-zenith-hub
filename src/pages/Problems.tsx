@@ -44,9 +44,6 @@ import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import { PROBLEMS_COURSE_ID, PROBLEMS_PER_PAGE, SHOW_FREE_PAGES } from "@/statics";
 
-// const PROBLEMS_COURSE_ID = "ynRqmBdSMEUAZhh0WYLn";
-// const PROBLEMS_PER_PAGE = 20;
-// const SHOW_FREE_PAGES = 2;
 
 interface AskedInItem {
   name: string;
