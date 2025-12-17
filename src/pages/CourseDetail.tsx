@@ -273,24 +273,6 @@ const CourseDetail = () => {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="border-y border-border/50 bg-card/30 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: "1200+", label: "Practice Problems" },
-              { value: "100+", label: "Video Chapters" },
-              { value: "500+", label: "Students Enrolled" },
-              { value: "95%", label: "Success Rate" }
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-24">
@@ -378,31 +360,6 @@ const CourseDetail = () => {
         </div>
       </div>
 
-      {/* Final CTA */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-primary/20" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl" />
-        
-        <div className="container mx-auto px-4 py-24 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Ready to Land Your
-              <span className="block text-primary">Dream Quant Job?</span>
-            </h2>
-            <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-              Join 500+ successful students who landed positions at top trading firms and hedge funds.
-            </p>
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-12 py-7 text-lg shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
-              onClick={() => navigate("/premium")}
-            >
-              Start Your Journey Today
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
