@@ -161,7 +161,7 @@ const CourseDetail = () => {
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               {/* Left Side - Course Info */}
-              <div className="animate-fade-in">
+              <div className="animate-fade-in text-center lg:text-left">
                 <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
                   #1 Rated Quant Prep Course
                 </Badge>
@@ -173,13 +173,13 @@ const CourseDetail = () => {
                   </span>
                 </h1>
                 
-                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
+                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                 </p>
                 
 
                 {/* CTA and Rating */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <div className="flex flex-col sm:flex-row items-center lg:items-start sm:justify-center lg:justify-start gap-6">
                   <Button 
                     ref={enrollButtonRef}
                     size="lg" 
