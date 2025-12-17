@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Percent, Coins, LineChart, GitBranch, Footprints } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FeatureRow from "@/components/FeatureRow";
 import Autoplay from "embla-carousel-autoplay";
@@ -22,34 +22,44 @@ const CourseDetail = () => {
 
   const masterTopics = [
     {
-      icon: BookOpen,
-      title: "Quantitative Methods",
-      description: "Master the mathematical foundations essential for quantitative finance interviews."
+      icon: Lightbulb,
+      title: "Brainteasers",
+      description: "Sharpen your logical thinking with classic and modern quantitative puzzles."
+    },
+    {
+      icon: Percent,
+      title: "Probability",
+      description: "Master probability theory from basics to advanced concepts used in interviews."
+    },
+    {
+      icon: Dices,
+      title: "Betting Games",
+      description: "Learn optimal strategies for dice games, card games, and expected value problems."
     },
     {
       icon: TrendingUp,
-      title: "Financial Modeling", 
-      description: "Learn advanced modeling techniques used in top-tier investment firms."
+      title: "Market Making",
+      description: "Understand bid-ask spreads, inventory management, and pricing strategies."
     },
     {
-      icon: Target,
-      title: "Interview Strategy",
-      description: "Develop winning strategies to tackle any quantitative finance interview."
+      icon: BarChart3,
+      title: "Statistics",
+      description: "Build strong foundations in statistical inference and hypothesis testing."
     },
     {
-      icon: Users,
-      title: "Mock Interviews",
-      description: "Practice with realistic interview scenarios and get expert feedback."
+      icon: LineChart,
+      title: "Regression",
+      description: "Master linear regression, time series analysis, and predictive modeling."
     },
     {
-      icon: Lightbulb,
-      title: "Problem Solving",
-      description: "Master complex problem-solving techniques for quantitative challenges."
+      icon: GitBranch,
+      title: "Martingales",
+      description: "Explore martingale theory and its applications in finance and betting."
     },
     {
-      icon: Award,
-      title: "Career Guidance",
-      description: "Get insider tips on landing positions at top quantitative finance firms."
+      icon: Footprints,
+      title: "Random Walks",
+      description: "Understand Brownian motion, stochastic processes, and their financial applications."
     }
   ];
 
@@ -316,7 +326,7 @@ const CourseDetail = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {masterTopics.map((topic, index) => (
                 <Card key={index} className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:bg-card/80 transition-all duration-300 group h-full">
                   <CardContent className="p-8">
