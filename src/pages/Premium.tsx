@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Lightbulb, Lock, Gamepad2, Tag, BookOpen, Sparkles, Check } from "lucide-react";
+import { Crown, Lightbulb, Tag, BookOpen, Check } from "lucide-react";
 
 const Premium = () => {
   const navigate = useNavigate();
@@ -50,24 +50,14 @@ const Premium = () => {
       description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more.",
     },
     {
-      icon: Lock,
-      title: "Solutions",
-      description: "See solutions written by real quants. Our solutions make learning easy, with detailed explanations and interview-focused thinking. QuantProf uniquely places large emphasis on how to think of the solution, rather than just the solution itself.",
-    },
-    {
       icon: Lightbulb,
-      title: "Hints",
-      description: "Need help? Just like in real interviews, all of our questions come with hints to point you in the right direction.",
-    },
-    {
-      icon: Gamepad2,
-      title: "Games",
-      description: "Gain access to twice as many games and the ability to modify numerous parameters of existing games.",
+      title: "Hints and Detailed Solutions",
+      description: "Need help? Just like in real interviews, all of our questions come with hints to point you in the right direction. Plus, see solutions written by real quants with detailed explanations and interview-focused thinking.",
     },
     {
       icon: Tag,
-      title: "Topic Tags",
-      description: "Enhance your prep by targeting sub-topics where you need more practice. With over 50 topics to filter by, you'll eliminate any weaknesses quickly!",
+      title: "Company Tagged Questions",
+      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
     },
     {
       icon: BookOpen,
