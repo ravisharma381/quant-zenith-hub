@@ -127,11 +127,11 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <AvatarImage src={user.photoURL} alt={user.displayName} />
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {user.displayName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
-                        .slice(0, 2)}
+                        ?.split(" ")
+                        ?.map((n) => n[0])
+                        ?.join("")
+                        ?.toUpperCase()
+                        ?.slice(0, 2) || 'A'}
                     </AvatarFallback>
                   </Avatar>
                 </Button>

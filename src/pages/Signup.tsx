@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { loginWithGoogle, loading, user } = useAuth();
+  const { loginWithGoogle, loading, user, loginWithGitHub } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: Location })?.from?.pathname || "/";
@@ -19,6 +19,10 @@ const Signup = () => {
 
   const handleGoogleSignIn = async () => {
     await loginWithGoogle();
+  };
+
+  const handleGithubSignIn = async () => {
+    await loginWithGitHub();
   };
 
   return (
@@ -57,6 +61,16 @@ const Signup = () => {
               >
                 <span className="mr-2 font-bold">G</span>
                 {loading ? "Signing Up..." : "Sign Up with Google"}
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <Button
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={handleGithubSignIn}
+                disabled={loading}
+              >
+                <Github />
+                {loading ? "Signing in..." : "Sign Up with GitHub"}
               </Button>
             </div>
 

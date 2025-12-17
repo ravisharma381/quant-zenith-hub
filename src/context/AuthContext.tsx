@@ -9,6 +9,8 @@ import {
     browserLocalPersistence,
     User as FirebaseUser,
     signInWithPopup,
+    GithubAuthProvider,
+    AuthProvider,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where, documentId } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
@@ -34,6 +36,7 @@ interface AuthContextType {
     userProfile: UserProfile | null;
     loading: boolean;
     loginWithGoogle: () => Promise<void>;
+    loginWithGitHub: () => Promise<void>;
     logout: () => Promise<void>;
     setRerender: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -43,11 +46,12 @@ export const AuthContext = createContext<AuthContextType>({
     userProfile: null,
     loading: true,
     loginWithGoogle: async () => { },
+    loginWithGitHub: async () => { },
     logout: async () => { },
     setRerender: () => true,
 });
 
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<FirebaseUser | null>(null);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
@@ -76,11 +80,23 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 if (firebaseUser) {
                     const userRef = doc(db, "users", firebaseUser.uid);
                     const userSnap = await getDoc(userRef);
+                    const providerProfile = firebaseUser.providerData.find(
+                        p => p.providerId === "github.com"
+                    );
+
+                    const derivedName =
+                        firebaseUser.displayName ||
+                        providerProfile?.displayName ||
+                        (firebaseUser.email ? firebaseUser.email.split("@")[0] : null) ||
+                        "Anonymous";
 
                     if (!userSnap.exists()) {
                         await setDoc(userRef, {
-                            name: firebaseUser.displayName,
-                            email: firebaseUser.email,
+                            name: derivedName,
+                            email:
+                                firebaseUser.email ||
+                                firebaseUser.providerData.find(p => p.email)?.email ||
+                                null,
                             photoURL: firebaseUser.photoURL,
                             provider: firebaseUser.providerData[0]?.providerId || "unknown",
                             role: "user",
@@ -88,6 +104,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                             lastLoginAt: serverTimestamp(),
                             isPremium: false,
                         });
+
                     } else {
                         await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
                     }
@@ -111,28 +128,56 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         }
     }, [rerender]);
 
-
-    // 🔹 3️⃣ Login with Google (with persistence)
-    const loginWithGoogle = async () => {
+    const signInWithProvider = async (provider: AuthProvider) => {
         try {
             setLoading(true);
-            const provider = new GoogleAuthProvider();
-            if (import.meta.env.DEV) {
-                // await setPersistence(auth, browserLocalPersistence);
-                // await signInWithRedirect(auth, provider);
-                await signInWithPopup(auth, provider);
-            } else {
-                // Forproduction
-                // await setPersistence(auth, browserLocalPersistence);
-                // await signInWithRedirect(auth, provider);
-                await signInWithPopup(auth, provider);
-            }
+
+            // Popup works reliably for Google + GitHub
+            await signInWithPopup(auth, provider);
+
             setRerender(true);
-
-
         } catch (err) {
-            console.error("Login error:", err);
+            console.error("OAuth login error:", err);
+            setLoading(false);
         }
+    };
+
+
+    // 🔹 3️⃣ Login with Google (with persistence)
+    // const loginWithGoogle = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const provider = new GoogleAuthProvider();
+    //         if (import.meta.env.DEV) {
+    //             // await setPersistence(auth, browserLocalPersistence);
+    //             // await signInWithRedirect(auth, provider);
+    //             await signInWithPopup(auth, provider);
+    //         } else {
+    //             // Forproduction
+    //             // await setPersistence(auth, browserLocalPersistence);
+    //             // await signInWithRedirect(auth, provider);
+    //             await signInWithPopup(auth, provider);
+    //         }
+    //         setRerender(true);
+
+
+    //     } catch (err) {
+    //         console.error("Login error:", err);
+    //     }
+    // };
+    const loginWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        await signInWithProvider(provider);
+    };
+
+    const loginWithGitHub = async () => {
+        const provider = new GithubAuthProvider();
+
+        provider.addScope("read:user");
+        provider.addScope("user:email");
+
+        await signInWithProvider(provider);
     };
 
     // 🔹 4️⃣ Logout and reset state
@@ -148,12 +193,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     };
 
     return (
-        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender }}>
+        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender, loginWithGitHub }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export default AuthProvider;
+export default ContextAuthProvider;
 
 export const useAuth = () => useContext(AuthContext);

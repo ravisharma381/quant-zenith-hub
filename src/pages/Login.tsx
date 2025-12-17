@@ -35,7 +35,7 @@ import { useAuth } from "@/hooks/useAuth";
 // };
 
 const Login: React.FC = () => {
-  const { loginWithGoogle, loading, user } = useAuth();
+  const { loginWithGoogle, loginWithGitHub, loading, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,6 +56,9 @@ const Login: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     await loginWithGoogle();
+  };
+  const handleGithubSignIn = async () => {
+    await loginWithGitHub();
   };
 
 
@@ -92,6 +95,16 @@ const Login: React.FC = () => {
               >
                 <span className="mr-2 font-bold">G</span>
                 {loading ? "Signing in..." : "Sign in with Google"}
+              </Button>
+            </div>
+            <div className="space-y-4">
+              <Button
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={handleGithubSignIn}
+                disabled={loading}
+              >
+                <Github />
+                {loading ? "Signing in..." : "Sign in with GitHub"}
               </Button>
             </div>
 

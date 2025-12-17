@@ -28,7 +28,7 @@ import Playlists from "./pages/Playlists";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import AuthProvider from "./context/AuthContext";
+import ContextAuthProvider from "./context/AuthContext";
 import AdminCourses from "./pages/Admin/AdminCourses";
 import AdminRoute from "./pages/Admin/AdminRoute";
 import SuperAdminRoute from "./pages/Admin/SuperAdminRoute";
@@ -47,7 +47,7 @@ import PaypalSuccess from "./pages/PaypalSuccess";
 
 const App = () => (
   <HelmetProvider>
-    <AuthProvider>
+    <ContextAuthProvider>
       <TooltipProvider>
         <div className="dark">
           <Toaster />
@@ -164,7 +164,7 @@ const App = () => (
           </BrowserRouter>
         </div>
       </TooltipProvider>
-    </AuthProvider>
+    </ContextAuthProvider>
   </HelmetProvider>
 );
 
