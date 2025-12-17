@@ -13,12 +13,6 @@ const CourseDetail = () => {
   const [showStickyBar, setShowStickyBar] = useState(false);
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
 
-  const features = [
-    "Comprehensive interview preparation framework",
-    "Real quantitative finance interview questions", 
-    "Advanced mathematical concepts and modeling",
-    "Python and R programming for quants"
-  ];
 
   const masterTopics = [
     {
@@ -109,6 +103,12 @@ const CourseDetail = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Only show sticky bar after scrolling down at least 100px
+      if (scrollY < 100) {
+        setShowStickyBar(false);
+        return;
+      }
       if (enrollButtonRef.current) {
         const rect = enrollButtonRef.current.getBoundingClientRect();
         const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
@@ -177,17 +177,6 @@ const CourseDetail = () => {
                   Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                 </p>
                 
-                {/* Features List */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 group">
-                      <div className="flex-shrink-0 w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                        <Check className="w-4 h-4 text-primary" />
-                      </div>
-                      <span className="text-foreground text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
 
                 {/* CTA and Rating */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
