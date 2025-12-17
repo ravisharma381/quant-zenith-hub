@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Percent, Coins, LineChart, GitBranch, Footprints } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FeatureRow from "@/components/FeatureRow";
 import Autoplay from "embla-carousel-autoplay";
@@ -27,7 +27,7 @@ const CourseDetail = () => {
       description: "Sharpen your logical thinking with classic and modern quantitative puzzles."
     },
     {
-      icon: Percent,
+      icon: Coins,
       title: "Probability",
       description: "Master probability theory from basics to advanced concepts used in interviews."
     },
@@ -47,17 +47,17 @@ const CourseDetail = () => {
       description: "Build strong foundations in statistical inference and hypothesis testing."
     },
     {
-      icon: LineChart,
+      icon: ScatterChart,
       title: "Regression",
       description: "Master linear regression, time series analysis, and predictive modeling."
     },
     {
-      icon: GitBranch,
+      icon: LineChart,
       title: "Martingales",
       description: "Explore martingale theory and its applications in finance and betting."
     },
     {
-      icon: Footprints,
+      icon: Grid3x3,
       title: "Random Walks",
       description: "Understand Brownian motion, stochastic processes, and their financial applications."
     }
