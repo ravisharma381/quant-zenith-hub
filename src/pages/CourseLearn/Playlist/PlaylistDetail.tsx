@@ -143,7 +143,7 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
                                 <AccordionContent className="pb-0 px-0">
                                     <div className="divide-y divide-border">
                                         {grp.items.map((problem, index) => (
-                                            <Link key={problem.id} to={`/course/${courseId}/learn/${problem.id}`} target="_blank">
+                                            <Link key={problem.id} to={`/problems/${problem.id}`} target="_blank">
                                                 <div key={problem.id} className="hover:bg-green-500/10 transition-colors cursor-pointer">
                                                     <div className="px-6 py-3">
                                                         <div className="flex items-center justify-between">

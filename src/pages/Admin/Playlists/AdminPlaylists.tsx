@@ -11,6 +11,7 @@ import { X, Pencil, PlusCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { useNavigate, useParams } from "react-router-dom";
+import { PROBLEMS_COURSE_ID } from "@/statics";
 
 interface Playlist {
     id?: string;
@@ -136,7 +137,7 @@ const AdminPlaylists: React.FC = () => {
 
         const q = query(
             collection(db, "topics"),
-            where("courseId", "==", courseId),
+            where("courseId", "==", PROBLEMS_COURSE_ID),
             where("type", "==", "question"),
             orderBy("title"),
             startAt(text),
@@ -181,6 +182,31 @@ const AdminPlaylists: React.FC = () => {
         const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Playlist[];
         setPlaylists(data);
     };
+
+    const fetchTopicsByIds = async (ids: string[]) => {
+        if (!ids.length) return;
+
+        const chunks: string[][] = [];
+        for (let i = 0; i < ids.length; i += 10) {
+            chunks.push(ids.slice(i, i + 10)); // Firestore "in" limit
+        }
+
+        const results: Topic[] = [];
+
+        for (const chunk of chunks) {
+            const q = query(
+                collection(db, "topics"),
+                where("__name__", "in", chunk)
+            );
+            const snap = await getDocs(q);
+            snap.docs.forEach(d =>
+                results.push({ id: d.id, ...d.data() } as Topic)
+            );
+        }
+
+        setTopics(results);
+    };
+
 
     const prevPage = async () => {
         if (pageStack.length === 0) return;
@@ -255,9 +281,10 @@ const AdminPlaylists: React.FC = () => {
     };
 
     // 🔹 Open for edit
-    const openEdit = (playlist: Playlist) => {
+    const openEdit = async (playlist: Playlist) => {
         setEditingPlaylist(playlist);
         setFormData(playlist);
+        await fetchTopicsByIds(playlist.topicIds || []);
         setOpen(true);
     };
     const openAdd = () => {

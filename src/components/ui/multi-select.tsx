@@ -32,82 +32,109 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     onChange,
     placeholder = "Select items...",
     disabled,
-    onSearch
+    onSearch,
 }) => {
     const [open, setOpen] = React.useState(false);
-    const inputRef = React.useRef<HTMLInputElement>(null);
 
-    const toggleValue = (val: string) => {
-        if (value.includes(val)) {
-            onChange(value.filter((v) => v !== val));
+    // 🔹 internal cache for selected options
+    const [selectedMap, setSelectedMap] = React.useState<
+        Record<string, Option>
+    >({});
+
+    // 🔹 whenever options or value change, reconcile cache
+    React.useEffect(() => {
+        setSelectedMap(prev => {
+            const next = { ...prev };
+
+            // add/update from options
+            options.forEach(opt => {
+                if (value.includes(opt.value)) {
+                    next[opt.value] = opt;
+                }
+            });
+
+            // remove unselected
+            Object.keys(next).forEach(key => {
+                if (!value.includes(key)) {
+                    delete next[key];
+                }
+            });
+
+            return next;
+        });
+    }, [options, value]);
+
+    const selectedOptions = Object.values(selectedMap);
+
+    const toggle = (opt: Option) => {
+        if (value.includes(opt.value)) {
+            onChange(value.filter(v => v !== opt.value));
         } else {
-            onChange([...value, val]);
+            onChange([...value, opt.value]);
         }
     };
 
-    const handleRemove = (val: string) => {
-        onChange(value.filter((v) => v !== val));
+    const remove = (val: string) => {
+        onChange(value.filter(v => v !== val));
     };
 
-    const selectedOptions = options.filter((opt) => value.includes(opt.value));
-
     return (
-        <div className="w-full">
+        <div className="w-full space-y-2">
+            {/* Selected chips */}
+            <div className="min-h-[44px] rounded-md border px-2 py-2 flex flex-wrap gap-1 bg-background">
+                {selectedOptions.length === 0 && (
+                    <span className="text-muted-foreground text-sm">
+                        {placeholder}
+                    </span>
+                )}
+
+                {selectedOptions.map(opt => (
+                    <Badge
+                        key={opt.value}
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                    >
+                        {opt.label}
+                        <X
+                            className="h-3 w-3 cursor-pointer opacity-70 hover:opacity-100"
+                            onClick={() => remove(opt.value)}
+                        />
+                    </Badge>
+                ))}
+            </div>
+
+            {/* Search dropdown */}
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
-                        type="button"
                         variant="outline"
-                        role="combobox"
-                        className="w-full justify-between font-normal text-left"
                         disabled={disabled}
+                        className="w-full justify-start"
                     >
-                        {value.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                                {selectedOptions.map((item) => (
-                                    <Badge
-                                        key={item.value}
-                                        variant="secondary"
-                                        className="flex items-center gap-1"
-                                    >
-                                        {item.label}
-                                        <X
-                                            className="h-3 w-3 cursor-pointer opacity-70 hover:opacity-100"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemove(item.value);
-                                            }}
-                                        />
-                                    </Badge>
-                                ))}
-                            </div>
-                        ) : (
-                            <span className="text-muted-foreground">{placeholder}</span>
-                        )}
+                        Search topics
                     </Button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-[300px] p-0">
                     <Command shouldFilter={false}>
                         <CommandInput
-                            ref={inputRef}
                             placeholder="Search..."
-                            className="h-9"
                             onValueChange={(text) => onSearch?.(text)}
                         />
+
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
-                                {options.map((opt) => {
-                                    const selected = value.includes(opt.value);
+                                {options.map(opt => {
+                                    const checked = value.includes(opt.value);
                                     return (
                                         <CommandItem
                                             key={opt.value}
-                                            onSelect={() => toggleValue(opt.value)}
+                                            onSelect={() => toggle(opt)}
                                             className="flex justify-between"
                                         >
                                             {opt.label}
-                                            {selected && <Check className="h-4 w-4 text-primary" />}
+                                            {checked && <Check className="h-4 w-4" />}
                                         </CommandItem>
                                     );
                                 })}
@@ -119,3 +146,4 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         </div>
     );
 };
+
