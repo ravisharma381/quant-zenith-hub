@@ -204,8 +204,8 @@ const CourseDetail = () => {
               </div>
 
               {/* Right Side - Auto-playing Stats Carousel */}
-              <div className="flex justify-center lg:justify-end">
-                <div className="w-full max-w-md">
+              <div className="flex justify-center lg:justify-end w-full lg:w-auto px-4 lg:px-0 lg:mr-8">
+                <div className="w-full lg:max-w-md">
                   <Carousel
                     opts={{
                       align: "start",
@@ -251,15 +251,15 @@ const CourseDetail = () => {
                       ].map((item, index) => (
                         <CarouselItem key={index}>
                           <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-primary/10">
-                            <div className={`bg-gradient-to-br ${item.gradient} h-48 flex items-center justify-center relative`}>
+                            <div className={`bg-gradient-to-br ${item.gradient} h-56 lg:h-64 flex items-center justify-center relative`}>
                               <div className="text-center text-white">
-                                <item.icon className="w-12 h-12 mx-auto mb-3 opacity-90" />
-                                <div className="text-5xl font-bold">{item.stat}</div>
+                                <item.icon className="w-14 h-14 mx-auto mb-4 opacity-90" />
+                                <div className="text-5xl lg:text-6xl font-bold">{item.stat}</div>
                               </div>
                             </div>
-                            <CardContent className="p-6">
-                              <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
-                              <p className="text-muted-foreground text-sm">{item.description}</p>
+                            <CardContent className="p-6 lg:p-8">
+                              <h3 className="text-xl lg:text-2xl font-semibold text-foreground mb-2">{item.title}</h3>
+                              <p className="text-muted-foreground text-sm lg:text-base">{item.description}</p>
                             </CardContent>
                           </Card>
                         </CarouselItem>
