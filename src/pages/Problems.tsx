@@ -42,10 +42,11 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
+import { PROBLEMS_COURSE_ID, PROBLEMS_PER_PAGE, SHOW_FREE_PAGES } from "@/statics";
 
-const PROBLEMS_COURSE_ID = "ynRqmBdSMEUAZhh0WYLn";
-const PROBLEMS_PER_PAGE = 20;
-const SHOW_FREE_PAGES = 2;
+// const PROBLEMS_COURSE_ID = "ynRqmBdSMEUAZhh0WYLn";
+// const PROBLEMS_PER_PAGE = 20;
+// const SHOW_FREE_PAGES = 2;
 
 interface AskedInItem {
   name: string;
@@ -80,7 +81,7 @@ const Problems: React.FC = () => {
   // Data state
   const [problems, setProblems] = useState<ProblemDoc[]>([]);
   const [problemsLoading, setProblemsLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(60);
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
   const location = useLocation();
 
@@ -174,7 +175,11 @@ const Problems: React.FC = () => {
         const snapshot = await getCountFromServer(countQuery);
         const totalItems = snapshot.data().count || 0;
         if (!mounted) return;
-        setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
+        if (!isSubscribed) {
+          setTotalPages(60)
+        } else {
+          setTotalPages(Math.max(1, Math.ceil(totalItems / PROBLEMS_PER_PAGE)));
+        }
       } catch (err) {
         console.error("Error fetching total count:", err);
       }
@@ -215,9 +220,9 @@ const Problems: React.FC = () => {
           }
 
           // For free pages, still restrict to non-private first pages
-          // if (currentPage <= SHOW_FREE_PAGES) {
-          //   constraints.push(where("isPrivate", "==", false));
-          // }
+          if (currentPage <= SHOW_FREE_PAGES) {
+            constraints.push(where("isPrivate", "==", false));
+          }
 
           const q = query(
             collection(db, "topics"),
@@ -280,7 +285,7 @@ const Problems: React.FC = () => {
 
         // free pages show only non-private
         if (currentPage <= SHOW_FREE_PAGES) {
-          // constraints.push(where("isPrivate", "==", false));
+          constraints.push(where("isPrivate", "==", false));
         }
 
         const q = query(
