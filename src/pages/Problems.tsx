@@ -218,7 +218,7 @@ const Problems: React.FC = () => {
 
           // For free pages, still restrict to non-private first pages
           if (currentPage <= SHOW_FREE_PAGES) {
-            constraints.push(where("isPrivate", "==", false));
+            // constraints.push(where("isPrivate", "==", false));
           }
 
           const q = query(
@@ -282,7 +282,7 @@ const Problems: React.FC = () => {
 
         // free pages show only non-private
         if (currentPage <= SHOW_FREE_PAGES) {
-          constraints.push(where("isPrivate", "==", false));
+          // constraints.push(where("isPrivate", "==", false));
         }
 
         const q = query(
