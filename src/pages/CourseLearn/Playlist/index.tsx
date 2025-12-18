@@ -80,25 +80,101 @@ const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setL
                 {playlists.map((pl) => (
                     <Card
                         key={pl.id}
-                        className="bg-card hover:scale-105 transition-all duration-200 cursor-pointer group border-2 hover:border-primary/50"
+                        className="
+                            relative
+                            bg-card
+                            cursor-pointer
+                            group
+                            border-2
+                            transition-all
+                            duration-200
+                            hover:border-primary/50
+                            hover:-translate-y-1
+                            h-[200px] sm:h-[220px]
+                        "
                         onClick={() => openDetail(pl.id)}
                     >
-                        <CardContent className="p-8">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                                        {pl.heading}
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {pl.subheading}
-                                    </p>
-                                </div>
-                                <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center ml-4">
-                                    <span className="text-3xl font-bold text-primary">{pl.topicIds.length}</span>
-                                </div>
+                        {/* Top-right logo box */}
+                        <div
+                            className="
+                                absolute
+                                top-4
+                                right-4
+                                w-10 h-10 sm:w-12 sm:h-12
+                                bg-white
+                                rounded-xl
+                                flex
+                                items-center
+                                justify-center
+                                overflow-hidden
+                                z-10
+                            "
+                        >
+                            {pl.logoURL ? (
+                                <img
+                                    src={pl.logoURL}
+                                    alt={pl.heading}
+                                    className="w-full h-full object-contain p-2"
+                                />
+                            ) : (
+                                <span className="text-xs font-semibold text-primary">
+                                    QP
+                                </span>
+                            )}
+                        </div>
+
+                        <CardContent
+                            className="
+                                p-6
+                                pr-16 sm:pr-20
+                                h-full
+                                flex
+                                flex-col
+                                justify-between
+                            "
+                        >
+                            {/* Top content */}
+                            <div className="pt-1">
+                                <h3
+                                    className="
+                                        text-lg sm:text-xl
+                                        font-bold
+                                        text-foreground
+                                        mb-4
+                                        group-hover:text-primary
+                                        transition-colors
+                                    "
+                                >
+                                    {pl.heading}
+                                </h3>
+
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {pl.subheading}
+                                </p>
+                            </div>
+
+                            {/* Bottom-fixed count */}
+                            <div
+                                className="
+                                    mt-4
+                                    flex
+                                    items-center
+                                    justify-between
+                                    pt-4
+                                    border-t
+                                    border-border
+                                "
+                            >
+                                <span className="text-xs text-muted-foreground">
+                                    Questions
+                                </span>
+                                <span className="text-base font-bold text-primary">
+                                    {pl.topicIds.length}
+                                </span>
                             </div>
                         </CardContent>
                     </Card>
+
                 ))}
             </div>
         </div>

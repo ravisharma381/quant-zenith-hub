@@ -86,7 +86,7 @@ const AdminChapters: React.FC = () => {
             let q = query(
                 collection(db, "chapters"),
                 where("courseId", "==", courseId),
-                orderBy("createdAt", "desc"),
+                orderBy("order", "asc"),
                 limit(PAGE_SIZE)
             );
 

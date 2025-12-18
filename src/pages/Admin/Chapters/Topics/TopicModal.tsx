@@ -103,6 +103,9 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setPlaylistIds(initialData.playlistIds ?? []);
             setAskedIn(initialData.askedIn ?? []);
             setIsPrivate(initialData.isPrivate ?? true);
+            if (initialData.type === "playlist" && initialData.playlistIds?.length) {
+                resolvePlaylistsByIds(initialData.playlistIds);
+            }
         } else {
             setTitle("");
             setType("layout");
@@ -186,6 +189,30 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
         window.addEventListener("message", onMessage);
         return () => window.removeEventListener("message", onMessage);
     }, []);
+
+    const chunk = <T,>(arr: T[], size: number) =>
+        Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+            arr.slice(i * size, i * size + size)
+        );
+
+    const resolvePlaylistsByIds = async (ids: string[]) => {
+        const chunks = chunk(ids, 10);
+        const results: { label: string; value: string }[] = [];
+
+        for (const c of chunks) {
+            const snap = await getDocs(
+                query(collection(db, "playlists"), where("__name__", "in", c))
+            );
+
+            snap.docs.forEach(d => {
+                const data = d.data() as Playlist;
+                results.push({ label: data.heading, value: d.id });
+            });
+        }
+
+        setPlaylistOptions(results);
+    };
+
 
     const handleSubmit = () => {
         if (!title || !courseId || !chapterId) {

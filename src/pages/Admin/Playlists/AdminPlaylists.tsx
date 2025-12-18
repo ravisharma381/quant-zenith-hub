@@ -99,7 +99,7 @@ const AdminPlaylists: React.FC = () => {
             const q = query(
                 collection(db, "playlists"),
                 where("courseId", "==", courseId),
-                orderBy("createdAt", "desc"),
+                orderBy("sortOrder", "asc"),
                 limit(PAGE_SIZE)
             );
 
@@ -162,7 +162,7 @@ const AdminPlaylists: React.FC = () => {
         const q = query(
             collection(db, "playlists"),
             where("courseId", "==", courseId),
-            orderBy("createdAt", "desc"),
+            orderBy("sortOrder", "asc"),
             startAfter(lastDoc),
             limit(PAGE_SIZE)
         );
@@ -217,7 +217,7 @@ const AdminPlaylists: React.FC = () => {
         const q = query(
             collection(db, "playlists"),
             where("courseId", "==", courseId),
-            orderBy("createdAt", "desc"),
+            orderBy("sortOrder", "asc"),
             startAt(prevStart),
             limit(PAGE_SIZE)
         );
@@ -234,6 +234,18 @@ const AdminPlaylists: React.FC = () => {
         const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Playlist[];
         setPlaylists(data);
     };
+
+    useEffect(() => {
+        if (!open) return;
+
+        const ids = formData.topicIds || [];
+        if (!ids.length) {
+            setTopics([]);
+            return;
+        }
+
+        fetchTopicsByIds(ids);
+    }, [open, formData.topicIds]);
 
 
 
@@ -284,7 +296,6 @@ const AdminPlaylists: React.FC = () => {
     const openEdit = async (playlist: Playlist) => {
         setEditingPlaylist(playlist);
         setFormData(playlist);
-        await fetchTopicsByIds(playlist.topicIds || []);
         setOpen(true);
     };
     const openAdd = () => {
@@ -386,7 +397,7 @@ const AdminPlaylists: React.FC = () => {
                         <DialogTitle>{editingPlaylist ? "Edit Playlist" : "Add Playlist"}</DialogTitle>
                     </DialogHeader>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 overflow-y-auto">
                         <div>
                             <Label>Heading</Label>
                             <Input

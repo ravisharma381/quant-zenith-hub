@@ -118,11 +118,58 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
 
             <div className="flex items-center gap-8 mb-12">
                 {/* Logo section - 25% width */}
-                <div className="w-1/4 flex-shrink-0">
+                {/* <div className="w-1/4 flex-shrink-0">
                     <div className="w-full aspect-square bg-primary/10 rounded-3xl flex items-center justify-center">
                         <span className="text-6xl font-bold text-primary">{topics?.length}</span>
                     </div>
+                </div> */}
+                <div className="flex items-center gap-4">
+                    {/* Logo */}
+                    <div className="w-16 flex-shrink-0">
+                        <div
+                            className="
+                                w-full
+                                aspect-square
+                                bg-white
+                                rounded-sm
+                                flex
+                                items-center
+                                justify-center
+                                border
+                                border-border
+                            "
+                        >
+                            {playlist?.logoURL ? (
+                                <img
+                                    src={playlist.logoURL}
+                                    alt={playlist.heading}
+                                    className="w-12 h-12 object-contain"
+                                />
+                            ) : (
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    QP
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Heading */}
+                    <div className="flex-1 min-w-0">
+                        <h2
+                            className="
+                                text-xl sm:text-2xl
+                                font-bold
+                                text-foreground
+                                leading-tight
+                                truncate
+                            "
+                        >
+                            {playlist.heading}
+                        </h2>
+                    </div>
                 </div>
+
+
 
                 {/* About content - 75% width */}
                 <div className="flex-1">
