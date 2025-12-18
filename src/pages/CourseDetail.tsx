@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3 } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, Crown, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import FeatureRow from "@/components/FeatureRow";
+
 import Autoplay from "embla-carousel-autoplay";
 const CourseDetail = () => {
   const navigate = useNavigate();
@@ -59,22 +59,24 @@ const CourseDetail = () => {
 
   const courseFeatures = [
     {
-      icon: Brain,
-      title: "Learn The Right Approach",
-      description: "Each question is paired with a comprehensive solution that systematically walks you through how to solve the question. Each question also has a hint to guide you towards the right approach.",
-      imageType: "mockup"
+      icon: Crown,
+      title: "Premium Questions",
+      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more.",
     },
     {
-      icon: Calculator,
-      title: "Mathematical Excellence",
-      description: "Master advanced mathematical concepts including stochastic calculus, probability theory, and statistical inference essential for quantitative finance roles.",
-      imageType: "formula"
+      icon: Lightbulb,
+      title: "Hints and Detailed Solutions",
+      description: "Need help? Just like in real interviews, all of our questions come with hints to point you in the right direction. Plus, see solutions written by real quants with detailed explanations and interview-focused thinking.",
     },
     {
-      icon: BarChart3,
-      title: "Real-World Applications",
-      description: "Apply theoretical knowledge to practical scenarios used in top investment banks and hedge funds. Learn through case studies from Goldman Sachs, JPMorgan, and Two Sigma.",
-      imageType: "chart"
+      icon: Tag,
+      title: "Company Tagged Questions",
+      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
+    },
+    {
+      icon: BookOpen,
+      title: "Courses",
+      description: "Hone your skills with access to the first ever quant recruiting textbooks. With over 500 pages of unique material crafted by quants with extensive teaching background, you will learn probability, statistics, game theory, and much more.",
     }
   ];
 
@@ -287,16 +289,15 @@ const CourseDetail = () => {
             </p>
           </div>
           
-          <div className="space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
             {courseFeatures.map((feature, index) => (
-              <FeatureRow
-                key={index}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                index={index}
-                theme="primary"
-              />
+              <div key={index} className="flex gap-4">
+                <feature.icon className="w-6 h-6 text-muted-foreground flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
