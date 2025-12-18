@@ -370,7 +370,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
                             );
                         case "paragraph":
                             return (
-                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-white'} whitespace-pre-line `}>
+                                <p key={i} className={`text-lg ${isChildren ? 'text-white' : 'text-gray-200'} whitespace-pre-line `}>
                                     {renderRichText(b.text)}
                                 </p>
                             );

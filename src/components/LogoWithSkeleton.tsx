@@ -9,11 +9,11 @@ interface LogoWithSkeletonProps {
   className?: string;
 }
 
-const LogoWithSkeleton: React.FC<LogoWithSkeletonProps> = ({ 
-  src, 
-  alt, 
-  companyName, 
-  className = "w-8 h-8 object-contain rounded hover:scale-110 transition-transform cursor-default" 
+const LogoWithSkeleton: React.FC<LogoWithSkeletonProps> = ({
+  src,
+  alt,
+  companyName,
+  className = "w-8 h-8 object-contain rounded hover:scale-110 transition-transform cursor-default"
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -29,7 +29,7 @@ const LogoWithSkeleton: React.FC<LogoWithSkeletonProps> = ({
             <img
               src={src}
               alt={alt}
-              className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200`}
+              className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 bg-white`}
               onLoad={() => setIsLoaded(true)}
               onError={() => {
                 setHasError(true);

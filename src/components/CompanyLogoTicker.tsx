@@ -36,7 +36,7 @@ const CompanyLogoTicker = () => {
                     <img
                       src={logo.src}
                       alt={logo.alt}
-                      className="h-20 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
+                      className="h-20 w-auto object-contain"
                     />
                   </div>
                 </div>
@@ -52,7 +52,7 @@ const CompanyLogoTicker = () => {
                     <img
                       src={logo.src}
                       alt={logo.alt}
-                      className="h-20 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
+                      className="h-20 w-auto object-contain"
                     />
                   </div>
                 </div>
