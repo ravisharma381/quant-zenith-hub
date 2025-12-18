@@ -253,6 +253,13 @@ const CourseDetail = () => {
                           title: "Success Rate",
                           description: "Students landing offers at top quant firms",
                           gradient: "from-amber-600/90 via-orange-500/70 to-red-500/80"
+                        },
+                        {
+                          icon: Award,
+                          stat: "30 Days",
+                          title: "Full Refund",
+                          description: "Not satisfied? Get a complete refund, no questions asked",
+                          gradient: "from-pink-600/90 via-rose-500/70 to-red-400/80"
                         }
                       ].map((item, index) => (
                         <CarouselItem key={index}>
