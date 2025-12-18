@@ -21,6 +21,11 @@ const CourseDetail = () => {
       description: "Sharpen your logical thinking with classic and modern quantitative puzzles."
     },
     {
+      icon: Calculator,
+      title: "Combinatorics",
+      description: "Master counting techniques, permutations, and combinations essential for probability."
+    },
+    {
       icon: Coins,
       title: "Probability",
       description: "Master probability theory from basics to advanced concepts used in interviews."
@@ -316,7 +321,7 @@ const CourseDetail = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {masterTopics.map((topic, index) => (
                 <Card key={index} className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:bg-card/80 transition-all duration-300 group h-full">
                   <CardContent className="p-8">
