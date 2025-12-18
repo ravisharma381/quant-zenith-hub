@@ -60,13 +60,13 @@ const CourseDetail = () => {
   const courseFeatures = [
     {
       icon: Crown,
-      title: "Premium Questions",
-      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more.",
+      title: "Premium Questions with Detailed Solutions",
+      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more. Each question comes with hints and detailed solutions written by real quants.",
     },
     {
-      icon: Lightbulb,
-      title: "Hints and Detailed Solutions",
-      description: "Need help? Just like in real interviews, all of our questions come with hints to point you in the right direction. Plus, see solutions written by real quants with detailed explanations and interview-focused thinking.",
+      icon: BookOpen,
+      title: "Theory",
+      description: "Master the fundamentals with 100+ chapters covering all the topics needed to excel at quant interviews. From probability to market making, we've got you covered.",
     },
     {
       icon: Tag,
@@ -74,9 +74,9 @@ const CourseDetail = () => {
       description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
     },
     {
-      icon: BookOpen,
-      title: "Courses",
-      description: "Hone your skills with access to the first ever quant recruiting textbooks. With over 500 pages of unique material crafted by quants with extensive teaching background, you will learn probability, statistics, game theory, and much more.",
+      icon: Award,
+      title: "30 Days Full Refund",
+      description: "Not satisfied? Get a full refund within 30 days, no questions asked. We're confident you'll love our course.",
     }
   ];
 
