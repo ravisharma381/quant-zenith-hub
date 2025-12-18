@@ -173,14 +173,14 @@ const CourseDetail = () => {
                   #1 Rated Quant Prep Course
                 </Badge>
                 
-                <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
                   Quant Interview
                   <span className="block bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
                     Masterclass
                   </span>
                 </h1>
                 
-                <p className="text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
                   Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                 </p>
                 
