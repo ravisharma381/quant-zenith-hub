@@ -10,7 +10,7 @@ const CourseCard = ({ course, isEnrolled }) => {
     return (
         <div
             key={course.id}
-            className="cursor-pointer bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row"
+            className="cursor-pointer bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row md:min-h-[215px]"
             onClick={() => course.isComingSoon ? null : navigate(`/course/${course.slug}`)}
         >
             {/* Gradient Header with Instructor Photo */}

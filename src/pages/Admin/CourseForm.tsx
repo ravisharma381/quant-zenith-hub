@@ -25,6 +25,7 @@ export interface CourseFormData {
     thumbnailURL?: string;
     isComingSoon?: boolean;
     isProblemType: boolean;
+    order: number;
 }
 
 interface CourseFormProps {
@@ -57,7 +58,8 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
             isPublished: false,
             thumbnailURL: "",
             isComingSoon: false,
-            isProblemType: false
+            isProblemType: false,
+            order: 0,
         }
     );
 
@@ -169,6 +171,15 @@ const CourseForm: React.FC<CourseFormProps> = ({ mode, initialData, onSubmit, lo
 
             {/* Money + Appearance */}
             <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                    <Label>Order</Label>
+                    <Input
+                        name="order"
+                        type="number"
+                        value={formData?.order || 0}
+                        onChange={handleChange}
+                    />
+                </div>
                 <div>
                     <Label>Price (Yearly)</Label>
                     <Input

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useNavigate } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
@@ -47,7 +47,7 @@ const Courses = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const q = query(collection(db, "courses"), where("isPublished", "==", true), where("isProblemType", "==", false));
+      const q = query(collection(db, "courses"), where("isPublished", "==", true), where("isProblemType", "==", false), orderBy("order", "asc"));
       const snapshot = await getDocs(q);
       const list = snapshot.docs.map((doc) => ({
         id: doc.id,
