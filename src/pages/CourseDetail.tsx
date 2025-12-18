@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Play, Brain, Calculator, BarChart3 } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, Crown, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import FeatureRow from "@/components/FeatureRow";
 import { useAuth } from "@/context/AuthContext";
 import { Helmet } from "react-helmet-async";
+import Autoplay from "embla-carousel-autoplay";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
@@ -20,64 +21,74 @@ const CourseDetail = () => {
   const isBought = userProfile?.isPremium
 
 
-  const features = [
-    "Comprehensive interview preparation framework",
-    "Real quantitative finance interview questions",
-    "Advanced mathematical concepts and modeling",
-    "Python and R programming for quants"
-  ];
-
   const masterTopics = [
     {
-      icon: BookOpen,
-      title: "Quantitative Methods",
-      description: "Master the mathematical foundations essential for quantitative finance interviews."
+      icon: Lightbulb,
+      title: "Brainteasers",
+      description: "Sharpen your logical thinking with classic and modern quantitative puzzles."
+    },
+    {
+      icon: Calculator,
+      title: "Combinatorics",
+      description: "Master counting techniques, permutations, and combinations essential for probability."
+    },
+    {
+      icon: Coins,
+      title: "Probability",
+      description: "Master probability theory from basics to advanced concepts used in interviews."
+    },
+    {
+      icon: Dices,
+      title: "Betting Games",
+      description: "Learn optimal strategies for dice games, card games, and expected value problems."
     },
     {
       icon: TrendingUp,
-      title: "Financial Modeling",
-      description: "Learn advanced modeling techniques used in top-tier investment firms."
+      title: "Market Making",
+      description: "Understand bid-ask spreads, inventory management, and pricing strategies."
     },
     {
-      icon: Target,
-      title: "Interview Strategy",
-      description: "Develop winning strategies to tackle any quantitative finance interview."
+      icon: BarChart3,
+      title: "Statistics",
+      description: "Build strong foundations in statistical inference and hypothesis testing."
     },
     {
-      icon: Users,
-      title: "Mock Interviews",
-      description: "Practice with realistic interview scenarios and get expert feedback."
+      icon: ScatterChart,
+      title: "Regression",
+      description: "Master linear regression, time series analysis, and predictive modeling."
     },
     {
-      icon: Lightbulb,
-      title: "Problem Solving",
-      description: "Master complex problem-solving techniques for quantitative challenges."
+      icon: LineChart,
+      title: "Martingales",
+      description: "Explore martingale theory and its applications in finance and betting."
     },
     {
-      icon: Award,
-      title: "Career Guidance",
-      description: "Get insider tips on landing positions at top quantitative finance firms."
+      icon: Grid3x3,
+      title: "Random Walks",
+      description: "Understand Brownian motion, stochastic processes, and their financial applications."
     }
   ];
 
   const courseFeatures = [
     {
-      icon: Brain,
-      title: "Learn The Right Approach",
-      description: "Each question is paired with a comprehensive solution that systematically walks you through how to solve the question. Each question also has a hint to guide you towards the right approach.",
-      imageType: "mockup"
+      icon: Crown,
+      title: "Premium Questions with Detailed Solutions",
+      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more. Each question comes with hints and detailed solutions written by real quants.",
     },
     {
-      icon: Calculator,
-      title: "Mathematical Excellence",
-      description: "Master advanced mathematical concepts including stochastic calculus, probability theory, and statistical inference essential for quantitative finance roles.",
-      imageType: "formula"
+      icon: BookOpen,
+      title: "Theory",
+      description: "Master the fundamentals with 100+ chapters covering all the topics needed to excel at quant interviews. From probability to market making, we've got you covered.",
     },
     {
-      icon: BarChart3,
-      title: "Real-World Applications",
-      description: "Apply theoretical knowledge to practical scenarios used in top investment banks and hedge funds. Learn through case studies from Goldman Sachs, JPMorgan, and Two Sigma.",
-      imageType: "chart"
+      icon: Tag,
+      title: "Company Tagged Questions",
+      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
+    },
+    {
+      icon: Award,
+      title: "30 Days Full Refund",
+      description: "Not satisfied? Get a full refund within 30 days, no questions asked. We're confident you'll love our course.",
     }
   ];
 
@@ -106,6 +117,12 @@ const CourseDetail = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Only show sticky bar after scrolling down at least 100px
+      if (scrollY < 100) {
+        setShowStickyBar(false);
+        return;
+      }
       if (enrollButtonRef.current) {
         const rect = enrollButtonRef.current.getBoundingClientRect();
         const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
@@ -141,7 +158,7 @@ const CourseDetail = () => {
       </Helmet>
       <div className="min-h-screen bg-background">
         {/* Sticky Enrollment Bar */}
-        <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : '-translate-y-full'
+        <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ${showStickyBar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
           }`}>
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
@@ -155,151 +172,249 @@ const CourseDetail = () => {
                   <span className="text-sm font-medium text-foreground">4.9/5</span>
                 </div>
                 <Button
-                  className="bg-primary hover:bg-primary/90 text-background font-semibold px-6"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
                   onClick={() => navigate(
                     isBought
                       ? `/course/${courseId}/learn`
-                      : `/course/${slug}/checkout`,
+                      : `/premium`,
                   )}
                 >
-                  {isBought ? "Continue Learning" : 'Enroll Now'}
+                  {isBought ? "Go to Course" : "Get Premium"}
                 </Button>
               </div>
             </div>
           </div>
         </div>
+
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-background via-primary/10 to-primary/20 overflow-hidden">
-          <div className="container mx-auto px-4 py-16">
-            <div className="max-w-7xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Left Side - Course Info */}
-                <div>
-                  <h1 className="text-5xl font-bold text-foreground mb-6">
-                    Quant Interview Masterclass
+        <div className="relative w-full overflow-hidden max-w-full">
+          {/* MAIN SECTION GRADIENT (RESTORED) */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-purple-500/10" />
+
+          {/* SOFT BACKGROUND BLOBS */}
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[60vw] max-w-[360px] aspect-square bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-1/2 translate-x-1/2 w-[70vw] max-w-[420px] aspect-square bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* CONTENT */}
+          <div className="relative z-10 w-full overflow-hidden">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                {/* Left Side */}
+                <div className="text-center lg:text-left w-full">
+                  <Badge className="mb-6 bg-primary/20 text-primary border-primary/30">
+                    #1 Rated Quant Prep Course
+                  </Badge>
+
+                  <h1 className="font-bold text-foreground mb-6 leading-tight text-[clamp(1.75rem,5vw,3.75rem)]">
+                    Quant Interview
+                    <span className="block bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+                      Masterclass
+                    </span>
                   </h1>
-                  <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                    Master quantitative finance interviews with our comprehensive course designed by industry experts
+
+                  <p className="text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 text-[clamp(0.95rem,2.5vw,1.25rem)]">
+                    Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                   </p>
 
-                  {/* Features List */}
-                  <div className="space-y-4 mb-8">
-                    {features.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                          <Check className="w-4 h-4 text-background" />
-                        </div>
-                        <span className="text-foreground">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* CTA and Rating */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                     <Button
                       ref={enrollButtonRef}
                       size="lg"
-                      className="bg-primary hover:bg-primary/90 text-background font-semibold px-8"
-                      onClick={() => navigate(
-                        isBought
-                          ? `/course/${courseId}/learn`
-                          : `/course/${slug}/checkout`,
-                      )}
+                      className="px-10 py-6 text-lg shadow-lg"
+                      onClick={() =>
+                        navigate(isBought ? `/course/${courseId}/learn` : `/premium`)
+                      }
                     >
-                      {isBought ? "Continue Learning" : "Enroll Me Now"}
+                      {isBought ? "Go to Course" : "Get Premium"}
                     </Button>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span className="ml-1 font-medium text-foreground">4.9/5</span>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                        ))}
                       </div>
-                      <span className="text-muted-foreground">from 500+ students</span>
+                      <div>
+                        <span className="font-semibold">4.9/5</span>
+                        <span className="text-muted-foreground ml-1">• 500+ students</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Side - Course Preview */}
-                <div className="flex justify-center">
-                  <div className="w-full max-w-lg">
-                    <div className="bg-gradient-to-br from-primary/80 to-primary/60 rounded-xl w-full h-80 relative overflow-hidden flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary/70 transition-all duration-300">
-                      <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-                        <Play className="w-10 h-10 text-background ml-1" />
-                      </div>
-                    </div>
-                    <div className="text-center mt-6">
-                      <h3 className="text-foreground font-semibold mb-2 text-xl">Course Preview</h3>
-                      <p className="text-muted-foreground text-sm">Get a sneak peek of what you'll learn</p>
-                    </div>
+                {/* Right Side */}
+                <div className="w-full flex justify-center lg:justify-end overflow-hidden">
+                  <div className="w-full max-w-[360px] sm:max-w-[420px] mx-auto lg:mx-0">
+                    <Carousel
+                      opts={{ align: "start", loop: true }}
+                      plugins={[Autoplay({ delay: 3000 })]}
+                      className="w-full overflow-hidden"
+                    >
+                      <CarouselContent className="flex w-full items-stretch">
+                        {[
+                          {
+                            icon: FileText,
+                            stat: "1000+",
+                            title: "Practice Problems",
+                            description:
+                              "Comprehensive question bank covering all interview topics",
+                            gradient: "from-primary/90 via-primary/70 to-emerald-600/80",
+                          },
+                          {
+                            icon: Building2,
+                            stat: "50+",
+                            title: "Company Specific Problems",
+                            description:
+                              "Real questions from top trading firms and hedge funds",
+                            gradient:
+                              "from-purple-600/90 via-purple-500/70 to-indigo-600/80",
+                          },
+                          {
+                            icon: GraduationCap,
+                            stat: "100+",
+                            title: "Chapters",
+                            description:
+                              "Complete theory coverage from basics to advanced",
+                            gradient:
+                              "from-emerald-600/90 via-teal-500/70 to-cyan-600/80",
+                          },
+                          {
+                            icon: Target,
+                            stat: "95%",
+                            title: "Success Rate",
+                            description:
+                              "Students landing offers at top quant firms",
+                            gradient:
+                              "from-amber-600/90 via-orange-500/70 to-red-500/80",
+                          },
+                          {
+                            icon: Award,
+                            stat: "30 Days",
+                            title: "Full Refund",
+                            description:
+                              "Not satisfied? Get a complete refund, no questions asked",
+                            gradient:
+                              "from-pink-600/90 via-rose-500/70 to-red-400/80",
+                          },
+                        ].map((item, index) => (
+                          <CarouselItem
+                            key={index}
+                            className="flex w-full min-w-full max-w-full shrink-0 grow-0 items-stretch"
+                          >
+                            <Card className="w-full h-full overflow-hidden flex flex-col">
+                              {/* ⬆️ INCREASED HEADER HEIGHT */}
+                              <div
+                                className={`bg-gradient-to-br ${item.gradient} h-56 sm:h-60 lg:h-64 flex items-center justify-center`}
+                              >
+                                <div className="text-center text-white">
+                                  <item.icon className="w-14 h-14 mx-auto mb-4" />
+                                  <div className="text-4xl sm:text-5xl font-bold">
+                                    {item.stat}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* CONTENT */}
+                              <CardContent className="p-6 flex-1 flex flex-col">
+                                <h3 className="text-xl font-semibold mb-2">
+                                  {item.title}
+                                </h3>
+                                <p className="text-muted-foreground text-sm leading-relaxed">
+                                  {item.description}
+                                </p>
+                              </CardContent>
+                            </Card>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                    </Carousel>
                   </div>
                 </div>
+
+
+
               </div>
             </div>
           </div>
         </div>
 
         {/* Features Section */}
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-24">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-foreground mb-4">Features</h2>
-              <p className="text-lg text-muted-foreground">
+            <div className="text-center mb-20">
+              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Why Choose Us</Badge>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+                Everything You Need to
+                <span className="block text-primary">Ace Your Interview</span>
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Discover what makes our course the ultimate preparation for quantitative finance success
               </p>
             </div>
 
-            <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
               {courseFeatures.map((feature, index) => (
-                <FeatureRow
-                  key={index}
-                  icon={feature.icon}
-                  title={feature.title}
-                  description={feature.description}
-                  index={index}
-                  theme="primary"
-                />
+                <div key={index} className="flex gap-4">
+                  <feature.icon className="w-6 h-6 text-muted-foreground flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
 
         {/* What You'll Master Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-foreground mb-4">What You'll Master</h2>
-              <p className="text-lg text-muted-foreground">
-                Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
-              </p>
-            </div>
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
+          <div className="container mx-auto px-4 py-24 relative z-10">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">Curriculum</Badge>
+                <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">What You'll Master</h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Our comprehensive curriculum covers everything you need to excel in quantitative finance interviews
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {masterTopics.map((topic, index) => (
-                <Card key={index} className="border-border hover:border-primary/50 transition-colors h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                      <topic.icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{topic.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {masterTopics.map((topic, index) => (
+                  <Card key={index} className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:bg-card/80 transition-all duration-300 group h-full">
+                    <CardContent className="p-8">
+                      <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-colors">
+                        <topic.icon className="w-7 h-7 text-primary" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-foreground mb-3">{topic.title}</h3>
+                      <p className="text-muted-foreground leading-relaxed">{topic.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-foreground text-center mb-12">Frequently Asked Questions</h2>
+        <div className="container mx-auto px-4 py-24">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-16">
+              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">FAQ</Badge>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">Frequently Asked Questions</h2>
+            </div>
 
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="border border-border rounded-lg px-6">
-                  <AccordionTrigger className="text-left text-foreground hover:text-primary [&[data-state=open]]:text-primary [&>svg]:text-white">
+                <AccordionItem
+                  key={index}
+                  value={`item-${index}`}
+                  className="border border-border/50 rounded-xl px-6 bg-card/30 backdrop-blur-sm hover:bg-card/50 transition-colors data-[state=open]:bg-card/60"
+                >
+                  <AccordionTrigger className="text-left text-foreground hover:text-primary py-6 text-lg [&[data-state=open]]:text-primary [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-6">
+                  <AccordionContent className="text-muted-foreground pb-6 text-base leading-relaxed">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
@@ -308,22 +423,6 @@ const CourseDetail = () => {
           </div>
         </div>
 
-        {/* Final CTA */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto text-center">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-background font-semibold px-12 py-6 text-lg"
-              onClick={() => navigate(
-                isBought
-                  ? `/course/${courseId}/learn`
-                  : `/course/${slug}/checkout`,
-              )}
-            >
-              {isBought ? "Continue Learning" : 'Start Your Journey Today'}
-            </Button>
-          </div>
-        </div>
       </div>
     </>
   );
