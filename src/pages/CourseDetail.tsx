@@ -164,23 +164,23 @@ const CourseDetail = () => {
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
         
-        <div className="container mx-auto px-4 py-20 relative z-10">
-          <div className="max-w-7xl mx-auto">
+        <div className="container mx-auto px-4 py-20 relative z-10 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto w-full">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               {/* Left Side - Course Info */}
-              <div className="animate-fade-in text-center lg:text-left">
+              <div className="animate-fade-in text-center lg:text-left w-full overflow-hidden">
                 <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
                   #1 Rated Quant Prep Course
                 </Badge>
                 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight break-words">
                   Quant Interview
                   <span className="block bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
                     Masterclass
                   </span>
                 </h1>
                 
-                <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
+                <p className="text-sm sm:text-base md:text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 px-2 sm:px-0">
                   Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
                 </p>
                 
