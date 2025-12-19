@@ -86,7 +86,7 @@ const Problems: React.FC = () => {
   const isLoggedIn = !!user;
 
   // Static lists
-  const topics = ["All", "Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income", "Probability", "Optimization"];
+  const topics = ["All", "probability", "brainteasers", "combinatorics"];
   const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"];
 
   // helpers for colors (unchanged)
@@ -112,13 +112,6 @@ const Problems: React.FC = () => {
     return colors[topic.length % colors.length];
   };
 
-  const getCompanyName = (logo: string) => {
-    if (logo.includes("jane-street")) return "Jane Street";
-    if (logo.includes("citadel")) return "Citadel";
-    if (logo.includes("driv")) return "Driv";
-    if (logo.includes("company")) return "Top Firm";
-    return "Company";
-  };
 
   // ---------- Fetch progress (only if logged in) ----------
   // Option B: fetch progress later and update badges without refetching problems.
@@ -668,8 +661,8 @@ const Problems: React.FC = () => {
                             <LogoWithSkeleton
                               key={idx}
                               src={logo.logoURL}
-                              alt="Company logo"
-                              companyName={getCompanyName(logo.name)}
+                              alt={logo?.name || '-'}
+                              companyName={logo?.name || '-'}
                             />
                           )) : <span className="text-muted-foreground">-</span>}
                         </div>

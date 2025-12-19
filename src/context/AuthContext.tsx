@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where, documentId } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
+import { toast } from "@/hooks/use-toast";
 
 interface UserProfile {
     id: string;
@@ -133,7 +134,14 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setLoading(true);
 
             // Popup works reliably for Google + GitHub
-            await signInWithPopup(auth, provider);
+            const val = await signInWithPopup(auth, provider);
+            console.log(val);
+
+            toast({
+                title: "Login successful ✅",
+                description: "You have successfully logged in.",
+                variant: "default",
+            })
 
             setRerender(true);
         } catch (err) {

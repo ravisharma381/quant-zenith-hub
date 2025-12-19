@@ -318,7 +318,7 @@ const Index = () => {
                     Over 10,000 professionals have successfully landed positions at top firms
                     using QuantProf.
                   </p>
-                  <Button variant="link" size="lg" className="w-full sm:w-auto" asChild>
+                  <Button size="lg" className="w-full sm:w-auto bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)]" asChild>
                     <Link to="/problems">
                       Solve your first problem
                     </Link>

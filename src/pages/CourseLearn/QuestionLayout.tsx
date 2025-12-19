@@ -220,7 +220,7 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
 
                     {/* Problem description */}
                     <div className="prose prose-invert max-w-none">
-                        <div className="text-white leading-relaxed whitespace-pre-line text-base">
+                        <div className="text-white text-lg leading-relaxed whitespace-pre-line">
                             {renderRichCMS(topic.question)}
                         </div>
                     </div>
@@ -282,10 +282,10 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
 
                             return (
                                 <AccordionItem key={hintKey} value={hintKey} className="border border-border rounded-lg px-4">
-                                    <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
+                                    <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                         {`Hint ${i + 1}`}
                                     </AccordionTrigger>
-                                    <AccordionContent className="text-white leading-relaxed">
+                                    <AccordionContent className="text-white leading-relaxed text-lg">
                                         {renderRichCMS(hintVal)}
                                     </AccordionContent>
                                 </AccordionItem>
@@ -293,10 +293,10 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
                         })}
 
                         <AccordionItem value="solution" className="border border-border rounded-lg px-4">
-                            <AccordionTrigger className="text-white font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
+                            <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
                                 Solution
                             </AccordionTrigger>
-                            <AccordionContent className="text-white leading-relaxed">
+                            <AccordionContent className="text-white leading-relaxed text-lg">
                                 {renderRichCMS(topic.solution)}
                             </AccordionContent>
                         </AccordionItem>

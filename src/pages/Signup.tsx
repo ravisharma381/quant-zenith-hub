@@ -57,20 +57,20 @@ const Signup = () => {
               <Button
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={handleGoogleSignIn}
-                disabled={loading}
+              // disabled={loading}
               >
                 <span className="mr-2 font-bold">G</span>
-                {loading ? "Signing Up..." : "Sign Up with Google"}
+                Sign Up with Google
               </Button>
             </div>
             <div className="space-y-4">
               <Button
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={handleGithubSignIn}
-                disabled={loading}
+              // disabled={loading}
               >
                 <Github />
-                {loading ? "Signing in..." : "Sign Up with GitHub"}
+                Sign Up with GitHub
               </Button>
             </div>
 
