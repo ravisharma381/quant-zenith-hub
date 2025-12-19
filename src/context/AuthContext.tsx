@@ -2,18 +2,15 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
     onAuthStateChanged,
     GoogleAuthProvider,
-    signInWithRedirect,
     signOut,
     getRedirectResult,
-    setPersistence,
-    browserLocalPersistence,
     User as FirebaseUser,
     signInWithPopup,
     GithubAuthProvider,
     AuthProvider,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where, documentId } from "firebase/firestore";
-import { auth, db } from "@/firebase/config";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db, firebaseAuthInitError } from "@/firebase/config";
 import { toast } from "@/hooks/use-toast";
 
 interface UserProfile {
@@ -59,8 +56,24 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const [rerender, setRerender] = useState(true);
 
+    // If auth can't initialize (e.g., invalid API key), don't crash the whole app.
+    useEffect(() => {
+        if (!auth) {
+            setLoading(false);
+            toast({
+                title: "Firebase configuration error",
+                description:
+                    firebaseAuthInitError ||
+                    "Firebase Auth failed to initialize. Please verify your Firebase Web API key.",
+                variant: "destructive",
+            });
+        }
+    }, []);
+
     // 🔹 1️⃣ Handle redirect result once per page load
     useEffect(() => {
+        if (!auth) return;
+
         const handleRedirect = async () => {
             try {
                 const result = await getRedirectResult(auth);
@@ -77,13 +90,15 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // 🔹 2️⃣ Listen to auth state changes
     useEffect(() => {
+        if (!auth) return;
+
         if (rerender) {
             const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
                 if (firebaseUser) {
                     const userRef = doc(db, "users", firebaseUser.uid);
                     const userSnap = await getDoc(userRef);
                     const providerProfile = firebaseUser.providerData.find(
-                        p => p.providerId === "github.com"
+                        (p) => p.providerId === "github.com"
                     );
 
                     const derivedName =
@@ -97,7 +112,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                             name: derivedName,
                             email:
                                 firebaseUser.email ||
-                                firebaseUser.providerData.find(p => p.email)?.email ||
+                                firebaseUser.providerData.find((p) => p.email)?.email ||
                                 null,
                             photoURL: firebaseUser.photoURL,
                             provider: firebaseUser.providerData[0]?.providerId || "unknown",
@@ -131,6 +146,17 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, [rerender]);
 
     const signInWithProvider = async (provider: AuthProvider) => {
+        if (!auth) {
+            toast({
+                title: "Firebase configuration error",
+                description:
+                    firebaseAuthInitError ||
+                    "Firebase Auth is not available. Please verify your Firebase Web API key.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         try {
             setLoading(true);
 
@@ -142,7 +168,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 title: "Login successful ✅",
                 description: "You have successfully logged in.",
                 variant: "default",
-            })
+            });
 
             setRerender(true);
         } catch (err) {
@@ -151,29 +177,6 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-
-    // 🔹 3️⃣ Login with Google (with persistence)
-    // const loginWithGoogle = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const provider = new GoogleAuthProvider();
-    //         if (import.meta.env.DEV) {
-    //             // await setPersistence(auth, browserLocalPersistence);
-    //             // await signInWithRedirect(auth, provider);
-    //             await signInWithPopup(auth, provider);
-    //         } else {
-    //             // Forproduction
-    //             // await setPersistence(auth, browserLocalPersistence);
-    //             // await signInWithRedirect(auth, provider);
-    //             await signInWithPopup(auth, provider);
-    //         }
-    //         setRerender(true);
-
-
-    //     } catch (err) {
-    //         console.error("Login error:", err);
-    //     }
-    // };
     const loginWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: "select_account" });
@@ -192,7 +195,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // 🔹 4️⃣ Logout and reset state
     const logout = async () => {
         try {
-            await signOut(auth);
+            if (auth) await signOut(auth);
             setUser(null);
             setUserProfile(null);
             console.log("User signed out successfully.");
@@ -211,3 +214,4 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export default ContextAuthProvider;
 
 export const useAuth = () => useContext(AuthContext);
+
