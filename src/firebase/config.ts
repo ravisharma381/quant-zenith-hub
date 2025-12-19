@@ -1,5 +1,5 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, type Auth } from "firebase/auth";
 import {
   type Firestore,
   getFirestore,
@@ -21,7 +21,20 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
+// IMPORTANT: Never throw during module init (prevents blank preview).
+let _auth: Auth | null = null;
+let _authInitError: string | null = null;
+try {
+  _auth = getAuth(app);
+} catch (e) {
+  const msg = e instanceof Error ? e.message : String(e);
+  _authInitError = msg;
+  console.error("Firebase Auth init failed:", e);
+}
+
+export const auth = _auth;
+export const firebaseAuthInitError = _authInitError;
+
 export const functions = getFunctions(app, "asia-south1");
 export const storage = getStorage(app);
 
