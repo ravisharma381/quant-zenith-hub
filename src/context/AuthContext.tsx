@@ -26,6 +26,7 @@ interface UserProfile {
     createdAt?: any;
     lastLoginAt?: any;
     isPremium: boolean;
+    purchasedCourses?: string[];
     purchasedAt?: string;
     expiresAt?: string;
     planType: string;
