@@ -150,7 +150,7 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
         if (e.key === "Enter") handleSubmit();
     };
 
-    const level = Number(topic.level ?? 1);
+    const level = Number(topic.difficulty ?? 1);
 
     const getDifficultyColor = (difficulty: number) => {
         if (difficulty <= 3)

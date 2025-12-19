@@ -468,9 +468,9 @@ const Problems: React.FC = () => {
         <div className="max-w-7xl mx-auto">
 
           {/* Filters row: uses flex-wrap, fits in one row on normal screens, wraps on small screens */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          {/*<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
 
-            {/* Search */}
+            
             <div >
               <label className="block text-sm font-medium text-foreground mb-2">Search</label>
               <Input
@@ -481,7 +481,6 @@ const Problems: React.FC = () => {
               />
             </div>
 
-            {/* Topic */}
             <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
               <Select value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); setCurrentPage(1); }}>
@@ -492,7 +491,6 @@ const Problems: React.FC = () => {
               </Select>
             </div>
 
-            {/* Difficulty */}
             <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
               <Select value={selectedDifficulty} onValueChange={(v) => { setSelectedDifficulty(v); setCurrentPage(1); }}>
@@ -503,7 +501,6 @@ const Problems: React.FC = () => {
               </Select>
             </div>
 
-            {/* Status */}
             <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Status</label>
               <Select value={selectedStatus} onValueChange={(v: any) => { setSelectedStatus(v); setCurrentPage(1); }}>
@@ -516,11 +513,9 @@ const Problems: React.FC = () => {
               </Select>
             </div>
 
-            {/* Spacer */}
             <div className="flex-1" />
 
-            {/* Go to page + Clear filters aligned on right */}
-            {/* <div className="flex items-end gap-3">
+             <div className="flex items-end gap-3">
               <div className="flex flex-col">
                 <label className="block text-sm font-medium text-foreground mb-2">Go to page</label>
                 <div className="flex items-center gap-2">
@@ -561,8 +556,8 @@ const Problems: React.FC = () => {
                   </Button>
                 </div>
               )}
-            </div> */}
-          </div>
+            </div> 
+          </div>*/}
 
           {/* Problems Table */}
           <div className="bg-card border border-border rounded-lg overflow-hidden">
