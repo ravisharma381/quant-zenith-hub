@@ -84,7 +84,7 @@
   display: flex;
   gap: 4rem;
   padding-right: 4rem;
-  animation: logo-scroll 30s linear infinite;
+  animation: logo-scroll 50s linear infinite;
   flex-shrink: 0;
 }
 

@@ -1,16 +1,31 @@
 import React from "react";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
-import drivLogo from "@/assets/driv-logo.png";
+import jumpTradingLogo from "@/assets/jump-trading-logo.webp";
+import optiverLogo from "@/assets/optiver.png";
+import akunaLogo from "@/assets/akuna.png";
+import drwLogo from "@/assets/drw.png";
+import fiveRingsLogo from "@/assets/five-rings.png";
+import gravitonLogo from "@/assets/graviton.png";
+import hrtLogo from "@/assets/hrt.png";
+import imcLogo from "@/assets/imc-logo.png";
+import siLogo from "@/assets/si.png";
+import twoSigmaLogo from "@/assets/two-sigma.png";
 
 const CompanyLogoTicker = () => {
   const logos = [
     { src: janeStreetLogo, alt: "Jane Street" },
     { src: citadelLogo, alt: "Citadel" },
-    { src: drivLogo, alt: "DRW" },
-    { src: janeStreetLogo, alt: "Jane Street" },
-    { src: citadelLogo, alt: "Citadel" },
-    { src: drivLogo, alt: "DRW" },
+    { src: jumpTradingLogo, alt: "Jump Trading" },
+    { src: optiverLogo, alt: "Optiver" },
+    { src: akunaLogo, alt: "Akuna Capital" },
+    { src: drwLogo, alt: "DRW" },
+    { src: fiveRingsLogo, alt: "Five Rings" },
+    { src: gravitonLogo, alt: "Graviton" },
+    { src: hrtLogo, alt: "Hudson River Trading" },
+    { src: imcLogo, alt: "IMC Trading" },
+    { src: siLogo, alt: "Optiver" },
+    { src: twoSigmaLogo, alt: "Two Sigma" },
   ];
 
   return (
@@ -32,7 +47,7 @@ const CompanyLogoTicker = () => {
                   key={index}
                   className="logo-ticker-item"
                 >
-                  <div className="bg-muted/50 rounded-xl px-12 py-6 flex items-center justify-center min-w-[320px]">
+                  <div className="bg-white rounded-xl px-12 py-6 flex items-center justify-center w-[320px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
@@ -48,7 +63,7 @@ const CompanyLogoTicker = () => {
                   key={`duplicate-${index}`}
                   className="logo-ticker-item"
                 >
-                  <div className="bg-muted/50 rounded-xl px-12 py-6 flex items-center justify-center min-w-[320px]">
+                  <div className="bg-white rounded-xl px-12 py-6 flex items-center justify-center w-[320px]">
                     <img
                       src={logo.src}
                       alt={logo.alt}
