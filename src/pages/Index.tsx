@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Layout from "@/components/Layout";
+import TeX from "@matejmazur/react-katex";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
 import {
   TrendingUp,
@@ -19,6 +18,7 @@ import {
   Target,
   Brain
 } from "lucide-react";
+import { LANDING_PROBLEM_ID, SOLVE_FIRST_PROBLEM_ID } from "@/statics";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -32,6 +32,7 @@ const Index = () => {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const currentPhrase = typewriterPhrases[currentPhraseIndex];
@@ -112,7 +113,7 @@ const Index = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-dark overflow-hidden">
+      <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
@@ -130,7 +131,7 @@ const Index = () => {
               </div>
               <div className="flex justify-center lg:justify-start animate-fade-in">
                 <Button size="lg" variant="premium" className="text-base lg:text-lg px-6 lg:px-8 shadow-none hover:shadow-none" asChild>
-                  <Link to="/problems">
+                  <Link to={`/problems/${SOLVE_FIRST_PROBLEM_ID}`}>
                     Solve your first problem
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
@@ -144,45 +145,47 @@ const Index = () => {
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-2xl font-bold text-foreground">
-                      Nearest Diagonal I
+                      Increasing Dice Rolls I
                     </CardTitle>
                   </div>
-                  <Badge className="w-fit bg-[hsl(142,76%,36%)] text-white hover:bg-[hsl(142,76%,36%)] border-none">
-                    Easy
-                  </Badge>
+                  <div
+                    className={` max-w-fit bg-green-500/20 text-green-400 border-green-500/30 inline-flex items-center rounded-full border px-3 md:px-5 py-0.5 text-xs md:text-sm font-semibold`}
+                  >
+                    1/10
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                    A point is selected uniformly at random from the unit square. Find the expected distance of the point from the <span className="italic">y = x</span> line.
+                    A fair six-sided die is rolled twice, and the two outcomes are recorded in order. What is the probability that the number obtained on the second roll is strictly larger than the number obtained on the first roll?
                   </CardDescription>
 
                   {/* Multiple Choice Options */}
                   <div className="space-y-3">
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>3</sub>
+                        <span>0.41667</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>3√2</sub>
+                        <span>0.3245</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>6</sub>
+                        <span>0.4789</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <sup>1</sup>⁄<sub>6√2</sub>
+                        <span>0.3907</span>
                       </span>
                     </button>
                   </div>
 
                   {/* Bottom Section with Tags and Submit */}
-                  <div className="flex flex-wrap items-center justify-between gap-4 pt-4">
-                    <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap items-center justify-end gap-4 pt-4">
+                    {/* <div className="flex flex-wrap gap-2">
                       <Badge variant="outline" className="text-xs text-red-500 border-red-500">
                         Expected Value/LOTUS
                       </Badge>
@@ -192,9 +195,11 @@ const Index = () => {
                       <Badge variant="outline" className="text-xs text-purple-500 border-purple-500">
                         Task Distribution
                       </Badge>
-                    </div>
-                    <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none">
-                      Submit
+                    </div> */}
+                    <Button
+                      onClick={() => navigate(`/problems/${LANDING_PROBLEM_ID}`)}
+                      size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none">
+                      Try it Out
                     </Button>
                   </div>
                 </CardContent>
@@ -202,11 +207,11 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
 
       {/* Features Section */}
-      <section className="pt-12 pb-7 md:pt-20 md:pb-9 px-4">
+      < section className="pt-12 pb-7 md:pt-20 md:pb-9 px-4" >
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -243,13 +248,13 @@ const Index = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Company Logo Ticker */}
-      <CompanyLogoTicker />
+      < CompanyLogoTicker />
 
       {/* Benefits Section */}
-      <section className="py-12 md:py-20 bg-gradient-accent px-4">
+      < section className="py-12 md:py-20 bg-gradient-accent px-4" >
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
@@ -318,8 +323,8 @@ const Index = () => {
                     Over 10,000 professionals have successfully landed positions at top firms
                     using QuantProf.
                   </p>
-                  <Button size="lg" className="w-full sm:w-auto bg-[hsl(270,95%,60%)] text-[hsl(220,13%,8%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)]" asChild>
-                    <Link to="/problems">
+                  <Button size="lg" className="w-full sm:w-auto bg-[hsl(270,95%,60%)] hover:!bg-[hsl(270,95%,60%)]/90 hover:!shadow-[0_0_20px_hsl(270,95%,60%,0.3)] focus-visible:!ring-[hsl(270,95%,60%)] text-white" asChild>
+                    <Link to={`/problems/${SOLVE_FIRST_PROBLEM_ID}`}>
                       Solve your first problem
                     </Link>
                   </Button>
@@ -328,7 +333,7 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
     </>
   );
 };
