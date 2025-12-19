@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import TeX from "@matejmazur/react-katex";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
 import {
   TrendingUp,
@@ -145,7 +144,7 @@ const Index = () => {
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-2xl font-bold text-foreground">
-                      Increasing Dice Rolls I
+                      Increasing Dice Rolls III
                     </CardTitle>
                   </div>
                   <div
@@ -163,22 +162,22 @@ const Index = () => {
                   <div className="space-y-3">
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <span>0.41667</span>
+                        <span>5/12</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <span>0.3245</span>
+                        <span>4/15</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <span>0.4789</span>
+                        <span>3/11</span>
                       </span>
                     </button>
                     <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
                       <span className="text-foreground font-mono text-lg">
-                        <span>0.3907</span>
+                        <span>7/12</span>
                       </span>
                     </button>
                   </div>
