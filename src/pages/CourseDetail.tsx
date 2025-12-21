@@ -47,8 +47,8 @@ const CourseDetail = () => {
     },
     {
       icon: ScatterChart,
-      title: "Regression",
-      description: "Master linear regression, time series analysis, and predictive modeling."
+      title: "Fermi Estimation",
+      description: "Master order-of-magnitude estimates and back-of-the-envelope calculations for interview problems."
     },
     {
       icon: LineChart,
