@@ -139,7 +139,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             toast({
                 title: "Login successful ✅",
-                description: "You have successfully logged in.",
+                description: "You have successfully logged in. Redirecting...",
                 variant: "default",
             })
 

@@ -161,7 +161,7 @@ const TransactionsTab: React.FC = () => {
             </div>
 
             {/* Table */}
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border rounded-lg overflow-x-auto">
                 <table className="w-full text-sm">
                     <thead className="bg-muted/40">
                         <tr>
