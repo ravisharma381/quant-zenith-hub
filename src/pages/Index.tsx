@@ -277,14 +277,35 @@ const Index = () => {
               </h2>
               <div className="space-y-4 md:space-y-6">
                 <div className="flex items-start gap-3 md:gap-4">
+                  <Target className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                      Company tagged questions
+                    </h3>
+                    <p className="text-sm md:text-base text-muted-foreground">
+                      Practice with company tagged questions from top quant trading firms, continuously updated with the latest problems.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 md:gap-4">
                   <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                      Real Interview Questions
+                      Refunds
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      Practice with actual questions from top financial institutions like Goldman Sachs, 
-                      JPMorgan, and Two Sigma.
+                      We offer a no-questions-asked full refund: 30 days on the yearly plan and 60 days on the lifetime plan.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 md:gap-4">
+                  <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                      Expert courses
+                    </h3>
+                    <p className="text-sm md:text-base text-muted-foreground">
+                      In-depth courses covering everything you need to ace quant interviews, including brainteasers, combinatorics, probability, statistics, martingales, market making, and much more.
                     </p>
                   </div>
                 </div>
@@ -292,35 +313,10 @@ const Index = () => {
                   <Zap className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                      Interactive Learning
+                      Curated playlists
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      Engage with hands-on simulations, games, and interactive problem-solving tools 
-                      that make learning effective and enjoyable.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 md:gap-4">
-                  <Target className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                      Personalized Learning Path
-                    </h3>
-                    <p className="text-sm md:text-base text-muted-foreground">
-                      AI-powered recommendations adapt to your learning style and help you focus 
-                      on areas that need improvement.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 md:gap-4">
-                  <Brain className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                      Expert Guidance
-                    </h3>
-                    <p className="text-sm md:text-base text-muted-foreground">
-                      Learn from industry professionals with years of experience at leading 
-                      quantitative finance firms.
+                      Multiple problem playlists, some designed for rapid coverage of all concepts, others focused on targeted practice to strengthen specific areas.
                     </p>
                   </div>
                 </div>
@@ -334,8 +330,7 @@ const Index = () => {
                     Join the Elite
                   </h3>
                   <p className="text-sm md:text-base text-muted-foreground mb-6">
-                    Over 10,000 professionals have successfully landed positions at top firms 
-                    using QuantProf.
+                    Candidates worldwide have successfully secured roles at top firms using QuantProf.
                   </p>
                   <Button variant="purple" size="lg" className="w-full sm:w-auto" asChild>
                     <Link to="/problems">
