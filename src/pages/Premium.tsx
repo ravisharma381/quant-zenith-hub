@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Lightbulb, Tag, BookOpen, Check } from "lucide-react";
+import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, ListMusic, Building2 } from "lucide-react";
 
 const Premium = () => {
   const navigate = useNavigate();
@@ -46,23 +46,33 @@ const Premium = () => {
   const features = [
     {
       icon: Crown,
-      title: "Premium Questions",
-      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more.",
+      title: "Premium questions",
+      description: "Unlock 1,000+ carefully selected, high-quality problems. Our library is continuously updated and expanding. We also have company tagged playlists.",
     },
     {
       icon: Lightbulb,
-      title: "Hints and Detailed Solutions",
-      description: "Need help? Just like in real interviews, all of our questions come with hints to point you in the right direction. Plus, see solutions written by real quants with detailed explanations and interview-focused thinking.",
-    },
-    {
-      icon: Tag,
-      title: "Company Tagged Questions",
-      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
+      title: "Hints",
+      description: "Stuck on a problem? Each problem includes carefully crafted hints that simulate the interview experience - helping you converge on the correct approach.",
     },
     {
       icon: BookOpen,
+      title: "Solutions",
+      description: "Every problem has a detailed solution. Our solutions make learning easier through clear explanations and interview-focused reasoning. QuantProf places a strong emphasis on how to think about a problem, not just on the final answer.",
+    },
+    {
+      icon: RefreshCcw,
+      title: "Refunds",
+      description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access - no questions asked. To request a refund, simply email us from the email ID linked to your premium account, no billing details are required. If you cannot afford premium, you are free to purchase it, request a refund, and repeat this as often as needed - effectively accessing premium for free.",
+    },
+    {
+      icon: ListMusic,
       title: "Courses",
-      description: "Hone your skills with access to the first ever quant recruiting textbooks. With over 500 pages of unique material crafted by quants with extensive teaching background, you will learn probability, statistics, game theory, and much more.",
+      description: "In-depth courses covering everything you need to ace quant interviews, including brainteasers, combinatorics, probability, statistics, martingales, market making, and much more.",
+    },
+    {
+      icon: Building2,
+      title: "Company tagged playlists",
+      description: "Playlists featuring company-specific interview problems from top firms, along with quick-revision playlists and targeted topic playlists to strengthen weak areas.",
     },
   ];
 
@@ -174,7 +184,7 @@ const Premium = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="flex gap-4">
                 <div className="flex-shrink-0">
