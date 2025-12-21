@@ -91,6 +91,7 @@ const Billing = () => {
         const q = query(
           collection(db, "transactions"),
           where("userId", "==", user.uid),
+          where("status", "==", "success"),
           orderBy("updatedAt", "desc"),
           limit(5) // fetch only 5 recent
         );

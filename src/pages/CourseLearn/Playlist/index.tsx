@@ -155,7 +155,7 @@ const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setL
                             </div>
 
                             {/* Bottom-fixed count */}
-                            <div
+                            {/* <div
                                 className="
                                     mt-4
                                     flex
@@ -172,7 +172,7 @@ const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setL
                                 <span className="text-base font-bold text-primary">
                                     {pl.topicIds.length}
                                 </span>
-                            </div>
+                            </div> */}
                         </CardContent>
                     </Card>
 
