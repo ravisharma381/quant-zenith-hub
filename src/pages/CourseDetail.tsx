@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, Crown, Tag } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Autoplay from "embla-carousel-autoplay";
@@ -64,24 +64,24 @@ const CourseDetail = () => {
 
   const courseFeatures = [
     {
-      icon: Crown,
-      title: "Premium Questions with Detailed Solutions",
-      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more. Each question comes with hints and detailed solutions written by real quants.",
-    },
-    {
       icon: BookOpen,
-      title: "Theory",
-      description: "Master the fundamentals with 100+ chapters covering all the topics needed to excel at quant interviews. From probability to market making, we've got you covered.",
+      title: "Detailed Theory",
+      description: "Learn from the ground up with 100+ chapters covering the full spectrum of quant interview topics. Master all the topics needed to excel in your interviews. From probability to market making, we've got you covered.",
     },
     {
-      icon: Tag,
-      title: "Company Tagged Questions",
-      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
+      icon: Brain,
+      title: "Learn How to Think",
+      description: "We place strong emphasis on teaching you how to think through problems and independently identify the correct approaches on your own.",
     },
     {
-      icon: Award,
-      title: "30 Days Full Refund",
-      description: "Not satisfied? Get a full refund within 30 days, no questions asked. We're confident you'll love our course.",
+      icon: FileText,
+      title: "Premium Questions and Solutions",
+      description: "Access a growing library of 1,000+ high-quality quant interview problems. Each problem has detailed hints and solutions.",
+    },
+    {
+      icon: RefreshCcw,
+      title: "Full Refunds",
+      description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access-no questions asked. To request a refund, simply email us from the address linked to your premium account, no billing details are required.",
     }
   ];
 
