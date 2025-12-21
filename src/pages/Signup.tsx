@@ -48,9 +48,6 @@ const Signup = () => {
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Sign Up
               </h1>
-              <p className="text-muted-foreground">
-                Connect your Google account or other provider to get started.
-              </p>
             </div>
 
             <div className="space-y-4">
@@ -88,10 +85,10 @@ const Signup = () => {
       <div className="hidden md:flex w-full md:w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 items-center justify-center p-10 md:p-8 mt-8 md:mt-0">
         <div className="text-center text-white space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold">
-            You're One Step Away From Acing Your Next Interview.
+            You're Just One Step Away From Acing Your Quant Interviews.
           </h2>
           <p className="text-lg md:text-xl text-white/90">
-            Create your account and start practicing!
+            Get started by creating your account and start practicing.
           </p>
         </div>
       </div>

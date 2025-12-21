@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, Crown, Tag } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, Crown, Tag, RefreshCcw, Ruler } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Helmet } from "react-helmet-async";
@@ -25,94 +25,90 @@ const CourseDetail = () => {
     {
       icon: Lightbulb,
       title: "Brainteasers",
-      description: "Sharpen your logical thinking with classic and modern quantitative puzzles."
+      description: "Learn how to solve difficult quant puzzles by identifying commonly occurring patterns such as the pigeonhole principle and monovariants."
     },
     {
       icon: Calculator,
       title: "Combinatorics",
-      description: "Master counting techniques, permutations, and combinations essential for probability."
+      description: "Master essential counting techniques such as permutations, combinations, reflection principle etc."
     },
     {
       icon: Coins,
       title: "Probability",
-      description: "Master probability theory from basics to advanced concepts used in interviews."
+      description: "Master probability and expectation from basics to advanced."
     },
     {
       icon: Dices,
       title: "Betting Games",
-      description: "Learn optimal strategies for dice games, card games, and expected value problems."
+      description: "Learn how to identify optimal strategies for betting games, such as parameter optimization and optimal stopping conditions."
     },
     {
       icon: TrendingUp,
       title: "Market Making",
-      description: "Understand bid-ask spreads, inventory management, and pricing strategies."
+      description: "Understand core market-making concepts and learn how to quickly estimate probabilities/expected values and communicate effectively in market-making games."
     },
     {
       icon: BarChart3,
       title: "Statistics",
-      description: "Build strong foundations in statistical inference and hypothesis testing."
+      description: "Build a strong foundation in statistics, including regression and hypothesis testing."
     },
     {
-      icon: ScatterChart,
-      title: "Regression",
-      description: "Master linear regression, time series analysis, and predictive modeling."
+      icon: Ruler,
+      title: "Fermi Estimation",
+      description: "Master order-of-magnitude estimates and back-of-the-envelope calculations for interview problems."
     },
     {
       icon: LineChart,
       title: "Martingales",
-      description: "Explore martingale theory and its applications in finance and betting."
+      description: "Master core martingale concepts and commonly used martingales."
     },
     {
       icon: Grid3x3,
       title: "Random Walks",
-      description: "Understand Brownian motion, stochastic processes, and their financial applications."
+      description: "Learn how to analyze random walks, and apply them to interview-style problems."
     }
   ];
 
   const courseFeatures = [
     {
-      icon: Crown,
-      title: "Premium Questions with Detailed Solutions",
-      description: "Gain exclusive access to our quickly-growing collection of over 1500 questions spanning probability, statistics, brainteasers, and much more. Each question comes with hints and detailed solutions written by real quants.",
-    },
-    {
       icon: BookOpen,
-      title: "Theory",
-      description: "Master the fundamentals with 100+ chapters covering all the topics needed to excel at quant interviews. From probability to market making, we've got you covered.",
+      title: "Detailed Theory",
+      description: "Learn from the ground up with 100+ chapters covering the full spectrum of quant interview topics. Master all the topics needed to excel in your interviews. From probability to market making, we've got you covered.",
     },
     {
-      icon: Tag,
-      title: "Company Tagged Questions",
-      description: "Practice with questions tagged by company. Know exactly what to expect from interviews at top quant firms like Jane Street, Citadel, Two Sigma, and more.",
+      icon: Brain,
+      title: "Learn How to Think",
+      description: "We place strong emphasis on teaching you how to think through problems and independently identify the correct approaches on your own.",
     },
     {
-      icon: Award,
-      title: "30 Days Full Refund",
-      description: "Not satisfied? Get a full refund within 30 days, no questions asked. We're confident you'll love our course.",
+      icon: FileText,
+      title: "Premium Questions and Solutions",
+      description: "Access a growing library of 1,000+ high-quality quant interview problems. Each problem has detailed hints and solutions.",
+    },
+    {
+      icon: RefreshCcw,
+      title: "Full Refunds",
+      description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access-no questions asked. To request a refund, simply email us from the address linked to your premium account, no billing details are required.",
     }
   ];
 
   const faqs = [
     {
-      question: "What level of mathematics background do I need?",
-      answer: "A solid foundation in calculus, linear algebra, and probability theory is recommended. We provide refresher materials for key concepts."
+      question: "What prerequisite knowledge is required to take this course?",
+      answer: "Only basic high school mathematics. All topics are covered from the basics."
     },
     {
-      question: "How long does the course take to complete?",
-      answer: "The course contains 70+ hours of content. Most students complete it in 8-12 weeks studying 6-8 hours per week."
+      question: "Do you offer a refund?",
+      answer: "Yes. We offer a 30-day full refund for yearly access and a 60-day full refund for lifetime access. There are no terms and conditions.",
     },
     {
-      question: "Do you provide job placement assistance?",
-      answer: "Yes, we offer career guidance, resume reviews, and connections to our network of industry professionals."
+      question: "How do I request a refund?",
+      answer: "Simply email us at quantprof@proton.me from the email ID associated with your premium account. No billing details are required.",
     },
     {
-      question: "What programming languages are covered?",
-      answer: "The course covers Python and R extensively, with practical applications in quantitative finance and data analysis."
+      question: "What if I cannot afford premium?",
+      answer: "You can purchase premium and request a refund. You may repeat this as often as needed, using the same payment method - effectively accessing premium for free for as long as you need. Our only request is that this is not misused.",
     },
-    {
-      question: "Is there a money-back guarantee?",
-      answer: "Yes, we offer a 30-day money-back guarantee if you're not completely satisfied with the course."
-    }
   ];
 
   useEffect(() => {
@@ -261,15 +257,6 @@ const CourseDetail = () => {
                             gradient: "from-primary/90 via-primary/70 to-emerald-600/80",
                           },
                           {
-                            icon: Building2,
-                            stat: "50+",
-                            title: "Company Specific Problems",
-                            description:
-                              "Real questions from top trading firms and hedge funds",
-                            gradient:
-                              "from-purple-600/90 via-purple-500/70 to-indigo-600/80",
-                          },
-                          {
                             icon: GraduationCap,
                             stat: "100+",
                             title: "Chapters",
@@ -277,15 +264,6 @@ const CourseDetail = () => {
                               "Complete theory coverage from basics to advanced",
                             gradient:
                               "from-emerald-600/90 via-teal-500/70 to-cyan-600/80",
-                          },
-                          {
-                            icon: Target,
-                            stat: "95%",
-                            title: "Success Rate",
-                            description:
-                              "Students landing offers at top quant firms",
-                            gradient:
-                              "from-amber-600/90 via-orange-500/70 to-red-500/80",
                           },
                           {
                             icon: Award,

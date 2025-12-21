@@ -82,9 +82,6 @@ const Login: React.FC = () => {
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Sign In
               </h1>
-              <p className="text-muted-foreground">
-                Connect your Google account or other provider to get started.
-              </p>
             </div>
 
             <div className="space-y-4">
@@ -125,7 +122,7 @@ const Login: React.FC = () => {
             Welcome Back To Quantprof.org
           </h2>
           <p className="text-lg md:text-xl text-white/90">
-            Sign into your account and get ready for your next interview!
+            Log in to your account and start preparing for your next interview.
           </p>
         </div>
       </div>

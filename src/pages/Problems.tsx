@@ -743,9 +743,7 @@ const Problems: React.FC = () => {
                 Upgrade to Premium
               </DialogTitle>
               <DialogDescription>
-                This content is locked. Upgrade to Premium to access all 1200+
-                problems and unlock your full potential in quant finance
-                interviews.
+                This content is locked. Upgrade to Premium to access 1,000+ high-quality problems and in-depth courses, and prepare efficiently for quant interviews.
               </DialogDescription>
             </DialogHeader>
             <div className="flex justify-end gap-3 mt-4">

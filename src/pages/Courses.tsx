@@ -73,12 +73,12 @@ const Courses = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12 text-center">
+        {/* <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4">Expert-Led Courses</h1>
           <p className="text-muted-foreground text-lg">
             Learn from industry professionals and academics
           </p>
-        </div>
+        </div> */}
 
         {/* Courses Grid */}
         {

@@ -32,11 +32,11 @@ const CompanyLogoTicker = () => {
     <section className="pt-2 pb-12 md:pt-3 md:pb-16 px-4 overflow-hidden bg-gradient-subtle">
       <div className="container mx-auto max-w-6xl">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-12">
-          Helped land jobs at{" "}
+          Helped candidates secure roles at {' '}
           <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
             top trading firms
           </span>{" "}
-          around the world!
+          worldwide.
         </h2>
 
         <div className="relative">
