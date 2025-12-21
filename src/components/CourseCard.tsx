@@ -69,12 +69,12 @@ const CourseCard = ({ course, isEnrolled }) => {
                                 navigate(
                                     isEnrolled
                                         ? `/course/${course.id}/learn`
-                                        : `/premium`,
+                                        : `/course/${course.slug}`,
                                 )
                             }
                             }
                         >
-                            {isEnrolled ? "Start Learning" : "Get Premium"}
+                            {isEnrolled ? "Start Learning" : "View Course"}
                         </Button>}
                 </div>
             </div>
