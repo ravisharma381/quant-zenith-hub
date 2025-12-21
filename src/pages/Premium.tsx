@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, ListMusic, Building2 } from "lucide-react";
+import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, GraduationCap, Briefcase } from "lucide-react";
 
 const Premium = () => {
   const navigate = useNavigate();
@@ -65,12 +65,12 @@ const Premium = () => {
       description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access - no questions asked. To request a refund, simply email us from the email ID linked to your premium account, no billing details are required. If you cannot afford premium, you are free to purchase it, request a refund, and repeat this as often as needed - effectively accessing premium for free.",
     },
     {
-      icon: ListMusic,
+      icon: GraduationCap,
       title: "Courses",
       description: "In-depth courses covering everything you need to ace quant interviews, including brainteasers, combinatorics, probability, statistics, martingales, market making, and much more.",
     },
     {
-      icon: Building2,
+      icon: Briefcase,
       title: "Company tagged playlists",
       description: "Playlists featuring company-specific interview problems from top firms, along with quick-revision playlists and targeted topic playlists to strengthen weak areas.",
     },
