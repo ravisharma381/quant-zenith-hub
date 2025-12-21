@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, ScatterChart, Grid3x3, RefreshCcw } from "lucide-react";
+import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, Ruler, Grid3x3, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import Autoplay from "embla-carousel-autoplay";
@@ -46,7 +46,7 @@ const CourseDetail = () => {
       description: "Build strong foundations in statistical inference and hypothesis testing."
     },
     {
-      icon: ScatterChart,
+      icon: Ruler,
       title: "Fermi Estimation",
       description: "Master order-of-magnitude estimates and back-of-the-envelope calculations for interview problems."
     },
