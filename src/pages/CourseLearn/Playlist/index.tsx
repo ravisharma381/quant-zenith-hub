@@ -90,7 +90,7 @@ const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setL
                             duration-200
                             hover:border-primary/50
                             hover:-translate-y-1
-                            h-[200px] sm:h-[220px]
+                            h-[160px] sm:h-[180px]
                         "
                         onClick={() => openDetail(pl.id)}
                     >
