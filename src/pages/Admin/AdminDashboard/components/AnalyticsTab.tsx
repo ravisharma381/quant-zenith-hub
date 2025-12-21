@@ -1,177 +1,283 @@
 // src/pages/admin/components/AnalyticsTab.tsx
 
-import React from "react";
+import React, { useState } from "react";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
-    LineChart,
-    Line,
+    Tabs,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+    AreaChart,
+    Area,
+    BarChart,
+    Bar,
     XAxis,
     YAxis,
     Tooltip,
     ResponsiveContainer,
-    BarChart,
-    Bar,
-    PieChart,
-    Pie,
-    Cell,
+    Legend,
+    Rectangle,
 } from "recharts";
+import {
+    ShoppingCart,
+    DollarSign,
+    CalendarDays,
+    TrendingUp,
+    Infinity,
+    Globe,
+} from "lucide-react";
 
-// -------------------- DUMMY DATA --------------------
+/* -------------------- DUMMY DATA -------------------- */
 
-const kpis = [
-    { label: "Today", value: 5 },
-    { label: "Last 7 Days", value: 38 },
-    { label: "This Month", value: 142 },
-    { label: "Lifetime", value: 1240 },
+const timeSeries = {
+    weekly: [
+        { label: "W1", sales: 42, revenue: 8400 },
+        { label: "W2", sales: 55, revenue: 11200 },
+        { label: "W3", sales: 48, revenue: 9800 },
+        { label: "W4", sales: 67, revenue: 13600 },
+    ],
+    monthly: [
+        { label: "Jan", sales: 128, revenue: 25400 },
+        { label: "Feb", sales: 112, revenue: 22100 },
+        { label: "Mar", sales: 148, revenue: 29500 },
+        { label: "Apr", sales: 167, revenue: 33200 },
+        { label: "May", sales: 193, revenue: 38400 },
+    ],
+    yearly: [
+        { label: "2023", sales: 1219, revenue: 245000 },
+        { label: "2024", sales: 1678, revenue: 341000 },
+        { label: "2025", sales: 412, revenue: 82400 },
+    ],
+};
+
+const locationData = [
+    { region: "India", sales: 312, revenue: 62400 },
+    { region: "United States", sales: 124, revenue: 24800 },
+    { region: "Canada", sales: 46, revenue: 9200 },
+    { region: "Germany", sales: 29, revenue: 5800 },
 ];
 
-const dailyTrend = [
-    { date: "Mon", count: 4 },
-    { date: "Tue", count: 6 },
-    { date: "Wed", count: 7 },
-    { date: "Thu", count: 9 },
-    { date: "Fri", count: 8 },
-    { date: "Sat", count: 3 },
-    { date: "Sun", count: 1 },
-];
+const lifetime = {
+    sales: 3821,
+    revenue: 768200,
+};
 
-const countryData = [
-    { name: "India", value: 82 },
-    { name: "United States", value: 31 },
-    { name: "Canada", value: 11 },
-    { name: "Germany", value: 6 },
-];
+/* -------------------- HELPERS -------------------- */
 
-const cityData = [
-    { city: "Bengaluru", count: 28 },
-    { city: "Mumbai", count: 21 },
-    { city: "Delhi", count: 17 },
-    { city: "New York", count: 9 },
-    { city: "Toronto", count: 6 },
-];
+function sum(data: { sales: number; revenue: number }[]) {
+    return data.reduce(
+        (acc, cur) => {
+            acc.sales += cur.sales;
+            acc.revenue += cur.revenue;
+            return acc;
+        },
+        { sales: 0, revenue: 0 }
+    );
+}
 
-const planData = [
-    { name: "Yearly", value: 78 },
-    { name: "Lifetime", value: 22 },
-];
+/* -------------------- TOOLTIP -------------------- */
 
-const COLORS = ["#7c3aed", "#f59e0b"];
+const SoftTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
 
-// -------------------- COMPONENT --------------------
+    return (
+        <div className="rounded-xl border bg-background px-4 py-3 shadow-md">
+            <p className="text-xs text-muted-foreground mb-1">{label}</p>
+            {payload.map((p: any) => (
+                <p key={p.dataKey} className="text-sm font-medium">
+                    {p.dataKey === "revenue"
+                        ? `Revenue: $${p.value.toLocaleString()}`
+                        : `Sales: ${p.value}`}
+                </p>
+            ))}
+        </div>
+    );
+};
+
+/* -------------------- KPI CARD -------------------- */
+
+const KpiCard = ({
+    title,
+    value,
+    subtitle,
+    icon: Icon,
+    accent,
+}: any) => (
+    <Card className="relative overflow-hidden">
+        <div className={`absolute left-0 top-0 h-full w-1 ${accent}`} />
+        <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">{title}</p>
+                <Icon className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <p className="text-3xl font-semibold mt-2 tabular-nums">{value}</p>
+            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+        </CardContent>
+    </Card>
+);
+
+/* -------------------- ACTIVE BAR OVERRIDE -------------------- */
+/* This COMPLETELY removes the grey hover */
+
+const NoGreyActiveBar = (props: any) => (
+    <Rectangle
+        {...props}
+        fill={props.fill}
+        opacity={0.85}
+    />
+);
+
+/* -------------------- COMPONENT -------------------- */
 
 const AnalyticsTab: React.FC = () => {
+    const [mode, setMode] = useState<"sales" | "revenue">("sales");
+    const [range, setRange] =
+        useState<"weekly" | "monthly" | "yearly">("weekly");
+
+    const series = timeSeries[range];
+    const totals = sum(series);
+
     return (
-        <div className="space-y-6">
-            {/* KPI CARDS */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {kpis.map((kpi) => (
-                    <Card key={kpi.label}>
-                        <CardContent className="p-6">
-                            <p className="text-sm text-muted-foreground">{kpi.label}</p>
-                            <p className="text-3xl font-bold">{kpi.value}</p>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+        <div className="space-y-10">
 
-            {/* TREND + PLAN SPLIT */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="md:col-span-2">
-                    <CardHeader>
-                        <CardTitle>Daily Purchases (Last 7 Days)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[260px]">
+            {/* ================= TOP SECTION ================= */}
+            <Card>
+                <CardHeader className="pb-4">
+                    <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+                        <TabsList>
+                            <TabsTrigger value="sales">Sales</TabsTrigger>
+                            <TabsTrigger value="revenue">Revenue</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </CardHeader>
+
+                <CardContent className="space-y-8">
+                    {/* KPI CARDS */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <KpiCard
+                            title="Today"
+                            value={mode === "sales" ? "9" : "$1,791"}
+                            subtitle="Compared to yesterday"
+                            icon={CalendarDays}
+                            accent="bg-purple-500"
+                        />
+
+                        <KpiCard
+                            title="This Week"
+                            value={
+                                mode === "sales"
+                                    ? totals.sales
+                                    : `$${totals.revenue.toLocaleString()}`
+                            }
+                            subtitle="Last 7 days"
+                            icon={TrendingUp}
+                            accent="bg-green-500"
+                        />
+
+                        <KpiCard
+                            title="This Month"
+                            value={mode === "sales" ? "193" : "$38,400"}
+                            subtitle="Month to date"
+                            icon={mode === "sales" ? ShoppingCart : DollarSign}
+                            accent="bg-blue-500"
+                        />
+
+                        <KpiCard
+                            title="Lifetime"
+                            value={
+                                mode === "sales"
+                                    ? lifetime.sales
+                                    : `$${lifetime.revenue.toLocaleString()}`
+                            }
+                            subtitle="All-time"
+                            icon={Infinity}
+                            accent="bg-amber-500"
+                        />
+                    </div>
+
+                    {/* RANGE TABS */}
+                    <Tabs value={range} onValueChange={(v) => setRange(v as any)}>
+                        <TabsList>
+                            <TabsTrigger value="weekly">Weekly</TabsTrigger>
+                            <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                            <TabsTrigger value="yearly">Yearly</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+
+                    {/* AREA CHART */}
+                    <div className="h-[320px]">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={dailyTrend}>
-                                <XAxis dataKey="date" />
-                                <YAxis allowDecimals={false} />
-                                <Tooltip />
-                                <Line
-                                    type="monotone"
-                                    dataKey="count"
-                                    stroke="#7c3aed"
-                                    strokeWidth={2}
+                            <AreaChart data={series}>
+                                <XAxis
+                                    dataKey="label"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tick={{ fill: "#9ca3af", fontSize: 12 }}
                                 />
-                            </LineChart>
+                                <YAxis hide />
+                                <Tooltip content={<SoftTooltip />} />
+                                <Legend />
+                                <Area
+                                    type="monotone"
+                                    dataKey={mode}
+                                    name={mode === "sales" ? "Sales" : "Revenue"}
+                                    stroke={mode === "sales" ? "#7c3aed" : "#22c55e"}
+                                    fill={mode === "sales" ? "#7c3aed33" : "#22c55e33"}
+                                    strokeWidth={3}
+                                />
+                            </AreaChart>
                         </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+                    </div>
+                </CardContent>
+            </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Plan Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[260px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={planData}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    innerRadius={60}
-                                    outerRadius={90}
-                                >
-                                    {planData.map((_, i) => (
-                                        <Cell key={i} fill={COLORS[i]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
+            {/* ================= GEO SECTION ================= */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Globe className="w-5 h-5" />
+                        User Location Analytics
+                    </CardTitle>
+                </CardHeader>
 
-            {/* GEO ANALYTICS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top Countries</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[260px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={countryData}>
-                                <XAxis dataKey="name" />
-                                <YAxis allowDecimals={false} />
-                                <Tooltip />
-                                <Bar dataKey="value" fill="#7c3aed" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top Cities</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="text-muted-foreground border-b">
-                                    <th className="py-2 text-left">City</th>
-                                    <th className="py-2 text-right">Purchases</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cityData.map((c) => (
-                                    <tr key={c.city} className="border-b">
-                                        <td className="py-2">{c.city}</td>
-                                        <td className="py-2 text-right font-medium">
-                                            {c.count}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </CardContent>
-                </Card>
-            </div>
+                <CardContent className="h-[320px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={locationData} barSize={30}>
+                            <XAxis
+                                dataKey="region"
+                                tickLine={false}
+                                axisLine={false}
+                                tick={{ fill: "#9ca3af", fontSize: 12 }}
+                            />
+                            <YAxis hide />
+                            <Tooltip content={<SoftTooltip />} />
+                            <Legend />
+                            <Bar
+                                dataKey="sales"
+                                name="Sales"
+                                stackId="a"
+                                fill="#7c3aed"
+                                activeBar={<NoGreyActiveBar />}
+                                radius={[4, 4, 0, 0]}
+                            />
+                            <Bar
+                                dataKey="revenue"
+                                name="Revenue"
+                                stackId="a"
+                                fill="#22c55e"
+                                activeBar={<NoGreyActiveBar />}
+                                radius={[4, 4, 0, 0]}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
         </div>
     );
 };
