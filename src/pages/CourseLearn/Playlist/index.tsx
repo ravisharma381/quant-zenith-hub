@@ -140,15 +140,16 @@ const PlaylistGrid: React.FC<playlistProps> = ({ playlistIds = [], loading, setL
                                         text-lg sm:text-xl
                                         font-bold
                                         text-foreground
-                                        mb-4
+                                        mb-3
                                         group-hover:text-primary
                                         transition-colors
+                                        line-clamp-2
                                     "
                                 >
                                     {pl.heading}
                                 </h3>
 
-                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
                                     {pl.subheading}
                                 </p>
                             </div>
