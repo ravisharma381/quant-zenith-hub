@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, GraduationCap, Briefcase } from "lucide-react";
+import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, GraduationCap, ListMusic } from "lucide-react";
 
 const Premium = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const Premium = () => {
       description: "In-depth courses covering everything you need to ace quant interviews, including brainteasers, combinatorics, probability, statistics, martingales, market making, and much more.",
     },
     {
-      icon: Briefcase,
+      icon: ListMusic,
       title: "Company tagged playlists",
       description: "Playlists featuring company-specific interview problems from top firms, along with quick-revision playlists and targeted topic playlists to strengthen weak areas.",
     },
