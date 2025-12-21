@@ -82,13 +82,17 @@ const CourseLearnPage: React.FC = () => {
 
                 setChapters(chapterList);
 
-                const flattened = chapterList.flatMap((ch: any) =>
-                    (ch.topicMeta || []).map((t: any) => ({
+                const flattened = chapterList.flatMap((ch: any) => {
+                    const sortedTopics = [...(ch.topicMeta || [])].sort(
+                        (a: any, b: any) => a.order - b.order
+                    );
+
+                    return sortedTopics.map((t: any) => ({
                         ...t,
                         chapterId: ch.id,
                         chapterTitle: ch.title
-                    }))
-                );
+                    }));
+                });
 
                 setTopicMeta(flattened);
 

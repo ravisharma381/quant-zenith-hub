@@ -47,7 +47,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
 
     const flatSearchResults = searchActive
         ? chapters.flatMap((chapter) =>
-            (chapter.topicMeta || [])
+            (chapter.topicMeta.sort((a, b) => a.order - b.order) || [])
                 .filter((t: any) => filterMatch(t.title))
                 .map((t: any) => ({
                     ...t,
@@ -240,7 +240,7 @@ const CourseSidebar: React.FC<SidebarProps> = ({
                         </div>
                     ) : (
                         chapters.map((chapter) => {
-                            const topics = (chapter.topicMeta || []).filter((t: any) =>
+                            const topics = (chapter.topicMeta || []).sort((a, b) => a.order - b.order).filter((t: any) =>
                                 filterMatch(t.title)
                             );
 
