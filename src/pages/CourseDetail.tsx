@@ -243,11 +243,20 @@ const CourseDetail = () => {
                   <div className="w-full max-w-[360px] sm:max-w-[420px] mx-auto lg:mx-0">
                     <Carousel
                       opts={{ align: "start", loop: true }}
-                      plugins={[Autoplay({ delay: 3000 })]}
+                      plugins={[Autoplay({ delay: 2000 })]}
                       className="w-full overflow-hidden"
                     >
                       <CarouselContent className="flex w-full items-stretch">
                         {[
+                          {
+                            icon: Award,
+                            stat: "30 Days",
+                            title: "Full Refund",
+                            description:
+                              "Not satisfied? Get a complete refund, no questions asked",
+                            gradient:
+                              "from-pink-600/90 via-rose-500/70 to-red-400/80",
+                          },
                           {
                             icon: FileText,
                             stat: "1000+",
@@ -265,15 +274,7 @@ const CourseDetail = () => {
                             gradient:
                               "from-emerald-600/90 via-teal-500/70 to-cyan-600/80",
                           },
-                          {
-                            icon: Award,
-                            stat: "30 Days",
-                            title: "Full Refund",
-                            description:
-                              "Not satisfied? Get a complete refund, no questions asked",
-                            gradient:
-                              "from-pink-600/90 via-rose-500/70 to-red-400/80",
-                          },
+
                         ].map((item, index) => (
                           <CarouselItem
                             key={index}
