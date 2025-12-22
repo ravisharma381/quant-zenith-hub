@@ -11,6 +11,7 @@ import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 /* --- KaTeX for math rendering --- */
 import TeX from "@matejmazur/react-katex";
 import "katex/dist/katex.min.css";
+import { useNavigate } from "react-router-dom";
 
 function renderRichCMS(text?: string | null) {
     if (!text) return null;
@@ -95,7 +96,7 @@ function renderRichCMS(text?: string | null) {
 
 
 
-const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsCompleted?: () => void }) => {
+const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false }: { topic: any, markAsCompleted?: () => void, isUser?: boolean, isProblemsPage?: boolean }) => {
 
     // ---- STATES ----
     const [answer, setAnswer] = useState("");
@@ -108,6 +109,7 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
         message: "",
     });
     const [copied, setCopied] = useState(false);
+    const navigate = useNavigate();
 
     // ---- ANSWER CHECK ----
     const isCorrect = () => {
@@ -128,6 +130,10 @@ const QuestionLayout = ({ topic, markAsCompleted }: { topic: any, markAsComplete
     };
 
     const handleSubmit = () => {
+        if (!isUser && isProblemsPage) {
+            navigate("/signup");
+            return
+        }
         if (isCorrect()) {
             setFeedback({ type: "correct", message: "Correct answer!" });
             fireRandomCelebration();

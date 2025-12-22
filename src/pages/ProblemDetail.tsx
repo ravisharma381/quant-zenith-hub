@@ -289,7 +289,7 @@ const ProblemDetail = () => {
       </div>
 
       {/* QUESTION */}
-      <QuestionLayout topic={topic} markAsCompleted={isSubscribed ? markAsCompleted : undefined} />
+      <QuestionLayout topic={topic} isUser={!!user} isProblemsPage={true} markAsCompleted={isSubscribed ? markAsCompleted : undefined} />
     </div>
   );
 };
