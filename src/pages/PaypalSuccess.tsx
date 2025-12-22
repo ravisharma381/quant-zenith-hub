@@ -55,7 +55,7 @@ const PaypalSuccess = () => {
     if (status === "success") {
       const t = setTimeout(() => {
         setRerender(true);
-        navigate("/", { replace: true });
+        navigate("/?success=true", { replace: true });
       }, 2500);
 
       return () => clearTimeout(t);

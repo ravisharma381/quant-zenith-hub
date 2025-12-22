@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { LANDING_PROBLEM_ID, SOLVE_FIRST_PROBLEM_ID } from "@/statics";
 import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -33,6 +35,20 @@ const Index = () => {
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
+
+  useEffect(() => {
+    const success = searchParams.get("success");
+
+    if (success === "true") {
+      setShowPremiumPopup(true);
+
+      setTimeout(() => {
+        setSearchParams({}, { replace: true });
+      }, 0);
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     const currentPhrase = typewriterPhrases[currentPhraseIndex];
@@ -340,6 +356,29 @@ const Index = () => {
           </div>
         </div>
       </section >
+      <Dialog open={showPremiumPopup} onOpenChange={setShowPremiumPopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <CheckCircle className="w-12 h-12 text-green-500" />
+            </div>
+            <DialogTitle className="text-2xl font-bold text-center">
+              You are now a Premium User 🎉
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              Your payment was successful. You now have full access to all premium
+              problems, playlists, and courses.
+            </p>
+            <div>
+              <Button variant="default" className="border-none focus-visible:border-none" onClick={() => setShowPremiumPopup(false)}>Start Learning</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 };
