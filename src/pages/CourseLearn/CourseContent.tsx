@@ -13,6 +13,7 @@ import PlaylistDetail from "./Playlist/PlaylistDetail";
 import { useNavigate, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import RendererTopicSkeleton from "./TopicSkeleton";
+import { Helmet } from "react-helmet-async";
 
 
 interface Props {
@@ -142,109 +143,118 @@ const CourseContent: React.FC<Props> = ({
     const paddingClass = sidebarOpen ? "px-2 md:px-4" : "px-2 md:px-10";
 
     return (
-        <div
-            className={cn(
-                "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
-                sidebarOpen && "hidden md:block"
-            )}>
-            {/* TOP BAR */}
-            {(topic.type !== 'playlist' || !playlistLoading) && <div className={cn(
-                "pt-6 pb-4",
-                sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
-            )}>
-
-                {/* Sidebar toggle */}
-                <div className="flex items-center gap-2 mb-1">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                onClick={toggleSidebar}
-                                className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md"
-                            >
-                                <Menu className="h-5 w-5" />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            <p>{sidebarOpen ? "Hide sidebar" : "Show sidebar"}</p>
-                        </TooltipContent>
-                    </Tooltip>
-
-                    {/* Prev */}
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                disabled={!canPrev}
-                                onClick={goPrev}
-                                className={`p-2 rounded-md ${canPrev
-                                    ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
-                                    : "text-gray-600 cursor-not-allowed"
-                                    }`}
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom"><p>Previous topic</p></TooltipContent>
-                    </Tooltip>
-
-                    {/* Next */}
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                disabled={!canNext}
-                                onClick={goNext}
-                                className={`p-2 rounded-md ${canNext
-                                    ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
-                                    : "text-gray-600 cursor-not-allowed"
-                                    }`}
-                            >
-                                <ChevronRight className="h-4 w-4" />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom"><p>Next topic</p></TooltipContent>
-                    </Tooltip>
-                </div>
-            </div>}
-
-            {/* CONTENT */}
-            <div className="min-h-[calc(100vh-100px)] select-none bg-black">
-                <div className={cn(
-                    "pb-6 pt-2 bg-black",
+        <>
+            <Helmet>
+                <title>{`${topicMeta[currentIndex]?.title || "Topic"} - ${topicMeta[currentIndex]?.chapterTitle || ""} | QuantProf`}</title>
+                <meta
+                    name="description"
+                    content="QuantProf"
+                />
+            </Helmet>
+            <div
+                className={cn(
+                    "flex-1 bg-black h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar",
+                    sidebarOpen && "hidden md:block"
+                )}>
+                {/* TOP BAR */}
+                {(topic.type !== 'playlist' || !playlistLoading) && <div className={cn(
+                    "pt-6 pb-4",
                     sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
                 )}>
+
+                    {/* Sidebar toggle */}
+                    <div className="flex items-center gap-2 mb-1">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={toggleSidebar}
+                                    className="p-2 text-gray-400 hover:text-[hsl(122_97%_50%)] hover:bg-gray-800 rounded-md"
+                                >
+                                    <Menu className="h-5 w-5" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                                <p>{sidebarOpen ? "Hide sidebar" : "Show sidebar"}</p>
+                            </TooltipContent>
+                        </Tooltip>
+
+                        {/* Prev */}
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    disabled={!canPrev}
+                                    onClick={goPrev}
+                                    className={`p-2 rounded-md ${canPrev
+                                        ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
+                                        : "text-gray-600 cursor-not-allowed"
+                                        }`}
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom"><p>Previous topic</p></TooltipContent>
+                        </Tooltip>
+
+                        {/* Next */}
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    disabled={!canNext}
+                                    onClick={goNext}
+                                    className={`p-2 rounded-md ${canNext
+                                        ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
+                                        : "text-gray-600 cursor-not-allowed"
+                                        }`}
+                                >
+                                    <ChevronRight className="h-4 w-4" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom"><p>Next topic</p></TooltipContent>
+                        </Tooltip>
+                    </div>
+                </div>}
+
+                {/* CONTENT */}
+                <div className="min-h-[calc(100vh-100px)] select-none bg-black">
                     <div className={cn(
-                        "mx-auto bg-black",
-                        sidebarOpen ? "max-w-5xl" : "max-w-6xl"
+                        "pb-6 pt-2 bg-black",
+                        sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
                     )}>
-                        {/* LAYOUT TOPIC */}
-                        {topic.type === "layout" && (
-                            <Renderer doc={typeof topic.jsonContent === "string" ? JSON.parse(topic.jsonContent) : topic.jsonContent} />
-                        )}
+                        <div className={cn(
+                            "mx-auto bg-black",
+                            sidebarOpen ? "max-w-5xl" : "max-w-6xl"
+                        )}>
+                            {/* LAYOUT TOPIC */}
+                            {topic.type === "layout" && (
+                                <Renderer doc={typeof topic.jsonContent === "string" ? JSON.parse(topic.jsonContent) : topic.jsonContent} />
+                            )}
 
-                        {/* QUESTION TOPIC */}
-                        {topic.type === "question" && <QuestionLayout topic={topic} />}
+                            {/* QUESTION TOPIC */}
+                            {topic.type === "question" && <QuestionLayout topic={topic} />}
 
 
-                        {/* PLAYLIST */}
-                        {topic.type === "playlist" && (
-                            <div className="flex-1 bg-black h-[calc(100vh-80px)]">
-                                <div className={`${paddingClass} mx-auto py-6`}>
-                                    {playlistId ?
-                                        <PlaylistDetail
-                                            playlistId={playlistId}
-                                            onBack={() => navigate(-1)}
-                                        />
-                                        : <PlaylistGrid
-                                            playlistIds={topic.playlistIds || []}
-                                            loading={playlistLoading}
-                                            setLoading={setPlaylistLoading}
-                                        />}
+                            {/* PLAYLIST */}
+                            {topic.type === "playlist" && (
+                                <div className="flex-1 bg-black h-[calc(100vh-80px)]">
+                                    <div className={`${paddingClass} mx-auto py-6`}>
+                                        {playlistId ?
+                                            <PlaylistDetail
+                                                playlistId={playlistId}
+                                                onBack={() => navigate(-1)}
+                                            />
+                                            : <PlaylistGrid
+                                                playlistIds={topic.playlistIds || []}
+                                                loading={playlistLoading}
+                                                setLoading={setPlaylistLoading}
+                                            />}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

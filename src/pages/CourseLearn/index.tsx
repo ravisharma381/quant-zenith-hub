@@ -223,7 +223,7 @@ const CourseLearnPage: React.FC = () => {
             <div className="min-h-screen bg-black text-white">
                 <Navigation />
                 <div className="p-8">No chapter found in this course.</div>
-                <Button onClick={() => navigate('/courses')}>Purchase To Continue</Button>
+                <Button onClick={() => navigate('/premium')}>Purchase To Continue</Button>
             </div>
         );
     }

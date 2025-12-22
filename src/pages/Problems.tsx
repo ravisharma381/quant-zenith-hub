@@ -460,7 +460,7 @@ const Problems: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Quant Interview Questions & Problems – Practice for Top Firms</title>
+        <title>Quant Interview Problems - Practice for Top Firms</title>
         <meta name="description" content="Practice quant interview questions frequently asked at top firms." />
       </Helmet>
 

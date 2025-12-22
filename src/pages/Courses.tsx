@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Timestamp } from "firebase/firestore";
 import { useAuth } from "@/hooks/useAuth";
 import CourseCard from "@/components/CourseCard";
+import { Helmet } from "react-helmet-async";
 
 export interface Course {
   id: string;
@@ -70,43 +71,49 @@ const Courses = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        {/* <div className="mb-12 text-center">
+    <>
+      <Helmet>
+        <title>Courses | QuantProf</title>
+        <meta name="description" content="Browse a wide range of expert-led courses on QuantProf" />
+      </Helmet>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          {/* <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4">Expert-Led Courses</h1>
           <p className="text-muted-foreground text-lg">
             Learn from industry professionals and academics
           </p>
         </div> */}
 
-        {/* Courses Grid */}
-        {
-          loading && <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
-            <div className="flex flex-col items-center gap-6">
-              {/* Scaling Circle */}
-              <div className="relative">
-                <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
-                <div className="w-12 h-12 rounded-full bg-primary"></div>
-              </div>
+          {/* Courses Grid */}
+          {
+            loading && <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
+              <div className="flex flex-col items-center gap-6">
+                {/* Scaling Circle */}
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 animate-ping absolute"></div>
+                  <div className="w-12 h-12 rounded-full bg-primary"></div>
+                </div>
 
-              {/* Loading Text */}
-              <p className="text-muted-foreground text-lg font-medium">
-                Loading Courses
-              </p>
+                {/* Loading Text */}
+                <p className="text-muted-foreground text-lg font-medium">
+                  Loading Courses
+                </p>
+              </div>
             </div>
-          </div>
-        }
-        {!loading && <div className="space-y-6">
-          {courses.map((course) => {
-            const isEnrolled = isPremium;
-            return (
-              <CourseCard key={course.id} course={course} isEnrolled={isEnrolled} />
-            )
-          })}
-        </div>}
+          }
+          {!loading && <div className="space-y-6">
+            {courses.map((course) => {
+              const isEnrolled = isPremium;
+              return (
+                <CourseCard key={course.id} course={course} isEnrolled={isEnrolled} />
+              )
+            })}
+          </div>}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

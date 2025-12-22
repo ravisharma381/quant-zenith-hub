@@ -18,6 +18,7 @@ import {
   Brain
 } from "lucide-react";
 import { LANDING_PROBLEM_ID, SOLVE_FIRST_PROBLEM_ID } from "@/statics";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -113,6 +114,10 @@ const Index = () => {
 
   return (
     <>
+      <Helmet>
+        <title>QuantProf - #1 quant finance prep platform | 1000+ problems</title>
+        <meta name="description" content="Practice quant interview questions frequently asked at top firms." />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>

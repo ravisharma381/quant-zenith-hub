@@ -13,6 +13,7 @@ import { httpsCallable } from "firebase/functions";
 import { functions } from "@/firebase/config";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const planTemplates = [
   // {
@@ -125,7 +126,7 @@ const faqs = [
   },
   {
     question: "What makes QuantProf unique?",
-    answer: "QuantProf offers a generous refund policy, is significantly more affordable than alternatives, and continuously updates its library of problems and courses.",
+    answer: "QuantProf offers a higher quality problem collection that is continuously updated, along with structured courses designed to help you develop the skills needed to solve challenging problems on your own. We also back everything with a generous refund policy.",
   },
 ];
 
@@ -225,59 +226,67 @@ const Premium = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-5xl mx-auto text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Unlock The Best Tools For Acing Quant Interviews
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Structured practice, deep theory, and interview-level problems-everything serious quant prep demands.
-          </p>
-        </div>
+    <>
+      <Helmet>
+        <title>{`Buy Premium | QuantProf`}</title>
+        <meta
+          name="description"
+          content="QuantProf"
+        />
+      </Helmet>
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-5xl mx-auto text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Unlock The Best Tools For Acing Quant Interviews
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Structured practice, deep theory, and interview-level problems-everything serious quant prep demands.
+            </p>
+          </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
-          {plans.map((plan, index) => (
-            <Card
-              key={index}
-              className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
-            >
-              <CardContent className="p-8 flex flex-col h-full">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-3xl font-bold text-foreground">{plan.name}</h3>
-                    {plan.featured && (
-                      <Badge className={`bg-purple-100 ${plan.badgeColor} border-0 text-xs px-2 py-1`}>
-                        🎉 Most Popular
-                      </Badge>
-                    )}
-                  </div>
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
+            {plans.map((plan, index) => (
+              <Card
+                key={index}
+                className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
+              >
+                <CardContent className="p-8 flex flex-col h-full">
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <h3 className="text-3xl font-bold text-foreground">{plan.name}</h3>
+                      {plan.featured && (
+                        <Badge className={`bg-purple-100 ${plan.badgeColor} border-0 text-xs px-2 py-1`}>
+                          🎉 Most Popular
+                        </Badge>
+                      )}
+                    </div>
 
-                  <p className="text-muted-foreground text-sm mb-6">{plan.description}</p>
+                    <p className="text-muted-foreground text-sm mb-6">{plan.description}</p>
 
-                  <div className="mb-4 h-[64px] flex flex-col justify-end">
-                    {loading ? (
-                      <>
-                        <SkeletonBox className="h-4 w-20 mb-2" />
-                        <SkeletonBox className="h-10 w-32" />
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-muted-foreground line-through text-sm">
-                          {plan.originalPrice}
-                        </span>
-                        <div className="flex items-baseline">
-                          <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-                          <span className="text-muted-foreground ml-1">{plan.period}</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                    <div className="mb-4 h-[64px] flex flex-col justify-end">
+                      {loading ? (
+                        <>
+                          <SkeletonBox className="h-4 w-20 mb-2" />
+                          <SkeletonBox className="h-10 w-32" />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-muted-foreground line-through text-sm">
+                            {plan.originalPrice}
+                          </span>
+                          <div className="flex items-baseline">
+                            <span className="text-4xl font-bold text-foreground">{plan.price}</span>
+                            <span className="text-muted-foreground ml-1">{plan.period}</span>
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-                  <Button
-                    className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+                    <Button
+                      className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
                     !shadow-none
                     hover:!shadow-none
                     focus:!shadow-none
@@ -286,97 +295,98 @@ const Premium = () => {
                     !ring-0
                     focus-visible:!ring-0
                     focus-visible:!ring-offset-0`}
-                    disabled={loading || payInitiated !== null}
-                    onClick={() => handleGetStarted(plan.name)}
-                  >
-                    {payInitiated === plan.name ? "Redirecting to PayPal…" : "Get Started"}
-                  </Button>
-                </div>
+                      disabled={loading || payInitiated !== null}
+                      onClick={() => handleGetStarted(plan.name)}
+                    >
+                      {payInitiated === plan.name ? "Redirecting to PayPal…" : "Get Started"}
+                    </Button>
+                  </div>
 
-                {/* Features stay below, card height still stable */}
-                <div className="space-y-3">
-                  {plan.features.map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-purple-500 mt-0.5" />
-                      <span className="text-sm text-muted-foreground">
-                        {feature.bold ? (
-                          <>
-                            {feature.text.split(feature.bold)[0]}
-                            <span className="font-semibold text-foreground">{feature.bold}</span>
-                            {feature.text.split(feature.bold)[1]}
-                          </>
-                        ) : (
-                          feature.text
-                        )}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  {/* Features stay below, card height still stable */}
+                  <div className="space-y-3">
+                    {plan.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-purple-500 mt-0.5" />
+                        <span className="text-sm text-muted-foreground">
+                          {feature.bold ? (
+                            <>
+                              {feature.text.split(feature.bold)[0]}
+                              <span className="font-semibold text-foreground">{feature.bold}</span>
+                              {feature.text.split(feature.bold)[1]}
+                            </>
+                          ) : (
+                            feature.text
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
-          ))}
-        </div>
-
-
-        {/* Why Premium Section */}
-        <div className="max-w-5xl mx-auto mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground">
-              Why <span className="text-purple-400">Premium</span>?
-            </h2>
-            <p className="text-muted-foreground mt-2">
-              We provide our users an unparalleled preparation experience.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <feature.icon className="w-6 h-6 text-foreground" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
-                </div>
-              </div>
             ))}
           </div>
-        </div>
 
-        {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-foreground mb-2">Frequently Asked Questions</h2>
-            <p className="text-muted-foreground">
-              For any additional questions, you can reach us directly at{" "}
-              <a href="mailto:quantprof@proton.me" className="text-purple-400 hover:underline">
-                quantprof@proton.me
-              </a>
-              .
-            </p>
+
+          {/* Why Premium Section */}
+          <div className="max-w-5xl mx-auto mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-foreground">
+                Why <span className="text-purple-400">Premium</span>?
+              </h2>
+              <p className="text-muted-foreground mt-2">
+                We provide our users an unparalleled preparation experience.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <div key={index} className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <feature.icon className="w-6 h-6 text-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((faq, index) => (
-              <AccordionItem
-                key={index}
-                value={`item-${index}`}
-                className="border border-border rounded-lg px-6 bg-card"
-              >
-                <AccordionTrigger className="text-left text-foreground hover:text-purple-400 [&[data-state=open]]:text-purple-400 [&>svg]:text-foreground">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-6">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          {/* FAQ Section */}
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-foreground mb-2">Frequently Asked Questions</h2>
+              <p className="text-muted-foreground">
+                For any additional questions, you can reach us directly at{" "}
+                <a href="mailto:quantprof@proton.me" className="text-purple-400 hover:underline">
+                  quantprof@proton.me
+                </a>
+                .
+              </p>
+            </div>
+
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((faq, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index}`}
+                  className="border border-border rounded-lg px-6 bg-card"
+                >
+                  <AccordionTrigger className="text-left text-foreground hover:text-purple-400 [&[data-state=open]]:text-purple-400 [&>svg]:text-foreground">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

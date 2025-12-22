@@ -5,6 +5,7 @@ import { CalendarDays, CreditCard, Clock } from "lucide-react";
 import { db } from "@/firebase/config";
 import { collection, query, where, getDocs, doc, getDoc, orderBy, limit } from "firebase/firestore";
 import { useAuth } from "@/hooks/useAuth"; // adjust path if different
+import { Helmet } from "react-helmet-async";
 
 const providerLogos: Record<string, string> = {
   razorpay:
@@ -165,122 +166,131 @@ const Billing = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Subscription Billing</h1>
-          <p className="text-muted-foreground text-lg">
-            Manage your subscription payments and billing information
-          </p>
-        </div>
+    <>
+      <Helmet>
+        <title>{`Billing | QuantProf`}</title>
+        <meta
+          name="description"
+          content="QuantProf"
+        />
+      </Helmet>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12 text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Subscription Billing</h1>
+            <p className="text-muted-foreground text-lg">
+              Manage your subscription payments and billing information
+            </p>
+          </div>
 
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">Recent Transactions</h2>
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">Recent Transactions</h2>
 
-          <div className="space-y-4">
-            {transactions.map((tx) => {
-              const today = new Date();
-              const expires = tx.expiresAt ? new Date(tx.expiresAt) : null;
-              const isExpired = expires ? expires < today : false;
+            <div className="space-y-4">
+              {transactions.map((tx) => {
+                const today = new Date();
+                const expires = tx.expiresAt ? new Date(tx.expiresAt) : null;
+                const isExpired = expires ? expires < today : false;
 
-              const expiryLabel = isExpired ? "Expired At" : "Expires On";
-              const statusLabel = isExpired ? "Expired" : tx.status;
+                const expiryLabel = isExpired ? "Expired At" : "Expires On";
+                const statusLabel = isExpired ? "Expired" : tx.status;
 
-              const providerKey = tx.provider?.toLowerCase();
-              const logoUrl = providerLogos[providerKey];
+                const providerKey = tx.provider?.toLowerCase();
+                const logoUrl = providerLogos[providerKey];
 
-              return (
-                <Card key={tx.id} className="overflow-hidden p-4 md:p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
+                return (
+                  <Card key={tx.id} className="overflow-hidden p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row gap-6">
 
-                    <div className="w-full md:w-32 h-32 rounded-xl bg-white flex items-center justify-center shrink-0 relative border border-border shadow-sm overflow-hidden">
-                      <div className="absolute inset-0 bg-white" />
-                      {/* Logo */}
-                      {logoUrl ? (
-                        <img
-                          src={logoUrl}
-                          alt={tx.provider}
-                          className="absolute inset-0 w-16 h-16 object-contain m-auto"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
-                            <span className="text-black font-bold text-sm">
-                              {tx.provider.slice(0, 2).toUpperCase()}
-                            </span>
+                      <div className="w-full md:w-32 h-32 rounded-xl bg-white flex items-center justify-center shrink-0 relative border border-border shadow-sm overflow-hidden">
+                        <div className="absolute inset-0 bg-white" />
+                        {/* Logo */}
+                        {logoUrl ? (
+                          <img
+                            src={logoUrl}
+                            alt={tx.provider}
+                            className="absolute inset-0 w-16 h-16 object-contain m-auto"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-black/10 rounded-full flex items-center justify-center">
+                              <span className="text-black font-bold text-sm">
+                                {tx.provider.slice(0, 2).toUpperCase()}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Right Details Section */}
-                    <div className="flex-1">
-
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-lg font-semibold text-foreground">
-                            {tx.planType} Plan
-                          </h3>
-                          <p className="text-sm text-muted-foreground">{tx.provider}</p>
-                        </div>
-
-                        <div className="text-right space-y-1">
-                          <div className="text-xl font-bold text-foreground">{tx.amount}</div>
-                          <Badge className={getStatusColor(statusLabel)} variant="outline">
-                            {statusLabel}
-                          </Badge>
-                        </div>
+                        )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Purchased */}
-                        <div className="flex items-start gap-2">
-                          <CalendarDays className="w-4 h-4 text-muted-foreground mt-0.5" />
+                      {/* Right Details Section */}
+                      <div className="flex-1">
+
+                        <div className="flex items-start justify-between mb-4">
                           <div>
-                            <div className="text-muted-foreground text-xs">Purchased</div>
-                            <div className="font-medium">{tx.purchaseDate}</div>
+                            <h3 className="text-lg font-semibold text-foreground">
+                              {tx.planType} Plan
+                            </h3>
+                            <p className="text-sm text-muted-foreground">{tx.provider}</p>
+                          </div>
+
+                          <div className="text-right space-y-1">
+                            <div className="text-xl font-bold text-foreground">{tx.amount}</div>
+                            <Badge className={getStatusColor(statusLabel)} variant="outline">
+                              {statusLabel}
+                            </Badge>
                           </div>
                         </div>
 
-                        {/* Expiry */}
-                        <div className="flex items-start gap-2">
-                          <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
-                          <div>
-                            <div className="text-muted-foreground text-xs">{expiryLabel}</div>
-                            <div className={`font-medium ${isExpired ? "text-red-500" : "text-foreground"}`}>
-                              {tx.expirationDate}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {/* Purchased */}
+                          <div className="flex items-start gap-2">
+                            <CalendarDays className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <div className="text-muted-foreground text-xs">Purchased</div>
+                              <div className="font-medium">{tx.purchaseDate}</div>
+                            </div>
+                          </div>
+
+                          {/* Expiry */}
+                          <div className="flex items-start gap-2">
+                            <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <div className="text-muted-foreground text-xs">{expiryLabel}</div>
+                              <div className={`font-medium ${isExpired ? "text-red-500" : "text-foreground"}`}>
+                                {tx.expirationDate}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Payment Method */}
+                          <div className="flex items-start gap-2">
+                            <CreditCard className="w-4 h-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <div className="text-muted-foreground text-xs">Payment Method</div>
+                              <div className="font-medium">{tx.provider}</div>
                             </div>
                           </div>
                         </div>
 
-                        {/* Payment Method */}
-                        <div className="flex items-start gap-2">
-                          <CreditCard className="w-4 h-4 text-muted-foreground mt-0.5" />
-                          <div>
-                            <div className="text-muted-foreground text-xs">Payment Method</div>
-                            <div className="font-medium">{tx.provider}</div>
-                          </div>
+                        <div className="text-xs text-muted-foreground mt-4">
+                          Transaction ID: {tx.id}
                         </div>
                       </div>
 
-                      <div className="text-xs text-muted-foreground mt-4">
-                        Transaction ID: {tx.id}
-                      </div>
                     </div>
-
-                  </div>
-                </Card>
-              );
-            })}
-            {transactions.length === 0 && (
-              <div className="text-muted-foreground text-center py-10">
-                No transactions found.
-              </div>
-            )}
+                  </Card>
+                );
+              })}
+              {transactions.length === 0 && (
+                <div className="text-muted-foreground text-center py-10">
+                  No transactions found.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

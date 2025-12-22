@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { Helmet } from "react-helmet-async";
 
 const Playlists = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Playlists = () => {
       icon: "🎲"
     },
     {
-      id: "jane-street", 
+      id: "jane-street",
       name: "Jane Street",
       problems: 133,
       topics: 32,
@@ -189,8 +190,16 @@ const Playlists = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <Helmet>
+        <title>{`Playlists | QuantProf`}</title>
+        <meta
+          name="description"
+          content="QuantProf Playlists: Curated quant interview question playlists"
+        />
+      </Helmet>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Curated quant interview question playlists
@@ -214,7 +223,7 @@ const Playlists = () => {
                         {company.icon}
                       </div>
                     </div>
-                    
+
                     <div className="mt-auto grid grid-cols-2 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-foreground">
@@ -237,9 +246,10 @@ const Playlists = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

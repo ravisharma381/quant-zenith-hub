@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 // const Login: React.FC = () => {
 //   const { loginWithGoogle, loading, user } = useAuth();
@@ -63,70 +64,79 @@ const Login: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <>
+      <Helmet>
+        <title>{`Sign In | QuantProf`}</title>
+        <meta
+          name="description"
+          content="QuantProf"
+        />
+      </Helmet>
+      <div className="min-h-screen flex flex-col md:flex-row">
 
-      {/* Left Side */}
-      <div className="w-full md:w-1/2 bg-background flex items-center justify-center p-6 md:p-8">
-        <div className="w-full max-w-md space-y-8">
-          <div>
-            <Link
-              to="/"
-              className="inline-flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
-            >
-              ← Back to Quantprof.org
-            </Link>
-          </div>
-
-          <div className="space-y-6">
+        {/* Left Side */}
+        <div className="w-full md:w-1/2 bg-background flex items-center justify-center p-6 md:p-8">
+          <div className="w-full max-w-md space-y-8">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Sign In
-              </h1>
-            </div>
-
-            <div className="space-y-4">
-              <Button
-                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={handleGoogleSignIn}
-              // disabled={loading}
+              <Link
+                to="/"
+                className="inline-flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
               >
-                <span className="mr-2 font-bold">G</span>
-                Sign in with Google
-              </Button>
-            </div>
-            <div className="space-y-4">
-              <Button
-                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={handleGithubSignIn}
-              // disabled={loading}
-              >
-                <Github />
-                Sign in with GitHub
-              </Button>
-            </div>
-
-            <div className="text-center">
-              <span className="text-muted-foreground">Not registered yet?</span>
-              <Link to="/signup" className="text-primary hover:underline ml-1">
-                Create an account.
+                ← Back to Quantprof.org
               </Link>
             </div>
+
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground mb-2">
+                  Sign In
+                </h1>
+              </div>
+
+              <div className="space-y-4">
+                <Button
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={handleGoogleSignIn}
+                // disabled={loading}
+                >
+                  <span className="mr-2 font-bold">G</span>
+                  Sign in with Google
+                </Button>
+              </div>
+              <div className="space-y-4">
+                <Button
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={handleGithubSignIn}
+                // disabled={loading}
+                >
+                  <Github />
+                  Sign in with GitHub
+                </Button>
+              </div>
+
+              <div className="text-center">
+                <span className="text-muted-foreground">Not registered yet?</span>
+                <Link to="/signup" className="text-primary hover:underline ml-1">
+                  Create an account.
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side */}
+        <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 items-center justify-center p-10 md:p-8 mt-8 md:mt-0">
+          <div className="text-center text-white space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Welcome Back To Quantprof.org
+            </h2>
+            <p className="text-lg md:text-xl text-white/90">
+              Log in to your account and start preparing for your next interview.
+            </p>
           </div>
         </div>
       </div>
-
-      {/* Right Side */}
-      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary/80 to-primary/40 items-center justify-center p-10 md:p-8 mt-8 md:mt-0">
-        <div className="text-center text-white space-y-6">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            Welcome Back To Quantprof.org
-          </h2>
-          <p className="text-lg md:text-xl text-white/90">
-            Log in to your account and start preparing for your next interview.
-          </p>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

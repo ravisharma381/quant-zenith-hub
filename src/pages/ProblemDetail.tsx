@@ -215,6 +215,15 @@ const ProblemDetail = () => {
     navigate(`/problems/${prevId.id}`);
   }
 
+  useEffect(() => {
+    if (topic?.title) {
+      document.title = `Problem - ${topic.title} | QuantProf`;
+    }
+    return () => {
+      document.title = "QuantProf";
+    };
+  }, [topic?.title]);
+
   // ================================
   // RENDER
   // ================================

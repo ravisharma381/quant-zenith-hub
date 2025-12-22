@@ -135,11 +135,11 @@ const CourseDetail = () => {
   return (
     <>
       <Helmet>
-        <title>Quant Interview Questions | Probability, Puzzles & Trading Problems</title>
+        <title>Quant Interview Masterclass | QuantProf</title>
 
         <meta
           name="description"
-          content="Practice the most common quant interview questions asked at Jane Street, Optiver, HRT, IMC, Citadel and top trading firms. Includes probability problems, mental math, market making scenarios and brainteasers."
+          content="Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms."
         />
 
         <link rel="canonical" href="https://quantprof.org/quant-interview-questions" />
