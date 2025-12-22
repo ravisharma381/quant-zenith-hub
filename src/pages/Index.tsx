@@ -21,6 +21,7 @@ import { LANDING_PROBLEM_ID, SOLVE_FIRST_PROBLEM_ID } from "@/statics";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { fireRandomCelebration } from "@/lib/confetti";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -40,14 +41,16 @@ const Index = () => {
 
   useEffect(() => {
     const success = searchParams.get("success");
-
+    let t: any
     if (success === "true") {
       setShowPremiumPopup(true);
+      fireRandomCelebration();
 
-      setTimeout(() => {
+      t = setTimeout(() => {
         setSearchParams({}, { replace: true });
       }, 0);
     }
+    return () => clearTimeout(t);
   }, [searchParams, setSearchParams]);
 
   useEffect(() => {
