@@ -564,9 +564,9 @@ const Problems: React.FC = () => {
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
               <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
-              <div className="col-span-3 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+              <div className="col-span-4 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
               <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-              <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
+              <div className="hidden md:block col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
               <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
               <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
             </div>
@@ -614,7 +614,7 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Title */}
-                      <div className="col-span-3 md:col-span-3 flex items-center gap-2">
+                      <div className="col-span-4 md:col-span-3 flex items-center gap-2">
                         <div className="flex items-center gap-2">
                           <h3
                             className={`font-semibold ${locked ? "text-muted-foreground" : "text-foreground"
@@ -639,7 +639,7 @@ const Problems: React.FC = () => {
                       </div>
 
                       {/* Difficulty */}
-                      <div className="col-span-2 md:col-span-2 flex items-center justify-center">
+                      <div className="hidden col-span-2 md:col-span-2 md:flex items-center justify-center">
                         <div
                           className={`${getDifficultyColor(
                             problem.difficulty
