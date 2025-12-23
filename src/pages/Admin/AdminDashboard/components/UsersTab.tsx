@@ -109,10 +109,11 @@ const UsersTab: React.FC = () => {
                 planType: role === 'user-Yearly' ? 'Yearly' : 'Lifetime',
                 expiresAt: role === 'user-Yearly' ? new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString() : null
             });
+        } else {
+            await updateDoc(doc(db, "users", userId), {
+                role, isPremium: (role === "admin" || role === "superAdmin")
+            });
         }
-        await updateDoc(doc(db, "users", userId), {
-            role, isPremium: (role === "admin" || role === "superAdmin")
-        });
     };
 
     return (
