@@ -83,7 +83,7 @@ const CourseDetail = () => {
     {
       icon: FileText,
       title: "Premium Questions and Solutions",
-      description: "Access a growing library of 1,000+ high-quality quant interview problems. Each problem has detailed hints and solutions.",
+      description: "Access a growing library of 1,000+ high-quality quant interview problems, including hundreds of company tagged problems. Each problem has detailed hints and solutions.",
     },
     {
       icon: RefreshCcw,

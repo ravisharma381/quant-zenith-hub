@@ -103,7 +103,16 @@ const UsersTab: React.FC = () => {
     }, [debouncedSearch, premiumFilter, planFilter]);
 
     const updateRole = async (userId: string, role: string) => {
-        await updateDoc(doc(db, "users", userId), { role, isPremium: (role === "admin" || role === "superAdmin") });
+        if (['user-Yearly', 'user-Lifetime'].includes(role)) {
+            await updateDoc(doc(db, "users", userId), {
+                isPremium: true,
+                planType: role === 'user-Yearly' ? 'Yearly' : 'Lifetime',
+                expiresAt: role === 'user-Yearly' ? new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString() : null
+            });
+        }
+        await updateDoc(doc(db, "users", userId), {
+            role, isPremium: (role === "admin" || role === "superAdmin")
+        });
     };
 
     return (
@@ -214,6 +223,8 @@ const UsersTab: React.FC = () => {
                                             <SelectItem value="user">User</SelectItem>
                                             <SelectItem value="admin">Admin</SelectItem>
                                             <SelectItem value="superAdmin">Super Admin</SelectItem>
+                                            <SelectItem value="user-Yearly">Gift Yearly Plan</SelectItem>
+                                            <SelectItem value="user-Lifetime">Gift Lifetime Plan</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </td>
