@@ -777,3 +777,107 @@ export const paypalWebhook = onRequest(
 );
 
 
+// ----------ADMIN STATICS----------
+
+export const onTransactionUpdated = onDocumentUpdated(
+  "transactions/{orderId}",
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+
+    if (!after) return;
+
+    // Only act on first transition to success
+    if (before?.status === "success" || after.status !== "success") {
+      return;
+    }
+
+    const amount = after.amountSmallest;
+    if (typeof amount !== "number") return;
+
+    // Timestamp source of truth
+    const createdAt =
+      after.createdAt?.toDate?.() ??
+      after.updatedAt?.toDate?.() ??
+      new Date();
+
+    const year = createdAt.getUTCFullYear().toString();
+    const month = `${year}-${String(createdAt.getUTCMonth() + 1).padStart(2, "0")}`;
+    const day = `${month}-${String(createdAt.getUTCDate()).padStart(2, "0")}`;
+
+    // ---- OPTIONAL: Region (future analytics) ----
+    // You can improve this later using IP / billing address
+    const region = after.currency === "INR" ? "IN" : "US";
+
+    const statsRef = db.collection("adminStats").doc("global");
+
+    await statsRef.set(
+      {
+        lifetimeRevenue: admin.firestore.FieldValue.increment(amount),
+
+        [`revenueByYear.${year}`]:
+          admin.firestore.FieldValue.increment(amount),
+
+        [`revenueByMonth.${month}`]:
+          admin.firestore.FieldValue.increment(amount),
+
+        [`revenueByDay.${day}`]:
+          admin.firestore.FieldValue.increment(amount),
+
+        [`revenueByRegion.${region}`]:
+          admin.firestore.FieldValue.increment(amount),
+
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
+);
+
+export const onUserCreated = onDocumentCreated(
+  "users/{userId}",
+  async () => {
+    const statsRef = db.collection("adminStats").doc("global");
+
+    await statsRef.set(
+      {
+        totalUsers: admin.firestore.FieldValue.increment(1),
+      },
+      { merge: true }
+    );
+  }
+);
+
+
+export const onUserUpdated = onDocumentUpdated(
+  "users/{userId}",
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+
+    if (!before || !after) return;
+
+    const statsRef = db.collection("adminStats").doc("global");
+
+    // Premium upgrade
+    if (!before.isPremium && after.isPremium) {
+      await statsRef.set(
+        { premiumUsers: admin.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
+    }
+
+    // Premium downgrade / expiry
+    if (before.isPremium && !after.isPremium) {
+      await statsRef.set(
+        { premiumUsers: admin.firestore.FieldValue.increment(-1) },
+        { merge: true }
+      );
+    }
+  }
+);
+
+
+
+
+
