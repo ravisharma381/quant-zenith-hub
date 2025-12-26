@@ -139,7 +139,7 @@ const CourseDetail = () => {
 
         <meta
           name="description"
-          content="Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms."
+          content="Master quant interviews with our comprehensive course covering all core concepts in detail and 1000+ high quality problems."
         />
 
         <link rel="canonical" href="https://quantprof.org/quant-interview-questions" />
@@ -163,10 +163,6 @@ const CourseDetail = () => {
                 <p className="text-sm text-muted-foreground">Master quantitative finance interviews</p>
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-sm font-medium text-foreground">4.9/5</span>
-                </div>
                 <Button
                   className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
                   onClick={() => navigate(
@@ -209,7 +205,7 @@ const CourseDetail = () => {
                   </h1>
 
                   <p className="text-muted-foreground mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 text-[clamp(0.95rem,2.5vw,1.25rem)]">
-                    Master quantitative finance interviews with our comprehensive course designed by industry experts from top trading firms.
+                    Master quant interviews with our comprehensive course covering all core concepts in detail and 1000+ high quality problems.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
@@ -223,18 +219,6 @@ const CourseDetail = () => {
                     >
                       {isBought ? "Go to Course" : "Get Premium"}
                     </Button>
-
-                    <div className="flex items-center gap-3">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                        ))}
-                      </div>
-                      <div>
-                        <span className="font-semibold">4.9/5</span>
-                        <span className="text-muted-foreground ml-1">• 500+ students</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
 

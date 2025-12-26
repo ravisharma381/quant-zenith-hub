@@ -44,11 +44,6 @@ const CourseCard = ({ course, isEnrolled }) => {
 
                     {/* Rating and Stats */}
                     {!course.isComingSoon && <div className="flex items-center gap-2 text-sm">
-                        <div className="flex items-center">
-                            <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                            <span className="font-medium text-foreground">{course.rating}</span>
-                        </div>
-                        <span className="text-muted-foreground">|</span>
                         <span className="text-muted-foreground">100+ chapters</span>
                         <span className="text-muted-foreground">|</span>
                         <span className="text-muted-foreground">1000+ problems</span>

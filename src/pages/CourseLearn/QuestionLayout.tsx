@@ -140,7 +140,10 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
         } else {
             setFeedback({ type: "wrong", message: "Wrong answer" });
             setShakeKey(k => k + 1);
-            navigator.vibrate?.(200);
+            if (navigator.vibrate) {
+                navigator.vibrate(0);
+                navigator.vibrate([0, 200]);
+            }
         }
     };
 

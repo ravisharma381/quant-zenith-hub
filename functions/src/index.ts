@@ -14,7 +14,9 @@ import {
   onDocumentCreated,
   onDocumentDeleted,
   onDocumentUpdated,
+  onDocumentWritten,
 } from "firebase-functions/firestore";
+import { onSchedule } from "firebase-functions/scheduler";
 
 // -------------------- GLOBAL SETUP --------------------
 const BILLING_CURRENCY: "USD" | "INR" = "USD";
@@ -795,18 +797,19 @@ export const onTransactionUpdated = onDocumentUpdated(
     const amount = after.amountSmallest;
     if (typeof amount !== "number") return;
 
-    // Timestamp source of truth
-    const createdAt =
+    // Source timestamp
+    const baseDate =
       after.createdAt?.toDate?.() ??
       after.updatedAt?.toDate?.() ??
       new Date();
 
-    const year = createdAt.getUTCFullYear().toString();
-    const month = `${year}-${String(createdAt.getUTCMonth() + 1).padStart(2, "0")}`;
-    const day = `${month}-${String(createdAt.getUTCDate()).padStart(2, "0")}`;
+    // Convert to IST (UTC + 5:30)
+    const istDate = new Date(baseDate.getTime() + 5.5 * 60 * 60 * 1000);
 
-    // ---- OPTIONAL: Region (future analytics) ----
-    // You can improve this later using IP / billing address
+    const year = istDate.getFullYear().toString();
+    const month = `${year}-${String(istDate.getMonth() + 1).padStart(2, "0")}`;
+    const day = `${month}-${String(istDate.getDate()).padStart(2, "0")}`;
+
     const region = after.currency === "INR" ? "IN" : "US";
 
     const statsRef = db.collection("adminStats").doc("global");
@@ -815,17 +818,21 @@ export const onTransactionUpdated = onDocumentUpdated(
       {
         lifetimeRevenue: admin.firestore.FieldValue.increment(amount),
 
-        [`revenueByYear.${year}`]:
-          admin.firestore.FieldValue.increment(amount),
+        revenueByYear: {
+          [year]: admin.firestore.FieldValue.increment(amount),
+        },
 
-        [`revenueByMonth.${month}`]:
-          admin.firestore.FieldValue.increment(amount),
+        revenueByMonth: {
+          [month]: admin.firestore.FieldValue.increment(amount),
+        },
 
-        [`revenueByDay.${day}`]:
-          admin.firestore.FieldValue.increment(amount),
+        revenueByDay: {
+          [day]: admin.firestore.FieldValue.increment(amount),
+        },
 
-        [`revenueByRegion.${region}`]:
-          admin.firestore.FieldValue.increment(amount),
+        revenueByRegion: {
+          [region]: admin.firestore.FieldValue.increment(amount),
+        },
 
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
@@ -833,6 +840,7 @@ export const onTransactionUpdated = onDocumentUpdated(
     );
   }
 );
+
 
 export const onUserCreated = onDocumentCreated(
   "users/{userId}",
@@ -877,6 +885,148 @@ export const onUserUpdated = onDocumentUpdated(
   }
 );
 
+// TOPIC_INDEX REALTIME SYNC
+
+function normalizeTitle(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export const syncProblemIndex = onDocumentWritten(
+  {
+    document: "topics/{problemId}",
+    region: "asia-south1",
+  },
+  async (event) => {
+    const problemId = event.params.problemId;
+    const after = event.data?.after;
+
+    const indexRef = db.collection("problem_index").doc(problemId);
+
+    /* ---------- DELETE ---------- */
+    if (!after?.exists) {
+      await indexRef.delete();
+      return;
+    }
+
+    const data = after.data()!;
+
+    /* ---------- IGNORE NON-QUESTIONS ---------- */
+    if (data.type !== "question") {
+      await indexRef.delete();
+      return;
+    }
+
+    /* ---------- HARD VALIDATION ---------- */
+    if (
+      !data.title ||
+      !data.courseId ||
+      typeof data.order !== "number"
+    ) {
+      console.error("Invalid topic document:", problemId);
+      return;
+    }
+
+    /* ---------- INDEX DOCUMENT ---------- */
+    const indexDoc = {
+      problemId,
+      title: data.title,
+      normalizedTitle: normalizeTitle(data.title),
+      topic: data.topic ?? "unknown",
+      level: Number(data.level ?? 1),
+      order: data.order,
+      isPrivate: Boolean(data.isPrivate),
+      askedIn: Array.isArray(data.askedIn) ? data.askedIn : [],
+      courseId: data.courseId,
+      updatedAt: new Date(),
+    };
+
+    await indexRef.set(indexDoc, { merge: true });
+  }
+);
+
+
+// CRON JOBS
+// ----------- PROBLEMS INDEX -----------
+
+
+export const rebuildProblemIndex = onSchedule(
+  {
+    // 03:30 IST (22:00 UTC)
+    // schedule: "0 22 * * *",
+    schedule: "55 15 * * *",
+    region: "asia-south1",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+  },
+  async () => {
+    const topicsSnap = await db
+      .collection("topics")
+      .where("type", "==", "question")
+      .get();
+
+    const validIds = new Set<string>();
+    const BATCH_SIZE = 400;
+    let batch = db.batch();
+    let opCount = 0;
+
+    for (const doc of topicsSnap.docs) {
+      const d = doc.data();
+
+      if (!d.title || typeof d.order !== "number" || !d.courseId) {
+        continue;
+      }
+
+      validIds.add(doc.id);
+
+      const indexRef = db.collection("problem_index").doc(doc.id);
+
+      batch.set(
+        indexRef,
+        {
+          problemId: doc.id,
+          title: d.title,
+          normalizedTitle: normalizeTitle(d.title),
+          topic: d.topic ?? "unknown",
+          level: Number(d.level ?? 1),
+          order: d.order,
+          isPrivate: Boolean(d.isPrivate),
+          askedIn: Array.isArray(d.askedIn) ? d.askedIn : [],
+          courseId: d.courseId,
+          updatedAt: new Date(),
+        },
+        { merge: true }
+      );
+
+      opCount++;
+      if (opCount % BATCH_SIZE === 0) {
+        await batch.commit();
+        batch = db.batch();
+      }
+    }
+
+    if (opCount % BATCH_SIZE !== 0) {
+      await batch.commit();
+    }
+
+    /* ---------- CLEAN ORPHANS ---------- */
+    const indexSnap = await db.collection("problem_index").get();
+    const cleanupBatch = db.batch();
+
+    indexSnap.docs.forEach((doc) => {
+      if (!validIds.has(doc.id)) {
+        cleanupBatch.delete(doc.ref);
+      }
+    });
+
+    await cleanupBatch.commit();
+  }
+);
 
 
 
