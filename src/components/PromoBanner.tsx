@@ -41,58 +41,86 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
 
   return (
     <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black py-3 px-4 relative">
-      <div className="container mx-auto flex items-center justify-center gap-4 md:gap-8 flex-wrap">
-        {/* New Year Badge */}
+      <div className="container mx-auto flex items-center justify-center gap-4 md:gap-8 pr-8">
+        {/* New Year Badge - hidden on mobile */}
         <div className="hidden md:flex flex-col items-center">
           <span className="bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded">NEW</span>
           <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded -mt-0.5">YEAR</span>
         </div>
         
-        {/* Sale Text */}
-        <div className="text-center">
-          <h2 className="text-lg md:text-xl font-extrabold tracking-wide">
-            NEW YEAR'S SALE
-          </h2>
-          <p className="text-sm md:text-base font-bold">
-            LIMITED TIME 30% OFF
-          </p>
+        {/* Mobile Layout */}
+        <div className="flex md:hidden items-center justify-between w-full">
+          <div className="flex flex-col items-start">
+            <h2 className="text-sm font-extrabold tracking-wide">NEW YEAR'S SALE</h2>
+            <p className="text-xs font-bold">LIMITED TIME 30% OFF</p>
+            <div className="flex gap-2 text-center mt-1">
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">{timeLeft.days}</span>
+                <span className="text-[10px]">days</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">{timeLeft.hours}</span>
+                <span className="text-[10px]">hours</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">{timeLeft.mins}</span>
+                <span className="text-[10px]">mins</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">{timeLeft.secs}</span>
+                <span className="text-[10px]">secs</span>
+              </div>
+            </div>
+          </div>
+          <Button 
+            onClick={() => navigate('/premium')}
+            className="bg-yellow-300 hover:bg-yellow-400 text-black font-bold px-4 py-1.5 text-sm rounded shadow-md"
+          >
+            Get Premium
+          </Button>
         </div>
         
-        {/* Countdown */}
-        <div className="flex gap-2 md:gap-4 text-center">
-          <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold">{timeLeft.days}</span>
-            <span className="text-xs">days</span>
+        {/* Desktop Layout */}
+        <div className="hidden md:flex items-center gap-8">
+          <div className="text-center">
+            <h2 className="text-xl font-extrabold tracking-wide">NEW YEAR'S SALE</h2>
+            <p className="text-base font-bold">LIMITED TIME 30% OFF</p>
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold">{timeLeft.hours}</span>
-            <span className="text-xs">hours</span>
+          
+          <div className="flex gap-4 text-center">
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold">{timeLeft.days}</span>
+              <span className="text-xs">days</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold">{timeLeft.hours}</span>
+              <span className="text-xs">hours</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold">{timeLeft.mins}</span>
+              <span className="text-xs">mins</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold">{timeLeft.secs}</span>
+              <span className="text-xs">secs</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold">{timeLeft.mins}</span>
-            <span className="text-xs">mins</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-bold">{timeLeft.secs}</span>
-            <span className="text-xs">secs</span>
-          </div>
+          
+          <Button 
+            onClick={() => navigate('/premium')}
+            className="bg-yellow-300 hover:bg-yellow-400 text-black font-bold px-6 py-2 rounded shadow-md"
+          >
+            Get Premium
+          </Button>
         </div>
-        
-        {/* CTA Button */}
-        <Button 
-          onClick={() => navigate('/premium')}
-          className="bg-yellow-300 hover:bg-yellow-400 text-black font-bold px-6 py-2 rounded shadow-md"
-        >
-          Get Premium
-        </Button>
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-black hover:text-gray-700 transition-colors"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-black hover:text-gray-700 transition-colors"
           aria-label="Close banner"
         >
-          <X className="w-6 h-6" />
+          <X className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
     </div>
