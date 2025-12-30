@@ -6,11 +6,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Check, Star, BookOpen, TrendingUp, Target, Users, Lightbulb, Award, Brain, Calculator, BarChart3, FileText, Building2, GraduationCap, Dices, Coins, LineChart, Ruler, Grid3x3, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PromoBanner from "@/components/PromoBanner";
 
 import Autoplay from "embla-carousel-autoplay";
 const CourseDetail = () => {
   const navigate = useNavigate();
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showPromoBanner, setShowPromoBanner] = useState(true);
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
 
 
@@ -131,6 +133,10 @@ const CourseDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Promo Banner */}
+      {showPromoBanner && (
+        <PromoBanner onClose={() => setShowPromoBanner(false)} />
+      )}
       {/* Sticky Enrollment Bar */}
       <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ${
         showStickyBar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'

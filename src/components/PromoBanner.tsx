@@ -10,8 +10,8 @@ interface PromoBannerProps {
 const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
   const navigate = useNavigate();
   
-  // Set target date to January 5, 2025
-  const targetDate = new Date("2025-01-05T23:59:59");
+  // Set target date to January 4, 2026 at 11:59 PM GMT
+  const targetDate = new Date("2026-01-04T23:59:00Z");
   
   const calculateTimeLeft = () => {
     const now = new Date();
@@ -54,7 +54,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
             NEW YEAR'S SALE
           </h2>
           <p className="text-sm md:text-base font-bold">
-            30% OFF
+            LIMITED TIME 30% OFF
           </p>
         </div>
         
