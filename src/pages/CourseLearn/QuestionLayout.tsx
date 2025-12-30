@@ -31,7 +31,7 @@ function renderRichCMS(text?: string | null) {
      * - Also match <img />
      */
     const tokenRegex =
-        /((?<!\\)\$\$[\s\S]+?(?<!\\)\$\$|(?<!\\)\$[^$]+?(?<!\\)\$|<img\b[^>]*>)/g;
+        /((?<!\\)\$\$[\s\S]+?(?<!\\)\$\$|(?<!\\)\$[^$]+?(?<!\\)\$|<img\b[^>]*>|<link\b[^>]*\/>)/g;
 
     const parts = normalized.split(tokenRegex).filter(Boolean);
 
@@ -81,6 +81,28 @@ function renderRichCMS(text?: string | null) {
                 </div>
             );
         }
+
+        // ---------- LINK ----------
+        if (part.trim().startsWith("<link")) {
+            const href = (part.match(/href="([^"]+)"/i) || [])[1];
+            const text = (part.match(/text="([^"]+)"/i) || [])[1] || href;
+            const target = (part.match(/target="([^"]+)"/i) || [])[1] || "_self";
+
+            if (!href) return null;
+
+            return (
+                <a
+                    key={idx}
+                    href={href}
+                    target={target}
+                    rel={target === "_blank" ? "noopener noreferrer" : undefined}
+                    className="text-primary underline underline-offset-4 hover:text-primary/80 inline"
+                >
+                    {text}
+                </a>
+            );
+        }
+
 
         // ---------- PLAIN TEXT ----------
         // Unescape \$ → $
