@@ -9,12 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Helmet } from "react-helmet-async";
 import Autoplay from "embla-carousel-autoplay";
+import PromoBanner from "@/components/PromoBanner";
 
 const CourseDetail = () => {
   const navigate = useNavigate();
   const [showStickyBar, setShowStickyBar] = useState(false);
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
   const { userProfile } = useAuth();
+  const [showBanner, setShowBanner] = useState(true);
   const slug = window.location.pathname.split("/course/")[1];
   const courseId = 'pxeKbx6V6C2IeBy1UnWm';
 
@@ -153,6 +155,7 @@ const CourseDetail = () => {
         <meta property="og:url" content="https://quantprof.org/quant-interview-questions" />
       </Helmet>
       <div className="min-h-screen bg-background">
+        {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
         {/* Sticky Enrollment Bar */}
         <div className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ${showStickyBar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
           }`}>

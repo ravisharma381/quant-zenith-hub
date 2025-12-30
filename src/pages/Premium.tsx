@@ -14,6 +14,7 @@ import { functions } from "@/firebase/config";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import PromoBanner from "@/components/PromoBanner";
 
 const planTemplates = [
   // {
@@ -38,6 +39,7 @@ const planTemplates = [
     description: "Access all premium features for one year, with no automatic renewal and a 30-day, no-questions-asked full refund.",
     originalPrice: "$360",
     price: "$199",
+    discount: "LIMITED TIME 30% OFF",
     period: "/year",
     buttonColor: "bg-purple-600 hover:bg-purple-700",
     borderColor: "border-purple-500 hover:border-purple-600",
@@ -57,6 +59,7 @@ const planTemplates = [
     description: "Get lifetime access to all premium features with a one-time payment and a 60-day, no-questions-asked full refund.",
     originalPrice: "$599",
     price: "$399",
+    discount: "LIMITED TIME 30% OFF",
     period: " one-time",
     borderColor: "border-amber-500 hover:border-amber-600",
     buttonColor: "bg-amber-600 hover:bg-amber-700",
@@ -134,6 +137,7 @@ const Premium = () => {
   const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number }>>({});
   const [loading, setLoading] = useState(true);
   const [payInitiated, setPayInitiated] = useState<string | null>(null);
+  const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -235,6 +239,7 @@ const Premium = () => {
         />
       </Helmet>
       <div className="min-h-screen bg-background">
+        {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-5xl mx-auto text-center mb-12">
@@ -274,9 +279,14 @@ const Premium = () => {
                         </>
                       ) : (
                         <>
-                          <span className="text-muted-foreground line-through text-sm">
-                            {plan.originalPrice}
-                          </span>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-muted-foreground line-through text-sm">
+                              {plan.originalPrice}
+                            </span>
+                            <Badge className="bg-green-500 text-white border-0 text-xs px-2 py-0.5 font-bold">
+                              {plan.discount}
+                            </Badge>
+                          </div>
                           <div className="flex items-baseline">
                             <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                             <span className="text-muted-foreground ml-1">{plan.period}</span>
