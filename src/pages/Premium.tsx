@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Lightbulb, BookOpen, Check, RefreshCcw, GraduationCap, ListMusic } from "lucide-react";
+import PromoBanner from "@/components/PromoBanner";
 
 const Premium = () => {
   const navigate = useNavigate();
+  const [showBanner, setShowBanner] = useState(true);
+  
   const plans = [
     {
       name: "Yearly",
       description: "Our most popular plan grants access to all premium features.",
-      originalPrice: "$360",
+      originalPrice: "$285",
       price: "$199",
       period: "/year",
+      discount: "30% OFF",
       buttonColor: "bg-purple-600 hover:bg-purple-700",
       borderColor: "border-purple-500",
       featured: true,
@@ -28,9 +32,10 @@ const Premium = () => {
     {
       name: "Lifetime",
       description: "Get lifetime access to all premium features with a one-time payment.",
-      originalPrice: "$599",
+      originalPrice: "$570",
       price: "$399",
       period: " one-time",
+      discount: "30% OFF",
       buttonColor: "bg-foreground hover:bg-foreground/90",
       borderColor: "border-border",
       featured: false,
@@ -105,6 +110,9 @@ const Premium = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Promo Banner */}
+      {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
+      
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-5xl mx-auto text-center mb-12">
@@ -138,7 +146,12 @@ const Premium = () => {
                   {plan.description}
                 </p>
                 <div className="mb-6">
-                  <span className="text-muted-foreground line-through text-sm">{plan.originalPrice}</span>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-muted-foreground line-through text-sm">{plan.originalPrice}</span>
+                    <Badge className="bg-green-500 text-white border-0 text-xs px-2 py-0.5 font-bold">
+                      {plan.discount}
+                    </Badge>
+                  </div>
                   <div className="flex items-baseline">
                     <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                     <span className="text-muted-foreground ml-1">{plan.period}</span>
