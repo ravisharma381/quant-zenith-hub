@@ -22,7 +22,6 @@ import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { fireRandomCelebration } from "@/lib/confetti";
-import PromoBanner from "@/components/PromoBanner";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -39,7 +38,6 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -140,7 +138,6 @@ const Index = () => {
         <meta name="description" content="Practice quant interview questions frequently asked at top firms." />
       </Helmet>
       {/* Hero Section */}
-      {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-7xl relative z-10">
