@@ -39,6 +39,10 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
     return () => clearInterval(timer);
   }, []);
 
+  if (new Date().getTime() > targetDate.getTime()) {
+    return null; // Don't render the banner if the target date has passed
+  }
+
   return (
     <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black py-3 px-4 relative">
       <div className="container mx-auto flex items-center justify-center gap-4 md:gap-8 pr-8">
