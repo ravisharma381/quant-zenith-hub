@@ -359,7 +359,7 @@ const Problems: React.FC = () => {
               <label className="block text-sm font-medium text-foreground mb-2">Search</label>
               <Input
                 className="w-full"
-                placeholder="Search (prefix)..."
+                placeholder="Search"
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               />
