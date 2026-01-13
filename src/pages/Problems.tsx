@@ -129,24 +129,34 @@ const Problems: React.FC = () => {
     const c: any[] = [
       where("courseId", "==", PROBLEMS_COURSE_ID),
     ];
-    if (searchTerm.trim().length > 0) {
-      const term = searchTerm.trim().toLowerCase();
 
+    const term = searchTerm.trim().toLowerCase();
+
+    if (term.length > 0) {
       c.push(
         where("normalizedTitle", ">=", term),
-        where("normalizedTitle", "<=", term + "\uf8ff")
+        where("normalizedTitle", "<=", term + "\uf8ff"),
+        orderBy("normalizedTitle")
       );
     }
+
     if (selectedTopic !== "All") {
       c.push(where("topic", "==", selectedTopic));
     }
 
     if (selectedDifficulty !== "All") {
-      c.push(where("level", "==", parseInt(selectedDifficulty.replace("Level ", ""), 10)));
+      c.push(
+        where(
+          "level",
+          "==",
+          Number(selectedDifficulty.replace("Level ", ""))
+        )
+      );
     }
 
     return c;
   }
+
 
   /* ---------------- Count ---------------- */
 
