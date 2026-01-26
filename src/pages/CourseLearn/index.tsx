@@ -221,7 +221,7 @@ const CourseLearnPage: React.FC = () => {
 
     if (chapters.length === 0) {
         return (
-            <div className="min-h-screen bg-black text-white">
+            <div className="min-h-screen text-white">
                 <Navigation />
 
                 <div className="min-h-[calc(100vh-68px)] flex items-center justify-center px-6">
