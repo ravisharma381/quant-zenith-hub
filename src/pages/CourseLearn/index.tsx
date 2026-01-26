@@ -18,6 +18,7 @@ import CourseSidebar from "./CourseSidebar";
 import CourseContent from "./CourseContent";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Lock } from "lucide-react";
 
 const CourseLearnPage: React.FC = () => {
     const { courseId: routeCourseId, topicId: routeTopicId } =
@@ -222,11 +223,48 @@ const CourseLearnPage: React.FC = () => {
         return (
             <div className="min-h-screen bg-black text-white">
                 <Navigation />
-                <div className="p-8">No chapter found in this course.</div>
-                <Button onClick={() => navigate('/premium')}>Purchase To Continue</Button>
+
+                <div className="min-h-[calc(100vh-68px)] flex items-center justify-center px-6">
+                    <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-6">
+                        {/* Header */}
+                        <div className="flex items-center gap-2 mb-3">
+                            <Lock className="h-5 w-5 text-purple-400" />
+                            <h2 className="text-lg font-semibold">
+                                Upgrade to Premium
+                            </h2>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-sm text-white/70 leading-relaxed">
+                            This content is locked. Upgrade to Premium to access
+                            1,000+ high-quality problems and in-depth courses, and
+                            prepare efficiently for quant interviews.
+                        </p>
+
+                        {/* Actions */}
+                        <div className="flex justify-end gap-3 mt-6">
+                            {/* <Button
+                                variant="outline"
+                                className="border-white/20 text-white hover:bg-white/10"
+                                onClick={() => navigate(-1)}
+                            >
+                                Maybe Later
+                            </Button> */}
+
+                            <Button
+                                className="bg-purple-600 hover:bg-purple-700"
+                                onClick={() => navigate('/premium')}
+                            >
+                                Upgrade Now
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
+
+
 
     return (
         <TooltipProvider delayDuration={0}>

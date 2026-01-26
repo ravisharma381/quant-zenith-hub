@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Circle } from "lucide-react";
+import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Circle, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc, setDoc, query, where, limit, collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
@@ -231,9 +231,34 @@ const ProblemDetail = () => {
 
   if (!topic) {
     return (
-      <div className="container mx-auto py-20 text-center text-foreground">
-        <h1 className="text-2xl font-bold mb-4">Problem Not Found</h1>
-        <p className="text-muted-foreground">This problem does not exist.</p>
+      <div className="min-h-[calc(100vh-68px)] flex items-center justify-center px-6">
+        <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-6">
+          {/* Header */}
+          <div className="flex items-center gap-2 mb-3">
+            <Lock className="h-5 w-5 text-purple-400" />
+            <h2 className="text-lg font-semibold">
+              Upgrade to Premium
+            </h2>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-white/70 leading-relaxed">
+            This content is locked. Upgrade to Premium to access
+            1,000+ high-quality problems and in-depth courses, and
+            prepare efficiently for quant interviews.
+          </p>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 mt-6">
+
+            <Button
+              className="bg-purple-600 hover:bg-purple-700"
+              onClick={() => navigate('/premium')}
+            >
+              Upgrade Now
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }

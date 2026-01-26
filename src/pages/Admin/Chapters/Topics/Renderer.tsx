@@ -132,8 +132,8 @@ const InputQuestion = ({
         const user = Number(val.trim());
 
         if (!Number.isNaN(expected) && !Number.isNaN(user)) {
-            const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
-            return Math.abs(user - expected) <= epsilon;
+            // const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
+            return expected === user;
         }
 
         return val.trim() === (answer ?? "").trim();
@@ -221,7 +221,7 @@ const Callout = ({
         red: { border: "#ef4444", bg: "rgba(239,68,68,0.12)" }
     };
 
-    let style: any = {
+    const style: any = {
         borderLeftWidth: "4px",
         padding: "1.25rem",
         borderRadius: "0 0.5rem 0.5rem 0"

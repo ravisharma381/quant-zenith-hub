@@ -140,8 +140,8 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
         let value = false
 
         if (!Number.isNaN(expected) && !Number.isNaN(user)) {
-            const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
-            value = Math.abs(user - expected) <= epsilon;
+            // const epsilon = Math.max(0.02 * Math.abs(expected), 1e-9);
+            value = expected === user
         } else {
             value = answer.trim() === (topic.answer ?? "").trim();
         }
