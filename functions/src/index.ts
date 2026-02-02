@@ -553,7 +553,10 @@ export const razorpayWebhook = onRequest(
         if (txnData && txnData.planType && txnData.userId) {
           const uid = txnData.userId;
 
-          const purchasedAtTs = admin.firestore.Timestamp.now();
+          const purchasedAtTs =
+            (txnData.createdAt instanceof admin.firestore.Timestamp)
+              ? txnData.createdAt
+              : admin.firestore.Timestamp.now();
           const expiresAtIso = computeExpiryTimestamp(purchasedAtTs, txnData.planType);
 
           // NEW: Write expiry to transaction
