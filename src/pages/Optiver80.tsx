@@ -99,11 +99,24 @@ function generateQuestion() {
 }
 
 function generateOptions(correct: number): number[] {
+	const isInt = Number.isInteger(correct);
 	const options = new Set([correct]);
 	while (options.size < 4) {
-		const delta = Math.random() < 0.5 ? rand1Dec(0.1, 2) : randInt(1, 5);
-		const fake = Math.random() < 0.5 ? correct + delta : correct - delta;
-		options.add(Number(fake.toFixed(2)));
+		let fake: number;
+		if (isInt) {
+			// integer-only traps
+			const delta = randInt(1, 5);
+			fake = Math.random() < 0.5 ? correct + delta : correct - delta;
+		} else {
+			// decimal-only traps (1 or 2 decimals)
+			const delta = rand1Dec(0.1, 2);
+			fake = Math.random() < 0.5 ? correct + delta : correct - delta;
+			fake = Math.round(fake * 100) / 100;
+		}
+		if (!Number.isFinite(fake)) continue;
+		if (fake === correct) continue;
+		if (fake < -100 || fake > 500) continue;
+		options.add(fake);
 	}
 	return shuffle([...options]);
 }
