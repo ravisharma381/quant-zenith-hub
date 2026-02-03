@@ -1,73 +1,97 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Trophy, Clock, Zap, Timer, Rocket, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
 import CountdownTimer from "@/components/CountdownTimer";
 
+type DifficultyKey = "easy" | "medium" | "hard";
+type OpKey = "+" | "-" | "*" | "/";
+
+const RANGES = {
+  easy: {
+    "+": { a: [1, 30], b: [1, 30] },
+    "-": { a: [1, 30], b: [1, 30] },
+    "*": { a: [1, 15], b: [1, 15] },
+    "/": { b: [1, 15], ans: [1, 15] },
+  },
+  medium: {
+    "+": { a: [10, 99], b: [10, 99] },
+    "-": { a: [10, 99], b: [1, 99] },
+    "*": { a: [2, 49], b: [2, 49] },
+    "/": { b: [2, 49], ans: [2, 49] },
+  },
+  hard: {
+    "+": { a: [99, 999], b: [99, 999] },
+    "-": { a: [99, 999], b: [99, 999] },
+    "*": { a: [11, 99], b: [11, 99] },
+    "/": { b: [11, 99], ans: [11, 99] },
+  },
+} as const;
+
+function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateProblem(
+  diffic: DifficultyKey,
+  operations: OpKey[]
+): [OpKey, number, number, number] {
+  const op = operations[randInt(0, operations.length - 1)];
+  const cfg = RANGES[diffic][op];
+
+  let a: number, b: number, ans: number;
+  if (op === "+") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = a + b;
+  } else if (op === "-") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    if (b > a) [a, b] = [b, a];
+    ans = a - b;
+  } else if (op === "*") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = a * b;
+  } else {
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = randInt(cfg.ans[0], cfg.ans[1]);
+    a = b * ans;
+  }
+  return [op, a, b, ans];
+}
+
+const OP_UI_MAP = { "+": "+", "-": "-", "*": "×" as const, "/": "÷" as const };
+
 const ArithmeticPro = () => {
   const navigate = useNavigate();
   const [gameState, setGameState] = useState<'setup' | 'countdown' | 'playing' | 'finished'>('setup');
   const [countdown, setCountdown] = useState(3);
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
+  const [timeLeft, setTimeLeft] = useState(180);
   const [score, setScore] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState({ a: 0, b: 0, operation: '+', answer: 0 });
+  const [currentQuestion, setCurrentQuestion] = useState<{ a: number; b: number; operation: string; answer: number }>({ a: 0, b: 0, operation: '+', answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
-  // Game setup state
   const [selectedDifficulty, setSelectedDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Medium');
   const [selectedDuration, setSelectedDuration] = useState<60 | 120 | 180>(180);
   const [selectedOps, setSelectedOps] = useState<Array<'+' | '-' | '×' | '÷'>>(['+', '-', '×', '÷']);
 
-  // Green theme colors
   const themeColors = {
     primary: "hsl(122, 97%, 50%)",
     primaryRgb: "34, 197, 94",
-    primaryForeground: "hsl(220, 13%, 8%)"
+    primaryForeground: "hsl(220, 13%, 8%)",
   };
 
   const generateQuestion = useCallback(() => {
-    const operations = selectedOps.length ? selectedOps : ['+'];
-    const operation = operations[Math.floor(Math.random() * operations.length)];
-    let a = 0, b = 0, answer = 0;
-
-    const ranges = (() => {
-      switch (selectedDifficulty) {
-        case 'Easy':
-          return { addSubMax: 60, mulMaxA: 12, mulMaxB: 12 };
-        case 'Hard':
-          return { addSubMax: 200, mulMaxA: 20, mulMaxB: 20 };
-        default:
-          return { addSubMax: 100, mulMaxA: 15, mulMaxB: 15 };
-      }
-    })();
-
-    switch (operation) {
-      case '+':
-        a = Math.floor(Math.random() * ranges.addSubMax) + 1;
-        b = Math.floor(Math.random() * ranges.addSubMax) + 1;
-        answer = a + b;
-        break;
-      case '-':
-        a = Math.floor(Math.random() * ranges.addSubMax) + Math.floor(ranges.addSubMax / 2);
-        b = Math.floor(Math.random() * Math.floor(ranges.addSubMax / 2)) + 1;
-        answer = a - b;
-        break;
-      case '×':
-        a = Math.floor(Math.random() * ranges.mulMaxA) + 1;
-        b = Math.floor(Math.random() * ranges.mulMaxB) + 1;
-        answer = a * b;
-        break;
-      case '÷':
-        answer = Math.floor(Math.random() * ranges.mulMaxA) + 1;
-        b = Math.floor(Math.random() * Math.max(2, ranges.mulMaxB)) + 1;
-        a = answer * b;
-        break;
-      default:
-        a = b = answer = 0;
-    }
-
+    const ops: OpKey[] = selectedOps.length
+      ? (selectedOps.map((o) => (o === '×' ? '*' : o === '÷' ? '/' : o)) as OpKey[])
+      : ['+'];
+    const diffic: DifficultyKey =
+      selectedDifficulty === 'Easy' ? 'easy' : selectedDifficulty === 'Hard' ? 'hard' : 'medium';
+    const [op, a, b, answer] = generateProblem(diffic, ops);
+    const operation = OP_UI_MAP[op];
     setCurrentQuestion({ a, b, operation, answer });
   }, [selectedDifficulty, selectedOps]);
 
