@@ -42,10 +42,10 @@ function calculateMoM(current = 0, previous = 0) {
 }
 
 // Frontend-only estimate
-function calculateExpectedNetRevenue(gross = 0) {
-    if (!gross) return 0;
-    return Math.max(Math.round(gross * (1 - 0.044)) - 30, 0);
-}
+// function calculateExpectedNetRevenue(gross = 0) {
+//     if (!gross) return 0;
+//     return Math.max(Math.round(gross * (1 - 0.044)) - 30, 0);
+// }
 
 /* ---------------- KPI CARD ---------------- */
 
@@ -174,10 +174,10 @@ const OverviewTab: React.FC = () => {
 
     const mom = calculateMoM(thisMonthRevenue, lastMonthRevenue);
 
-    const expectedActualRevenue = useMemo(
-        () => calculateExpectedNetRevenue(stats?.lifetimeRevenue ?? 0),
-        [stats?.lifetimeRevenue]
-    );
+    // const expectedActualRevenue = useMemo(
+    //     () => calculateExpectedNetRevenue(stats?.lifetimeRevenue ?? 0),
+    //     [stats?.lifetimeRevenue]
+    // );
 
     if (!stats) {
         return <OverviewSkeleton />;
@@ -245,14 +245,14 @@ const OverviewTab: React.FC = () => {
                 />
 
                 {/* Expected Net Revenue – BIG */}
-                <KpiCard
+                {/* <KpiCard
                     label="Actual Revenue (Expected)"
                     value={formatCurrency(expectedActualRevenue)}
                     icon={<Wallet className="w-6 h-6" />}
                     accent="emerald-500"
                     className="col-span-12 md:col-span-6"
                     subtext="Estimated after PayPal fees"
-                />
+                /> */}
             </div>
         </div>
     );

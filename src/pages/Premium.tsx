@@ -139,7 +139,7 @@ const Premium = () => {
   const [payInitiated, setPayInitiated] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, userProfile, setRerender } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
@@ -179,9 +179,11 @@ const Premium = () => {
   const handleGetStarted = async (planName: string) => {
     const encodedPlan = encodeURIComponent(planName);
 
-    // Require login
+    // 🔒 Require login
     if (!user) {
-      navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
+      navigate(
+        `/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`
+      );
       return;
     }
 
@@ -189,31 +191,114 @@ const Premium = () => {
     setPayInitiated(planName);
 
     try {
-      const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
+      const createPremiumOrder = httpsCallable(
+        functions,
+        "createPremiumOrder"
+      );
 
-      const resp: any = await createPayPalOrder({
-        planType: planName,
-      });
+      const resp = await createPremiumOrder({ planType: planName });
 
-      const payload = resp?.data?.data;
-      if (!payload?.approvalUrl) {
-        throw new Error("PayPal approval URL not returned");
+      const result = resp.data as {
+        ok: boolean;
+        data?: {
+          orderId: string;
+          keyId: string;
+          amount: number;
+          currency: string;
+        };
+      };
+
+      if (!result.ok || !result.data) {
+        console.error("createPremiumOrder invalid response:", resp);
+        throw new Error("Invalid Razorpay order response");
       }
 
-      // Open PayPal checkout
-      window.open(payload.approvalUrl, "_blank");
+      const { orderId, keyId, amount, currency } = result.data;
+
+      const options = {
+        key: keyId,
+        order_id: orderId,
+        amount,
+        currency,
+        image: "https://quantprof.org/favicon-96x96.png",
+        name: "QuantProf",
+        description: `${planName} Premium Access`,
+
+        handler: () => {
+          navigate("/?success=true", { replace: true });
+          setRerender(true);
+        },
+
+        modal: {
+          ondismiss: () => {
+            setPayInitiated(null);
+          },
+        },
+
+        theme: {
+          color: "hsl(270,95%,60%)",
+        },
+        prefill: {
+          email: userProfile?.email,
+          contact: "+14155552671",
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
 
     } catch (err: any) {
-      console.error("PayPal checkout failed", err);
+      console.error("Razorpay checkout failed:", err);
       toast({
         title: "Payment failed",
-        description: err?.message || "Unable to start PayPal checkout",
+        description: err?.message || "Unable to start Razorpay checkout",
         variant: "destructive",
       });
     } finally {
       setPayInitiated(null);
     }
   };
+
+
+
+  // const handleGetStarted = async (planName: string) => {
+  //   const encodedPlan = encodeURIComponent(planName);
+
+  //   // Require login
+  //   if (!user) {
+  //     navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
+  //     return;
+  //   }
+
+  //   if (payInitiated) return;
+  //   setPayInitiated(planName);
+
+  //   try {
+  //     const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
+
+  //     const resp: any = await createPayPalOrder({
+  //       planType: planName,
+  //     });
+
+  //     const payload = resp?.data?.data;
+  //     if (!payload?.approvalUrl) {
+  //       throw new Error("PayPal approval URL not returned");
+  //     }
+
+  //     // Open PayPal checkout
+  //     window.open(payload.approvalUrl, "_blank");
+
+  //   } catch (err: any) {
+  //     console.error("PayPal checkout failed", err);
+  //     toast({
+  //       title: "Payment failed",
+  //       description: err?.message || "Unable to start PayPal checkout",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setPayInitiated(null);
+  //   }
+  // };
 
   const plans = planTemplates.map((tpl) => {
     const found = pricingMap[tpl.name.toLowerCase()];
@@ -308,7 +393,7 @@ const Premium = () => {
                       disabled={loading || payInitiated !== null}
                       onClick={() => handleGetStarted(plan.name)}
                     >
-                      {payInitiated === plan.name ? "Redirecting to PayPal…" : "Get Started"}
+                      {payInitiated === plan.name ? "Initiating Payment…" : "Get Started"}
                     </Button>
                   </div>
 
