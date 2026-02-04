@@ -81,7 +81,7 @@ const SequencesSetup = () => {
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
             </Button>
             <Button
-              onClick={() => navigate(`/games/sequences-pro?duration=${selectedDuration}`)}
+              onClick={() => navigate(`/games/sequences-pro?duration=${selectedDuration}&difficulty=${selectedDifficulty.toLowerCase()}`)}
               className={`px-8 ${theme.buttonStyles}`}
             >
               Start Now

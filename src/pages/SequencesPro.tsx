@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Trophy, Clock, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getGameTheme } from "@/lib/gameTheme";
 import CountdownTimer from "@/components/CountdownTimer";
+import { createSequenceQuestion, type Difficulty } from "@/lib/sequencesProLogic";
 
 const SequencesPro = () => {
   const navigate = useNavigate();
@@ -12,11 +12,16 @@ const SequencesPro = () => {
   const [countdown, setCountdown] = useState(3);
   const [timeLeft, setTimeLeft] = useState(() => {
     const params = new URLSearchParams(location.search);
-    const d = parseInt(params.get('duration') || '300', 10);
-    return isNaN(d) ? 300 : d; // default 5 minutes
+    const d = parseInt(params.get('duration') || '180', 10);
+    return isNaN(d) ? 180 : d;
+  });
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => {
+    const params = new URLSearchParams(location.search);
+    const d = (params.get('difficulty') || 'medium').toLowerCase();
+    return (d === 'easy' || d === 'medium' || d === 'hard') ? d : 'medium';
   });
   const [score, setScore] = useState(0);
-  const [currentSequence, setCurrentSequence] = useState<{ sequence: number[], answer: number, type: string }>({ sequence: [], answer: 0, type: '' });
+  const [currentSequence, setCurrentSequence] = useState<{ sequence: number[]; answer: number }>({ sequence: [], answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
@@ -28,46 +33,9 @@ const SequencesPro = () => {
   };
 
   const generateSequence = useCallback(() => {
-    const types = ['arithmetic', 'geometric', 'fibonacci', 'squares', 'cubes'];
-    const type = types[Math.floor(Math.random() * types.length)];
-    let sequence: number[] = [];
-    let answer = 0;
-
-    switch (type) {
-      case 'arithmetic': {
-        const diff = Math.floor(Math.random() * 10) + 1;
-        const start = Math.floor(Math.random() * 20) + 1;
-        sequence = [start, start + diff, start + 2*diff, start + 3*diff, start + 4*diff];
-        answer = start + 5*diff;
-        break;
-      }
-      case 'geometric': {
-        const ratio = Math.floor(Math.random() * 3) + 2;
-        const base = Math.floor(Math.random() * 5) + 1;
-        sequence = [base, base*ratio, base*ratio*ratio, base*ratio*ratio*ratio];
-        answer = base * Math.pow(ratio, 4);
-        break;
-      }
-      case 'fibonacci':
-        sequence = [1, 1, 2, 3, 5];
-        answer = 8;
-        break;
-      case 'squares': {
-        const n = Math.floor(Math.random() * 3) + 2;
-        sequence = [n*n, (n+1)*(n+1), (n+2)*(n+2), (n+3)*(n+3)];
-        answer = (n+4)*(n+4);
-        break;
-      }
-      case 'cubes': {
-        const m = Math.floor(Math.random() * 3) + 2;
-        sequence = [m*m*m, (m+1)*(m+1)*(m+1), (m+2)*(m+2)*(m+2)];
-        answer = (m+3)*(m+3)*(m+3);
-        break;
-      }
-    }
-
-    setCurrentSequence({ sequence, answer, type });
-  }, []);
+    const { question, answer } = createSequenceQuestion(difficulty, 5);
+    setCurrentSequence({ sequence: question, answer });
+  }, [difficulty]);
 
   useEffect(() => {
     if (gameState === 'countdown' && countdown > 1) {
