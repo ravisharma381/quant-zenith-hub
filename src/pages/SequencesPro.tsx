@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, Clock } from "lucide-react";
+import { ArrowLeft, Trophy, Clock, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getGameTheme } from "@/lib/gameTheme";
+import CountdownTimer from "@/components/CountdownTimer";
+import { createSequenceQuestion, type Difficulty } from "@/lib/sequencesProLogic";
 
 const SequencesPro = () => {
   const navigate = useNavigate();
@@ -13,11 +12,16 @@ const SequencesPro = () => {
   const [countdown, setCountdown] = useState(3);
   const [timeLeft, setTimeLeft] = useState(() => {
     const params = new URLSearchParams(location.search);
-    const d = parseInt(params.get('duration') || '300', 10);
-    return isNaN(d) ? 300 : d; // default 5 minutes
+    const d = parseInt(params.get('duration') || '180', 10);
+    return isNaN(d) ? 180 : d;
+  });
+  const [difficulty, setDifficulty] = useState<Difficulty>(() => {
+    const params = new URLSearchParams(location.search);
+    const d = (params.get('difficulty') || 'medium').toLowerCase();
+    return (d === 'easy' || d === 'medium' || d === 'hard') ? d : 'medium';
   });
   const [score, setScore] = useState(0);
-  const [currentSequence, setCurrentSequence] = useState<{ sequence: number[], answer: number, type: string }>({ sequence: [], answer: 0, type: '' });
+  const [currentSequence, setCurrentSequence] = useState<{ sequence: number[]; answer: number }>({ sequence: [], answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
@@ -29,54 +33,20 @@ const SequencesPro = () => {
   };
 
   const generateSequence = useCallback(() => {
-    const types = ['arithmetic', 'geometric', 'fibonacci', 'squares', 'cubes'];
-    const type = types[Math.floor(Math.random() * types.length)];
-    let sequence: number[] = [];
-    let answer = 0;
-
-    switch (type) {
-      case 'arithmetic': {
-        const diff = Math.floor(Math.random() * 10) + 1;
-        const start = Math.floor(Math.random() * 20) + 1;
-        sequence = [start, start + diff, start + 2*diff, start + 3*diff, start + 4*diff];
-        answer = start + 5*diff;
-        break;
-      }
-      case 'geometric': {
-        const ratio = Math.floor(Math.random() * 3) + 2;
-        const base = Math.floor(Math.random() * 5) + 1;
-        sequence = [base, base*ratio, base*ratio*ratio, base*ratio*ratio*ratio];
-        answer = base * Math.pow(ratio, 4);
-        break;
-      }
-      case 'fibonacci':
-        sequence = [1, 1, 2, 3, 5];
-        answer = 8;
-        break;
-      case 'squares': {
-        const n = Math.floor(Math.random() * 3) + 2;
-        sequence = [n*n, (n+1)*(n+1), (n+2)*(n+2), (n+3)*(n+3)];
-        answer = (n+4)*(n+4);
-        break;
-      }
-      case 'cubes': {
-        const m = Math.floor(Math.random() * 3) + 2;
-        sequence = [m*m*m, (m+1)*(m+1)*(m+1), (m+2)*(m+2)*(m+2)];
-        answer = (m+3)*(m+3)*(m+3);
-        break;
-      }
-    }
-
-    setCurrentSequence({ sequence, answer, type });
-  }, []);
+    const { question, answer } = createSequenceQuestion(difficulty, 5);
+    setCurrentSequence({ sequence: question, answer });
+  }, [difficulty]);
 
   useEffect(() => {
-    if (gameState === 'countdown' && countdown > 0) {
+    if (gameState === 'countdown' && countdown > 1) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (gameState === 'countdown' && countdown === 0) {
-      setGameState('playing');
-      generateSequence();
+    } else if (gameState === 'countdown' && countdown === 1) {
+      const timer = setTimeout(() => {
+        setGameState('playing');
+        generateSequence();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [gameState, countdown, generateSequence]);
 
@@ -108,18 +78,12 @@ const SequencesPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Sequences Pro</h1>
-          <div 
-            className="text-8xl font-bold mb-4 animate-pulse"
-            style={{ color: themeColors.primary }}
-          >
-            {countdown || "GO!"}
-          </div>
-          <p className="text-muted-foreground">Find the pattern and complete the sequence!</p>
-        </div>
-      </div>
+      <CountdownTimer
+        countdown={countdown}
+        color={themeColors.primary}
+        title="Sequences Pro"
+        subtitle="Find the pattern and complete the sequence!"
+      />
     );
   }
 
@@ -127,13 +91,13 @@ const SequencesPro = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <Trophy 
-            className="w-16 h-16 mx-auto mb-6" 
+          <Trophy
+            className="w-16 h-16 mx-auto mb-6"
             style={{ color: themeColors.primary }}
           />
           <h1 className="text-4xl font-bold text-foreground mb-4">Game Over!</h1>
           <div className="bg-card rounded-xl p-6 mb-6 border">
-            <div 
+            <div
               className="text-3xl font-bold mb-2"
               style={{ color: themeColors.primary }}
             >
@@ -145,10 +109,11 @@ const SequencesPro = () => {
             </div>
           </div>
           <div className="space-y-4">
-            <Button 
-              onClick={() => window.location.reload()} 
-              className="w-full"
-              style={{ 
+            <Button
+              onClick={() => window.location.reload()}
+              variant="clean"
+              className="w-full h-10 px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"
+              style={{
                 backgroundColor: themeColors.primary,
                 color: themeColors.primaryForeground
               }}
@@ -165,86 +130,60 @@ const SequencesPro = () => {
     );
   }
 
-  const totalDuration = (() => {
-    const d = parseInt(new URLSearchParams(location.search).get('duration') || `${timeLeft}`, 10);
-    return isNaN(d) || d <= 0 ? timeLeft : d;
-  })();
-
   return (
-    <div className="min-h-screen bg-background p-2 md:p-4">
-      <div className="container mx-auto max-w-xl md:max-w-2xl">
+    <div className="min-h-screen bg-background flex justify-center pt-4 px-4">
+      <div className="w-full max-w-4xl bg-card rounded-lg border border-border flex flex-col">
         {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-4 md:mb-8">
-          <div className="justify-self-start">
-            <Button variant="ghost" onClick={() => navigate('/games')} className="text-xs md:text-sm p-1 md:p-2">
-              <ArrowLeft className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
-              Back
-            </Button>
+        <div className="px-4 md:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-foreground">
+            <Star className="w-5 h-5" />
+            <span className="font-medium">{score} points</span>
           </div>
-          <div 
-            className="justify-self-center text-lg md:text-2xl font-bold text-center"
-            style={{ color: themeColors.primary }}
-          >
-            Score: {score}
+          <div className="flex items-center gap-2 text-foreground">
+            <Clock className="w-5 h-5" />
+            <span className="font-medium">{formatTime(timeLeft)}</span>
           </div>
-          <div className="justify-self-end flex items-center">
-            <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-muted-foreground" />
-            <span className="font-mono text-sm md:text-lg">{formatTime(timeLeft)}</span>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div className="mb-4 md:mb-8">
-          <div 
-            className="w-full h-2 rounded-full"
-            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
-          >
-            <div 
-              className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
-              style={{ 
-                width: `${(totalDuration - timeLeft) / totalDuration * 100}%`,
-                backgroundColor: themeColors.primary
-              }}
-            />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.location.reload()}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <RotateCcw className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={() => navigate('/games')}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <Undo2 className="w-5 h-5 text-muted-foreground" />
+            </button>
           </div>
         </div>
 
-        {/* Question */}
-        <div 
-          className="bg-card rounded-xl p-6 md:p-12 text-center border-2 transition-all duration-300"
-          style={{
-            borderColor: themeColors.primary,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.3)`
-          }}
-        >
-          <div className="text-lg md:text-xl font-bold text-foreground mb-4">What comes next?</div>
-          <div className="text-xl md:text-3xl font-bold text-foreground mb-4 md:mb-8 font-mono break-all">
-            {currentSequence.sequence.join(', ')}, ?
-          </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-            <Input
+        {/* Separator */}
+        <div className="border-t border-border/50" />
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-16">
+          <div className="text-lg text-muted-foreground mb-6">What comes next?</div>
+          <form onSubmit={handleSubmit} className="flex items-center gap-4">
+            <span className="text-4xl md:text-6xl font-light text-foreground tracking-wide font-mono">
+              {currentSequence.sequence.join(', ')},
+            </span>
+            <input
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-lg md:text-xl h-10 md:h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              style={{
-                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
-                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
-              }}
-              placeholder="Next number"
+              className="w-24 md:w-32 h-14 md:h-16 text-2xl md:text-3xl text-center bg-transparent rounded-md [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none"
+              style={{ border: `2px solid ${themeColors.primary}` }}
               autoFocus
             />
-            {(() => { const theme = getGameTheme(2); return (
-              <Button 
-                type="submit" 
-                className={`mx-auto px-6 md:px-8 ${theme.buttonStyles} disabled:opacity-100 text-sm md:text-base`}
-                disabled={!userAnswer}
-              >
-                Submit Answer
-              </Button>
-            )})()}
           </form>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-border/50" />
+        <div className="px-4 py-4 text-center">
+          <span className="text-muted-foreground text-sm">Sequences Pro</span>
         </div>
       </div>
     </div>

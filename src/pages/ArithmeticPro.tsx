@@ -1,84 +1,110 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, Clock, Zap, Timer, Rocket } from "lucide-react";
+import { ArrowLeft, Trophy, Clock, Zap, Timer, Rocket, Star, RotateCcw, Undo2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getGameTheme } from "@/lib/gameTheme";
+import CountdownTimer from "@/components/CountdownTimer";
+
+type DifficultyKey = "easy" | "medium" | "hard";
+type OpKey = "+" | "-" | "*" | "/";
+
+const RANGES = {
+  easy: {
+    "+": { a: [1, 30], b: [1, 30] },
+    "-": { a: [1, 30], b: [1, 30] },
+    "*": { a: [1, 15], b: [1, 15] },
+    "/": { b: [1, 15], ans: [1, 15] },
+  },
+  medium: {
+    "+": { a: [10, 99], b: [10, 99] },
+    "-": { a: [10, 99], b: [1, 99] },
+    "*": { a: [2, 49], b: [2, 49] },
+    "/": { b: [2, 49], ans: [2, 49] },
+  },
+  hard: {
+    "+": { a: [99, 999], b: [99, 999] },
+    "-": { a: [99, 999], b: [99, 999] },
+    "*": { a: [11, 99], b: [11, 99] },
+    "/": { b: [11, 99], ans: [11, 99] },
+  },
+} as const;
+
+function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateProblem(
+  diffic: DifficultyKey,
+  operations: OpKey[]
+): [OpKey, number, number, number] {
+  const op = operations[randInt(0, operations.length - 1)];
+  const cfg = RANGES[diffic][op];
+
+  let a: number, b: number, ans: number;
+  if (op === "+") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = a + b;
+  } else if (op === "-") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    if (b > a) [a, b] = [b, a];
+    ans = a - b;
+  } else if (op === "*") {
+    a = randInt(cfg.a[0], cfg.a[1]);
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = a * b;
+  } else {
+    b = randInt(cfg.b[0], cfg.b[1]);
+    ans = randInt(cfg.ans[0], cfg.ans[1]);
+    a = b * ans;
+  }
+  return [op, a, b, ans];
+}
+
+const OP_UI_MAP = { "+": "+", "-": "-", "*": "×" as const, "/": "÷" as const };
 
 const ArithmeticPro = () => {
   const navigate = useNavigate();
   const [gameState, setGameState] = useState<'setup' | 'countdown' | 'playing' | 'finished'>('setup');
   const [countdown, setCountdown] = useState(3);
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
+  const [timeLeft, setTimeLeft] = useState(180);
   const [score, setScore] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState({ a: 0, b: 0, operation: '+', answer: 0 });
+  const [currentQuestion, setCurrentQuestion] = useState<{ a: number; b: number; operation: string; answer: number }>({ a: 0, b: 0, operation: '+', answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
 
-  // Game setup state
   const [selectedDifficulty, setSelectedDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Medium');
   const [selectedDuration, setSelectedDuration] = useState<60 | 120 | 180>(180);
   const [selectedOps, setSelectedOps] = useState<Array<'+' | '-' | '×' | '÷'>>(['+', '-', '×', '÷']);
 
-  // Green theme colors
   const themeColors = {
     primary: "hsl(122, 97%, 50%)",
     primaryRgb: "34, 197, 94",
-    primaryForeground: "hsl(220, 13%, 8%)"
+    primaryForeground: "hsl(220, 13%, 8%)",
   };
 
   const generateQuestion = useCallback(() => {
-    const operations = selectedOps.length ? selectedOps : ['+'];
-    const operation = operations[Math.floor(Math.random() * operations.length)];
-    let a = 0, b = 0, answer = 0;
-
-    const ranges = (() => {
-      switch (selectedDifficulty) {
-        case 'Easy':
-          return { addSubMax: 60, mulMaxA: 12, mulMaxB: 12 };
-        case 'Hard':
-          return { addSubMax: 200, mulMaxA: 20, mulMaxB: 20 };
-        default:
-          return { addSubMax: 100, mulMaxA: 15, mulMaxB: 15 };
-      }
-    })();
-
-    switch (operation) {
-      case '+':
-        a = Math.floor(Math.random() * ranges.addSubMax) + 1;
-        b = Math.floor(Math.random() * ranges.addSubMax) + 1;
-        answer = a + b;
-        break;
-      case '-':
-        a = Math.floor(Math.random() * ranges.addSubMax) + Math.floor(ranges.addSubMax / 2);
-        b = Math.floor(Math.random() * Math.floor(ranges.addSubMax / 2)) + 1;
-        answer = a - b;
-        break;
-      case '×':
-        a = Math.floor(Math.random() * ranges.mulMaxA) + 1;
-        b = Math.floor(Math.random() * ranges.mulMaxB) + 1;
-        answer = a * b;
-        break;
-      case '÷':
-        answer = Math.floor(Math.random() * ranges.mulMaxA) + 1;
-        b = Math.floor(Math.random() * Math.max(2, ranges.mulMaxB)) + 1;
-        a = answer * b;
-        break;
-      default:
-        a = b = answer = 0;
-    }
-
+    const ops: OpKey[] = selectedOps.length
+      ? (selectedOps.map((o) => (o === '×' ? '*' : o === '÷' ? '/' : o)) as OpKey[])
+      : ['+'];
+    const diffic: DifficultyKey =
+      selectedDifficulty === 'Easy' ? 'easy' : selectedDifficulty === 'Hard' ? 'hard' : 'medium';
+    const [op, a, b, answer] = generateProblem(diffic, ops);
+    const operation = OP_UI_MAP[op];
     setCurrentQuestion({ a, b, operation, answer });
   }, [selectedDifficulty, selectedOps]);
 
   useEffect(() => {
-    if (gameState === 'countdown' && countdown > 0) {
+    if (gameState === 'countdown' && countdown > 1) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (gameState === 'countdown' && countdown === 0) {
-      setGameState('playing');
-      generateQuestion();
+    } else if (gameState === 'countdown' && countdown === 1) {
+      const timer = setTimeout(() => {
+        setGameState('playing');
+        generateQuestion();
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [gameState, countdown, generateQuestion]);
 
@@ -126,7 +152,7 @@ const ArithmeticPro = () => {
           <section className="mb-4 md:mb-6">
             <h2 className="text-xs md:text-sm text-muted-foreground mb-2 text-center">Choose Difficulty</h2>
             <div className="flex gap-2 md:gap-3 justify-center">
-              {(['Easy','Medium','Hard'] as const).map((d) => (
+              {(['Easy', 'Medium', 'Hard'] as const).map((d) => (
                 <Button
                   key={d}
                   variant="outline"
@@ -160,7 +186,7 @@ const ArithmeticPro = () => {
           <section className="mb-6 md:mb-8">
             <h2 className="text-xs md:text-sm text-muted-foreground mb-2 text-center">Choose Operations (minimum 1)</h2>
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:gap-3 md:justify-center">
-              {(['+','-','×','÷'] as const).map((op) => {
+              {(['+', '-', '×', '÷'] as const).map((op) => {
                 const active = isOpSelected(op);
                 return (
                   <Button
@@ -201,18 +227,12 @@ const ArithmeticPro = () => {
 
   if (gameState === 'countdown') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center -mt-20">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Quant Arithmetic Zetamac</h1>
-          <div 
-            className="text-8xl font-bold mb-4 animate-pulse"
-            style={{ color: themeColors.primary }}
-          >
-            {countdown || "GO!"}
-          </div>
-          <p className="text-muted-foreground">Get ready for rapid-fire mental math!</p>
-        </div>
-      </div>
+      <CountdownTimer
+        countdown={countdown}
+        color={themeColors.primary}
+        title="Quant Arithmetic Zetamac"
+        subtitle="Get ready for rapid-fire mental math!"
+      />
     );
   }
 
@@ -220,13 +240,13 @@ const ArithmeticPro = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <Trophy 
-            className="w-16 h-16 mx-auto mb-6" 
+          <Trophy
+            className="w-16 h-16 mx-auto mb-6"
             style={{ color: themeColors.primary }}
           />
           <h1 className="text-4xl font-bold text-foreground mb-4">Game Over!</h1>
           <div className="bg-card rounded-xl p-6 mb-6 border">
-            <div 
+            <div
               className="text-3xl font-bold mb-2"
               style={{ color: themeColors.primary }}
             >
@@ -238,10 +258,11 @@ const ArithmeticPro = () => {
             </div>
           </div>
           <div className="space-y-4">
-            <Button 
-              onClick={() => window.location.reload()} 
-              className="w-full"
-              style={{ 
+            <Button
+              onClick={() => window.location.reload()}
+              variant="clean"
+              className="w-full h-10 px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"
+              style={{
                 backgroundColor: themeColors.primary,
                 color: themeColors.primaryForeground
               }}
@@ -259,73 +280,58 @@ const ArithmeticPro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-2 md:p-4">
-      <div className="container mx-auto max-w-xl md:max-w-2xl">
+    <div className="min-h-screen bg-background flex justify-center pt-4 px-4">
+      <div className="w-full max-w-4xl bg-card rounded-lg border border-border flex flex-col">
         {/* Header */}
-        <div className="grid grid-cols-3 items-center mb-4 md:mb-8">
-          <div className="justify-self-start">
-            <div className="text-foreground font-bold text-sm md:text-base">{score} points</div>
+        <div className="px-4 md:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-foreground">
+            <Star className="w-5 h-5" />
+            <span className="font-medium">{score} points</span>
           </div>
-          <div className="justify-self-center text-lg md:text-2xl font-bold text-center">
-            Quant Arithmetic Zetamac
+          <div className="flex items-center gap-2 text-foreground">
+            <Clock className="w-5 h-5" />
+            <span className="font-medium">{timeLeft} seconds</span>
           </div>
-          <div className="justify-self-end flex items-center">
-            <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2 text-muted-foreground" />
-            <span className="font-mono text-sm md:text-lg">{formatTime(timeLeft)}</span>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div className="mb-4 md:mb-8">
-          <div 
-            className="w-full h-2 rounded-full"
-            style={{ backgroundColor: `rgba(${themeColors.primaryRgb}, 0.2)` }}
-          >
-            <div 
-              className="h-2 rounded-full transition-[width] duration-1000 ease-linear"
-              style={{ 
-                width: `${(selectedDuration - timeLeft) / selectedDuration * 100}%`,
-                backgroundColor: themeColors.primary
-              }}
-            />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.location.reload()}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <RotateCcw className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={() => navigate('/games')}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <Undo2 className="w-5 h-5 text-muted-foreground" />
+            </button>
           </div>
         </div>
 
-        {/* Question */}
-        <div 
-          className="bg-card rounded-xl p-6 md:p-12 text-center border-2 transition-all duration-300"
-          style={{
-            borderColor: `rgba(${themeColors.primaryRgb}, 0.2)`,
-            boxShadow: `0 0 30px rgba(${themeColors.primaryRgb}, 0.1)`
-          }}
-        >
-          <div className="text-2xl md:text-4xl font-bold text-foreground mb-4 md:mb-8">
-            {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} = ?
-          </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-            <Input
+        {/* Separator */}
+        <div className="border-t border-border/50" />
+
+        {/* Main Content */}
+        <div className="flex-1 flex items-center justify-center px-4 py-12 md:py-16">
+          <form onSubmit={handleSubmit} className="flex items-center gap-4">
+            <span className="text-5xl md:text-7xl font-light text-foreground tracking-wide">
+              {currentQuestion.a} {currentQuestion.operation} {currentQuestion.b} =
+            </span>
+            <input
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
-              className="text-center text-lg md:text-xl h-10 md:h-12 max-w-xs mx-auto [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              style={{
-                borderColor: `rgba(${themeColors.primaryRgb}, 0.3)`,
-                boxShadow: userAnswer ? `0 0 10px rgba(${themeColors.primaryRgb}, 0.2)` : 'none'
-              }}
-              placeholder="Your answer"
+              className="w-24 md:w-32 h-16 md:h-20 text-3xl md:text-4xl text-center bg-transparent rounded-md [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none"
+              style={{ border: `2px solid ${themeColors.primary}` }}
               autoFocus
             />
-            {(() => { const theme = getGameTheme(1); return (
-              <Button 
-                type="submit" 
-                className={`mx-auto px-6 md:px-8 ${theme.buttonStyles} text-sm md:text-base`}
-                disabled={!userAnswer}
-              >
-                Submit Answer
-              </Button>
-            )})()}
           </form>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-border/50" />
+        <div className="px-4 py-4 text-center">
+          <span className="text-muted-foreground text-sm">Quant Arithmetic Zetamac</span>
         </div>
       </div>
     </div>

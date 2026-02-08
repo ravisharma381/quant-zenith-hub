@@ -13,7 +13,7 @@ const Games = () => {
       title: "Arithmetic Zetamac",
       description: "Master mental math with rapid-fire arithmetic questions. Test your speed and accuracy!",
       icon: "±",
-      timeLimit: "3 minutes",
+      timeLimit: "1-3 minutes",
       category: "Mental Math",
       difficulty: "Custom",
       route: "/games/arithmetic-pro"
@@ -23,9 +23,9 @@ const Games = () => {
       title: "Sequences Pro",
       description: "Identify patterns and find the next number in sequences. Challenge your logical thinking!",
       icon: "⋯",
-      timeLimit: "5 minutes",
-      category: "Pattern Recognition", 
-      difficulty: "Hard",
+      timeLimit: "1-3 minutes",
+      category: "Pattern Recognition",
+      difficulty: "Custom",
       route: "/games/sequences-pro/setup"
     },
     {
@@ -35,19 +35,19 @@ const Games = () => {
       icon: "⚡",
       timeLimit: "80 seconds",
       category: "Speed Math",
-      difficulty: "Hard",
+      difficulty: "Medium",
       route: "/games/optiver-80"
     },
-    {
-      id: 6,
-      title: "Memory Sequences",
-      description: "Memorize digit sequences and reproduce them. Train your working memory and concentration!",
-      icon: "🧠",
-      timeLimit: "Varies",
-      category: "Memory",
-      difficulty: "Medium",
-      route: "/games/memory-sequences"
-    }
+    // {
+    //   id: 6,
+    //   title: "Memory Sequences",
+    //   description: "Memorize digit sequences and reproduce them. Train your working memory and concentration!",
+    //   icon: "🧠",
+    //   timeLimit: "Varies",
+    //   category: "Memory",
+    //   difficulty: "Medium",
+    //   route: "/games/memory-sequences"
+    // }
   ];
 
   const getDifficultyColor = (difficulty: string) => {
@@ -60,11 +60,11 @@ const Games = () => {
     }
   };
 
- 
+
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">        
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4">Quant Interview Games</h1>
@@ -78,8 +78,8 @@ const Games = () => {
           {games.map((game) => {
             const theme = getGameTheme(game.id);
             return (
-              <div 
-                key={game.id} 
+              <div
+                key={game.id}
                 onClick={() => navigate(game.route)}
                 className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group hover:scale-105`}
               >
@@ -87,17 +87,17 @@ const Games = () => {
                 <div className={`w-16 h-16 ${theme.iconBg} rounded-lg flex items-center justify-center mb-6 transition-colors`}>
                   <span className="text-2xl">{game.icon}</span>
                 </div>
-                
+
                 {/* Title */}
                 <h3 className={`text-xl font-bold text-foreground ${theme.titleHover} transition-colors mb-4`}>
                   {game.title}
                 </h3>
-                
+
                 {/* Description */}
                 <p className="text-muted-foreground text-sm leading-relaxed mb-6">
                   {game.description}
                 </p>
-                
+
                 {/* Badge and Time */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
@@ -113,7 +113,7 @@ const Games = () => {
                 </div>
 
                 {/* Play Button - Full Width */}
-                <Button 
+                <Button
                   className={`w-full ${theme.buttonStyles} transition-colors pointer-events-none`}
                 >
                   Play

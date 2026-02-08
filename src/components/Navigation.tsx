@@ -24,7 +24,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
 
   const navItems = [
     { name: "Problems", path: "/problems" },
-    // { name: "Games", path: "/games" },
+    { name: "Games", path: "/games" },
     // { name: "Blogs", path: "/blogs" },
   ];
 
