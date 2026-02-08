@@ -592,7 +592,7 @@ const Problems: React.FC = () => {
                 {problemsLoading && <PaginationItem><div className="w-full"><PaginationSkeleton /></div></PaginationItem>}
                 {!problemsLoading && (
                   <>
-                    <PaginationPrevious onClick={() => goToPage(currentPage - 1)} />
+                    {currentPage > 1 && <PaginationPrevious onClick={() => goToPage(currentPage - 1)} />}
                     {renderPaginationItems()}
                     <PaginationNext onClick={() => goToPage(currentPage + 1)} />
                   </>
