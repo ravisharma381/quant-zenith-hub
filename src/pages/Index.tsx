@@ -120,8 +120,8 @@ const Index = () => {
             {/* Left Side - Text Content */}
             <div className="text-center lg:text-left">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-bold mb-4 animate-fade-in leading-tight">
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Get into<br />Quant Finance
+                <span className="bg-gradient-hero bg-clip-text text-transparent animate-gradient-flow">
+                  Break into<br />Quant Finance
                 </span>
               </h1>
               <div className="h-8 mb-6">
