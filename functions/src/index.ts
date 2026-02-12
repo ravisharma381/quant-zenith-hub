@@ -246,7 +246,7 @@ export const onTopicDeleted = onDocumentDeleted(
   }
 );
 
-// -------------------- RAZORPAY & PAYPAL FUNCTIONS (typed, no any) --------------------
+// -------------------- RAZORPAY & PAYPAL FUNCTIONS (typed) --------------------
 
 type TransactionDoc = {
   userId?: string;

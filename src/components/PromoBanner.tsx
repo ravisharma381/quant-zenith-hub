@@ -11,7 +11,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   // Set target date to January 4, 2026 at 11:59 PM GMT
-  const targetDate = new Date("2026-01-08T23:59:00Z");
+  const targetDate = new Date("2026-01-31T23:59:00Z");
 
   const calculateTimeLeft = () => {
     const now = new Date();

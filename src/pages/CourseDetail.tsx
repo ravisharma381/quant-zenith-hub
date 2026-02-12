@@ -146,7 +146,7 @@ const CourseDetail = () => {
 
         <link rel="canonical" href="https://quantprof.org/quant-interview-questions" />
 
-        <meta property="og:title" content="Top Quant Interview Questions (2025)" />
+        <meta property="og:title" content="Quant Interview Masterclass" />
         <meta
           property="og:description"
           content="Solve real quant interview questions with step-by-step solutions. Probability puzzles, expected value problems, bid/ask scenarios and HFT brainteasers."
