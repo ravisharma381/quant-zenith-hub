@@ -277,13 +277,7 @@ const ProblemDetail = () => {
         {/* Actions */}
         <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
           <Button
-            onClick={() => {
-              if (backState?.fromProblems) {
-                navigate("/problems", { state: backState });
-              } else {
-                navigate("/problems");
-              }
-            }}
+            onClick={() => navigate(-1)}
             className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none"
           >
             Back to Problems

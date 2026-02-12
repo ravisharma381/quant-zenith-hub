@@ -2,7 +2,7 @@
 // Problems.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -72,6 +72,8 @@ const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 
 
 const Problems: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { user, userProfile } = useAuth();
   const isSubscribed = userProfile?.isPremium === true;
 
@@ -79,15 +81,33 @@ const Problems: React.FC = () => {
 
   const [problems, setProblems] = useState<ProblemDoc[]>([]);
   const [problemsLoading, setProblemsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("All");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("All");
+  const [searchInput, setSearchInput] = useState(
+    searchParams.get("q") ?? ""
+  );
+
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("q") ?? ""
+  );
+
+  const [selectedTopic, setSelectedTopic] = useState(
+    searchParams.get("topic") ?? "All"
+  );
+
+  const [selectedDifficulty, setSelectedDifficulty] = useState(
+    searchParams.get("level")
+      ? `Level ${searchParams.get("level")}`
+      : "All"
+  );
+
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page") ?? 1)
+  );
   const isLoggedIn = !!user;
+  const isFirstRender = useRef(true);
 
   /* ---------------- Cursor Cache ---------------- */
 
@@ -117,26 +137,20 @@ const Problems: React.FC = () => {
     return colors[topic.length % colors.length];
   };
 
-  function isPageLocked(page: number) {
+  const isPageLocked = (page: number) => {
     return !isSubscribed && page > SHOW_FREE_PAGES;
   }
 
-  function isRowLocked(globalIndex: number) {
-    return !isSubscribed && globalIndex >= SHOW_FREE_PAGES * PROBLEMS_PER_PAGE;
-  }
-
-  function buildBaseConstraints() {
-    const c: any[] = [
+  const buildCountConstraints = () => {
+    const c = [
       where("courseId", "==", PROBLEMS_COURSE_ID),
     ];
 
-    const term = searchTerm.trim().toLowerCase();
-
-    if (term.length > 0) {
+    if (searchTerm.length > 0) {
+      const term = searchTerm.toLowerCase();
       c.push(
         where("normalizedTitle", ">=", term),
-        where("normalizedTitle", "<=", term + "\uf8ff"),
-        orderBy("normalizedTitle")
+        where("normalizedTitle", "<=", term + "\uf8ff")
       );
     }
 
@@ -155,8 +169,68 @@ const Problems: React.FC = () => {
     }
 
     return c;
+  };
+
+  const buildBaseConstraints = () => {
+    const c: any[] = [
+      where("courseId", "==", PROBLEMS_COURSE_ID),
+    ];
+
+    if (searchTerm.length > 0) {
+      const term = searchTerm.toLowerCase();
+
+      c.push(
+        where("normalizedTitle", ">=", term),
+        where("normalizedTitle", "<=", term + "\uf8ff"),
+        orderBy("normalizedTitle")
+      );
+    }
+
+    if (selectedTopic !== "All") {
+      c.push(where("topic", "==", selectedTopic));
+    }
+
+    if (selectedDifficulty !== "All") {
+      c.push(
+        where("level", "==",
+          Number(selectedDifficulty.replace("Level ", ""))
+        )
+      );
+    }
+
+    return c;
   }
 
+
+  // URL STATE
+
+  useEffect(() => {
+    const params: Record<string, string> = {};
+
+    if (searchTerm) params.q = searchTerm;
+    if (selectedTopic !== "All") params.topic = selectedTopic;
+    if (selectedDifficulty !== "All")
+      params.level = selectedDifficulty.replace("Level ", "");
+    if (currentPage > 1) params.page = String(currentPage);
+
+    setSearchParams(params, { replace: true });
+  }, [searchTerm, selectedTopic, selectedDifficulty, currentPage]);
+
+  // DEBOUNCE
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const term = searchInput.trim();
+
+      // ✅ Only reset if the term actually changed
+      if (term !== searchTerm) {
+        setCurrentPage(1);
+        setSearchTerm(term);
+      }
+    }, 400);
+
+    return () => clearTimeout(id);
+  }, [searchInput, searchTerm]);
 
   /* ---------------- Count ---------------- */
 
@@ -164,19 +238,27 @@ const Problems: React.FC = () => {
     (async () => {
       const countQuery = query(
         collection(db, "problem_index"),
-        ...buildBaseConstraints()
+        ...buildCountConstraints()
       );
+
       const snap = await getCountFromServer(countQuery);
-      setTotalPages(Math.max(1, Math.ceil(snap.data().count / PROBLEMS_PER_PAGE)));
+      setTotalPages(
+        Math.max(1, Math.ceil(snap.data().count / PROBLEMS_PER_PAGE))
+      );
     })();
   }, [selectedTopic, selectedDifficulty, searchTerm]);
 
   /* ---------------- Reset cursors on filter/search ---------------- */
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     pageCursors.current.clear();
     setCurrentPage(1);
-  }, [selectedTopic, selectedDifficulty, searchTerm]);
+  }, [searchTerm, selectedTopic, selectedDifficulty]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -201,46 +283,66 @@ const Problems: React.FC = () => {
 
   /* ---------------- Page Fetch ---------------- */
 
+  async function fetchPageInternal(page: number) {
+    let q = query(
+      collection(db, "problem_index"),
+      ...buildBaseConstraints(),
+      orderBy("order", "asc"),
+      limit(PROBLEMS_PER_PAGE)
+    );
+
+    if (page > 1) {
+      const cursor = pageCursors.current.get(page - 1);
+      if (cursor) {
+        q = query(q, startAfter(cursor));
+      }
+    }
+
+    const snap = await getDocs(q);
+
+    if (snap.docs.length > 0) {
+      pageCursors.current.set(page, snap.docs[snap.docs.length - 1]);
+    }
+
+    return snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        title: data.title,
+        topic: data.topic,
+        difficulty: parseInt(data.level ?? "1", 10),
+        askedIn: Array.isArray(data.askedIn) ? data.askedIn : [],
+        order: data.order ?? 0,
+        isPrivate: data.isPrivate ?? false,
+      };
+    });
+  }
+
+  async function warmUpCursors(targetPage: number) {
+    pageCursors.current.clear();
+
+    for (let p = 1; p < targetPage; p++) {
+      await fetchPageInternal(p);
+    }
+  }
+
+
   async function fetchPage(page: number) {
     setProblemsLoading(true);
 
     try {
-      let q = query(
-        collection(db, "problem_index"),
-        ...buildBaseConstraints(),
-        orderBy("order", "asc"),
-        limit(PROBLEMS_PER_PAGE)
-      );
-      if (page > 1) {
-        const cursor = pageCursors.current.get(page - 1);
-        if (!cursor) throw new Error("Missing cursor");
-        q = query(q, startAfter(cursor));
+      if (page > 1 && !pageCursors.current.has(page - 1)) {
+        await warmUpCursors(page);
       }
 
-      const snap = await getDocs(q);
-
-      const docs = snap.docs.map((d) => {
-        const data = d.data() as any;
-        return {
-          id: d.id,
-          title: data.title,
-          topic: data.topic,
-          difficulty: parseInt(data.level ?? "1", 10),
-          askedIn: Array.isArray(data.askedIn) ? data.askedIn : [],
-          order: data.order ?? 0,
-          isPrivate: data.isPrivate ?? false
-        };
-      });
-
-      if (snap.docs.length > 0) {
-        pageCursors.current.set(page, snap.docs[snap.docs.length - 1]);
-      }
-
+      const docs = await fetchPageInternal(page);
       setProblems(docs);
     } finally {
       setProblemsLoading(false);
     }
   }
+
+
 
   /* ---------------- Progressive Navigation ---------------- */
 
@@ -248,20 +350,6 @@ const Problems: React.FC = () => {
     if (isPageLocked(page)) {
       setShowUpgradeDialog(true);
       return;
-    }
-
-    if (pageCursors.current.has(page - 1) || page === 1) {
-      setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    setProblemsLoading(true);
-
-    let p = currentPage;
-    while (p < page) {
-      await fetchPage(p + 1);
-      p++;
     }
 
     setCurrentPage(page);
@@ -370,14 +458,14 @@ const Problems: React.FC = () => {
               <Input
                 className="w-full"
                 placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                value={searchInput}
+                onChange={(e) => { setSearchInput(e.target.value); }}
               />
             </div>
 
             <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
-              <Select value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); setCurrentPage(1); }}>
+              <Select value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); }}>
                 <SelectTrigger><SelectValue placeholder="Select a topic" /></SelectTrigger>
                 <SelectContent>
                   {topics.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
@@ -387,68 +475,13 @@ const Problems: React.FC = () => {
 
             <div className="">
               <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
-              <Select value={selectedDifficulty} onValueChange={(v) => { setSelectedDifficulty(v); setCurrentPage(1); }}>
+              <Select value={selectedDifficulty} onValueChange={(v) => { setSelectedDifficulty(v); }}>
                 <SelectTrigger><SelectValue placeholder="Select difficulty" /></SelectTrigger>
                 <SelectContent>
                   {difficulties.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-
-            {/* <div className="">
-              <label className="block text-sm font-medium text-foreground mb-2">Status</label>
-              <Select value={selectedStatus} onValueChange={(v: any) => { setSelectedStatus(v); setCurrentPage(1); }}>
-                <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="Solved">Solved</SelectItem>
-                  <SelectItem value="Unsolved">Unsolved</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
-
-            <div className="flex-1" />
-
-            {/* <div className="flex items-end gap-3">
-              <div className="flex flex-col">
-                <label className="block text-sm font-medium text-foreground mb-2">Go to page</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="gotoPageInput"
-                    className="w-28 no-spinner"
-                    type="number"
-                    min={1}
-                    max={totalPages}
-                    placeholder="1"
-                    value={goToPageInput}
-                    onChange={(e) => setGoToPageInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        const page = Number((e.target as HTMLInputElement).value || 1);
-                        if (page >= 1 && page <= totalPages) handlePageClick(page);
-                      }
-                    }}
-                  />
-                  <Button onClick={() => {
-                    const page = Number(goToPageInput || 0);
-                    if (page >= 1 && page <= totalPages) handlePageClick(page);
-                  }}>Go</Button>
-                </div>
-              </div>
-
-              {anyFilterApplied && (
-                <div className="flex items-center">
-                  <Button variant="ghost" onClick={() => {
-                    setSearchTerm("");
-                    setSelectedTopic("All");
-                    setSelectedDifficulty("All");
-                    setCurrentPage(1);
-                  }}>
-                    Clear filters
-                  </Button>
-                </div>
-              )}
-            </div> */}
           </div>
           {/* Problems Table */}
           <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -486,15 +519,7 @@ const Problems: React.FC = () => {
                         setShowUpgradeDialog(true);
                         return;
                       }
-                      navigate(`/problems/${problem.id}`, {
-                        state: {
-                          fromProblems: true,
-                          page: currentPage,
-                          searchTerm,
-                          selectedTopic,
-                          selectedDifficulty,
-                        }
-                      });
+                      navigate(`/problems/${problem.id}${location.search}`);
                     }}
                   >
                     <div className="grid grid-cols-12 gap-4 relative">
