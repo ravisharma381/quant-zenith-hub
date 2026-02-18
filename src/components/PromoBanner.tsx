@@ -10,8 +10,8 @@ interface PromoBannerProps {
 const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
-  // Set target date to January 4, 2026 at 11:59 PM GMT
-  const targetDate = new Date("2026-01-31T23:59:00Z");
+  // Set target date to February 24, 2026 at 11:59 PM GMT
+  const targetDate = new Date("2026-02-23T23:59:00Z");
 
   const calculateTimeLeft = () => {
     const now = new Date();
@@ -44,19 +44,13 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
   }
 
   return (
-    <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 text-black py-3 px-4 relative">
+    <div className="bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 text-white py-3 px-4 relative">
       <div className="container mx-auto flex items-center justify-center gap-4 md:gap-8 pr-8">
-        {/* New Year Badge - hidden on mobile */}
-        <div className="hidden md:flex flex-col items-center">
-          <span className="bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded">NEW</span>
-          <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded -mt-0.5">YEAR</span>
-        </div>
-
         {/* Mobile Layout */}
         <div className="flex md:hidden items-center justify-between w-full">
           <div className="flex flex-col items-start">
-            <h2 className="text-sm font-extrabold tracking-wide">NEW YEAR'S SALE</h2>
-            <p className="text-xs font-bold">LIMITED TIME 30% OFF</p>
+            <h2 className="text-sm font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
+            <p className="text-[11px] text-white/80">Prices increase on Feb 24th</p>
             <div className="flex gap-2 text-center mt-1">
               <div className="flex flex-col">
                 <span className="text-sm font-bold">{timeLeft.days}</span>
@@ -78,7 +72,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
           </div>
           <Button
             onClick={() => navigate('/premium')}
-            className="bg-yellow-300 hover:bg-yellow-400 text-black font-bold px-4 py-1.5 text-sm rounded shadow-md"
+            className="bg-white hover:bg-white/90 text-purple-700 font-bold px-4 py-1.5 text-sm rounded shadow-md"
           >
             Get Premium
           </Button>
@@ -87,8 +81,8 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         {/* Desktop Layout */}
         <div className="hidden md:flex items-center gap-8">
           <div className="text-center">
-            <h2 className="text-xl font-extrabold tracking-wide">NEW YEAR'S SALE</h2>
-            <p className="text-base font-bold">LIMITED TIME 30% OFF</p>
+            <h2 className="text-xl font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
+            <p className="text-sm text-white/80">Prices increase on Feb 24th</p>
           </div>
 
           <div className="flex gap-4 text-center">
@@ -112,7 +106,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
 
           <Button
             onClick={() => navigate('/premium')}
-            className="bg-yellow-300 hover:bg-yellow-400 text-black font-bold px-6 py-2 rounded shadow-md"
+            className="bg-white hover:bg-white/90 text-purple-700 font-bold px-6 py-2 rounded shadow-md"
           >
             Get Premium
           </Button>
@@ -121,7 +115,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-black hover:text-gray-700 transition-colors"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors"
           aria-label="Close banner"
         >
           <X className="w-5 h-5 md:w-6 md:h-6" />
