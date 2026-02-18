@@ -10,8 +10,8 @@ interface PromoBannerProps {
 const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
   const navigate = useNavigate();
   
-  // Set target date to January 4, 2026 at 11:59 PM GMT
-  const targetDate = new Date("2026-01-04T23:59:00Z");
+  // Set target date to February 24, 2026 at 11:59 PM GMT
+  const targetDate = new Date("2026-02-24T23:59:00Z");
   
   const calculateTimeLeft = () => {
     const now = new Date();
@@ -46,6 +46,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         <div className="flex md:hidden items-center justify-between w-full">
           <div className="flex flex-col items-start">
             <h2 className="text-sm font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
+            <p className="text-[11px] text-white/80">Prices increase on Feb 24th</p>
             <div className="flex gap-2 text-center mt-1">
               <div className="flex flex-col">
                 <span className="text-sm font-bold">{timeLeft.days}</span>
@@ -77,6 +78,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         <div className="hidden md:flex items-center gap-8">
           <div className="text-center">
             <h2 className="text-xl font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
+            <p className="text-sm text-white/80">Prices increase on Feb 24th</p>
           </div>
           
           <div className="flex gap-4 text-center">
