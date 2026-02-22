@@ -160,15 +160,17 @@ const Premium = () => {
                 <div className="flex gap-3 mb-6">
                   <Button 
                     onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
-                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg shadow-none hover:shadow-none`}
+                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-5 rounded-lg shadow-none hover:shadow-none flex-col h-auto`}
                   >
-                    PayPal
+                    <span>Get Started</span>
+                    <span className="text-[11px] font-normal opacity-80">via PayPal</span>
                   </Button>
                   <Button 
                     onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
-                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg shadow-none hover:shadow-none`}
+                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-5 rounded-lg shadow-none hover:shadow-none flex-col h-auto`}
                   >
-                    Razorpay
+                    <span>Get Started</span>
+                    <span className="text-[11px] font-normal opacity-80">via Razorpay</span>
                   </Button>
                 </div>
                 <div className="space-y-3">
