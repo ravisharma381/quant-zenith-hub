@@ -157,12 +157,20 @@ const Premium = () => {
                     <span className="text-muted-foreground ml-1">{plan.period}</span>
                   </div>
                 </div>
-                <Button 
-                  onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
-                  className={`w-full ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg mb-6 shadow-none hover:shadow-none`}
-                >
-                  Get Started
-                </Button>
+                <div className="flex gap-3 mb-6">
+                  <Button 
+                    onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
+                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg shadow-none hover:shadow-none`}
+                  >
+                    PayPal
+                  </Button>
+                  <Button 
+                    onClick={() => navigate('/course/quant-interview-masterclass/learn/fundamentals')}
+                    className={`flex-1 ${plan.buttonColor} ${plan.featured ? 'text-white' : 'text-background'} font-semibold py-6 rounded-lg shadow-none hover:shadow-none`}
+                  >
+                    Razorpay
+                  </Button>
+                </div>
                 <div className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-start gap-3">
