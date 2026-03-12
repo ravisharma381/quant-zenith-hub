@@ -30,6 +30,7 @@ interface UserProfile {
     expiresAt?: string;
     planType: string;
     planPrice: number;
+    usePaypal?: boolean;
 }
 
 interface AuthContextType {

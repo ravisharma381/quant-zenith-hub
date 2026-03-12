@@ -74,7 +74,7 @@ const Courses = () => {
     <>
       <Helmet>
         <title>Courses | QuantProf</title>
-        <meta name="description" content="Browse a wide range of expert-led courses on QuantProf" />
+        <meta name="description" content="Browse a wide range of expert-led courses on QuantProf." />
       </Helmet>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">

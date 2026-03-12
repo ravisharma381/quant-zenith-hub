@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 type AdminStats = {
     totalUsers?: number;
     premiumUsers?: number;
-    lifetimeRevenue?: number;
+    lifetimeRevenueUSDCents?: number;
     revenueByMonth?: Record<string, number>;
 };
 
@@ -238,7 +238,7 @@ const OverviewTab: React.FC = () => {
                 {/* Lifetime Revenue – BIG */}
                 <KpiCard
                     label="Lifetime Revenue"
-                    value={formatCurrency(stats.lifetimeRevenue ?? 0)}
+                    value={formatCurrency(stats.lifetimeRevenueUSDCents ?? 0)}
                     icon={<Wallet className="w-6 h-6" />}
                     accent="purple-500"
                     className="col-span-12 md:col-span-6"

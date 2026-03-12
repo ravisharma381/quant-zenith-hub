@@ -56,7 +56,7 @@ const planTemplates = [
   },
   {
     name: "Lifetime",
-    description: "Get lifetime access to all premium features with a one-time payment and a 60-day, no-questions-asked full refund.",
+    description: "Get lifetime access to all premium features with a one-time payment and a 30-day, no-questions-asked full refund.",
     originalPrice: "$599",
     price: "$399",
     discount: "LIMITED TIME 30% OFF",
@@ -66,7 +66,7 @@ const planTemplates = [
     badgeColor: "bg-amber-100 text-amber-700",
     featured: false,
     features: [
-      { text: "60-day, no-questions-asked full refund.", bold: "full refund" },
+      { text: "30-day, no-questions-asked full refund.", bold: "full refund" },
       { text: "Includes all premium features in the yearly plan", bold: null },
       { text: "Access to all upcoming features with no price increases.", bold: "no price increases" },
     ],
@@ -92,7 +92,7 @@ const features = [
   {
     icon: RefreshCcw,
     title: "Refunds",
-    description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access - no questions asked. To request a refund, simply email us from the email ID linked to your premium account, no billing details are required. If you cannot afford premium, you are free to purchase it, request a refund, and repeat this as often as needed - effectively accessing premium for free.",
+    description: "We offer a 30-day refund - no questions asked. To request a refund, simply email us from the email ID linked to your premium account, no billing details are required. If you cannot afford premium, you are free to purchase it, request a refund, and repeat this as often as needed - effectively accessing premium for free.",
   },
   {
     icon: GraduationCap,
@@ -109,7 +109,7 @@ const features = [
 const faqs = [
   {
     question: "Do you offer a refund?",
-    answer: "Yes. We offer a 30-day full refund for yearly access and a 60-day full refund for lifetime access. There are no terms and conditions.",
+    answer: "Yes. We offer a 30-day refund - no questions asked. There are no terms and conditions.",
   },
   {
     question: "How do I request a refund?",
@@ -134,9 +134,10 @@ const faqs = [
 ];
 
 const Premium = () => {
-  const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number }>>({});
+  const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number, currency?: string }>>({});
   const [loading, setLoading] = useState(true);
   const [payInitiated, setPayInitiated] = useState<string | null>(null);
+  const [method, setMethod] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
   const { user, userProfile, setRerender } = useAuth();
@@ -146,24 +147,144 @@ const Premium = () => {
   useEffect(() => {
     const autoBuy = searchParams.get("autobuy");
     if (autoBuy && user) {
-      handleGetStarted(decodeURIComponent(autoBuy));
+      handleGetStartedV2(decodeURIComponent(autoBuy));
     }
   }, [user]);
+
+  // useEffect(() => {
+  //   const fetchPricing = async () => {
+  //     try {
+  //       const q = query(collection(db, "pricing"), orderBy("createdAt", "asc"));
+  //       const snap = await getDocs(q);
+  //       const map: Record<string, any> = {};
+  //       snap.forEach((d) => {
+  //         const data = d.data();
+  //         if (data && data.name) {
+  //           map[String(data.name).toLowerCase()] = {
+  //             price: data.price,
+  //             originalPrice: data.originalPrice,
+  //           };
+  //         }
+  //       });
+  //       setPricingMap(map);
+  //     } catch (err) {
+  //       console.error("Error fetching pricing:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchPricing();
+  // }, []);
+
+  // const handleGetStarted = async (planName: string) => {
+  //   const encodedPlan = encodeURIComponent(planName);
+
+  //   // 🔒 Require login
+  //   if (!user) {
+  //     navigate(
+  //       `/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`
+  //     );
+  //     return;
+  //   }
+
+  //   if (payInitiated) return;
+  //   setPayInitiated(planName);
+  //   setMethod('razorpay');
+
+  //   try {
+  //     const createPremiumOrder = httpsCallable(
+  //       functions,
+  //       "createPremiumOrder"
+  //     );
+
+  //     const resp = await createPremiumOrder({ planType: planName });
+
+  //     const result = resp.data as {
+  //       ok: boolean;
+  //       data?: {
+  //         orderId: string;
+  //         keyId: string;
+  //         amount: number;
+  //         currency: string;
+  //       };
+  //     };
+
+  //     if (!result.ok || !result.data) {
+  //       console.error("createPremiumOrder invalid response:", resp);
+  //       throw new Error("Invalid Razorpay order response");
+  //     }
+
+  //     const { orderId, keyId, amount, currency } = result.data;
+
+  //     const options = {
+  //       key: keyId,
+  //       order_id: orderId,
+  //       amount,
+  //       currency,
+  //       image: "https://quantprof.org/favicon-96x96.png",
+  //       name: "QuantProf",
+  //       description: `${planName} Premium Access`,
+
+  //       handler: () => {
+  //         navigate("/?success=true", { replace: true });
+  //         setRerender(true);
+  //       },
+
+  //       modal: {
+  //         ondismiss: () => {
+  //           setPayInitiated(null);
+  //         },
+  //       },
+
+  //       theme: {
+  //         color: "hsl(270,95%,60%)",
+  //       },
+  //       prefill: {
+  //         email: userProfile?.email,
+  //       },
+  //     };
+
+  //     const rzp = new (window as any).Razorpay(options);
+  //     rzp.open();
+
+  //   } catch (err: any) {
+  //     console.error("Razorpay checkout failed:", err);
+  //     toast({
+  //       title: "Payment failed",
+  //       description: err?.message || "Unable to start Razorpay checkout",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setPayInitiated(null);
+  //   }
+  // };
+
+
+
+  // v2 - pricing from functions
 
   useEffect(() => {
     const fetchPricing = async () => {
       try {
-        const q = query(collection(db, "pricing"), orderBy("createdAt", "asc"));
-        const snap = await getDocs(q);
-        const map: Record<string, any> = {};
-        snap.forEach((d) => {
-          const data = d.data();
-          if (data && data.name) {
-            map[String(data.name).toLowerCase()] = {
-              price: data.price,
-              originalPrice: data.originalPrice,
-            };
-          }
+        const getPlans = httpsCallable(functions, "getPlansV2");
+        const res: any = await getPlans();
+
+        const plans = res.data?.plans || [];
+
+        const map: Record<
+          string,
+          { price: number; originalPrice: number | null; currency: string }
+        > = {};
+
+        plans.forEach((plan: any) => {
+          if (!plan?.name) return;
+
+          map[String(plan.name).toLowerCase()] = {
+            price: plan.price,
+            originalPrice: plan.originalPrice ?? null,
+            currency: plan.currency,
+          };
         });
         setPricingMap(map);
       } catch (err) {
@@ -175,8 +296,47 @@ const Premium = () => {
 
     fetchPricing();
   }, []);
+  const handlePaypalGetStarted = async (planName: string) => {
+    const encodedPlan = encodeURIComponent(planName);
 
-  const handleGetStarted = async (planName: string) => {
+    // Require login
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
+      return;
+    }
+
+    if (payInitiated) return;
+    setPayInitiated(planName);
+    setMethod('paypal');
+
+    try {
+      const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
+
+      const resp: any = await createPayPalOrder({
+        planType: planName,
+      });
+
+      const payload = resp?.data?.data;
+      if (!payload?.approvalUrl) {
+        throw new Error("PayPal approval URL not returned");
+      }
+
+      // Open PayPal checkout
+      window.open(payload.approvalUrl, "_blank");
+
+    } catch (err: any) {
+      console.error("PayPal checkout failed", err);
+      toast({
+        title: "Payment failed",
+        description: err?.message || "Unable to start PayPal checkout",
+        variant: "destructive",
+      });
+    } finally {
+      setPayInitiated(null);
+    }
+  };
+
+  const handleGetStartedV2 = async (planName: string) => {
     const encodedPlan = encodeURIComponent(planName);
 
     // 🔒 Require login
@@ -189,11 +349,12 @@ const Premium = () => {
 
     if (payInitiated) return;
     setPayInitiated(planName);
+    setMethod('razorpay');
 
     try {
       const createPremiumOrder = httpsCallable(
         functions,
-        "createPremiumOrder"
+        "createPremiumOrderV2"
       );
 
       const resp = await createPremiumOrder({ planType: planName });
@@ -240,7 +401,6 @@ const Premium = () => {
         },
         prefill: {
           email: userProfile?.email,
-          contact: "+14155552671",
         },
       };
 
@@ -259,55 +419,25 @@ const Premium = () => {
     }
   };
 
-
-
-  // const handleGetStarted = async (planName: string) => {
-  //   const encodedPlan = encodeURIComponent(planName);
-
-  //   // Require login
-  //   if (!user) {
-  //     navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
-  //     return;
-  //   }
-
-  //   if (payInitiated) return;
-  //   setPayInitiated(planName);
-
-  //   try {
-  //     const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
-
-  //     const resp: any = await createPayPalOrder({
-  //       planType: planName,
-  //     });
-
-  //     const payload = resp?.data?.data;
-  //     if (!payload?.approvalUrl) {
-  //       throw new Error("PayPal approval URL not returned");
-  //     }
-
-  //     // Open PayPal checkout
-  //     window.open(payload.approvalUrl, "_blank");
-
-  //   } catch (err: any) {
-  //     console.error("PayPal checkout failed", err);
-  //     toast({
-  //       title: "Payment failed",
-  //       description: err?.message || "Unable to start PayPal checkout",
-  //       variant: "destructive",
-  //     });
-  //   } finally {
-  //     setPayInitiated(null);
-  //   }
-  // };
+  // const plans = planTemplates.map((tpl) => {
+  //   const found = pricingMap[tpl.name.toLowerCase()];
+  //   return {
+  //     ...tpl,
+  //     price: found && typeof found.price === "number" ? `$${found.price}` : "$—",
+  //     originalPrice: found && typeof found.originalPrice === "number" ? `$${found.originalPrice}` : "",
+  //   };
+  // });
 
   const plans = planTemplates.map((tpl) => {
     const found = pricingMap[tpl.name.toLowerCase()];
     return {
       ...tpl,
-      price: found && typeof found.price === "number" ? `$${found.price}` : "$—",
-      originalPrice: found && typeof found.originalPrice === "number" ? `$${found.originalPrice}` : "",
+      price: found && typeof found.price === "number" ? `${found.currency === 'INR' ? '₹' : '$'}${found.price}` : "$—",
+      originalPrice: found && typeof found.originalPrice === "number" ? `${found.currency === 'INR' ? '₹' : '$'}${found.originalPrice}` : "",
     };
   });
+  const enableBoth = userProfile?.usePaypal
+  // const enableBoth = true
 
 
   const SkeletonBox = ({ className = "" }) => (
@@ -380,24 +510,59 @@ const Premium = () => {
                       )}
                     </div>
 
-                    <Button
-                      className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
-                    !shadow-none
-                    hover:!shadow-none
-                    focus:!shadow-none
-                    focus-visible:!shadow-none
-                    active:!shadow-none
-                    !ring-0
-                    focus-visible:!ring-0
-                    focus-visible:!ring-offset-0`}
-                      disabled={loading || payInitiated !== null}
-                      onClick={() => handleGetStarted(plan.name)}
-                    >
-                      {payInitiated === plan.name ? "Initiating Payment…" : "Get Started"}
-                    </Button>
+                    {enableBoth ?
+                      <div>
+                        <Button
+                          className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+                          !shadow-none
+                          hover:!shadow-none
+                          focus:!shadow-none
+                          focus-visible:!shadow-none
+                          active:!shadow-none
+                          !ring-0
+                          focus-visible:!ring-0
+                          focus-visible:!ring-offset-0`}
+                          disabled={loading || payInitiated !== null}
+                          onClick={() => handlePaypalGetStarted(plan.name)}
+                        >
+                          {(payInitiated === plan.name && method === 'paypal') ? "Initiating Payment…" : "Get Started"}
+                          <span className="text-xs font-normal opacity-80">via PayPal</span>
+                        </Button>
+                        <Button
+                          className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+                          !shadow-none
+                          hover:!shadow-none
+                          focus:!shadow-none
+                          focus-visible:!shadow-none
+                          active:!shadow-none
+                          !ring-0
+                          focus-visible:!ring-0
+                          focus-visible:!ring-offset-0`}
+                          disabled={loading || payInitiated !== null}
+                          onClick={() => handleGetStartedV2(plan.name)}
+                        >
+                          {(payInitiated === plan.name && method === 'razorpay') ? "Initiating Payment…" : "Get Started"}
+                          <span className="text-xs font-normal opacity-80">via Razorpay</span>
+                        </Button>
+                      </div>
+                      : <Button
+                        className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+                          !shadow-none
+                          hover:!shadow-none
+                          focus:!shadow-none
+                          focus-visible:!shadow-none
+                          active:!shadow-none
+                          !ring-0
+                          focus-visible:!ring-0
+                          focus-visible:!ring-offset-0`}
+                        disabled={loading || payInitiated !== null}
+                        onClick={() => handleGetStartedV2(plan.name)}
+                      >
+                        {(payInitiated === plan.name) ? "Initiating Payment…" : "Get Started"}
+                      </Button>
+                    }
                   </div>
 
-                  {/* Features stay below, card height still stable */}
                   <div className="space-y-3">
                     {plan.features.map((feature, i) => (
                       <div key={i} className="flex items-start gap-3">

@@ -90,7 +90,7 @@ const CourseDetail = () => {
     {
       icon: RefreshCcw,
       title: "Full Refunds",
-      description: "We offer a 30-day refund for yearly access and a 60-day refund for lifetime access-no questions asked. To request a refund, simply email us from the address linked to your premium account, no billing details are required.",
+      description: "We offer a 30-day refund - no questions asked. To request a refund, simply email us from the address linked to your premium account, no billing details are required.",
     }
   ];
 
@@ -101,7 +101,7 @@ const CourseDetail = () => {
     },
     {
       question: "Do you offer a refund?",
-      answer: "Yes. We offer a 30-day full refund for yearly access and a 60-day full refund for lifetime access. There are no terms and conditions.",
+      answer: "Yes. We offer a 30-day full refund. There are no terms and conditions.",
     },
     {
       question: "How do I request a refund?",
@@ -141,7 +141,7 @@ const CourseDetail = () => {
 
         <meta
           name="description"
-          content="Master quant interviews with our comprehensive course covering all core concepts in detail and 1000+ high quality problems."
+          content="Learn how to solve quant interview questions. Ace your quant interviews with a comprehensive curriculum covering probability, combinatorics, statistics, and brainteasers."
         />
 
         <link rel="canonical" href="https://quantprof.org/quant-interview-questions" />

@@ -34,6 +34,7 @@ interface UserRecord {
     expiresAt?: string | null;
     lastLoginAt?: any;
     createdAt?: any;
+    usePaypal?: boolean;
 }
 
 const UsersTab: React.FC = () => {
@@ -58,7 +59,7 @@ const UsersTab: React.FC = () => {
         async (reset = false) => {
             setLoading(true);
 
-            let constraints: any[] = [];
+            const constraints: any[] = [];
 
             // ---- SEARCH ----
             if (debouncedSearch) {
@@ -114,6 +115,11 @@ const UsersTab: React.FC = () => {
                 role, isPremium: (role === "admin" || role === "superAdmin")
             });
         }
+    };
+    const updateType = async (userId: string, role: string) => {
+        await updateDoc(doc(db, "users", userId), {
+            usePaypal: role === 'yes' ? true : false,
+        });
     };
 
     return (
@@ -171,6 +177,7 @@ const UsersTab: React.FC = () => {
                             <th className="p-3 text-center">Plan</th>
                             <th className="p-3 text-center">Last Login</th>
                             <th className="p-3 text-center">Role</th>
+                            <th className="p-3 text-center">Enable Paypal</th>
                         </tr>
                     </thead>
 
@@ -226,6 +233,20 @@ const UsersTab: React.FC = () => {
                                             <SelectItem value="superAdmin">Super Admin</SelectItem>
                                             <SelectItem value="user-Yearly">Gift Yearly Plan</SelectItem>
                                             <SelectItem value="user-Lifetime">Gift Lifetime Plan</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </td>
+                                <td className="p-3 text-center">
+                                    <Select
+                                        defaultValue={u.usePaypal ? "yes" : "no"}
+                                        onValueChange={(value) => updateType(u.id, value)}
+                                    >
+                                        <SelectTrigger className="w-[130px] mx-auto">
+                                            <SelectValue placeholder="Role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="yes">Yes</SelectItem>
+                                            <SelectItem value="no">No</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </td>

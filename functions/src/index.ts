@@ -27,6 +27,39 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
+interface PlanPriceOutput {
+  name: string;
+  currency: "INR" | "USD";
+  price: number;
+  originalPrice: number | null;
+}
+
+// type PricingRegion = "IN" | "TIER2" | "GLOBAL";
+
+interface RegionPricing {
+  currency: "INR" | "USD";
+  price: number;
+  originalPrice?: number;
+}
+
+interface PlanDoc {
+  name: string;
+  isActive: boolean;
+  pricingVersion?: number;
+  prices: {
+    IN?: RegionPricing;
+    TIER2?: RegionPricing;
+    GLOBAL?: RegionPricing;
+  };
+}
+
+// interface GetPlansV2Response {
+//   ok: true;
+//   region: "IN" | "TIER2" | "GLOBAL";
+//   country: string;
+//   plans: PlanPriceOutput[];
+// }
+
 // -------------------- SECRETS --------------------
 const RAZORPAY_KEY_ID = defineSecret("RAZORPAY_KEY_ID");
 const RAZORPAY_KEY_SECRET = defineSecret("RAZORPAY_KEY_SECRET");
@@ -93,6 +126,53 @@ function computeExpiryTimestamp(
   }
 
   return expiry.toISOString();
+}
+
+async function resolveCountryFromIp(ip: string | null): Promise<string> {
+  if (!ip) return "US";
+
+  try {
+    const resp = await fetch(`https://ipapi.co/${ip}/country/`);
+    if (!resp.ok) return "US";
+
+    const country = await resp.text();
+    if (!country || country.length !== 2) return "US";
+
+    return country.trim().toUpperCase();
+  } catch (err) {
+    console.error("IP lookup failed:", err);
+    return "US";
+  }
+}
+
+function convertToUsdCents(
+  amountSmallest: number,
+  currency: "INR" | "USD"
+): number {
+  if (currency === "USD") return amountSmallest;
+
+  const FX_RATE = 90.5; // INR per USD (move to config later)
+
+  const usd = (amountSmallest / 100) / FX_RATE;
+  return Math.round(usd * 100);
+}
+
+function getClientIp(req: CallableRequest): string | null {
+  const rawReq = req.rawRequest;
+  const forwarded = rawReq.headers["x-forwarded-for"] as string | undefined;
+
+  if (!forwarded) return null;
+
+  return forwarded.split(",")[0].trim();
+}
+
+const INDIA_COUNTRIES = ["IN"];
+const TIER2_COUNTRIES = ["VN", "EG", "PH", "BD"];
+
+function resolveRegion(country: string): "IN" | "TIER2" | "GLOBAL" {
+  if (INDIA_COUNTRIES.includes(country)) return "IN";
+  if (TIER2_COUNTRIES.includes(country)) return "TIER2";
+  return "GLOBAL";
 }
 
 // -------------------- PAYPAL HELPERS --------------------
@@ -175,6 +255,56 @@ async function verifyPayPalWebhook(
     return false;
   }
 }
+
+// -------------------- GET V2 PLANS --------------------
+
+export const getPlansV2 = onCall(
+  async (req: CallableRequest) => {
+    try {
+      // 1️⃣ Detect IP
+      const clientIp = getClientIp(req);
+
+      // 2️⃣ Resolve Country
+      const country = await resolveCountryFromIp(clientIp);
+
+      // 3️⃣ Resolve Region
+      const region = resolveRegion(country);
+
+      // 4️⃣ Fetch Active Plans
+      const plansSnap = await db.collection("plans")
+        .where("isActive", "==", true)
+        .get();
+
+      const plans: PlanPriceOutput[] = [];
+
+      plansSnap.forEach((doc) => {
+        const data = doc.data();
+
+        const regionPricing = data?.prices?.[region];
+        if (!regionPricing) return;
+
+        plans.push({
+          name: data.name,
+          currency: regionPricing.currency,
+          price: regionPricing.price,
+          originalPrice: regionPricing.originalPrice ?? null,
+        });
+      });
+
+      return {
+        ok: true,
+        region,
+        country,
+        plans,
+      };
+
+    } catch (err) {
+      console.error("getPlansV2 error:", err);
+      throw new HttpsError("internal", "Failed to fetch plans");
+    }
+  }
+);
+
 
 // -------------------- TOPIC TRIGGERS (unchanged) --------------------
 
@@ -382,6 +512,116 @@ export const createPremiumOrder = onCall(
     }
   }
 );
+
+export const createPremiumOrderV2 = onCall(
+  { secrets: [RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET] },
+  async (req: CallableRequest) => {
+    try {
+      const uid = req.auth?.uid;
+      if (!uid) {
+        throw new HttpsError("unauthenticated", "Sign in required.");
+      }
+
+      const { planType } = req.data as { planType?: string };
+      if (!planType) {
+        throw new HttpsError("invalid-argument", "planType required.");
+      }
+
+      // 1️⃣ Detect IP
+      const clientIp = getClientIp(req);
+      const country = await resolveCountryFromIp(clientIp);
+      const region = resolveRegion(country);
+
+      // 2️⃣ Fetch Plan
+      const planSnap = await db.collection("plans").doc(planType).get();
+
+      if (!planSnap.exists) {
+        throw new HttpsError("not-found", "Plan not found.");
+      }
+
+      const planData = planSnap.data() as PlanDoc;
+
+      if (!planData.isActive) {
+        throw new HttpsError("failed-precondition", "Plan is not active.");
+      }
+
+      const regionPricing = planData.prices?.[region];
+
+      if (!regionPricing) {
+        throw new HttpsError(
+          "failed-precondition",
+          "Pricing not configured for this region."
+        );
+      }
+
+      const { currency, price } = regionPricing;
+
+      const amountSmallest = Math.round(price * 100);
+      const usdAmountSmallest = convertToUsdCents(
+        amountSmallest,
+        currency
+      );
+
+      // 3️⃣ Create Razorpay Order
+      const razorpay = new Razorpay({
+        key_id: RAZORPAY_KEY_ID.value(),
+        key_secret: RAZORPAY_KEY_SECRET.value(),
+      });
+
+      const order = await razorpay.orders.create({
+        amount: amountSmallest,
+        currency,
+        receipt: `v2_${uid.substring(0, 6)}_${Date.now()}`,
+        notes: {
+          userId: uid,
+          planType,
+          region,
+          country,
+          pricingVersion: 2,
+        },
+      });
+
+      // 4️⃣ Store Transaction
+      await db.collection("transactions").doc(order.id).set({
+        userId: uid,
+        planType,
+        planPrice: price,
+        orderId: order.id,
+
+        amountSmallest,
+        usdAmountSmallest,
+
+        currency,
+        region,
+        country,
+
+        provider: "razorpay",
+        status: "pending",
+        pricingVersion: 2,
+
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return {
+        ok: true,
+        data: {
+          orderId: order.id,
+          keyId: RAZORPAY_KEY_ID.value(),
+          amount: amountSmallest,
+          currency,
+        },
+      };
+    } catch (err) {
+      console.error("createPremiumOrderV2 error:", err);
+
+      if (err instanceof HttpsError) throw err;
+
+      throw new HttpsError("internal", "Failed to create order");
+    }
+  }
+);
+
 
 /**
  * createPayPalOrder (callable)
@@ -784,6 +1024,67 @@ export const paypalWebhook = onRequest(
 
 // ----------ADMIN STATICS----------
 
+// export const onTransactionUpdated = onDocumentUpdated(
+//   "transactions/{orderId}",
+//   async (event) => {
+//     const before = event.data?.before.data();
+//     const after = event.data?.after.data();
+
+//     if (!after) return;
+
+//     // Only act on first transition to success
+//     if (before?.status === "success" || after.status !== "success") {
+//       return;
+//     }
+
+//     const amount = after.amountSmallest;
+//     if (typeof amount !== "number") return;
+
+//     // Source timestamp
+//     const baseDate =
+//       after.createdAt?.toDate?.() ??
+//       after.updatedAt?.toDate?.() ??
+//       new Date();
+
+//     // Convert to IST (UTC + 5:30)
+//     const istDate = new Date(baseDate.getTime() + 5.5 * 60 * 60 * 1000);
+
+//     const year = istDate.getFullYear().toString();
+//     const month = `${year}-${String(istDate.getMonth() + 1).padStart(2, "0")}`;
+//     const day = `${month}-${String(istDate.getDate()).padStart(2, "0")}`;
+
+//     const region = after.currency === "INR" ? "IN" : "US";
+
+//     const statsRef = db.collection("adminStats").doc("global");
+
+//     await statsRef.set(
+//       {
+//         lifetimeRevenue: admin.firestore.FieldValue.increment(amount),
+
+//         revenueByYear: {
+//           [year]: admin.firestore.FieldValue.increment(amount),
+//         },
+
+//         revenueByMonth: {
+//           [month]: admin.firestore.FieldValue.increment(amount),
+//         },
+
+//         revenueByDay: {
+//           [day]: admin.firestore.FieldValue.increment(amount),
+//         },
+
+//         revenueByRegion: {
+//           [region]: admin.firestore.FieldValue.increment(amount),
+//         },
+
+//         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+//       },
+//       { merge: true }
+//     );
+//   }
+// );
+
+// v2+v1
 export const onTransactionUpdated = onDocumentUpdated(
   "transactions/{orderId}",
   async (event) => {
@@ -843,6 +1144,9 @@ export const onTransactionUpdated = onDocumentUpdated(
     );
   }
 );
+
+
+
 
 
 export const onUserCreated = onDocumentCreated(

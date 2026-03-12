@@ -137,7 +137,9 @@ const Index = () => {
     <>
       <Helmet>
         <title>QuantProf - #1 quant finance prep platform | 1000+ problems</title>
-        <meta name="description" content="Practice quant interview questions frequently asked at top firms." />
+        <meta name="description"
+          content="Prepare for quantitative finance interviews and advance your career with quant interview questions, interactive games and expert-led courses on QuantProf." />
+        <meta name="author" content="QuantProf" />
       </Helmet>
       {/* Hero Section */}
       {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
@@ -313,7 +315,7 @@ const Index = () => {
                       Refunds
                     </h3>
                     <p className="text-sm md:text-base text-muted-foreground">
-                      We offer a no-questions-asked full refund: 30 days on the yearly plan and 60 days on the lifetime plan.
+                      We offer a no-questions-asked full refund: 30 days on the yearly plan and 30 days on the lifetime plan.
                     </p>
                   </div>
                 </div>
