@@ -309,17 +309,6 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 md:gap-4">
-                  <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-                      Refunds
-                    </h3>
-                    <p className="text-sm md:text-base text-muted-foreground">
-                      We offer a no-questions-asked full refund: 30 days on the yearly plan and 30 days on the lifetime plan.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 md:gap-4">
                   <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-purple flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">

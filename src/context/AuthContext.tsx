@@ -13,8 +13,9 @@ import {
     AuthProvider,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where, documentId } from "firebase/firestore";
-import { auth, db } from "@/firebase/config";
+import { auth, db, functions } from "@/firebase/config";
 import { toast } from "@/hooks/use-toast";
+import { httpsCallable } from "firebase/functions";
 
 interface UserProfile {
     id: string;
@@ -41,6 +42,8 @@ interface AuthContextType {
     loginWithGitHub: () => Promise<void>;
     logout: () => Promise<void>;
     setRerender: React.Dispatch<React.SetStateAction<boolean>>;
+    region: string;
+    regionLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -51,6 +54,8 @@ export const AuthContext = createContext<AuthContextType>({
     loginWithGitHub: async () => { },
     logout: async () => { },
     setRerender: () => true,
+    region: "IN",
+    regionLoading: true
 });
 
 const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -58,6 +63,9 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [rerender, setRerender] = useState(true);
+    const [region, setRegion] = useState("US");
+    const [regionLoading, setRegionLoading] = useState(true);
+
 
     // 🔹 1️⃣ Handle redirect result once per page load
     useEffect(() => {
@@ -129,6 +137,39 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return unsubscribe;
         }
     }, [rerender]);
+
+    // your firebase init
+
+    useEffect(() => {
+        const fetchRegion = async () => {
+            try {
+
+                const cachedRegion = localStorage.getItem("user_region");
+
+                if (cachedRegion) {
+                    setRegion(cachedRegion);
+                    setLoading(false);
+                    return;
+                }
+
+                const fn = httpsCallable(functions, "getUserRegion");
+                const res = await fn();
+
+                const detectedRegion: any = res.data?.data?.region;
+
+                if (detectedRegion) {
+                    localStorage.setItem("user_region", detectedRegion);
+                    setRegion(detectedRegion);
+                }
+            } catch (err) {
+                console.error("Region detection failed:", err);
+            } finally {
+                setRegionLoading(false);
+            }
+        };
+
+        fetchRegion();
+    }, []);
 
     const signInWithProvider = async (provider: AuthProvider) => {
         try {
@@ -202,7 +243,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender, loginWithGitHub }}>
+        <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender, loginWithGitHub, region, regionLoading }}>
             {children}
         </AuthContext.Provider>
     );

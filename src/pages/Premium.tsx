@@ -5,8 +5,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Crown, Lightbulb, Lock, Gamepad2, Tag, BookOpen, RefreshCcw, GraduationCap, ListMusic } from "lucide-react";
 import { Check } from "lucide-react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { httpsCallable } from "firebase/functions";
@@ -129,7 +127,7 @@ const faqs = [
   },
   {
     question: "What makes QuantProf unique?",
-    answer: "QuantProf offers a higher quality problem collection that is continuously updated, along with structured courses designed to help you develop the skills needed to solve challenging problems on your own. We also back everything with a generous refund policy.",
+    answer: "QuantProf offers a higher quality problem collection that is continuously updated, along with structured courses designed to help you develop the skills needed to solve challenging problems on your own.",
   },
 ];
 
@@ -140,7 +138,7 @@ const Premium = () => {
   const [method, setMethod] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
-  const { user, userProfile, setRerender } = useAuth();
+  const { user, userProfile, setRerender, region, regionLoading } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
@@ -444,6 +442,22 @@ const Premium = () => {
     <div className={`animate-pulse bg-muted rounded-md ${className}`} />
   );
 
+  const FeatureSkeleton = () => (
+    Array.from({ length: 5 }).map((_, i) => (
+      <div key={i} className="flex items-start gap-3 animate-pulse">
+
+        {/* icon placeholder */}
+        <div className="w-5 h-5 rounded bg-muted mt-0.5" />
+
+        {/* text placeholder */}
+        <div className="flex-1 space-y-2">
+          <div className="h-3 w-4/5 bg-muted rounded" />
+        </div>
+
+      </div>
+    ))
+  )
+
   return (
     <>
       <Helmet>
@@ -564,22 +578,24 @@ const Premium = () => {
                   </div>
 
                   <div className="space-y-3">
-                    {plan.features.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-purple-500 mt-0.5" />
-                        <span className="text-sm text-muted-foreground">
-                          {feature.bold ? (
-                            <>
-                              {feature.text.split(feature.bold)[0]}
-                              <span className="font-semibold text-foreground">{feature.bold}</span>
-                              {feature.text.split(feature.bold)[1]}
-                            </>
-                          ) : (
-                            feature.text
-                          )}
-                        </span>
-                      </div>
-                    ))}
+                    {regionLoading ?
+                      <FeatureSkeleton />
+                      : plan.features.slice(region === 'IN' ? 1 : 0, 6).map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-purple-500 mt-0.5" />
+                          <span className="text-sm text-muted-foreground">
+                            {feature.bold ? (
+                              <>
+                                {feature.text.split(feature.bold)[0]}
+                                <span className="font-semibold text-foreground">{feature.bold}</span>
+                                {feature.text.split(feature.bold)[1]}
+                              </>
+                            ) : (
+                              feature.text
+                            )}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -600,7 +616,7 @@ const Premium = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
+              {features.filter((_, idx) => ((region === 'IN' && idx === 3) ? false : true)).map((feature, index) => (
                 <div key={index} className="flex gap-4">
                   <div className="flex-shrink-0">
                     <feature.icon className="w-6 h-6 text-foreground" />
@@ -628,7 +644,7 @@ const Premium = () => {
             </div>
 
             <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq, index) => (
+              {faqs.slice(region === 'IN' ? 3 : 0, 6).map((faq, index) => (
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}

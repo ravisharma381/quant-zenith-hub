@@ -17,7 +17,8 @@ const CourseDetail = () => {
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
   const { userProfile } = useAuth();
   const [showBanner, setShowBanner] = useState(true);
-  const slug = window.location.pathname.split("/course/")[1];
+  const { region } = useAuth();
+  // const slug = window.location.pathname.split("/course/")[1];
   const courseId = 'pxeKbx6V6C2IeBy1UnWm';
 
   const isBought = userProfile?.isPremium
@@ -262,7 +263,7 @@ const CourseDetail = () => {
                               "from-emerald-600/90 via-teal-500/70 to-cyan-600/80",
                           },
 
-                        ].map((item, index) => (
+                        ].slice(region === 'IN' ? 1 : 0, 3).map((item, index) => (
                           <CarouselItem
                             key={index}
                             className="flex w-full min-w-full max-w-full shrink-0 grow-0 items-stretch"
@@ -319,7 +320,7 @@ const CourseDetail = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
-              {courseFeatures.map((feature, index) => (
+              {courseFeatures.slice(0, region === 'IN' ? 3 : 2).map((feature, index) => (
                 <div key={index} className="flex gap-4">
                   <feature.icon className="w-6 h-6 text-muted-foreground flex-shrink-0 mt-1" />
                   <div>
@@ -363,7 +364,7 @@ const CourseDetail = () => {
         </div>
 
         {/* FAQ Section */}
-        <div className="container mx-auto px-4 py-24">
+        {region !== 'IN' && <div className="container mx-auto px-4 py-24">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16">
               <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">FAQ</Badge>
@@ -387,7 +388,7 @@ const CourseDetail = () => {
               ))}
             </Accordion>
           </div>
-        </div>
+        </div>}
 
       </div>
     </>
