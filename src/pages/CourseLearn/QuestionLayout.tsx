@@ -174,7 +174,9 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
             await navigator.clipboard.writeText(window.location.href);
             setCopied(true);
             setTimeout(() => setCopied(false), 1500);
-        } catch (_) { }
+        } catch (_) {
+            console.log("Failed to copy link");
+        }
     };
 
     const handleKeyDown = (e: any) => {
@@ -196,7 +198,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
     return (
         <div className="max-w-4xl mx-auto">
 
-            <Tabs defaultValue="problem" className="w-full">
+            <Tabs defaultValue="problem" className="w-full" onValueChange={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
 
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex items-center justify-between mb-6">
@@ -317,7 +319,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                                         {`Hint ${i + 1}`}
                                     </AccordionTrigger>
                                     <AccordionContent className="text-white leading-relaxed text-lg">
-                                        {renderRichCMS(hintVal)}
+                                        <div className="overflow-x-auto custom-scroll">{renderRichCMS(hintVal)}</div>
                                     </AccordionContent>
                                 </AccordionItem>
                             );
@@ -328,7 +330,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                                 Solution
                             </AccordionTrigger>
                             <AccordionContent className="text-white leading-relaxed text-lg">
-                                {renderRichCMS(topic.solution)}
+                                <div className="overflow-x-auto custom-scroll">{renderRichCMS(topic.solution)}</div>
                             </AccordionContent>
                         </AccordionItem>
 

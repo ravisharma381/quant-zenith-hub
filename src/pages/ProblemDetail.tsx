@@ -14,10 +14,27 @@ const ProblemDetail = () => {
 
   const { user, loading: authLoading, userProfile } = useAuth();
   const location = useLocation();
-  const backState = location.state;
+  const searchParams = new URLSearchParams(location.search);
+  const urlTopic = searchParams.get('topic');
+  const page = searchParams.get('page');
+  const level = searchParams.get('level');
+  const q = searchParams.get('q');
   const isLoggedIn = !!user;
   // const isSubscribed = true;
   const isSubscribed = userProfile?.isPremium === true;
+  let backurl = '/problems?';
+  if (urlTopic) {
+    backurl += `topic=${urlTopic}`;
+  }
+  if (page) {
+    backurl += `&page=${page}`;
+  }
+  if (level) {
+    backurl += `&level=${level}`;
+  }
+  if (q) {
+    backurl += `&q=${q}`;
+  }
 
   const [topic, setTopic] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -277,7 +294,7 @@ const ProblemDetail = () => {
         {/* Actions */}
         <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
           <Button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(backurl)}
             className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none"
           >
             Back to Problems

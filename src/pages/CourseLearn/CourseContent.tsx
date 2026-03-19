@@ -215,7 +215,7 @@ const CourseContent: React.FC<Props> = ({
                 </div>}
 
                 {/* CONTENT */}
-                <div className="min-h-[calc(100vh-100px)] select-none bg-black">
+                <div className="min-h-[calc(100vh-100px)] select-none bg-black custom-scrollbar">
                     <div className={cn(
                         "pb-6 pt-2 bg-black",
                         sidebarOpen ? "px-4 md:px-6" : "px-4 md:px-16"
