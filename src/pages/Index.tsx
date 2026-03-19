@@ -136,7 +136,7 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>QuantProf - #1 quant finance prep platform | 1000+ problems</title>
+        <title>QuantProf - The Leading Platform for Quant Interview Questions</title>
         <meta name="description"
           content="Prepare for quantitative finance interviews and advance your career with quant interview questions, interactive games and expert-led courses on QuantProf." />
         <meta name="author" content="QuantProf" />

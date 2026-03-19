@@ -445,7 +445,7 @@ const Problems: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Quant Interview Problems - Practice for Top Firms</title>
+        <title>Quant Interview Questions - Practice for Top Firms</title>
         <meta name="description" content="Prepare for quantitative finance interviews with questions on combinatorics, probability, statistics and brainteasers from top firms like Jane Street and Citadel." />
       </Helmet>
 

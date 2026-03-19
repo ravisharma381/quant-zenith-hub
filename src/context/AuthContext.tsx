@@ -143,12 +143,11 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const fetchRegion = async () => {
             try {
-
                 const cachedRegion = localStorage.getItem("user_region");
 
                 if (cachedRegion) {
                     setRegion(cachedRegion);
-                    setLoading(false);
+                    setRegionLoading(false);
                     return;
                 }
 
