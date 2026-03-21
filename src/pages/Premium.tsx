@@ -196,6 +196,8 @@ const Premium = () => {
             </Card>
           ))}
         </div>
+        </div>
+      </div>
 
         {/* Why Premium Section */}
         <div className="max-w-5xl mx-auto mb-20">
