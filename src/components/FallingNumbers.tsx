@@ -7,6 +7,9 @@ const FallingNumbers = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const parent = canvas.parentElement;
+    if (!parent) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -14,9 +17,12 @@ const FallingNumbers = () => {
     const chars = "0123456789πΣ∫∂√±×÷∞∈∀∃∅∇∆λμσφψΩ".split("");
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      const rect = parent.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -32,35 +38,36 @@ const FallingNumbers = () => {
     }
 
     const drops: Drop[] = [];
-    const width = () => canvas.offsetWidth;
-    const height = () => canvas.offsetHeight;
+    const w = () => parent.getBoundingClientRect().width;
+    const h = () => parent.getBoundingClientRect().height;
 
     const createDrop = (): Drop => ({
-      x: Math.random() * width(),
+      x: Math.random() * w(),
       y: Math.random() * -200,
       speed: 0.3 + Math.random() * 0.8,
       char: chars[Math.floor(Math.random() * chars.length)],
-      opacity: 0.03 + Math.random() * 0.12,
-      size: 10 + Math.random() * 16,
+      opacity: 0.04 + Math.random() * 0.14,
+      size: 12 + Math.random() * 18,
       fadeSpeed: 0.0002 + Math.random() * 0.0005,
     });
 
-    // Initialize drops
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 70; i++) {
       const drop = createDrop();
-      drop.y = Math.random() * height();
+      drop.y = Math.random() * h();
       drops.push(drop);
     }
 
     const animate = () => {
-      ctx.clearRect(0, 0, width(), height());
+      const width = w();
+      const height = h();
+      ctx.clearRect(0, 0, width, height);
 
       for (let i = drops.length - 1; i >= 0; i--) {
         const drop = drops[i];
         drop.y += drop.speed;
         drop.opacity -= drop.fadeSpeed;
 
-        if (drop.y > height() || drop.opacity <= 0) {
+        if (drop.y > height || drop.opacity <= 0) {
           drops[i] = createDrop();
           continue;
         }
@@ -84,8 +91,7 @@ const FallingNumbers = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.8 }}
+      className="absolute inset-0 pointer-events-none"
     />
   );
 };
