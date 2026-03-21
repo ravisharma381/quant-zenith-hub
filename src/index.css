@@ -54,7 +54,7 @@
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 70%), hsl(330 60% 55%), hsl(122 97% 50%));
     --gradient-dark: linear-gradient(180deg, hsl(220 13% 10%), hsl(220 13% 8%));
     --gradient-accent: radial-gradient(ellipse at 80% 50%, hsl(160 40% 15% / 0.6) 0%, hsl(170 30% 10% / 0.3) 30%, hsl(220 13% 8%) 70%);
-    --dot-pattern: radial-gradient(circle, hsl(160 15% 55% / 0.4) 1px, transparent 1px);
+    --dot-pattern: radial-gradient(circle, hsl(160 20% 40% / 0.25) 1px, transparent 1px);
     
     --shadow-glow: 0 0 40px hsl(122 97% 50% / 0.3);
     --shadow-purple-glow: 0 0 40px hsl(270 70% 60% / 0.3);
