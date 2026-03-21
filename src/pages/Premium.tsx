@@ -199,6 +199,7 @@ const Premium = () => {
         </div>
       </div>
 
+      <div className="container mx-auto px-4">
         {/* Why Premium Section */}
         <div className="max-w-5xl mx-auto mb-20">
           <div className="text-center mb-12">
