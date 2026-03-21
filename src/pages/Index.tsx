@@ -116,7 +116,8 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
-        
+        {/* Dot pattern overlay */}
+        <div className="absolute inset-0" style={{ backgroundImage: 'var(--dot-pattern)', backgroundSize: '20px 20px' }} />
 
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
