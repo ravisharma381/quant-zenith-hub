@@ -60,7 +60,7 @@
     --shadow-card: 0 10px 30px -10px hsl(220 13% 4% / 0.5);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --dot-pattern: radial-gradient(circle, hsl(210 20% 50% / 0.4) 1px, transparent 1px);
+    
   }
 }
 

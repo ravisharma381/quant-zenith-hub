@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
+import TiltCard from "@/components/TiltCard";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -115,8 +116,11 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
-        {/* Dot pattern overlay */}
-        <div className="absolute inset-0" style={{ backgroundImage: 'var(--dot-pattern)', backgroundSize: '24px 24px' }} />
+        {/* Animated gradient orbs */}
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-20 blur-[100px] animate-[pulse_8s_ease-in-out_infinite]" style={{ background: 'hsl(var(--purple))' }} />
+        <div className="absolute -bottom-40 -right-20 w-[400px] h-[400px] rounded-full opacity-15 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_1s]" style={{ background: 'hsl(var(--primary))' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full opacity-10 blur-[120px] animate-[pulse_12s_ease-in-out_infinite_2s]" style={{ background: 'linear-gradient(135deg, hsl(var(--purple)), hsl(var(--primary)))' }} />
+        
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
             {/* Left Side - Text Content */}
@@ -141,8 +145,8 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Right Side - Problem Card */}
-            <div className="animate-fade-in">
+            {/* Right Side - Problem Card with tilt effect */}
+            <TiltCard className="relative animate-fade-in">
               <Card className="bg-card/95 backdrop-blur-sm border-border/50 overflow-hidden">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-4">
@@ -214,7 +218,7 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </TiltCard>
           </div>
         </div>
       </section>
