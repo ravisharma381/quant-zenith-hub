@@ -218,7 +218,7 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </TiltCard>
           </div>
         </div>
       </section>
