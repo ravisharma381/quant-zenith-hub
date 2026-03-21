@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
-import TiltCard from "@/components/TiltCard";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -116,9 +115,6 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 bg-gradient-accent overflow-hidden">
-        {/* Dot pattern overlay */}
-        <div className="absolute inset-0" style={{ backgroundImage: 'var(--dot-pattern)', backgroundSize: '20px 20px' }} />
-
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
             {/* Left Side - Text Content */}
@@ -143,8 +139,8 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Right Side - Problem Card with tilt effect */}
-            <TiltCard className="relative animate-fade-in">
+            {/* Right Side - Problem Card */}
+            <div className="animate-fade-in">
               <Card className="bg-card/95 backdrop-blur-sm border-border/50 overflow-hidden">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between gap-4">
@@ -216,7 +212,7 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
-            </TiltCard>
+            </div>
           </div>
         </div>
       </section>
