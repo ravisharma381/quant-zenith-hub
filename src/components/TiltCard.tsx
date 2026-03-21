@@ -7,7 +7,7 @@ interface TiltCardProps {
   glareOpacity?: number;
 }
 
-const TiltCard = ({ children, className = "", maxTilt = 8, glareOpacity = 0.15 }: TiltCardProps) => {
+const TiltCard = ({ children, className = "", maxTilt = 8, glareOpacity = 0.06 }: TiltCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg)");
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
