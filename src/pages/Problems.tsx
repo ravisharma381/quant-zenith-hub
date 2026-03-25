@@ -1,6 +1,6 @@
 
 // Problems.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -48,6 +48,7 @@ import {
 } from "@/statics";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollContext } from "@/components/Layout";
 
 /* ---------------- Types ---------------- */
 
@@ -362,6 +363,12 @@ const Problems: React.FC = () => {
     fetchPage(currentPage);
   }, [currentPage, selectedTopic, selectedDifficulty, searchTerm]);
 
+  const scrollRef = useContext(ScrollContext);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
   /* ---------------- Pagination Render ---------------- */
 
   function renderPaginationItems() {
@@ -496,7 +503,7 @@ const Problems: React.FC = () => {
             </div>
 
             {/* Rows */}
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-border custom-scrollbar">
               {problemsLoading && <TableSkeleton />}
               {!problemsLoading && problems.length === 0 && (
                 <div className="p-4 text-center text-sm text-muted-foreground">No problems found for this page.</div>

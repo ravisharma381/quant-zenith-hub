@@ -16,7 +16,7 @@ const CompanyPlaylist = () => {
       color: "bg-blue-500/20"
     },
     "citadel": {
-      name: "Citadel", 
+      name: "Citadel",
       description: "Problems commonly asked in Citadel interviews.",
       icon: "🏢",
       color: "bg-blue-600/20"
@@ -39,7 +39,7 @@ const CompanyPlaylist = () => {
     },
     {
       id: "conditional-expectation",
-      name: "Conditional Expectation", 
+      name: "Conditional Expectation",
       description: "Calculation of the expected value of a variable given certain conditions, essential for options pricing.",
       count: 8
     },
@@ -136,85 +136,84 @@ const CompanyPlaylist = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
-            >
-              <ArrowLeft size={16} />
-              Back to Explore
-            </button>
-            
-            <div className={`${company.color} rounded-lg p-6 mb-6`}>
-              <div className="flex items-center gap-4">
-                <div className="text-4xl">{company.icon}</div>
-                <div>
-                  <h1 className="text-3xl font-bold text-foreground">{company.name}</h1>
-                  <p className="text-muted-foreground mt-1">{company.description}</p>
-                </div>
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
+          >
+            <ArrowLeft size={16} />
+            Back to Explore
+          </button>
+
+          <div className={`${company.color} rounded-lg p-6 mb-6`}>
+            <div className="flex items-center gap-4">
+              <div className="text-4xl">{company.icon}</div>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">{company.name}</h1>
+                <p className="text-muted-foreground mt-1">{company.description}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-card border border-border rounded-lg p-4">
+              <h3 className="font-semibold text-foreground mb-4">Topics</h3>
+              <div className="space-y-2">
+                {topics.map((topic) => (
+                  <button
+                    key={topic.id}
+                    onClick={() => setSelectedTopic(topic.name)}
+                    className={`w-full text-left p-3 rounded-lg transition-colors ${selectedTopic === topic.name
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "hover:bg-muted text-muted-foreground"
+                      }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">{topic.name}</span>
+                      <span className="text-xs">{topic.count}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-card border border-border rounded-lg p-4">
-                <h3 className="font-semibold text-foreground mb-4">Topics</h3>
-                <div className="space-y-2">
-                  {topics.map((topic) => (
-                    <button
-                      key={topic.id}
-                      onClick={() => setSelectedTopic(topic.name)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
-                        selectedTopic === topic.name
-                          ? "bg-primary/10 text-primary border border-primary/20"
-                          : "hover:bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">{topic.name}</span>
-                        <span className="text-xs">{topic.count}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="mb-6">
+                <h2 className="text-xl font-bold text-foreground mb-2">{selectedTopic}</h2>
+                <p className="text-muted-foreground text-sm">
+                  {topics.find(t => t.name === selectedTopic)?.description}
+                </p>
               </div>
-            </div>
 
-            {/* Main Content */}
-            <div className="lg:col-span-3">
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold text-foreground mb-2">{selectedTopic}</h2>
-                  <p className="text-muted-foreground text-sm">
-                    {topics.find(t => t.name === selectedTopic)?.description}
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {problems.map((problem) => (
-                    <div
-                      key={problem.id}
-                      className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/problems/${problem.id}`)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        </div>
-                        <span className="font-medium text-foreground">{problem.name}</span>
-                        <span className="text-xs text-muted-foreground">{selectedTopic}</span>
+              <div className="space-y-3 custom-scrollbar">
+                {problems.map((problem) => (
+                  <div
+                    key={problem.id}
+                    className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+                    onClick={() => navigate(`/problems/${problem.id}`)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
                       </div>
-                      <Badge className={getDifficultyColor(problem.difficulty)} variant="outline">
-                        {problem.difficulty}
-                      </Badge>
+                      <span className="font-medium text-foreground">{problem.name}</span>
+                      <span className="text-xs text-muted-foreground">{selectedTopic}</span>
                     </div>
-                  ))}
-                </div>
+                    <Badge className={getDifficultyColor(problem.difficulty)} variant="outline">
+                      {problem.difficulty}
+                    </Badge>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
         </div>
       </div>
     </div>

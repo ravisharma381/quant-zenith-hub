@@ -281,7 +281,7 @@ const ProblemDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
+    <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8 custom-scrollbar">
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         {/* Completed badge */}
         {isCompleted && (

@@ -42,7 +42,7 @@ function renderRichCMS(text?: string | null) {
             part.endsWith("$$")
         ) {
             return (
-                <div key={idx} className="my-4">
+                <div key={idx} className="my-4 overflow-x-auto overflow-y-hidden custom-scroll ">
                     <TeX block>{part.slice(2, -2)}</TeX>
                 </div>
             );
@@ -53,7 +53,7 @@ function renderRichCMS(text?: string | null) {
             part.startsWith("$") &&
             part.endsWith("$")
         ) {
-            return <TeX key={idx}>{part.slice(1, -1)}</TeX>;
+            return <TeX className="overflow-x-auto overflow-y-hidden custom-scroll" key={idx}>{part.slice(1, -1)}</TeX>;
         }
 
         // ---------- IMAGE ----------
@@ -319,7 +319,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                                         {`Hint ${i + 1}`}
                                     </AccordionTrigger>
                                     <AccordionContent className="text-white leading-relaxed text-lg">
-                                        <div className="overflow-x-auto custom-scroll">{renderRichCMS(hintVal)}</div>
+                                        <div className="">{renderRichCMS(hintVal)}</div>
                                     </AccordionContent>
                                 </AccordionItem>
                             );
@@ -330,7 +330,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                                 Solution
                             </AccordionTrigger>
                             <AccordionContent className="text-white leading-relaxed text-lg">
-                                <div className="overflow-x-auto custom-scroll">{renderRichCMS(topic.solution)}</div>
+                                <div className="">{renderRichCMS(topic.solution)}</div>
                             </AccordionContent>
                         </AccordionItem>
 
