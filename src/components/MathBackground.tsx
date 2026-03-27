@@ -61,8 +61,8 @@ const MathBackground = () => {
     const createParticle = (): Particle => ({
       x: Math.random() * canvas.offsetWidth,
       y: canvas.offsetHeight + 20,
-      symbol: symbols[Math.floor(Math.random() * symbols.length)],
-      size: 12 + Math.random() * 20,
+      symbol: formulas[Math.floor(Math.random() * formulas.length)],
+      size: 10 + Math.random() * 6,
       speed: 0.2 + Math.random() * 0.5,
       opacity: 0.12 + Math.random() * 0.2,
       drift: (Math.random() - 0.5) * 0.4,
