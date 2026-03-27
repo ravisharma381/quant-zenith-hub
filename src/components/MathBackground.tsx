@@ -285,6 +285,35 @@ const MathBackground = () => {
           }
           ctx.stroke();
           break;
+
+        case "octahedron":
+          // 3D octahedron wireframe projection
+          const s = d.size;
+          const oct = [
+            [0, -s, 0], [s * 0.7, 0, 0], [0, 0, s * 0.5],
+            [-s * 0.7, 0, 0], [0, 0, -s * 0.5], [0, s, 0]
+          ];
+          const proj = oct.map(([px, py, pz]) => {
+            const cosR = Math.cos(d.rotation);
+            const sinR = Math.sin(d.rotation);
+            const rx = px * cosR - pz * sinR;
+            return [rx, py] as [number, number];
+          });
+          const edges = [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
+          edges.forEach(([a, b]) => {
+            ctx.beginPath();
+            ctx.moveTo(proj[a][0], proj[a][1]);
+            ctx.lineTo(proj[b][0], proj[b][1]);
+            ctx.stroke();
+          });
+          // vertices
+          ctx.fillStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
+          proj.forEach(([vx, vy]) => {
+            ctx.beginPath();
+            ctx.arc(vx, vy, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          break;
       }
 
       ctx.restore();
