@@ -142,12 +142,15 @@ export default {
 					'80%': { transform: 'translate(-8px, -5px) scale(0.96)', opacity: '0.7' },
 				},
 			},
-			animation: {
+		animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'shake': 'shake 0.5s ease-in-out'
+				'shake': 'shake 0.5s ease-in-out',
+				'grid-float-1': 'grid-float-1 8s ease-in-out infinite',
+				'grid-float-2': 'grid-float-2 10s ease-in-out infinite',
+				'grid-float-3': 'grid-float-3 12s ease-in-out infinite',
 			}
 		}
 	},
