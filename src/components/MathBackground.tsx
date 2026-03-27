@@ -438,14 +438,15 @@ const MathBackground = () => {
     };
 
     const initParticles = () => {
-      const count = Math.floor(canvas.offsetWidth / 18);
-      for (let i = 0; i < count; i++) {
+      // 25% symbols, 75% diagrams
+      const totalCount = Math.floor(canvas.offsetWidth / 14);
+      const symbolCount = Math.floor(totalCount * 0.25);
+      const diagramCount = Math.floor(totalCount * 0.75);
+      for (let i = 0; i < symbolCount; i++) {
         const p = createParticle();
         p.y = Math.random() * canvas.offsetHeight;
         particles.push(p);
       }
-      // Add geometric diagrams
-      const diagramCount = Math.floor(canvas.offsetWidth / 120);
       for (let i = 0; i < diagramCount; i++) {
         const d = createDiagram();
         d.y = Math.random() * canvas.offsetHeight;
