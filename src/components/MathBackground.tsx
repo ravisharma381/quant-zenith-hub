@@ -191,6 +191,71 @@ const MathBackground = () => {
           ctx.lineTo(d.size, 0);
           ctx.stroke();
           break;
+
+        case "fractal":
+          // Koch snowflake-like pattern
+          const drawKochSide = (x1: number, y1: number, x2: number, y2: number, depth: number) => {
+            if (depth === 0) {
+              ctx.lineTo(x2, y2);
+              return;
+            }
+            const dx = (x2 - x1) / 3;
+            const dy = (y2 - y1) / 3;
+            const mx = (x1 + x2) / 2;
+            const my = (y1 + y2) / 2;
+            const px = mx - dy * Math.sqrt(3) / 3;
+            const py = my + dx * Math.sqrt(3) / 3;
+            drawKochSide(x1, y1, x1 + dx, y1 + dy, depth - 1);
+            drawKochSide(x1 + dx, y1 + dy, px, py, depth - 1);
+            drawKochSide(px, py, x2 - dx, y2 - dy, depth - 1);
+            drawKochSide(x2 - dx, y2 - dy, x2, y2, depth - 1);
+          };
+          ctx.beginPath();
+          const kS = d.size * 0.8;
+          ctx.moveTo(0, -kS);
+          drawKochSide(0, -kS, kS * 0.866, kS * 0.5, 2);
+          drawKochSide(kS * 0.866, kS * 0.5, -kS * 0.866, kS * 0.5, 2);
+          drawKochSide(-kS * 0.866, kS * 0.5, 0, -kS, 2);
+          ctx.stroke();
+          break;
+
+        case "polar":
+          // Rose curve (rhodonea)
+          ctx.beginPath();
+          const petals = 5;
+          for (let a = 0; a <= Math.PI * 2; a += 0.02) {
+            const r = d.size * Math.cos(petals * a);
+            const px2 = r * Math.cos(a);
+            const py2 = r * Math.sin(a);
+            if (a === 0) ctx.moveTo(px2, py2);
+            else ctx.lineTo(px2, py2);
+          }
+          ctx.stroke();
+          break;
+
+        case "vector":
+          // Vector field arrows
+          const arrows = 3;
+          const step = d.size * 2 / arrows;
+          for (let r = 0; r < arrows; r++) {
+            for (let c = 0; c < arrows; c++) {
+              const ax = -d.size + c * step + step / 2;
+              const ay = -d.size + r * step + step / 2;
+              const angle = Math.atan2(ay, ax) + time;
+              const len = step * 0.35;
+              ctx.beginPath();
+              ctx.moveTo(ax, ay);
+              const ex = ax + Math.cos(angle) * len;
+              const ey = ay + Math.sin(angle) * len;
+              ctx.lineTo(ex, ey);
+              // arrowhead
+              ctx.lineTo(ex - Math.cos(angle - 0.5) * len * 0.3, ey - Math.sin(angle - 0.5) * len * 0.3);
+              ctx.moveTo(ex, ey);
+              ctx.lineTo(ex - Math.cos(angle + 0.5) * len * 0.3, ey - Math.sin(angle + 0.5) * len * 0.3);
+              ctx.stroke();
+            }
+          }
+          break;
       }
 
       ctx.restore();
