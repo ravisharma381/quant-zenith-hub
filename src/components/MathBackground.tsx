@@ -132,7 +132,7 @@ const MathBackground = () => {
           }
           ctx.stroke();
           // Axis
-          ctx.strokeStyle = `hsla(270, 70%, 65%, ${d.opacity * 0.5})`;
+          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.5})`;
           ctx.beginPath();
           ctx.moveTo(-d.size, 0);
           ctx.lineTo(d.size, 0);
