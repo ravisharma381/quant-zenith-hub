@@ -313,7 +313,7 @@ const MathBackground = () => {
       time += 0.01;
       ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      // Draw symbols
+      // Draw formulas with glow
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.y -= p.speed;
@@ -324,10 +324,15 @@ const MathBackground = () => {
           continue;
         }
 
-        ctx.font = `${p.size}px 'Courier New', monospace`;
         const symbolHues = [270, 200, 150, 340, 45, 180];
-        ctx.fillStyle = `hsla(${symbolHues[i % symbolHues.length]}, 70%, 65%, ${p.opacity})`;
+        const hue = symbolHues[i % symbolHues.length];
+        ctx.font = `${p.size}px 'Courier New', monospace`;
+        // Glow layer
+        ctx.shadowColor = `hsla(${hue}, 80%, 60%, ${p.opacity * 0.8})`;
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = `hsla(${hue}, 70%, 65%, ${p.opacity})`;
         ctx.fillText(p.symbol, p.x, p.y);
+        ctx.shadowBlur = 0;
       }
 
       // Draw diagrams
