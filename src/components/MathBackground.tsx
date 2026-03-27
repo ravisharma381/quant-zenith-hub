@@ -13,11 +13,16 @@ const MathBackground = () => {
     let animationId: number;
     let time = 0;
 
-    const symbols = [
-      "∫", "∑", "∂", "π", "∞", "√", "Δ", "∇", "∈", "∀",
-      "σ", "μ", "λ", "θ", "φ", "Ω", "α", "β", "γ", "ε",
-      "P(x)", "E[X]", "dx", "lim", "→", "≈", "±", "×",
-      "f(x)", "∮", "ℝ", "ℤ", "∝", "≡", "⊂", "∪"
+    const formulas = [
+      "a² + b² = c²", "E = mc²", "∇·F = ∂F/∂x", "P(A|B) = P(B|A)P(A)/P(B)",
+      "eiπ + 1 = 0", "∫∫∫ ∇·F dV = ∮∮ F·dS", "(A∪B)' = A'∩B'",
+      "Var(X) = E[X²] - (E[X])²", "d/dx[fg] = f'g + fg'", "∑1/n² = π²/6",
+      "det(AB) = det(A)det(B)", "σ = √(Var(X))", "lim n→∞ (1+1/n)ⁿ = e",
+      "∇×F = curl F", "P(A∪B) = P(A)+P(B)-P(A∩B)", "∂²u/∂t² = c²∇²u",
+      "E[X] = ∫xf(x)dx", "Cov(X,Y) = E[XY]-E[X]E[Y]", "∮ F·dr = ∫∫ curl F·dS",
+      "nCr = n!/r!(n-r)!", "(A∩B)' = A'∪B'", "Σ xᵢ/n = x̄",
+      "f'(x) = lim Δx→0", "∇f = ⟨∂f/∂x, ∂f/∂y⟩", "χ² = Σ(O-E)²/E",
+      "H = -Σ p log p", "Ax = λx", "∫₀^∞ e⁻ˣ dx = 1"
     ];
 
     interface Particle {
