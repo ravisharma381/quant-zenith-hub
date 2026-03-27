@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
+import MathBackground from "@/components/MathBackground";
 import { 
   TrendingUp, 
   BookOpen, 
