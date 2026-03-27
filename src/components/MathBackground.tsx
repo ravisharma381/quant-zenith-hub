@@ -17,7 +17,9 @@ const MathBackground = () => {
       "∫", "∑", "∂", "π", "∞", "√", "Δ", "∇", "∈", "∀",
       "σ", "μ", "λ", "θ", "φ", "Ω", "α", "β", "γ", "ε",
       "P(x)", "E[X]", "dx", "lim", "→", "≈", "±", "×",
-      "f(x)", "∮", "ℝ", "ℤ", "∝", "≡", "⊂", "∪"
+      "f(x)", "∮", "ℝ", "ℤ", "∝", "≡", "⊂", "∪",
+      "∮F⃗·dA⃗=∫∫∫∇·F⃗dV", "a⃗·b⃗=|a||b|cosθ",
+      "|⟨a,b⟩|≤‖a‖‖b‖", "eⁱᵖ=-1"
     ];
 
     interface Particle {
@@ -34,7 +36,7 @@ const MathBackground = () => {
     interface Diagram {
       x: number;
       y: number;
-      type: "triangle" | "circle" | "sine" | "graph" | "spiral" | "bell" | "ellipse" | "hyperbola" | "tangent" | "polar";
+      type: "triangle" | "circle" | "sine" | "graph" | "spiral" | "bell" | "ellipse" | "hyperbola" | "tangent" | "polar" | "octahedron";
       hue: number;
       size: number;
       speed: number;
@@ -64,7 +66,7 @@ const MathBackground = () => {
       phase: Math.random() * Math.PI * 2,
     });
 
-    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar"];
+    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar", "octahedron"];
     const diagramHues = [270, 200, 150, 340, 45, 180, 300, 120];
 
     const createDiagram = (): Diagram => ({
@@ -282,6 +284,35 @@ const MathBackground = () => {
             else ctx.lineTo(px, py);
           }
           ctx.stroke();
+          break;
+
+        case "octahedron":
+          // 3D octahedron wireframe projection
+          const s = d.size;
+          const oct = [
+            [0, -s, 0], [s * 0.7, 0, 0], [0, 0, s * 0.5],
+            [-s * 0.7, 0, 0], [0, 0, -s * 0.5], [0, s, 0]
+          ];
+          const proj = oct.map(([px, py, pz]) => {
+            const cosR = Math.cos(d.rotation);
+            const sinR = Math.sin(d.rotation);
+            const rx = px * cosR - pz * sinR;
+            return [rx, py] as [number, number];
+          });
+          const edges = [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
+          edges.forEach(([a, b]) => {
+            ctx.beginPath();
+            ctx.moveTo(proj[a][0], proj[a][1]);
+            ctx.lineTo(proj[b][0], proj[b][1]);
+            ctx.stroke();
+          });
+          // vertices
+          ctx.fillStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
+          proj.forEach(([vx, vy]) => {
+            ctx.beginPath();
+            ctx.arc(vx, vy, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
           break;
       }
 
