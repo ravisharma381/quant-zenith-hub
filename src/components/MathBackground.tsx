@@ -34,7 +34,7 @@ const MathBackground = () => {
     interface Diagram {
       x: number;
       y: number;
-      type: "triangle" | "circle" | "sine" | "graph" | "spiral" | "bell" | "ellipse" | "hyperbola" | "tangent" | "polar";
+      type: "triangle" | "circle" | "sine" | "graph" | "spiral" | "bell" | "ellipse" | "hyperbola" | "tangent" | "polar" | "derivative" | "integral" | "vector" | "matrix" | "limitsGraph" | "parametric";
       hue: number;
       size: number;
       speed: number;
