@@ -89,6 +89,8 @@ const MathBackground = () => {
       ctx.save();
       ctx.translate(d.x, d.y);
       ctx.rotate(d.rotation);
+      ctx.shadowColor = `hsla(${d.hue}, 80%, 60%, ${d.opacity * 0.6})`;
+      ctx.shadowBlur = 10;
       ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
       ctx.lineWidth = 1.2;
 
