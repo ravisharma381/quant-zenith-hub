@@ -64,7 +64,34 @@
   }
 }
 
-/* Logo Ticker Animation */
+/* Hero Section Mosaic Background */
+.hero-mosaic-bg {
+  background: var(--gradient-hero-bg);
+  position: relative;
+}
+
+.hero-mosaic-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(90deg, hsl(200 40% 40% / 0.15) 1px, transparent 1px),
+    linear-gradient(180deg, hsl(200 40% 40% / 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.hero-mosaic-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 50%, hsl(195 60% 35% / 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, hsl(200 50% 25% / 0.5) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+
 @keyframes logo-scroll {
   0% {
     transform: translateX(0);
