@@ -64,7 +64,7 @@ const MathBackground = () => {
       phase: Math.random() * Math.PI * 2,
     });
 
-    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar"];
+    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar", "derivative", "integral", "vector", "matrix", "limitsGraph", "parametric"];
     const diagramHues = [270, 200, 150, 340, 45, 180, 300, 120];
 
     const createDiagram = (): Diagram => ({
