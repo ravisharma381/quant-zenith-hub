@@ -63,7 +63,7 @@ const MathBackground = () => {
       phase: Math.random() * Math.PI * 2,
     });
 
-    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell"];
+    const diagramTypes: Diagram["type"][] = ["triangle", "sine", "graph", "spiral", "bell", "matrix", "fractal", "polar", "vector"];
 
     const createDiagram = (): Diagram => ({
       x: Math.random() * canvas.offsetWidth,
