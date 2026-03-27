@@ -54,7 +54,6 @@
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 70%), hsl(330 60% 55%), hsl(122 97% 50%));
     --gradient-dark: linear-gradient(180deg, hsl(220 13% 10%), hsl(220 13% 8%));
     --gradient-accent: linear-gradient(90deg, hsl(270 70% 50% / 0.03), hsl(270 70% 50% / 0.08));
-    --gradient-hero-bg: linear-gradient(135deg, hsl(195 60% 25%), hsl(200 50% 32%), hsl(190 55% 28%));
     
     --shadow-glow: 0 0 40px hsl(122 97% 50% / 0.3);
     --shadow-purple-glow: 0 0 40px hsl(270 70% 60% / 0.3);
@@ -64,47 +63,7 @@
   }
 }
 
-/* Hero Section Mosaic Background */
-.hero-mosaic-bg {
-  background: var(--gradient-hero-bg);
-  position: relative;
-}
-
-.hero-mosaic-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      hsl(195 50% 20% / 0.35) 0px,
-      hsl(195 50% 20% / 0.35) 1px,
-      transparent 1px,
-      transparent 48px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      hsl(195 50% 20% / 0.35) 0px,
-      hsl(195 50% 20% / 0.35) 1px,
-      transparent 1px,
-      transparent 48px
-    );
-  pointer-events: none;
-  z-index: 1;
-}
-
-.hero-mosaic-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 50%, hsl(195 55% 32% / 0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 40%, hsl(200 45% 22% / 0.6) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, hsl(195 50% 28% / 0.3) 0%, transparent 40%);
-  pointer-events: none;
-}
-
-
+/* Logo Ticker Animation */
 @keyframes logo-scroll {
   0% {
     transform: translateX(0);
