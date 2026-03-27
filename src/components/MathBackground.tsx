@@ -13,11 +13,16 @@ const MathBackground = () => {
     let animationId: number;
     let time = 0;
 
-    const symbols = [
-      "∫", "∑", "∂", "π", "∞", "√", "Δ", "∇", "∈", "∀",
-      "σ", "μ", "λ", "θ", "φ", "Ω", "α", "β", "γ", "ε",
-      "P(x)", "E[X]", "dx", "lim", "→", "≈", "±", "×",
-      "f(x)", "∮", "ℝ", "ℤ", "∝", "≡", "⊂", "∪"
+    const formulas = [
+      "a² + b² = c²", "E = mc²", "∇·F = ∂F/∂x", "P(A|B) = P(B|A)P(A)/P(B)",
+      "eiπ + 1 = 0", "∫∫∫ ∇·F dV = ∮∮ F·dS", "(A∪B)' = A'∩B'",
+      "Var(X) = E[X²] - (E[X])²", "d/dx[fg] = f'g + fg'", "∑1/n² = π²/6",
+      "det(AB) = det(A)det(B)", "σ = √(Var(X))", "lim n→∞ (1+1/n)ⁿ = e",
+      "∇×F = curl F", "P(A∪B) = P(A)+P(B)-P(A∩B)", "∂²u/∂t² = c²∇²u",
+      "E[X] = ∫xf(x)dx", "Cov(X,Y) = E[XY]-E[X]E[Y]", "∮ F·dr = ∫∫ curl F·dS",
+      "nCr = n!/r!(n-r)!", "(A∩B)' = A'∪B'", "Σ xᵢ/n = x̄",
+      "f'(x) = lim Δx→0", "∇f = ⟨∂f/∂x, ∂f/∂y⟩", "χ² = Σ(O-E)²/E",
+      "H = -Σ p log p", "Ax = λx", "∫₀^∞ e⁻ˣ dx = 1"
     ];
 
     interface Particle {
@@ -56,8 +61,8 @@ const MathBackground = () => {
     const createParticle = (): Particle => ({
       x: Math.random() * canvas.offsetWidth,
       y: canvas.offsetHeight + 20,
-      symbol: symbols[Math.floor(Math.random() * symbols.length)],
-      size: 12 + Math.random() * 20,
+      symbol: formulas[Math.floor(Math.random() * formulas.length)],
+      size: 10 + Math.random() * 6,
       speed: 0.2 + Math.random() * 0.5,
       opacity: 0.12 + Math.random() * 0.2,
       drift: (Math.random() - 0.5) * 0.4,
@@ -84,6 +89,8 @@ const MathBackground = () => {
       ctx.save();
       ctx.translate(d.x, d.y);
       ctx.rotate(d.rotation);
+      ctx.shadowColor = `hsla(${d.hue}, 80%, 60%, ${d.opacity * 0.6})`;
+      ctx.shadowBlur = 10;
       ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
       ctx.lineWidth = 1.2;
 
@@ -289,7 +296,7 @@ const MathBackground = () => {
     };
 
     const initParticles = () => {
-      const count = Math.floor(canvas.offsetWidth / 18);
+      const count = Math.floor(canvas.offsetWidth / 50);
       for (let i = 0; i < count; i++) {
         const p = createParticle();
         p.y = Math.random() * canvas.offsetHeight;
@@ -308,7 +315,7 @@ const MathBackground = () => {
       time += 0.01;
       ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      // Draw symbols
+      // Draw formulas with glow
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.y -= p.speed;
@@ -319,10 +326,15 @@ const MathBackground = () => {
           continue;
         }
 
-        ctx.font = `${p.size}px 'Courier New', monospace`;
         const symbolHues = [270, 200, 150, 340, 45, 180];
-        ctx.fillStyle = `hsla(${symbolHues[i % symbolHues.length]}, 70%, 65%, ${p.opacity})`;
+        const hue = symbolHues[i % symbolHues.length];
+        ctx.font = `${p.size}px 'Courier New', monospace`;
+        // Glow layer
+        ctx.shadowColor = `hsla(${hue}, 80%, 60%, ${p.opacity * 0.8})`;
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = `hsla(${hue}, 70%, 65%, ${p.opacity})`;
         ctx.fillText(p.symbol, p.x, p.y);
+        ctx.shadowBlur = 0;
       }
 
       // Draw diagrams
