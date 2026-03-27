@@ -296,7 +296,7 @@ const MathBackground = () => {
     };
 
     const initParticles = () => {
-      const count = Math.floor(canvas.offsetWidth / 18);
+      const count = Math.floor(canvas.offsetWidth / 50);
       for (let i = 0; i < count; i++) {
         const p = createParticle();
         p.y = Math.random() * canvas.offsetHeight;
