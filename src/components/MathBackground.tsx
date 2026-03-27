@@ -63,7 +63,8 @@ const MathBackground = () => {
       phase: Math.random() * Math.PI * 2,
     });
 
-    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell"];
+    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar"];
+    const diagramHues = [270, 200, 150, 340, 45, 180, 300, 120];
 
     const createDiagram = (): Diagram => ({
       x: Math.random() * canvas.offsetWidth,
@@ -71,10 +72,11 @@ const MathBackground = () => {
       type: diagramTypes[Math.floor(Math.random() * diagramTypes.length)],
       size: 30 + Math.random() * 40,
       speed: 0.1 + Math.random() * 0.3,
-      opacity: 0.08 + Math.random() * 0.12,
+      opacity: 0.1 + Math.random() * 0.15,
       phase: Math.random() * Math.PI * 2,
       rotation: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.005,
+      hue: diagramHues[Math.floor(Math.random() * diagramHues.length)],
     });
 
     const drawDiagram = (d: Diagram) => {
