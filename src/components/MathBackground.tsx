@@ -102,20 +102,26 @@ const MathBackground = () => {
           ctx.stroke();
           break;
 
-        case "circle":
-          // Concentric circles with radii
+        case "matrix":
+          // Matrix/grid of dots with connecting lines
+          const gridN = 4;
+          const spacing = d.size * 2 / gridN;
+          for (let r = 0; r <= gridN; r++) {
+            for (let c = 0; c <= gridN; c++) {
+              const gx = -d.size + c * spacing;
+              const gy = -d.size + r * spacing;
+              ctx.beginPath();
+              ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
+              ctx.fillStyle = `hsla(270, 70%, 65%, ${d.opacity})`;
+              ctx.fill();
+            }
+          }
+          // Diagonal lines
           ctx.beginPath();
-          ctx.arc(0, 0, d.size, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(0, 0, d.size * 0.6, 0, Math.PI * 2);
-          ctx.stroke();
-          // Cross lines
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.moveTo(0, -d.size);
-          ctx.lineTo(0, d.size);
+          ctx.moveTo(-d.size, -d.size);
+          ctx.lineTo(d.size, d.size);
+          ctx.moveTo(d.size, -d.size);
+          ctx.lineTo(-d.size, d.size);
           ctx.stroke();
           break;
 
