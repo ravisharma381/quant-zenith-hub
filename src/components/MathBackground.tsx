@@ -43,10 +43,10 @@ const MathBackground = () => {
       x: Math.random() * canvas.offsetWidth,
       y: canvas.offsetHeight + 20,
       symbol: symbols[Math.floor(Math.random() * symbols.length)],
-      size: 10 + Math.random() * 16,
-      speed: 0.15 + Math.random() * 0.35,
-      opacity: 0.04 + Math.random() * 0.1,
-      drift: (Math.random() - 0.5) * 0.3,
+      size: 12 + Math.random() * 20,
+      speed: 0.2 + Math.random() * 0.5,
+      opacity: 0.12 + Math.random() * 0.2,
+      drift: (Math.random() - 0.5) * 0.4,
       phase: Math.random() * Math.PI * 2,
     });
 
