@@ -438,10 +438,10 @@ const MathBackground = () => {
     };
 
     const initParticles = () => {
-      // 25% symbols, 75% diagrams
+      // 50% symbols, 50% diagrams
       const totalCount = Math.floor(canvas.offsetWidth / 14);
-      const symbolCount = Math.floor(totalCount * 0.25);
-      const diagramCount = Math.floor(totalCount * 0.75);
+      const symbolCount = Math.floor(totalCount * 0.5);
+      const diagramCount = Math.floor(totalCount * 0.5);
       for (let i = 0; i < symbolCount; i++) {
         const p = createParticle();
         p.y = Math.random() * canvas.offsetHeight;
