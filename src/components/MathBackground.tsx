@@ -320,7 +320,8 @@ const MathBackground = () => {
         }
 
         ctx.font = `${p.size}px 'Courier New', monospace`;
-        ctx.fillStyle = `hsla(270, 70%, 65%, ${p.opacity})`;
+        const symbolHues = [270, 200, 150, 340, 45, 180];
+        ctx.fillStyle = `hsla(${symbolHues[i % symbolHues.length]}, 70%, 65%, ${p.opacity})`;
         ctx.fillText(p.symbol, p.x, p.y);
       }
 
