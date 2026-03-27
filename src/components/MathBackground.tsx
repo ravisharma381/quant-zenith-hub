@@ -83,7 +83,7 @@ const MathBackground = () => {
       ctx.save();
       ctx.translate(d.x, d.y);
       ctx.rotate(d.rotation);
-      ctx.strokeStyle = `hsla(270, 70%, 65%, ${d.opacity})`;
+      ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
       ctx.lineWidth = 1.2;
 
       switch (d.type) {
