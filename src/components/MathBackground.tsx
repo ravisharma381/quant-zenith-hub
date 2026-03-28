@@ -42,7 +42,7 @@ const MathBackground = () => {
       x: Math.random() * canvas.offsetWidth,
       y: canvas.offsetHeight + 40,
       type: itemTypes[Math.floor(Math.random() * itemTypes.length)],
-      size: 20 + Math.random() * 25,
+      size: item.type === "card" ? 40 + Math.random() * 30 : 20 + Math.random() * 25,
       speed: 0.15 + Math.random() * 0.4,
       opacity: 0.12 + Math.random() * 0.18,
       drift: (Math.random() - 0.5) * 0.3,
