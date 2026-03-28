@@ -16,7 +16,7 @@ const MathBackground = () => {
     interface FloatingItem {
       x: number;
       y: number;
-      type: "die" | "card" | "chip" | "coin";
+      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube";
       size: number;
       speed: number;
       opacity: number;
@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
@@ -44,7 +44,7 @@ const MathBackground = () => {
         x: Math.random() * canvas.offsetWidth,
         y: canvas.offsetHeight + 40,
         type,
-        size: type === "card" ? 40 + Math.random() * 30 : 20 + Math.random() * 25,
+        size: type === "card" ? 56 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 30 + Math.random() * 35 : type === "knight" ? 30 + Math.random() * 25 : 20 + Math.random() * 25,
         speed: 0.15 + Math.random() * 0.4,
         opacity: 0.12 + Math.random() * 0.18,
         drift: (Math.random() - 0.5) * 0.3,
@@ -178,6 +178,104 @@ const MathBackground = () => {
           ctx.textBaseline = "middle";
           const vals = ["5", "10", "25", "50", "100", "$"];
           ctx.fillText(vals[item.variant % vals.length], 0, 0);
+          break;
+        }
+
+        case "knight": {
+          // Chess knight silhouette
+          ctx.strokeStyle = `hsla(${h}, 50%, 70%, ${o})`;
+          ctx.fillStyle = `hsla(${h}, 50%, 70%, ${o * 0.3})`;
+          ctx.lineWidth = 1.4;
+          const k = s * 0.5;
+          ctx.beginPath();
+          // Base
+          ctx.moveTo(-k * 0.6, k);
+          ctx.lineTo(k * 0.6, k);
+          ctx.lineTo(k * 0.5, k * 0.75);
+          ctx.lineTo(-k * 0.5, k * 0.75);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+          // Body and head
+          ctx.beginPath();
+          ctx.moveTo(-k * 0.35, k * 0.75);
+          ctx.lineTo(-k * 0.4, k * 0.1);
+          ctx.quadraticCurveTo(-k * 0.45, -k * 0.3, -k * 0.2, -k * 0.5);
+          // Ears
+          ctx.lineTo(-k * 0.1, -k * 0.9);
+          ctx.lineTo(k * 0.05, -k * 0.65);
+          // Head/snout
+          ctx.quadraticCurveTo(k * 0.4, -k * 0.6, k * 0.5, -k * 0.3);
+          ctx.lineTo(k * 0.6, -k * 0.15);
+          ctx.quadraticCurveTo(k * 0.45, -k * 0.05, k * 0.3, -k * 0.1);
+          // Jaw
+          ctx.quadraticCurveTo(k * 0.2, k * 0.15, k * 0.3, k * 0.4);
+          ctx.lineTo(k * 0.35, k * 0.75);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+          // Eye
+          ctx.fillStyle = `hsla(${h}, 60%, 75%, ${o})`;
+          ctx.beginPath();
+          ctx.arc(k * 0.1, -k * 0.35, k * 0.07, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        }
+
+        case "octahedron": {
+          // 3D octahedron wireframe
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
+          const os = s * 0.5;
+          const oct = [
+            [0, -os, 0], [os * 0.7, 0, 0], [0, 0, os * 0.5],
+            [-os * 0.7, 0, 0], [0, 0, -os * 0.5], [0, os, 0]
+          ];
+          const cosR = Math.cos(item.rotation);
+          const sinR = Math.sin(item.rotation);
+          const proj = oct.map(([px, py, pz]) => {
+            const rx = px * cosR - pz * sinR;
+            return [rx, py] as [number, number];
+          });
+          const edges = [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
+          edges.forEach(([a, b]) => {
+            ctx.beginPath();
+            ctx.moveTo(proj[a][0], proj[a][1]);
+            ctx.lineTo(proj[b][0], proj[b][1]);
+            ctx.stroke();
+          });
+          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          proj.forEach(([vx, vy]) => {
+            ctx.beginPath();
+            ctx.arc(vx, vy, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          break;
+        }
+
+        case "cube": {
+          // 3D cube wireframe
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
+          const cs = s * 0.4;
+          const verts = [
+            [-cs, -cs, -cs], [cs, -cs, -cs], [cs, cs, -cs], [-cs, cs, -cs],
+            [-cs, -cs, cs], [cs, -cs, cs], [cs, cs, cs], [-cs, cs, cs]
+          ];
+          const cosC = Math.cos(item.rotation);
+          const sinC = Math.sin(item.rotation);
+          const proj2 = verts.map(([px, py, pz]) => {
+            const rx = px * cosC - pz * sinC;
+            const rz = px * sinC + pz * cosC;
+            return [rx, py + rz * 0.3] as [number, number];
+          });
+          const cubeEdges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+          cubeEdges.forEach(([a, b]) => {
+            ctx.beginPath();
+            ctx.moveTo(proj2[a][0], proj2[a][1]);
+            ctx.lineTo(proj2[b][0], proj2[b][1]);
+            ctx.stroke();
+          });
           break;
         }
 
