@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "coin"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
@@ -38,20 +38,23 @@ const MathBackground = () => {
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     };
 
-    const createItem = (): FloatingItem => ({
-      x: Math.random() * canvas.offsetWidth,
-      y: canvas.offsetHeight + 40,
-      type: itemTypes[Math.floor(Math.random() * itemTypes.length)],
-      size: 20 + Math.random() * 25,
-      speed: 0.15 + Math.random() * 0.4,
-      opacity: 0.12 + Math.random() * 0.18,
-      drift: (Math.random() - 0.5) * 0.3,
-      phase: Math.random() * Math.PI * 2,
-      rotation: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.008,
-      hue: hues[Math.floor(Math.random() * hues.length)],
-      variant: Math.floor(Math.random() * 6),
-    });
+    const createItem = (): FloatingItem => {
+      const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+      return {
+        x: Math.random() * canvas.offsetWidth,
+        y: canvas.offsetHeight + 40,
+        type,
+        size: type === "card" ? 40 + Math.random() * 30 : 20 + Math.random() * 25,
+        speed: 0.15 + Math.random() * 0.4,
+        opacity: 0.12 + Math.random() * 0.18,
+        drift: (Math.random() - 0.5) * 0.3,
+        phase: Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.008,
+        hue: hues[Math.floor(Math.random() * hues.length)],
+        variant: Math.floor(Math.random() * 52),
+      };
+    };
 
     const drawDiePips = (ctx: CanvasRenderingContext2D, s: number, val: number, hue: number, opacity: number) => {
       ctx.fillStyle = `hsla(${hue}, 70%, 75%, ${opacity})`;
@@ -103,11 +106,10 @@ const MathBackground = () => {
         }
 
         case "card": {
-          // Playing card outline with suit
           const cw = s * 0.7;
           const ch = s;
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 1.5;
           const cr = s * 0.08;
           ctx.beginPath();
           ctx.moveTo(-cw / 2 + cr, -ch / 2);
@@ -121,13 +123,32 @@ const MathBackground = () => {
           ctx.quadraticCurveTo(-cw / 2, -ch / 2, -cw / 2 + cr, -ch / 2);
           ctx.closePath();
           ctx.stroke();
-          // Draw suit symbol
-          ctx.fillStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.font = `${s * 0.45}px serif`;
+          // Card rank and suit
+          const suits = ["♠", "♥", "♦", "♣"];
+          const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+          const suit = suits[item.variant % 4];
+          const rank = ranks[Math.floor(item.variant / 4) % 13];
+          const isRed = item.variant % 4 === 1 || item.variant % 4 === 2;
+          const cardHue = isRed ? 0 : 220;
+          ctx.fillStyle = `hsla(${cardHue}, 70%, 70%, ${o})`;
+          // Center suit
+          ctx.font = `${s * 0.35}px serif`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          const suits = ["♠", "♥", "♦", "♣"];
-          ctx.fillText(suits[item.variant % 4], 0, 0);
+          ctx.fillText(suit, 0, s * 0.08);
+          // Top-left rank
+          ctx.font = `bold ${s * 0.2}px sans-serif`;
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(rank, -cw / 2 + s * 0.06, -ch / 2 + s * 0.06);
+          // Bottom-right rank (inverted)
+          ctx.save();
+          ctx.translate(cw / 2 - s * 0.06, ch / 2 - s * 0.06);
+          ctx.rotate(Math.PI);
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(rank, 0, 0);
+          ctx.restore();
           break;
         }
 
@@ -160,23 +181,6 @@ const MathBackground = () => {
           break;
         }
 
-        case "coin": {
-          // Coin flip
-          const squeeze = 0.3 + Math.abs(Math.sin(time * 1.5 + item.phase)) * 0.7;
-          ctx.strokeStyle = `hsla(${h}, 50%, 75%, ${o})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, s * 0.4 * squeeze, s * 0.4, 0, 0, Math.PI * 2);
-          ctx.stroke();
-          if (squeeze > 0.5) {
-            ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.8})`;
-            ctx.font = `${s * 0.3}px serif`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(item.variant % 2 === 0 ? "H" : "T", 0, 0);
-          }
-          break;
-        }
       }
 
       ctx.restore();
