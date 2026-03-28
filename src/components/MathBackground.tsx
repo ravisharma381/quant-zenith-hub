@@ -103,11 +103,10 @@ const MathBackground = () => {
         }
 
         case "card": {
-          // Playing card outline with suit
           const cw = s * 0.7;
           const ch = s;
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 1.5;
           const cr = s * 0.08;
           ctx.beginPath();
           ctx.moveTo(-cw / 2 + cr, -ch / 2);
@@ -121,13 +120,32 @@ const MathBackground = () => {
           ctx.quadraticCurveTo(-cw / 2, -ch / 2, -cw / 2 + cr, -ch / 2);
           ctx.closePath();
           ctx.stroke();
-          // Draw suit symbol
-          ctx.fillStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.font = `${s * 0.45}px serif`;
+          // Card rank and suit
+          const suits = ["♠", "♥", "♦", "♣"];
+          const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+          const suit = suits[item.variant % 4];
+          const rank = ranks[Math.floor(item.variant / 4) % 13];
+          const isRed = item.variant % 4 === 1 || item.variant % 4 === 2;
+          const cardHue = isRed ? 0 : 220;
+          ctx.fillStyle = `hsla(${cardHue}, 70%, 70%, ${o})`;
+          // Center suit
+          ctx.font = `${s * 0.35}px serif`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          const suits = ["♠", "♥", "♦", "♣"];
-          ctx.fillText(suits[item.variant % 4], 0, 0);
+          ctx.fillText(suit, 0, s * 0.08);
+          // Top-left rank
+          ctx.font = `bold ${s * 0.2}px sans-serif`;
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(rank, -cw / 2 + s * 0.06, -ch / 2 + s * 0.06);
+          // Bottom-right rank (inverted)
+          ctx.save();
+          ctx.translate(cw / 2 - s * 0.06, ch / 2 - s * 0.06);
+          ctx.rotate(Math.PI);
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText(rank, 0, 0);
+          ctx.restore();
           break;
         }
 
