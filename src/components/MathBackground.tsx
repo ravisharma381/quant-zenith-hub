@@ -16,7 +16,7 @@ const MathBackground = () => {
     interface FloatingItem {
       x: number;
       y: number;
-      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube";
+      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn";
       size: number;
       speed: number;
       opacity: number;
@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
@@ -44,7 +44,7 @@ const MathBackground = () => {
         x: Math.random() * canvas.offsetWidth,
         y: canvas.offsetHeight + 40,
         type,
-        size: type === "card" ? 56 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 30 + Math.random() * 35 : type === "knight" ? 30 + Math.random() * 25 : 20 + Math.random() * 25,
+        size: type === "card" ? 56 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 30 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn") ? 30 + Math.random() * 30 : type === "knight" ? 30 + Math.random() * 25 : 20 + Math.random() * 25,
         speed: 0.15 + Math.random() * 0.4,
         opacity: 0.12 + Math.random() * 0.18,
         drift: (Math.random() - 0.5) * 0.3,
@@ -276,6 +276,86 @@ const MathBackground = () => {
             ctx.lineTo(proj2[b][0], proj2[b][1]);
             ctx.stroke();
           });
+          break;
+        }
+
+        case "parabola": {
+          // Coordinate axes + parabola
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(-s, 0); ctx.lineTo(s, 0);
+          ctx.moveTo(0, -s); ctx.lineTo(0, s);
+          ctx.stroke();
+          // Parabola curve
+          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          for (let i = -s * 0.85; i <= s * 0.85; i += 2) {
+            const norm = i / (s * 0.85);
+            const py = -norm * norm * s * 0.8;
+            if (i === -s * 0.85) ctx.moveTo(i, -py);
+            else ctx.lineTo(i, -py);
+          }
+          ctx.stroke();
+          // Focus dot
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          ctx.beginPath();
+          ctx.arc(0, s * 0.2, 2, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        }
+
+        case "ellipse": {
+          // Ellipse with foci and axes
+          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          // Foci
+          const fd = Math.sqrt(s * s - (s * 0.6) * (s * 0.6));
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          ctx.beginPath();
+          ctx.arc(-fd, 0, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(fd, 0, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          // Dashed axes
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.4})`;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(-s, 0); ctx.lineTo(s, 0);
+          ctx.moveTo(0, -s * 0.6); ctx.lineTo(0, s * 0.6);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          break;
+        }
+
+        case "venn": {
+          // Two-circle Venn diagram
+          const vr = s * 0.45;
+          const offset = s * 0.25;
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.arc(-offset, 0, vr, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = `hsla(${(h + 120) % 360}, 60%, 70%, ${o})`;
+          ctx.beginPath();
+          ctx.arc(offset, 0, vr, 0, Math.PI * 2);
+          ctx.stroke();
+          // Labels
+          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.7})`;
+          ctx.font = `${s * 0.18}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("A", -offset - vr * 0.4, 0);
+          ctx.fillStyle = `hsla(${(h + 120) % 360}, 60%, 70%, ${o * 0.7})`;
+          ctx.fillText("B", offset + vr * 0.4, 0);
+          ctx.fillStyle = `hsla(${(h + 60) % 360}, 60%, 70%, ${o * 0.5})`;
+          ctx.fillText("∩", 0, 0);
           break;
         }
 
