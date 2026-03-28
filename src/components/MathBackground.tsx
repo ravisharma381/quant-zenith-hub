@@ -13,41 +13,24 @@ const MathBackground = () => {
     let animationId: number;
     let time = 0;
 
-    const symbols = [
-      "∫", "∑", "∂", "π", "∞", "√", "Δ", "∇", "∈", "∀",
-      "σ", "μ", "λ", "θ", "φ", "Ω", "α", "β", "γ", "ε",
-      "P(x)", "E[X]", "dx", "lim", "→", "≈", "±", "×",
-      "f(x)", "∮", "ℝ", "ℤ", "∝", "≡", "⊂", "∪",
-      "∮F⃗·dA⃗=∫∫∫∇·F⃗dV", "a⃗·b⃗=|a||b|cosθ",
-      "|⟨a,b⟩|≤‖a‖‖b‖", "eⁱᵖ=-1"
-    ];
-
-    interface Particle {
+    interface FloatingItem {
       x: number;
       y: number;
-      symbol: string;
+      type: "die" | "card" | "chip" | "coin";
       size: number;
       speed: number;
       opacity: number;
       drift: number;
       phase: number;
-    }
-
-    interface Diagram {
-      x: number;
-      y: number;
-      type: "triangle" | "circle" | "sine" | "graph" | "spiral" | "bell" | "ellipse" | "hyperbola" | "tangent" | "polar" | "octahedron";
-      hue: number;
-      size: number;
-      speed: number;
-      opacity: number;
-      phase: number;
       rotation: number;
       rotSpeed: number;
+      hue: number;
+      variant: number; // sub-variant within type
     }
 
-    const particles: Particle[] = [];
-    const diagrams: Diagram[] = [];
+    const items: FloatingItem[] = [];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "coin"];
+    const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -55,283 +38,156 @@ const MathBackground = () => {
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     };
 
-    const createParticle = (): Particle => ({
+    const createItem = (): FloatingItem => ({
       x: Math.random() * canvas.offsetWidth,
-      y: canvas.offsetHeight + 20,
-      symbol: symbols[Math.floor(Math.random() * symbols.length)],
-      size: 12 + Math.random() * 20,
-      speed: 0.2 + Math.random() * 0.5,
-      opacity: 0.12 + Math.random() * 0.2,
-      drift: (Math.random() - 0.5) * 0.4,
-      phase: Math.random() * Math.PI * 2,
-    });
-
-    const diagramTypes: Diagram["type"][] = ["triangle", "circle", "sine", "graph", "spiral", "bell", "ellipse", "hyperbola", "tangent", "polar", "octahedron"];
-    const diagramHues = [270, 200, 150, 340, 45, 180, 300, 120];
-
-    const createDiagram = (): Diagram => ({
-      x: Math.random() * canvas.offsetWidth,
-      y: canvas.offsetHeight + 60,
-      type: diagramTypes[Math.floor(Math.random() * diagramTypes.length)],
-      size: 30 + Math.random() * 40,
-      speed: 0.1 + Math.random() * 0.3,
-      opacity: 0.1 + Math.random() * 0.15,
+      y: canvas.offsetHeight + 40,
+      type: itemTypes[Math.floor(Math.random() * itemTypes.length)],
+      size: 20 + Math.random() * 25,
+      speed: 0.15 + Math.random() * 0.4,
+      opacity: 0.12 + Math.random() * 0.18,
+      drift: (Math.random() - 0.5) * 0.3,
       phase: Math.random() * Math.PI * 2,
       rotation: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.005,
-      hue: diagramHues[Math.floor(Math.random() * diagramHues.length)],
+      rotSpeed: (Math.random() - 0.5) * 0.008,
+      hue: hues[Math.floor(Math.random() * hues.length)],
+      variant: Math.floor(Math.random() * 6),
     });
 
-    const drawDiagram = (d: Diagram) => {
+    const drawDiePips = (ctx: CanvasRenderingContext2D, s: number, val: number, hue: number, opacity: number) => {
+      ctx.fillStyle = `hsla(${hue}, 70%, 75%, ${opacity})`;
+      const r = s * 0.08;
+      const positions: Record<number, [number, number][]> = {
+        1: [[0, 0]],
+        2: [[-0.25, -0.25], [0.25, 0.25]],
+        3: [[-0.25, -0.25], [0, 0], [0.25, 0.25]],
+        4: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]],
+        5: [[-0.25, -0.25], [0.25, -0.25], [0, 0], [-0.25, 0.25], [0.25, 0.25]],
+        6: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0], [0.25, 0], [-0.25, 0.25], [0.25, 0.25]],
+      };
+      (positions[val] || positions[1]).forEach(([px, py]) => {
+        ctx.beginPath();
+        ctx.arc(px * s, py * s, r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    };
+
+    const drawItem = (item: FloatingItem) => {
       ctx.save();
-      ctx.translate(d.x, d.y);
-      ctx.rotate(d.rotation);
-      ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
-      ctx.lineWidth = 1.2;
+      ctx.translate(item.x, item.y);
+      ctx.rotate(item.rotation);
+      const s = item.size;
+      const h = item.hue;
+      const o = item.opacity;
 
-      switch (d.type) {
-        case "triangle":
-          // Sierpinski-like triangle
+      switch (item.type) {
+        case "die": {
+          // Rounded rectangle die
+          const half = s * 0.5;
+          const radius = s * 0.12;
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.moveTo(0, -d.size);
-          ctx.lineTo(-d.size * 0.866, d.size * 0.5);
-          ctx.lineTo(d.size * 0.866, d.size * 0.5);
+          ctx.moveTo(-half + radius, -half);
+          ctx.lineTo(half - radius, -half);
+          ctx.quadraticCurveTo(half, -half, half, -half + radius);
+          ctx.lineTo(half, half - radius);
+          ctx.quadraticCurveTo(half, half, half - radius, half);
+          ctx.lineTo(-half + radius, half);
+          ctx.quadraticCurveTo(-half, half, -half, half - radius);
+          ctx.lineTo(-half, -half + radius);
+          ctx.quadraticCurveTo(-half, -half, -half + radius, -half);
           ctx.closePath();
           ctx.stroke();
-          // Inner triangle
+          drawDiePips(ctx, s, (item.variant % 6) + 1, h, o);
+          break;
+        }
+
+        case "card": {
+          // Playing card outline with suit
+          const cw = s * 0.7;
+          const ch = s;
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
+          const cr = s * 0.08;
           ctx.beginPath();
-          ctx.moveTo(0, d.size * 0.5);
-          ctx.lineTo(-d.size * 0.433, -d.size * 0.25);
-          ctx.lineTo(d.size * 0.433, -d.size * 0.25);
+          ctx.moveTo(-cw / 2 + cr, -ch / 2);
+          ctx.lineTo(cw / 2 - cr, -ch / 2);
+          ctx.quadraticCurveTo(cw / 2, -ch / 2, cw / 2, -ch / 2 + cr);
+          ctx.lineTo(cw / 2, ch / 2 - cr);
+          ctx.quadraticCurveTo(cw / 2, ch / 2, cw / 2 - cr, ch / 2);
+          ctx.lineTo(-cw / 2 + cr, ch / 2);
+          ctx.quadraticCurveTo(-cw / 2, ch / 2, -cw / 2, ch / 2 - cr);
+          ctx.lineTo(-cw / 2, -ch / 2 + cr);
+          ctx.quadraticCurveTo(-cw / 2, -ch / 2, -cw / 2 + cr, -ch / 2);
           ctx.closePath();
           ctx.stroke();
+          // Draw suit symbol
+          ctx.fillStyle = `hsla(${h}, 70%, 70%, ${o})`;
+          ctx.font = `${s * 0.45}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          const suits = ["♠", "♥", "♦", "♣"];
+          ctx.fillText(suits[item.variant % 4], 0, 0);
           break;
+        }
 
-        case "circle":
-          // Concentric circles with radii
+        case "chip": {
+          // Poker chip with notches
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.arc(0, 0, d.size, 0, Math.PI * 2);
+          ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
           ctx.stroke();
+          // Inner circle
           ctx.beginPath();
-          ctx.arc(0, 0, d.size * 0.6, 0, Math.PI * 2);
+          ctx.arc(0, 0, s * 0.35, 0, Math.PI * 2);
           ctx.stroke();
-          // Cross lines
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.moveTo(0, -d.size);
-          ctx.lineTo(0, d.size);
-          ctx.stroke();
-          break;
-
-        case "sine":
-          // Sine wave
-          ctx.beginPath();
-          for (let i = -d.size; i <= d.size; i += 2) {
-            const sy = Math.sin((i / d.size) * Math.PI * 2 + time * 2) * d.size * 0.4;
-            if (i === -d.size) ctx.moveTo(i, sy);
-            else ctx.lineTo(i, sy);
-          }
-          ctx.stroke();
-          // Axis
-          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.5})`;
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.stroke();
-          break;
-
-        case "graph":
-          // Coordinate axes with curve
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.moveTo(0, -d.size);
-          ctx.lineTo(0, d.size);
-          ctx.stroke();
-          // Parabola
-          ctx.beginPath();
-          for (let i = -d.size * 0.8; i <= d.size * 0.8; i += 2) {
-            const norm = i / (d.size * 0.8);
-            const py = -norm * norm * d.size * 0.7;
-            if (i === -d.size * 0.8) ctx.moveTo(i, -py);
-            else ctx.lineTo(i, -py);
-          }
-          ctx.stroke();
-          break;
-
-        case "spiral":
-          // Fibonacci-like spiral
-          ctx.beginPath();
-          for (let a = 0; a < Math.PI * 6; a += 0.1) {
-            const r = (a / (Math.PI * 6)) * d.size;
-            const sx = Math.cos(a) * r;
-            const sy = Math.sin(a) * r;
-            if (a === 0) ctx.moveTo(sx, sy);
-            else ctx.lineTo(sx, sy);
-          }
-          ctx.stroke();
-          break;
-
-        case "bell":
-          // Bell curve / normal distribution
-          ctx.beginPath();
-          for (let i = -d.size; i <= d.size; i += 2) {
-            const norm = i / (d.size * 0.4);
-            const by = -Math.exp(-0.5 * norm * norm) * d.size * 0.8;
-            if (i === -d.size) ctx.moveTo(i, -by);
-            else ctx.lineTo(i, -by);
-          }
-          ctx.stroke();
-          // Baseline
-          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.5})`;
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.stroke();
-          break;
-
-        case "ellipse":
-          // Ellipse with foci
-          ctx.beginPath();
-          ctx.ellipse(0, 0, d.size, d.size * 0.6, 0, 0, Math.PI * 2);
-          ctx.stroke();
-          // Foci dots
-          const focalDist = Math.sqrt(d.size * d.size - (d.size * 0.6) * (d.size * 0.6));
-          ctx.fillStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
-          ctx.beginPath();
-          ctx.arc(-focalDist, 0, 2, 0, Math.PI * 2);
-          ctx.arc(focalDist, 0, 2, 0, Math.PI * 2);
-          ctx.fill();
-          // Axes
-          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.4})`;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(-d.size, 0);
-          ctx.lineTo(d.size, 0);
-          ctx.moveTo(0, -d.size * 0.6);
-          ctx.lineTo(0, d.size * 0.6);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          break;
-
-        case "hyperbola":
-          // Hyperbola branches
-          ctx.beginPath();
-          for (let t = -1.2; t <= 1.2; t += 0.05) {
-            const hx = d.size * 0.5 * Math.cosh(t);
-            const hy = d.size * 0.4 * Math.sinh(t);
-            if (t === -1.2) ctx.moveTo(hx, hy);
-            else ctx.lineTo(hx, hy);
-          }
-          ctx.stroke();
-          ctx.beginPath();
-          for (let t = -1.2; t <= 1.2; t += 0.05) {
-            const hx = -d.size * 0.5 * Math.cosh(t);
-            const hy = d.size * 0.4 * Math.sinh(t);
-            if (t === -1.2) ctx.moveTo(hx, hy);
-            else ctx.lineTo(hx, hy);
-          }
-          ctx.stroke();
-          // Asymptotes
-          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.3})`;
-          ctx.setLineDash([4, 4]);
-          ctx.beginPath();
-          ctx.moveTo(-d.size, -d.size * 0.8);
-          ctx.lineTo(d.size, d.size * 0.8);
-          ctx.moveTo(-d.size, d.size * 0.8);
-          ctx.lineTo(d.size, -d.size * 0.8);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          break;
-
-        case "tangent":
-          // Circle with tangent line
-          const r = d.size * 0.6;
-          ctx.beginPath();
-          ctx.arc(0, 0, r, 0, Math.PI * 2);
-          ctx.stroke();
-          // Tangent point and line
-          const tx = r * Math.cos(Math.PI / 4);
-          const ty = -r * Math.sin(Math.PI / 4);
-          ctx.fillStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
-          ctx.beginPath();
-          ctx.arc(tx, ty, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-          // Tangent line (perpendicular to radius)
-          ctx.beginPath();
-          ctx.moveTo(tx - d.size * 0.5 * Math.cos(Math.PI / 4 + Math.PI / 2), ty + d.size * 0.5 * Math.sin(Math.PI / 4 + Math.PI / 2));
-          ctx.lineTo(tx + d.size * 0.5 * Math.cos(Math.PI / 4 + Math.PI / 2), ty - d.size * 0.5 * Math.sin(Math.PI / 4 + Math.PI / 2));
-          ctx.stroke();
-          // Radius line
-          ctx.strokeStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity * 0.4})`;
-          ctx.setLineDash([2, 2]);
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.lineTo(tx, ty);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          break;
-
-        case "polar":
-          // Polar rose curve r = cos(3θ)
-          ctx.beginPath();
-          for (let a = 0; a <= Math.PI * 2; a += 0.03) {
-            const pr = d.size * Math.abs(Math.cos(3 * a));
-            const px = pr * Math.cos(a);
-            const py = pr * Math.sin(a);
-            if (a === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
-          }
-          ctx.stroke();
-          break;
-
-        case "octahedron":
-          // 3D octahedron wireframe projection
-          const s = d.size;
-          const oct = [
-            [0, -s, 0], [s * 0.7, 0, 0], [0, 0, s * 0.5],
-            [-s * 0.7, 0, 0], [0, 0, -s * 0.5], [0, s, 0]
-          ];
-          const proj = oct.map(([px, py, pz]) => {
-            const cosR = Math.cos(d.rotation);
-            const sinR = Math.sin(d.rotation);
-            const rx = px * cosR - pz * sinR;
-            return [rx, py] as [number, number];
-          });
-          const edges = [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
-          edges.forEach(([a, b]) => {
+          // Edge notches
+          for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
             ctx.beginPath();
-            ctx.moveTo(proj[a][0], proj[a][1]);
-            ctx.lineTo(proj[b][0], proj[b][1]);
+            ctx.moveTo(Math.cos(angle) * s * 0.42, Math.sin(angle) * s * 0.42);
+            ctx.lineTo(Math.cos(angle) * s * 0.5, Math.sin(angle) * s * 0.5);
             ctx.stroke();
-          });
-          // vertices
-          ctx.fillStyle = `hsla(${d.hue}, 70%, 65%, ${d.opacity})`;
-          proj.forEach(([vx, vy]) => {
-            ctx.beginPath();
-            ctx.arc(vx, vy, 2, 0, Math.PI * 2);
-            ctx.fill();
-          });
+          }
+          // Center value
+          ctx.fillStyle = `hsla(${h}, 70%, 70%, ${o})`;
+          ctx.font = `bold ${s * 0.22}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          const vals = ["5", "10", "25", "50", "100", "$"];
+          ctx.fillText(vals[item.variant % vals.length], 0, 0);
           break;
+        }
+
+        case "coin": {
+          // Coin flip
+          const squeeze = 0.3 + Math.abs(Math.sin(time * 1.5 + item.phase)) * 0.7;
+          ctx.strokeStyle = `hsla(${h}, 50%, 75%, ${o})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, s * 0.4 * squeeze, s * 0.4, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          if (squeeze > 0.5) {
+            ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.8})`;
+            ctx.font = `${s * 0.3}px serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(item.variant % 2 === 0 ? "H" : "T", 0, 0);
+          }
+          break;
+        }
       }
 
       ctx.restore();
     };
 
-    const initParticles = () => {
-      const count = Math.floor(canvas.offsetWidth / 18);
+    const initItems = () => {
+      const count = Math.floor(canvas.offsetWidth / 50);
       for (let i = 0; i < count; i++) {
-        const p = createParticle();
-        p.y = Math.random() * canvas.offsetHeight;
-        particles.push(p);
-      }
-      // Add geometric diagrams
-      const diagramCount = Math.floor(canvas.offsetWidth / 120);
-      for (let i = 0; i < diagramCount; i++) {
-        const d = createDiagram();
-        d.y = Math.random() * canvas.offsetHeight;
-        diagrams.push(d);
+        const item = createItem();
+        item.y = Math.random() * canvas.offsetHeight;
+        items.push(item);
       }
     };
 
@@ -339,42 +195,25 @@ const MathBackground = () => {
       time += 0.01;
       ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
-      // Draw symbols
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.y -= p.speed;
-        p.x += Math.sin(time + p.phase) * p.drift;
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.y -= item.speed;
+        item.x += Math.sin(time + item.phase) * item.drift;
+        item.rotation += item.rotSpeed;
 
-        if (p.y < -30) {
-          particles[i] = createParticle();
+        if (item.y < -60) {
+          items[i] = createItem();
           continue;
         }
 
-        ctx.font = `${p.size}px 'Courier New', monospace`;
-        const symbolHues = [270, 200, 150, 340, 45, 180];
-        ctx.fillStyle = `hsla(${symbolHues[i % symbolHues.length]}, 70%, 65%, ${p.opacity})`;
-        ctx.fillText(p.symbol, p.x, p.y);
-      }
-
-      // Draw diagrams
-      for (let i = diagrams.length - 1; i >= 0; i--) {
-        const d = diagrams[i];
-        d.y -= d.speed;
-        d.rotation += d.rotSpeed;
-
-        if (d.y < -80) {
-          diagrams[i] = createDiagram();
-          continue;
-        }
-
-        drawDiagram(d);
+        drawItem(item);
       }
 
       animationId = requestAnimationFrame(animate);
     };
 
     resize();
-    initParticles();
+    initItems();
     animate();
 
     window.addEventListener("resize", resize);
