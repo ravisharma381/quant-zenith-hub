@@ -178,23 +178,6 @@ const MathBackground = () => {
           break;
         }
 
-        case "coin": {
-          // Coin flip
-          const squeeze = 0.3 + Math.abs(Math.sin(time * 1.5 + item.phase)) * 0.7;
-          ctx.strokeStyle = `hsla(${h}, 50%, 75%, ${o})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, s * 0.4 * squeeze, s * 0.4, 0, 0, Math.PI * 2);
-          ctx.stroke();
-          if (squeeze > 0.5) {
-            ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.8})`;
-            ctx.font = `${s * 0.3}px serif`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(item.variant % 2 === 0 ? "H" : "T", 0, 0);
-          }
-          break;
-        }
       }
 
       ctx.restore();
