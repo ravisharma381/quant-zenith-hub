@@ -38,20 +38,23 @@ const MathBackground = () => {
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     };
 
-    const createItem = (): FloatingItem => ({
-      x: Math.random() * canvas.offsetWidth,
-      y: canvas.offsetHeight + 40,
-      type: itemTypes[Math.floor(Math.random() * itemTypes.length)],
-      size: item.type === "card" ? 40 + Math.random() * 30 : 20 + Math.random() * 25,
-      speed: 0.15 + Math.random() * 0.4,
-      opacity: 0.12 + Math.random() * 0.18,
-      drift: (Math.random() - 0.5) * 0.3,
-      phase: Math.random() * Math.PI * 2,
-      rotation: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.008,
-      hue: hues[Math.floor(Math.random() * hues.length)],
-      variant: Math.floor(Math.random() * 52),
-    });
+    const createItem = (): FloatingItem => {
+      const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+      return {
+        x: Math.random() * canvas.offsetWidth,
+        y: canvas.offsetHeight + 40,
+        type,
+        size: type === "card" ? 40 + Math.random() * 30 : 20 + Math.random() * 25,
+        speed: 0.15 + Math.random() * 0.4,
+        opacity: 0.12 + Math.random() * 0.18,
+        drift: (Math.random() - 0.5) * 0.3,
+        phase: Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.008,
+        hue: hues[Math.floor(Math.random() * hues.length)],
+        variant: Math.floor(Math.random() * 52),
+      };
+    };
 
     const drawDiePips = (ctx: CanvasRenderingContext2D, s: number, val: number, hue: number, opacity: number) => {
       ctx.fillStyle = `hsla(${hue}, 70%, 75%, ${opacity})`;
