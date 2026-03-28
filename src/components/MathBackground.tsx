@@ -50,7 +50,7 @@ const MathBackground = () => {
       rotation: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.008,
       hue: hues[Math.floor(Math.random() * hues.length)],
-      variant: Math.floor(Math.random() * 6),
+      variant: Math.floor(Math.random() * 52),
     });
 
     const drawDiePips = (ctx: CanvasRenderingContext2D, s: number, val: number, hue: number, opacity: number) => {
