@@ -16,7 +16,7 @@ const MathBackground = () => {
     interface FloatingItem {
       x: number;
       y: number;
-      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "histogram" | "die3d" | "bellcurve" | "scatter";
+      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "venn3" | "histogram" | "bellcurve";
       size: number;
       speed: number;
       opacity: number;
@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "histogram", "die3d", "bellcurve", "scatter"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "venn3", "histogram", "bellcurve"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
@@ -44,7 +44,7 @@ const MathBackground = () => {
         x: Math.random() * canvas.offsetWidth,
         y: canvas.offsetHeight + 40,
         type,
-        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube" || type === "die3d") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "bellcurve" || type === "scatter") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
+        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "venn3" || type === "bellcurve") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
         speed: 0.15 + Math.random() * 0.4,
         opacity: 0.12 + Math.random() * 0.18,
         drift: (Math.random() - 0.5) * 0.3,
@@ -358,31 +358,27 @@ const MathBackground = () => {
           break;
         }
 
-        case "die3d": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          const ds = s * 0.4;
-          const doff = ds * 0.5;
-          ctx.beginPath();
-          ctx.moveTo(-ds, -ds); ctx.lineTo(ds, -ds); ctx.lineTo(ds, ds); ctx.lineTo(-ds, ds); ctx.closePath();
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(-ds, -ds); ctx.lineTo(-ds + doff, -ds - doff); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds, -ds); ctx.closePath();
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(ds, -ds); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds + doff, ds - doff); ctx.lineTo(ds, ds); ctx.closePath();
-          ctx.stroke();
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          const fVal = (item.variant % 6) + 1;
-          const pr = ds * 0.1;
-          const pipPos: Record<number, [number, number][]> = {
-            1: [[0, 0]], 2: [[-0.4, -0.4], [0.4, 0.4]], 3: [[-0.4, -0.4], [0, 0], [0.4, 0.4]],
-            4: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0.4], [0.4, 0.4]],
-            5: [[-0.4, -0.4], [0.4, -0.4], [0, 0], [-0.4, 0.4], [0.4, 0.4]],
-            6: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0], [0.4, 0], [-0.4, 0.4], [0.4, 0.4]],
-          };
-          (pipPos[fVal] || pipPos[1]).forEach(([px, py]) => {
-            ctx.beginPath(); ctx.arc(px * ds, py * ds, pr, 0, Math.PI * 2); ctx.fill();
+        case "venn3": {
+          // Three-circle Venn diagram
+          const v3r = s * 0.35;
+          const v3d = s * 0.2;
+          const angles3 = [(-Math.PI / 2), (-Math.PI / 2 + 2 * Math.PI / 3), (-Math.PI / 2 + 4 * Math.PI / 3)];
+          const labels3 = ["A", "B", "C"];
+          const hues3 = [h, (h + 120) % 360, (h + 240) % 360];
+          angles3.forEach((a, idx) => {
+            const cx = Math.cos(a) * v3d;
+            const cy = Math.sin(a) * v3d;
+            ctx.strokeStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o})`;
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.arc(cx, cy, v3r, 0, Math.PI * 2);
+            ctx.stroke();
+            // Label outside
+            ctx.fillStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o * 0.7})`;
+            ctx.font = `${s * 0.16}px sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(labels3[idx], Math.cos(a) * (v3d + v3r * 0.7), Math.sin(a) * (v3d + v3r * 0.7));
           });
           break;
         }
@@ -417,30 +413,6 @@ const MathBackground = () => {
           break;
         }
 
-        case "scatter": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(s * 0.5, s * 0.5);
-          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(-s * 0.5, -s * 0.5);
-          ctx.stroke();
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          const scSeed = item.variant;
-          for (let i = 0; i < 12; i++) {
-            const px = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
-            const base = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
-            const jitter = (((i * 17 + scSeed * 3) % 50) - 25) / 25 * s * 0.15;
-            const py = s * 0.4 - (base + s * 0.4) * 0.8 + jitter;
-            ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI * 2); ctx.fill();
-          }
-          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o * 0.7})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(-s * 0.4, s * 0.35); ctx.lineTo(s * 0.4, -s * 0.35);
-          ctx.stroke();
-          break;
-        }
-
         case "histogram": {
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
           ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
@@ -471,8 +443,10 @@ const MathBackground = () => {
       ctx.restore();
     };
 
+    const MIN_ITEMS = 15;
+
     const initItems = () => {
-      const count = Math.floor(canvas.offsetWidth / 50);
+      const count = Math.max(MIN_ITEMS, Math.floor(canvas.offsetWidth / 50));
       for (let i = 0; i < count; i++) {
         const item = createItem();
         item.y = Math.random() * canvas.offsetHeight;
