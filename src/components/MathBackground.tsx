@@ -413,30 +413,6 @@ const MathBackground = () => {
           break;
         }
 
-        case "scatter": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(s * 0.5, s * 0.5);
-          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(-s * 0.5, -s * 0.5);
-          ctx.stroke();
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          const scSeed = item.variant;
-          for (let i = 0; i < 12; i++) {
-            const px = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
-            const base = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
-            const jitter = (((i * 17 + scSeed * 3) % 50) - 25) / 25 * s * 0.15;
-            const py = s * 0.4 - (base + s * 0.4) * 0.8 + jitter;
-            ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI * 2); ctx.fill();
-          }
-          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o * 0.7})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(-s * 0.4, s * 0.35); ctx.lineTo(s * 0.4, -s * 0.35);
-          ctx.stroke();
-          break;
-        }
-
         case "histogram": {
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
           ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
