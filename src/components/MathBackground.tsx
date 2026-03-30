@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "cauchy", "divergence", "histogram"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "histogram", "die3d", "bellcurve", "scatter"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
