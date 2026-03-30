@@ -358,31 +358,27 @@ const MathBackground = () => {
           break;
         }
 
-        case "die3d": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          const ds = s * 0.4;
-          const doff = ds * 0.5;
-          ctx.beginPath();
-          ctx.moveTo(-ds, -ds); ctx.lineTo(ds, -ds); ctx.lineTo(ds, ds); ctx.lineTo(-ds, ds); ctx.closePath();
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(-ds, -ds); ctx.lineTo(-ds + doff, -ds - doff); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds, -ds); ctx.closePath();
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(ds, -ds); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds + doff, ds - doff); ctx.lineTo(ds, ds); ctx.closePath();
-          ctx.stroke();
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          const fVal = (item.variant % 6) + 1;
-          const pr = ds * 0.1;
-          const pipPos: Record<number, [number, number][]> = {
-            1: [[0, 0]], 2: [[-0.4, -0.4], [0.4, 0.4]], 3: [[-0.4, -0.4], [0, 0], [0.4, 0.4]],
-            4: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0.4], [0.4, 0.4]],
-            5: [[-0.4, -0.4], [0.4, -0.4], [0, 0], [-0.4, 0.4], [0.4, 0.4]],
-            6: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0], [0.4, 0], [-0.4, 0.4], [0.4, 0.4]],
-          };
-          (pipPos[fVal] || pipPos[1]).forEach(([px, py]) => {
-            ctx.beginPath(); ctx.arc(px * ds, py * ds, pr, 0, Math.PI * 2); ctx.fill();
+        case "venn3": {
+          // Three-circle Venn diagram
+          const v3r = s * 0.35;
+          const v3d = s * 0.2;
+          const angles3 = [(-Math.PI / 2), (-Math.PI / 2 + 2 * Math.PI / 3), (-Math.PI / 2 + 4 * Math.PI / 3)];
+          const labels3 = ["A", "B", "C"];
+          const hues3 = [h, (h + 120) % 360, (h + 240) % 360];
+          angles3.forEach((a, idx) => {
+            const cx = Math.cos(a) * v3d;
+            const cy = Math.sin(a) * v3d;
+            ctx.strokeStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o})`;
+            ctx.lineWidth = 1.3;
+            ctx.beginPath();
+            ctx.arc(cx, cy, v3r, 0, Math.PI * 2);
+            ctx.stroke();
+            // Label outside
+            ctx.fillStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o * 0.7})`;
+            ctx.font = `${s * 0.16}px sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(labels3[idx], Math.cos(a) * (v3d + v3r * 0.7), Math.sin(a) * (v3d + v3r * 0.7));
           });
           break;
         }
