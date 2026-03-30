@@ -346,7 +346,6 @@ const MathBackground = () => {
           ctx.beginPath();
           ctx.arc(offset, 0, vr, 0, Math.PI * 2);
           ctx.stroke();
-          // Labels
           ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.7})`;
           ctx.font = `${s * 0.18}px sans-serif`;
           ctx.textAlign = "center";
@@ -356,6 +355,70 @@ const MathBackground = () => {
           ctx.fillText("B", offset + vr * 0.4, 0);
           ctx.fillStyle = `hsla(${(h + 60) % 360}, 60%, 70%, ${o * 0.5})`;
           ctx.fillText("∩", 0, 0);
+          break;
+        }
+
+        case "cauchy": {
+          // Cauchy-Schwarz inequality formula
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          ctx.font = `italic ${s * 0.16}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("|⟨u,v⟩|² ≤ ⟨u,u⟩⟨v,v⟩", 0, 0);
+          // Decorative bracket
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
+          ctx.lineWidth = 1;
+          const fw = s * 0.9;
+          ctx.beginPath();
+          ctx.moveTo(-fw, -s * 0.2);
+          ctx.lineTo(-fw, s * 0.2);
+          ctx.moveTo(fw, -s * 0.2);
+          ctx.lineTo(fw, s * 0.2);
+          ctx.stroke();
+          break;
+        }
+
+        case "divergence": {
+          // Divergence theorem formula
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          ctx.font = `italic ${s * 0.14}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("∫∫∫ (∇·F) dV = ∮∮ F·dS", 0, 0);
+          // Decorative underline
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.4})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.85, s * 0.18);
+          ctx.lineTo(s * 0.85, s * 0.18);
+          ctx.stroke();
+          break;
+        }
+
+        case "histogram": {
+          // Simple histogram bars
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
+          ctx.lineWidth = 1;
+          const barW = s * 0.15;
+          const heights = [0.3, 0.5, 0.85, 1, 0.7, 0.45, 0.2];
+          const totalW = heights.length * barW;
+          const startX = -totalW / 2;
+          heights.forEach((bh, i) => {
+            const bx = startX + i * barW;
+            const by = s * 0.5 - bh * s;
+            const barH = bh * s;
+            ctx.fillRect(bx, by, barW - 1, barH);
+            ctx.strokeRect(bx, by, barW - 1, barH);
+          });
+          // Axes
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.6})`;
+          ctx.beginPath();
+          ctx.moveTo(startX - 2, s * 0.5);
+          ctx.lineTo(startX + totalW + 2, s * 0.5);
+          ctx.moveTo(startX - 2, s * 0.5);
+          ctx.lineTo(startX - 2, -s * 0.55);
+          ctx.stroke();
           break;
         }
 
