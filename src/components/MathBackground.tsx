@@ -44,7 +44,7 @@ const MathBackground = () => {
         x: Math.random() * canvas.offsetWidth,
         y: canvas.offsetHeight + 40,
         type,
-        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube" || type === "die3d") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "bellcurve" || type === "scatter") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
+        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "venn3" || type === "bellcurve") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
         speed: 0.15 + Math.random() * 0.4,
         opacity: 0.12 + Math.random() * 0.18,
         drift: (Math.random() - 0.5) * 0.3,
