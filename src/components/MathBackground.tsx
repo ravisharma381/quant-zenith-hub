@@ -16,7 +16,7 @@ const MathBackground = () => {
     interface FloatingItem {
       x: number;
       y: number;
-      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "cauchy" | "divergence" | "histogram";
+      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "histogram" | "die3d" | "bellcurve" | "scatter";
       size: number;
       speed: number;
       opacity: number;
