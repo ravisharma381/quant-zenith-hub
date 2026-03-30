@@ -443,8 +443,10 @@ const MathBackground = () => {
       ctx.restore();
     };
 
+    const MIN_ITEMS = 15;
+
     const initItems = () => {
-      const count = Math.floor(canvas.offsetWidth / 50);
+      const count = Math.max(MIN_ITEMS, Math.floor(canvas.offsetWidth / 50));
       for (let i = 0; i < count; i++) {
         const item = createItem();
         item.y = Math.random() * canvas.offsetHeight;
