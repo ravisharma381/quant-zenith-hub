@@ -16,7 +16,7 @@ const MathBackground = () => {
     interface FloatingItem {
       x: number;
       y: number;
-      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "cauchy" | "divergence" | "histogram";
+      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "histogram" | "die3d" | "bellcurve" | "scatter";
       size: number;
       speed: number;
       opacity: number;
@@ -29,7 +29,7 @@ const MathBackground = () => {
     }
 
     const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "cauchy", "divergence", "histogram"];
+    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "histogram", "die3d", "bellcurve", "scatter"];
     const hues = [0, 30, 120, 200, 270, 340, 45];
 
     const resize = () => {
@@ -44,7 +44,7 @@ const MathBackground = () => {
         x: Math.random() * canvas.offsetWidth,
         y: canvas.offsetHeight + 40,
         type,
-        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn") ? 60 + Math.random() * 30 : (type === "cauchy" || type === "divergence") ? 70 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
+        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube" || type === "die3d") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "bellcurve" || type === "scatter") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
         speed: 0.15 + Math.random() * 0.4,
         opacity: 0.12 + Math.random() * 0.18,
         drift: (Math.random() - 0.5) * 0.3,
@@ -358,45 +358,90 @@ const MathBackground = () => {
           break;
         }
 
-        case "cauchy": {
-          // Cauchy-Schwarz inequality formula
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          ctx.font = `italic ${s * 0.16}px serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("|⟨u,v⟩|² ≤ ⟨u,u⟩⟨v,v⟩", 0, 0);
-          // Decorative bracket
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
-          ctx.lineWidth = 1;
-          const fw = s * 0.9;
+        case "die3d": {
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
+          ctx.lineWidth = 1.2;
+          const ds = s * 0.4;
+          const doff = ds * 0.5;
           ctx.beginPath();
-          ctx.moveTo(-fw, -s * 0.2);
-          ctx.lineTo(-fw, s * 0.2);
-          ctx.moveTo(fw, -s * 0.2);
-          ctx.lineTo(fw, s * 0.2);
+          ctx.moveTo(-ds, -ds); ctx.lineTo(ds, -ds); ctx.lineTo(ds, ds); ctx.lineTo(-ds, ds); ctx.closePath();
           ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(-ds, -ds); ctx.lineTo(-ds + doff, -ds - doff); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds, -ds); ctx.closePath();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(ds, -ds); ctx.lineTo(ds + doff, -ds - doff); ctx.lineTo(ds + doff, ds - doff); ctx.lineTo(ds, ds); ctx.closePath();
+          ctx.stroke();
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          const fVal = (item.variant % 6) + 1;
+          const pr = ds * 0.1;
+          const pipPos: Record<number, [number, number][]> = {
+            1: [[0, 0]], 2: [[-0.4, -0.4], [0.4, 0.4]], 3: [[-0.4, -0.4], [0, 0], [0.4, 0.4]],
+            4: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0.4], [0.4, 0.4]],
+            5: [[-0.4, -0.4], [0.4, -0.4], [0, 0], [-0.4, 0.4], [0.4, 0.4]],
+            6: [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0], [0.4, 0], [-0.4, 0.4], [0.4, 0.4]],
+          };
+          (pipPos[fVal] || pipPos[1]).forEach(([px, py]) => {
+            ctx.beginPath(); ctx.arc(px * ds, py * ds, pr, 0, Math.PI * 2); ctx.fill();
+          });
           break;
         }
 
-        case "divergence": {
-          // Divergence theorem formula
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          ctx.font = `italic ${s * 0.14}px serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("∫∫∫ (∇·F) dV = ∮∮ F·dS", 0, 0);
-          // Decorative underline
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.4})`;
+        case "bellcurve": {
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.moveTo(-s * 0.85, s * 0.18);
-          ctx.lineTo(s * 0.85, s * 0.18);
+          ctx.moveTo(-s, s * 0.4); ctx.lineTo(s, s * 0.4);
+          ctx.moveTo(0, s * 0.4); ctx.lineTo(0, -s * 0.5);
+          ctx.stroke();
+          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          for (let i = -s * 0.9; i <= s * 0.9; i += 2) {
+            const norm = i / (s * 0.35);
+            const gY = Math.exp(-0.5 * norm * norm) * s * 0.8;
+            if (i === -s * 0.9) ctx.moveTo(i, s * 0.4 - gY);
+            else ctx.lineTo(i, s * 0.4 - gY);
+          }
+          ctx.stroke();
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(0, s * 0.4); ctx.lineTo(0, -s * 0.45);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o * 0.7})`;
+          ctx.font = `italic ${s * 0.18}px serif`;
+          ctx.textAlign = "center";
+          ctx.fillText("μ", s * 0.06, s * 0.55);
+          break;
+        }
+
+        case "scatter": {
+          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(s * 0.5, s * 0.5);
+          ctx.moveTo(-s * 0.5, s * 0.5); ctx.lineTo(-s * 0.5, -s * 0.5);
+          ctx.stroke();
+          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
+          const scSeed = item.variant;
+          for (let i = 0; i < 12; i++) {
+            const px = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
+            const base = -s * 0.4 + ((scSeed * 7 + i * 31) % 100) / 100 * s * 0.8;
+            const jitter = (((i * 17 + scSeed * 3) % 50) - 25) / 25 * s * 0.15;
+            const py = s * 0.4 - (base + s * 0.4) * 0.8 + jitter;
+            ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI * 2); ctx.fill();
+          }
+          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o * 0.7})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.4, s * 0.35); ctx.lineTo(s * 0.4, -s * 0.35);
           ctx.stroke();
           break;
         }
 
         case "histogram": {
-          // Simple histogram bars
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
           ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
           ctx.lineWidth = 1;
@@ -411,7 +456,6 @@ const MathBackground = () => {
             ctx.fillRect(bx, by, barW - 1, barH);
             ctx.strokeRect(bx, by, barW - 1, barH);
           });
-          // Axes
           ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.6})`;
           ctx.beginPath();
           ctx.moveTo(startX - 2, s * 0.5);
