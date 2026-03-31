@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logoImage from "@/assets/logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
