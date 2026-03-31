@@ -30,11 +30,13 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">Q</span>
-            </div>
-            <span className="text-lg font-bold text-foreground">QuantProf</span>
+          <Link to="/" className="flex items-center space-x-2 group/logo">
+            <img 
+              src={logoImage} 
+              alt="QuantProf Logo" 
+              className="w-8 h-8 object-contain rounded-lg transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-[8deg] group-hover/logo:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" 
+            />
+            <span className="text-lg font-bold text-foreground transition-all duration-300 group-hover/logo:text-primary group-hover/logo:tracking-wider">QuantProf</span>
           </Link>
 
           {/* Desktop Navigation */}
