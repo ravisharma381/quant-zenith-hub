@@ -31,13 +31,11 @@ const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group/logo">
-            <div className="w-8 h-8 flex-shrink-0">
-              <img 
-                src={logoImage} 
-                alt="QuantProf Logo" 
-                className="w-full h-full object-contain rounded-lg transition-transform duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-[8deg] group-hover/logo:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" 
-              />
-            </div>
+            <img 
+              src={logoImage} 
+              alt="QuantProf Logo" 
+              className="w-8 h-8 object-contain rounded-lg transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-[8deg] group-hover/logo:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" 
+            />
             <span className="text-lg font-bold text-foreground transition-all duration-300 group-hover/logo:text-primary group-hover/logo:tracking-wider">QuantProf</span>
           </Link>
 
