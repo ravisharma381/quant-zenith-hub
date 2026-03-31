@@ -36,7 +36,7 @@ const Navigation = () => {
               alt="QuantProf Logo" 
               className="w-8 h-8 object-contain rounded-lg transition-all duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-[8deg] group-hover/logo:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" 
             />
-            <span className="text-lg font-bold text-foreground transition-all duration-300 group-hover/logo:text-primary group-hover/logo:tracking-wider">QuantProf</span>
+            <span className="text-lg font-bold text-foreground transition-colors duration-300 group-hover/logo:text-primary">QuantProf</span>
           </Link>
 
           {/* Desktop Navigation */}
