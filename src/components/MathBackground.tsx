@@ -1,497 +1,282 @@
-import React, { useEffect, useRef } from "react";
+import React, { useMemo } from "react";
+
+const ITEM_COUNT = 18;
+
+type ItemType = "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "bellcurve" | "histogram";
+
+const itemTypes: ItemType[] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "bellcurve", "histogram"];
+const hues = [0, 30, 120, 200, 270, 340, 45];
+const suits = ["♠", "♥", "♦", "♣"];
+const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+interface FloatingItem {
+  type: ItemType;
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+  delay: number;
+  opacity: number;
+  hue: number;
+  drift: number;
+  variant: number;
+  rotSpeed: number;
+}
+
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function generateItems(): FloatingItem[] {
+  const rand = seededRandom(42);
+  const items: FloatingItem[] = [];
+  for (let i = 0; i < ITEM_COUNT; i++) {
+    const type = itemTypes[Math.floor(rand() * itemTypes.length)];
+    items.push({
+      type,
+      x: rand() * 100,
+      y: rand() * 100,
+      size: type === "card" ? 80 + rand() * 40 : type === "knight" ? 55 + rand() * 25 : 45 + rand() * 30,
+      duration: 25 + rand() * 35,
+      delay: -(rand() * 40),
+      opacity: 0.12 + rand() * 0.16,
+      hue: hues[Math.floor(rand() * hues.length)],
+      drift: 15 + rand() * 30,
+      variant: Math.floor(rand() * 52),
+      rotSpeed: 20 + rand() * 40,
+    });
+  }
+  return items;
+}
+
+const DieSVG = ({ hue, opacity, variant }: { hue: number; opacity: number; variant: number }) => {
+  const val = (variant % 6) + 1;
+  const color = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  const pipColor = `hsla(${hue}, 70%, 75%, ${opacity})`;
+  const positions: Record<number, [number, number][]> = {
+    1: [[25, 25]],
+    2: [[15, 15], [35, 35]],
+    3: [[15, 15], [25, 25], [35, 35]],
+    4: [[15, 15], [35, 15], [15, 35], [35, 35]],
+    5: [[15, 15], [35, 15], [25, 25], [15, 35], [35, 35]],
+    6: [[15, 15], [35, 15], [15, 25], [35, 25], [15, 35], [35, 35]],
+  };
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <rect x="2" y="2" width="46" height="46" rx="6" fill="none" stroke={color} strokeWidth="1.2" />
+      {positions[val].map(([cx, cy], i) => (
+        <circle key={i} cx={cx} cy={cy} r="3.5" fill={pipColor} />
+      ))}
+    </svg>
+  );
+};
+
+const CardSVG = ({ hue, opacity, variant }: { hue: number; opacity: number; variant: number }) => {
+  const suit = suits[variant % 4];
+  const rank = ranks[Math.floor(variant / 4) % 13];
+  const isRed = variant % 4 === 1 || variant % 4 === 2;
+  const cardHue = isRed ? 0 : 220;
+  const borderColor = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  const textColor = `hsla(${cardHue}, 70%, 70%, ${opacity})`;
+  return (
+    <svg viewBox="0 0 35 50" width="100%" height="100%">
+      <rect x="1" y="1" width="33" height="48" rx="3" fill="none" stroke={borderColor} strokeWidth="1.2" />
+      <text x="5" y="12" fill={textColor} fontSize="8" fontWeight="bold" fontFamily="sans-serif">{rank}</text>
+      <text x="17.5" y="32" fill={textColor} fontSize="16" textAnchor="middle" fontFamily="serif">{suit}</text>
+      <text x="30" y="45" fill={textColor} fontSize="8" fontWeight="bold" fontFamily="sans-serif" textAnchor="end" transform="rotate(180 30 41)">{rank}</text>
+    </svg>
+  );
+};
+
+const ChipSVG = ({ hue, opacity, variant }: { hue: number; opacity: number; variant: number }) => {
+  const color = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  const textColor = `hsla(${hue}, 70%, 70%, ${opacity})`;
+  const vals = ["5", "10", "25", "50", "100", "$"];
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <circle cx="25" cy="25" r="23" fill="none" stroke={color} strokeWidth="1.2" />
+      <circle cx="25" cy="25" r="16" fill="none" stroke={color} strokeWidth="1" />
+      {Array.from({ length: 8 }).map((_, i) => {
+        const a = (i / 8) * Math.PI * 2;
+        return <line key={i} x1={25 + Math.cos(a) * 18} y1={25 + Math.sin(a) * 18} x2={25 + Math.cos(a) * 23} y2={25 + Math.sin(a) * 23} stroke={color} strokeWidth="1" />;
+      })}
+      <text x="25" y="29" fill={textColor} fontSize="10" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">{vals[variant % vals.length]}</text>
+    </svg>
+  );
+};
+
+const KnightSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const stroke = `hsla(${hue}, 50%, 70%, ${opacity})`;
+  const fill = `hsla(${hue}, 50%, 70%, ${opacity * 0.3})`;
+  return (
+    <svg viewBox="0 0 40 50" width="100%" height="100%">
+      <rect x="8" y="40" width="24" height="6" rx="1" fill={fill} stroke={stroke} strokeWidth="1.2" />
+      <path d="M12 40 L10 22 Q8 14 14 8 L16 2 L21 10 Q28 9 32 16 L34 20 Q30 22 26 20 Q24 28 28 36 L28 40 Z" fill={fill} stroke={stroke} strokeWidth="1.2" />
+      <circle cx="23" cy="14" r="1.5" fill={stroke} />
+    </svg>
+  );
+};
+
+const OctahedronSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const color = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <polygon points="25,3 45,25 25,47 5,25" fill="none" stroke={color} strokeWidth="1.2" />
+      <line x1="5" y1="25" x2="45" y2="25" stroke={color} strokeWidth="1" />
+      <line x1="25" y1="3" x2="25" y2="47" stroke={color} strokeWidth="0.8" strokeDasharray="2 2" />
+      {[[25,3],[45,25],[25,47],[5,25]].map(([cx,cy], i) => (
+        <circle key={i} cx={cx} cy={cy} r="2" fill={color} />
+      ))}
+    </svg>
+  );
+};
+
+const CubeSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const color = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <polygon points="10,15 30,10 45,18 25,23" fill="none" stroke={color} strokeWidth="1.2" />
+      <polygon points="10,15 25,23 25,43 10,35" fill="none" stroke={color} strokeWidth="1.2" />
+      <polygon points="25,23 45,18 45,38 25,43" fill="none" stroke={color} strokeWidth="1.2" />
+    </svg>
+  );
+};
+
+const ParabolaSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const axisColor = `hsla(${hue}, 60%, 70%, ${opacity * 0.5})`;
+  const curveColor = `hsla(${hue}, 70%, 70%, ${opacity})`;
+  const dotColor = `hsla(${hue}, 70%, 75%, ${opacity})`;
+  let d = "";
+  for (let i = -20; i <= 20; i++) {
+    const x = 25 + i;
+    const y = 40 - (i * i) / 12;
+    d += (i === -20 ? "M" : "L") + `${x},${y} `;
+  }
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <line x1="2" y1="40" x2="48" y2="40" stroke={axisColor} strokeWidth="0.8" />
+      <line x1="25" y1="2" x2="25" y2="48" stroke={axisColor} strokeWidth="0.8" />
+      <path d={d} fill="none" stroke={curveColor} strokeWidth="1.3" />
+      <circle cx="25" cy="35" r="2" fill={dotColor} />
+    </svg>
+  );
+};
+
+const EllipseSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const color = `hsla(${hue}, 70%, 70%, ${opacity})`;
+  const axisColor = `hsla(${hue}, 60%, 70%, ${opacity * 0.4})`;
+  const dotColor = `hsla(${hue}, 70%, 75%, ${opacity})`;
+  return (
+    <svg viewBox="0 0 50 30" width="100%" height="100%">
+      <ellipse cx="25" cy="15" rx="22" ry="12" fill="none" stroke={color} strokeWidth="1.3" />
+      <line x1="3" y1="15" x2="47" y2="15" stroke={axisColor} strokeWidth="0.8" strokeDasharray="2 2" />
+      <line x1="25" y1="3" x2="25" y2="27" stroke={axisColor} strokeWidth="0.8" strokeDasharray="2 2" />
+      <circle cx="12" cy="15" r="2" fill={dotColor} />
+      <circle cx="38" cy="15" r="2" fill={dotColor} />
+    </svg>
+  );
+};
+
+const VennSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const c1 = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  const c2 = `hsla(${(hue + 120) % 360}, 60%, 70%, ${opacity})`;
+  const tc1 = `hsla(${hue}, 60%, 70%, ${opacity * 0.7})`;
+  const tc2 = `hsla(${(hue + 120) % 360}, 60%, 70%, ${opacity * 0.7})`;
+  const ti = `hsla(${(hue + 60) % 360}, 60%, 70%, ${opacity * 0.5})`;
+  return (
+    <svg viewBox="0 0 60 40" width="100%" height="100%">
+      <circle cx="22" cy="20" r="16" fill="none" stroke={c1} strokeWidth="1.3" />
+      <circle cx="38" cy="20" r="16" fill="none" stroke={c2} strokeWidth="1.3" />
+      <text x="12" y="22" fill={tc1} fontSize="7" textAnchor="middle" fontFamily="sans-serif">A</text>
+      <text x="48" y="22" fill={tc2} fontSize="7" textAnchor="middle" fontFamily="sans-serif">B</text>
+      <text x="30" y="22" fill={ti} fontSize="7" textAnchor="middle" fontFamily="sans-serif">∩</text>
+    </svg>
+  );
+};
+
+const BellCurveSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const axisColor = `hsla(${hue}, 60%, 70%, ${opacity * 0.5})`;
+  const curveColor = `hsla(${hue}, 70%, 70%, ${opacity})`;
+  const textColor = `hsla(${hue}, 70%, 75%, ${opacity * 0.7})`;
+  let d = "";
+  for (let i = -25; i <= 25; i++) {
+    const x = 25 + i;
+    const norm = i / 9;
+    const y = 38 - Math.exp(-0.5 * norm * norm) * 30;
+    d += (i === -25 ? "M" : "L") + `${x},${y} `;
+  }
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      <line x1="2" y1="38" x2="48" y2="38" stroke={axisColor} strokeWidth="0.8" />
+      <line x1="25" y1="38" x2="25" y2="4" stroke={axisColor} strokeWidth="0.8" />
+      <path d={d} fill="none" stroke={curveColor} strokeWidth="1.5" />
+      <line x1="25" y1="38" x2="25" y2="8" stroke={axisColor} strokeWidth="0.6" strokeDasharray="2 2" />
+      <text x="27" y="46" fill={textColor} fontSize="7" fontStyle="italic" fontFamily="serif">μ</text>
+    </svg>
+  );
+};
+
+const HistogramSVG = ({ hue, opacity }: { hue: number; opacity: number }) => {
+  const color = `hsla(${hue}, 60%, 70%, ${opacity})`;
+  const fillColor = `hsla(${hue}, 60%, 70%, ${opacity * 0.3})`;
+  const heights = [0.3, 0.5, 0.85, 1, 0.7, 0.45, 0.2];
+  const barW = 6;
+  const startX = 4;
+  return (
+    <svg viewBox="0 0 50 50" width="100%" height="100%">
+      {heights.map((h, i) => {
+        const bh = h * 35;
+        return <rect key={i} x={startX + i * barW} y={42 - bh} width={barW - 1} height={bh} fill={fillColor} stroke={color} strokeWidth="0.8" />;
+      })}
+      <line x1={startX - 1} y1="42" x2={startX + heights.length * barW + 1} y2="42" stroke={color} strokeWidth="0.8" />
+      <line x1={startX - 1} y1="42" x2={startX - 1} y2="3" stroke={color} strokeWidth="0.8" />
+    </svg>
+  );
+};
+
+const renderSVG = (item: FloatingItem) => {
+  const { type, hue, opacity, variant } = item;
+  switch (type) {
+    case "die": return <DieSVG hue={hue} opacity={opacity} variant={variant} />;
+    case "card": return <CardSVG hue={hue} opacity={opacity} variant={variant} />;
+    case "chip": return <ChipSVG hue={hue} opacity={opacity} variant={variant} />;
+    case "knight": return <KnightSVG hue={hue} opacity={opacity} />;
+    case "octahedron": return <OctahedronSVG hue={hue} opacity={opacity} />;
+    case "cube": return <CubeSVG hue={hue} opacity={opacity} />;
+    case "parabola": return <ParabolaSVG hue={hue} opacity={opacity} />;
+    case "ellipse": return <EllipseSVG hue={hue} opacity={opacity} />;
+    case "venn": return <VennSVG hue={hue} opacity={opacity} />;
+    case "bellcurve": return <BellCurveSVG hue={hue} opacity={opacity} />;
+    case "histogram": return <HistogramSVG hue={hue} opacity={opacity} />;
+    default: return null;
+  }
+};
 
 const MathBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationId: number;
-    let time = 0;
-
-    interface FloatingItem {
-      x: number;
-      y: number;
-      type: "die" | "card" | "chip" | "knight" | "octahedron" | "cube" | "parabola" | "ellipse" | "venn" | "venn3" | "histogram" | "bellcurve";
-      size: number;
-      speed: number;
-      opacity: number;
-      drift: number;
-      phase: number;
-      rotation: number;
-      rotSpeed: number;
-      hue: number;
-      variant: number; // sub-variant within type
-    }
-
-    const items: FloatingItem[] = [];
-    const itemTypes: FloatingItem["type"][] = ["die", "card", "chip", "knight", "octahedron", "cube", "parabola", "ellipse", "venn", "venn3", "histogram", "bellcurve"];
-    const hues = [0, 30, 120, 200, 270, 340, 45];
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
-
-    const createItem = (): FloatingItem => {
-      const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
-      return {
-        x: Math.random() * canvas.offsetWidth,
-        y: canvas.offsetHeight + 40,
-        type,
-        size: type === "card" ? 80 + Math.random() * 42 : (type === "octahedron" || type === "cube") ? 60 + Math.random() * 35 : (type === "parabola" || type === "ellipse" || type === "venn" || type === "venn3" || type === "bellcurve") ? 60 + Math.random() * 30 : type === "histogram" ? 60 + Math.random() * 30 : type === "knight" ? 60 + Math.random() * 25 : 40 + Math.random() * 25,
-        speed: 0.15 + Math.random() * 0.4,
-        opacity: 0.12 + Math.random() * 0.18,
-        drift: (Math.random() - 0.5) * 0.3,
-        phase: Math.random() * Math.PI * 2,
-        rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.008,
-        hue: hues[Math.floor(Math.random() * hues.length)],
-        variant: Math.floor(Math.random() * 52),
-      };
-    };
-
-    const drawDiePips = (ctx: CanvasRenderingContext2D, s: number, val: number, hue: number, opacity: number) => {
-      ctx.fillStyle = `hsla(${hue}, 70%, 75%, ${opacity})`;
-      const r = s * 0.08;
-      const positions: Record<number, [number, number][]> = {
-        1: [[0, 0]],
-        2: [[-0.25, -0.25], [0.25, 0.25]],
-        3: [[-0.25, -0.25], [0, 0], [0.25, 0.25]],
-        4: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]],
-        5: [[-0.25, -0.25], [0.25, -0.25], [0, 0], [-0.25, 0.25], [0.25, 0.25]],
-        6: [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0], [0.25, 0], [-0.25, 0.25], [0.25, 0.25]],
-      };
-      (positions[val] || positions[1]).forEach(([px, py]) => {
-        ctx.beginPath();
-        ctx.arc(px * s, py * s, r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    };
-
-    const drawItem = (item: FloatingItem) => {
-      ctx.save();
-      ctx.translate(item.x, item.y);
-      ctx.rotate(item.rotation);
-      const s = item.size;
-      const h = item.hue;
-      const o = item.opacity;
-
-      switch (item.type) {
-        case "die": {
-          // Rounded rectangle die
-          const half = s * 0.5;
-          const radius = s * 0.12;
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(-half + radius, -half);
-          ctx.lineTo(half - radius, -half);
-          ctx.quadraticCurveTo(half, -half, half, -half + radius);
-          ctx.lineTo(half, half - radius);
-          ctx.quadraticCurveTo(half, half, half - radius, half);
-          ctx.lineTo(-half + radius, half);
-          ctx.quadraticCurveTo(-half, half, -half, half - radius);
-          ctx.lineTo(-half, -half + radius);
-          ctx.quadraticCurveTo(-half, -half, -half + radius, -half);
-          ctx.closePath();
-          ctx.stroke();
-          drawDiePips(ctx, s, (item.variant % 6) + 1, h, o);
-          break;
-        }
-
-        case "card": {
-          const cw = s * 0.7;
-          const ch = s;
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.5;
-          const cr = s * 0.08;
-          ctx.beginPath();
-          ctx.moveTo(-cw / 2 + cr, -ch / 2);
-          ctx.lineTo(cw / 2 - cr, -ch / 2);
-          ctx.quadraticCurveTo(cw / 2, -ch / 2, cw / 2, -ch / 2 + cr);
-          ctx.lineTo(cw / 2, ch / 2 - cr);
-          ctx.quadraticCurveTo(cw / 2, ch / 2, cw / 2 - cr, ch / 2);
-          ctx.lineTo(-cw / 2 + cr, ch / 2);
-          ctx.quadraticCurveTo(-cw / 2, ch / 2, -cw / 2, ch / 2 - cr);
-          ctx.lineTo(-cw / 2, -ch / 2 + cr);
-          ctx.quadraticCurveTo(-cw / 2, -ch / 2, -cw / 2 + cr, -ch / 2);
-          ctx.closePath();
-          ctx.stroke();
-          // Card rank and suit
-          const suits = ["♠", "♥", "♦", "♣"];
-          const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-          const suit = suits[item.variant % 4];
-          const rank = ranks[Math.floor(item.variant / 4) % 13];
-          const isRed = item.variant % 4 === 1 || item.variant % 4 === 2;
-          const cardHue = isRed ? 0 : 220;
-          ctx.fillStyle = `hsla(${cardHue}, 70%, 70%, ${o})`;
-          // Center suit
-          ctx.font = `${s * 0.35}px serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(suit, 0, s * 0.08);
-          // Top-left rank
-          ctx.font = `bold ${s * 0.2}px sans-serif`;
-          ctx.textAlign = "left";
-          ctx.textBaseline = "top";
-          ctx.fillText(rank, -cw / 2 + s * 0.06, -ch / 2 + s * 0.06);
-          // Bottom-right rank (inverted)
-          ctx.save();
-          ctx.translate(cw / 2 - s * 0.06, ch / 2 - s * 0.06);
-          ctx.rotate(Math.PI);
-          ctx.textAlign = "left";
-          ctx.textBaseline = "top";
-          ctx.fillText(rank, 0, 0);
-          ctx.restore();
-          break;
-        }
-
-        case "chip": {
-          // Poker chip with notches
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
-          ctx.stroke();
-          // Inner circle
-          ctx.beginPath();
-          ctx.arc(0, 0, s * 0.35, 0, Math.PI * 2);
-          ctx.stroke();
-          // Edge notches
-          for (let i = 0; i < 8; i++) {
-            const angle = (i / 8) * Math.PI * 2;
-            ctx.beginPath();
-            ctx.moveTo(Math.cos(angle) * s * 0.42, Math.sin(angle) * s * 0.42);
-            ctx.lineTo(Math.cos(angle) * s * 0.5, Math.sin(angle) * s * 0.5);
-            ctx.stroke();
-          }
-          // Center value
-          ctx.fillStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.font = `bold ${s * 0.22}px sans-serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          const vals = ["5", "10", "25", "50", "100", "$"];
-          ctx.fillText(vals[item.variant % vals.length], 0, 0);
-          break;
-        }
-
-        case "knight": {
-          // Chess knight silhouette
-          ctx.strokeStyle = `hsla(${h}, 50%, 70%, ${o})`;
-          ctx.fillStyle = `hsla(${h}, 50%, 70%, ${o * 0.3})`;
-          ctx.lineWidth = 1.4;
-          const k = s * 0.5;
-          ctx.beginPath();
-          // Base
-          ctx.moveTo(-k * 0.6, k);
-          ctx.lineTo(k * 0.6, k);
-          ctx.lineTo(k * 0.5, k * 0.75);
-          ctx.lineTo(-k * 0.5, k * 0.75);
-          ctx.closePath();
-          ctx.stroke();
-          ctx.fill();
-          // Body and head
-          ctx.beginPath();
-          ctx.moveTo(-k * 0.35, k * 0.75);
-          ctx.lineTo(-k * 0.4, k * 0.1);
-          ctx.quadraticCurveTo(-k * 0.45, -k * 0.3, -k * 0.2, -k * 0.5);
-          // Ears
-          ctx.lineTo(-k * 0.1, -k * 0.9);
-          ctx.lineTo(k * 0.05, -k * 0.65);
-          // Head/snout
-          ctx.quadraticCurveTo(k * 0.4, -k * 0.6, k * 0.5, -k * 0.3);
-          ctx.lineTo(k * 0.6, -k * 0.15);
-          ctx.quadraticCurveTo(k * 0.45, -k * 0.05, k * 0.3, -k * 0.1);
-          // Jaw
-          ctx.quadraticCurveTo(k * 0.2, k * 0.15, k * 0.3, k * 0.4);
-          ctx.lineTo(k * 0.35, k * 0.75);
-          ctx.closePath();
-          ctx.stroke();
-          ctx.fill();
-          // Eye
-          ctx.fillStyle = `hsla(${h}, 60%, 75%, ${o})`;
-          ctx.beginPath();
-          ctx.arc(k * 0.1, -k * 0.35, k * 0.07, 0, Math.PI * 2);
-          ctx.fill();
-          break;
-        }
-
-        case "octahedron": {
-          // 3D octahedron wireframe
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          const os = s * 0.5;
-          const oct = [
-            [0, -os, 0], [os * 0.7, 0, 0], [0, 0, os * 0.5],
-            [-os * 0.7, 0, 0], [0, 0, -os * 0.5], [0, os, 0]
-          ];
-          const cosR = Math.cos(item.rotation);
-          const sinR = Math.sin(item.rotation);
-          const proj = oct.map(([px, py, pz]) => {
-            const rx = px * cosR - pz * sinR;
-            return [rx, py] as [number, number];
-          });
-          const edges = [[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
-          edges.forEach(([a, b]) => {
-            ctx.beginPath();
-            ctx.moveTo(proj[a][0], proj[a][1]);
-            ctx.lineTo(proj[b][0], proj[b][1]);
-            ctx.stroke();
-          });
-          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          proj.forEach(([vx, vy]) => {
-            ctx.beginPath();
-            ctx.arc(vx, vy, 2, 0, Math.PI * 2);
-            ctx.fill();
-          });
-          break;
-        }
-
-        case "cube": {
-          // 3D cube wireframe
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.2;
-          const cs = s * 0.4;
-          const verts = [
-            [-cs, -cs, -cs], [cs, -cs, -cs], [cs, cs, -cs], [-cs, cs, -cs],
-            [-cs, -cs, cs], [cs, -cs, cs], [cs, cs, cs], [-cs, cs, cs]
-          ];
-          const cosC = Math.cos(item.rotation);
-          const sinC = Math.sin(item.rotation);
-          const proj2 = verts.map(([px, py, pz]) => {
-            const rx = px * cosC - pz * sinC;
-            const rz = px * sinC + pz * cosC;
-            return [rx, py + rz * 0.3] as [number, number];
-          });
-          const cubeEdges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-          cubeEdges.forEach(([a, b]) => {
-            ctx.beginPath();
-            ctx.moveTo(proj2[a][0], proj2[a][1]);
-            ctx.lineTo(proj2[b][0], proj2[b][1]);
-            ctx.stroke();
-          });
-          break;
-        }
-
-        case "parabola": {
-          // Coordinate axes + parabola
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(-s, 0); ctx.lineTo(s, 0);
-          ctx.moveTo(0, -s); ctx.lineTo(0, s);
-          ctx.stroke();
-          // Parabola curve
-          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.lineWidth = 1.3;
-          ctx.beginPath();
-          for (let i = -s * 0.85; i <= s * 0.85; i += 2) {
-            const norm = i / (s * 0.85);
-            const py = -norm * norm * s * 0.8;
-            if (i === -s * 0.85) ctx.moveTo(i, -py);
-            else ctx.lineTo(i, -py);
-          }
-          ctx.stroke();
-          // Focus dot
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          ctx.beginPath();
-          ctx.arc(0, s * 0.2, 2, 0, Math.PI * 2);
-          ctx.fill();
-          break;
-        }
-
-        case "ellipse": {
-          // Ellipse with foci and axes
-          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.lineWidth = 1.3;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
-          ctx.stroke();
-          // Foci
-          const fd = Math.sqrt(s * s - (s * 0.6) * (s * 0.6));
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o})`;
-          ctx.beginPath();
-          ctx.arc(-fd, 0, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(fd, 0, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-          // Dashed axes
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.4})`;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(-s, 0); ctx.lineTo(s, 0);
-          ctx.moveTo(0, -s * 0.6); ctx.lineTo(0, s * 0.6);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          break;
-        }
-
-        case "venn": {
-          // Two-circle Venn diagram
-          const vr = s * 0.45;
-          const offset = s * 0.25;
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.lineWidth = 1.3;
-          ctx.beginPath();
-          ctx.arc(-offset, 0, vr, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.strokeStyle = `hsla(${(h + 120) % 360}, 60%, 70%, ${o})`;
-          ctx.beginPath();
-          ctx.arc(offset, 0, vr, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.7})`;
-          ctx.font = `${s * 0.18}px sans-serif`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("A", -offset - vr * 0.4, 0);
-          ctx.fillStyle = `hsla(${(h + 120) % 360}, 60%, 70%, ${o * 0.7})`;
-          ctx.fillText("B", offset + vr * 0.4, 0);
-          ctx.fillStyle = `hsla(${(h + 60) % 360}, 60%, 70%, ${o * 0.5})`;
-          ctx.fillText("∩", 0, 0);
-          break;
-        }
-
-        case "venn3": {
-          // Three-circle Venn diagram
-          const v3r = s * 0.35;
-          const v3d = s * 0.2;
-          const angles3 = [(-Math.PI / 2), (-Math.PI / 2 + 2 * Math.PI / 3), (-Math.PI / 2 + 4 * Math.PI / 3)];
-          const labels3 = ["A", "B", "C"];
-          const hues3 = [h, (h + 120) % 360, (h + 240) % 360];
-          angles3.forEach((a, idx) => {
-            const cx = Math.cos(a) * v3d;
-            const cy = Math.sin(a) * v3d;
-            ctx.strokeStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o})`;
-            ctx.lineWidth = 1.3;
-            ctx.beginPath();
-            ctx.arc(cx, cy, v3r, 0, Math.PI * 2);
-            ctx.stroke();
-            // Label outside
-            ctx.fillStyle = `hsla(${hues3[idx]}, 60%, 70%, ${o * 0.7})`;
-            ctx.font = `${s * 0.16}px sans-serif`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(labels3[idx], Math.cos(a) * (v3d + v3r * 0.7), Math.sin(a) * (v3d + v3r * 0.7));
-          });
-          break;
-        }
-
-        case "bellcurve": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.5})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(-s, s * 0.4); ctx.lineTo(s, s * 0.4);
-          ctx.moveTo(0, s * 0.4); ctx.lineTo(0, -s * 0.5);
-          ctx.stroke();
-          ctx.strokeStyle = `hsla(${h}, 70%, 70%, ${o})`;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          for (let i = -s * 0.9; i <= s * 0.9; i += 2) {
-            const norm = i / (s * 0.35);
-            const gY = Math.exp(-0.5 * norm * norm) * s * 0.8;
-            if (i === -s * 0.9) ctx.moveTo(i, s * 0.4 - gY);
-            else ctx.lineTo(i, s * 0.4 - gY);
-          }
-          ctx.stroke();
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(0, s * 0.4); ctx.lineTo(0, -s * 0.45);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.fillStyle = `hsla(${h}, 70%, 75%, ${o * 0.7})`;
-          ctx.font = `italic ${s * 0.18}px serif`;
-          ctx.textAlign = "center";
-          ctx.fillText("μ", s * 0.06, s * 0.55);
-          break;
-        }
-
-        case "histogram": {
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o})`;
-          ctx.fillStyle = `hsla(${h}, 60%, 70%, ${o * 0.3})`;
-          ctx.lineWidth = 1;
-          const barW = s * 0.15;
-          const heights = [0.3, 0.5, 0.85, 1, 0.7, 0.45, 0.2];
-          const totalW = heights.length * barW;
-          const startX = -totalW / 2;
-          heights.forEach((bh, i) => {
-            const bx = startX + i * barW;
-            const by = s * 0.5 - bh * s;
-            const barH = bh * s;
-            ctx.fillRect(bx, by, barW - 1, barH);
-            ctx.strokeRect(bx, by, barW - 1, barH);
-          });
-          ctx.strokeStyle = `hsla(${h}, 60%, 70%, ${o * 0.6})`;
-          ctx.beginPath();
-          ctx.moveTo(startX - 2, s * 0.5);
-          ctx.lineTo(startX + totalW + 2, s * 0.5);
-          ctx.moveTo(startX - 2, s * 0.5);
-          ctx.lineTo(startX - 2, -s * 0.55);
-          ctx.stroke();
-          break;
-        }
-
-      }
-
-      ctx.restore();
-    };
-
-    const MIN_ITEMS = 15;
-
-    const initItems = () => {
-      const count = Math.max(MIN_ITEMS, Math.floor(canvas.offsetWidth / 50));
-      for (let i = 0; i < count; i++) {
-        const item = createItem();
-        item.y = Math.random() * canvas.offsetHeight;
-        items.push(item);
-      }
-    };
-
-    const animate = () => {
-      time += 0.01;
-      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-
-      for (let i = items.length - 1; i >= 0; i--) {
-        const item = items[i];
-        item.y -= item.speed;
-        item.x += Math.sin(time + item.phase) * item.drift;
-        item.rotation += item.rotSpeed;
-
-        if (item.y < -60) {
-          items[i] = createItem();
-          continue;
-        }
-
-        drawItem(item);
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    resize();
-    initItems();
-    animate();
-
-    window.addEventListener("resize", resize);
-    return () => {
-      window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
+  const items = useMemo(() => generateItems(), []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 1 }}
-    />
+    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className="absolute"
+          style={{
+            left: `${item.x}%`,
+            width: `${item.size}px`,
+            height: item.type === "card" ? `${item.size * 1.43}px` : `${item.size}px`,
+            animation: `mathFloat ${item.duration}s linear ${item.delay}s infinite, mathDrift ${item.duration * 0.7}s ease-in-out ${item.delay}s infinite alternate, mathSpin ${item.rotSpeed}s linear ${item.delay}s infinite`,
+            willChange: "transform",
+          }}
+        >
+          {renderSVG(item)}
+        </div>
+      ))}
+    </div>
   );
 };
 

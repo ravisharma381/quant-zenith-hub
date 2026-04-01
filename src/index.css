@@ -63,6 +63,34 @@
   }
 }
 
+/* Math Background CSS Animations */
+@keyframes mathFloat {
+  0% {
+    top: 110%;
+  }
+  100% {
+    top: -15%;
+  }
+}
+
+@keyframes mathDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(var(--drift, 25px));
+  }
+}
+
+@keyframes mathSpin {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+
 /* Logo Ticker Animation */
 @keyframes logo-scroll {
   0% {
