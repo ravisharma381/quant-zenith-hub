@@ -122,9 +122,6 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
             {/* Left Side - Text Content */}
             <div className="text-center lg:text-left">
-              <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 animate-fade-in">
-                <span className="text-primary font-mono text-sm md:text-base tracking-wide">The LeetCode for Quants</span>
-              </div>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-bold mb-4 animate-fade-in leading-tight">
                 <span className="bg-gradient-hero bg-clip-text text-transparent">
                   Get into<br />Quant Finance
