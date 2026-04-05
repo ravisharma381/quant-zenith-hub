@@ -22,6 +22,7 @@ interface Props {
     sidebarOpen: boolean;
     toggleSidebar: () => void;
     setSelectedTopicId: (id: string) => void;
+    completedProblemsSet: Set<string>;
 }
 
 const CourseContent: React.FC<Props> = ({
@@ -29,7 +30,8 @@ const CourseContent: React.FC<Props> = ({
     topicId,
     sidebarOpen,
     toggleSidebar,
-    setSelectedTopicId
+    setSelectedTopicId,
+    completedProblemsSet
 }) => {
     const [topic, setTopic] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
@@ -241,6 +243,7 @@ const CourseContent: React.FC<Props> = ({
                                             <PlaylistDetail
                                                 playlistId={playlistId}
                                                 onBack={() => navigate(-1)}
+                                                completedProblemsSet={completedProblemsSet}
                                             />
                                             : <PlaylistGrid
                                                 playlistIds={topic.playlistIds || []}

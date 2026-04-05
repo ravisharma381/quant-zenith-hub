@@ -13,6 +13,7 @@ import RendererTopicSkeleton from "../TopicSkeleton";
 interface playlistProps {
     playlistId: string | null,
     onBack: () => void
+    completedProblemsSet: Set<string>
 }
 
 const chunk = <T,>(arr: T[], size: number): T[][] =>
@@ -21,7 +22,7 @@ const chunk = <T,>(arr: T[], size: number): T[][] =>
         return acc;
     }, []);
 
-const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
+const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack, completedProblemsSet }) => {
     const { courseId, topicId } = useParams<{ courseId?: string; topicId?: string }>();
     const navigate = useNavigate();
 
@@ -200,18 +201,17 @@ const PlaylistDetail: React.FC<playlistProps> = ({ playlistId, onBack }) => {
                                                                 </h4>
                                                             </div>
                                                             <div className="flex items-center justify-center w-28">
-                                                                <Badge
-                                                                    variant="outline"
-                                                                    //     className={`text-xs ${problem.solved
-                                                                    //         ? "text-green-400 border-green-400/30"
-                                                                    //         : "text-red-400 border-red-400/30"
-                                                                    //         }`}
-                                                                    // >
-                                                                    //     {problem.solved ? "Solved" : "Not Solved"}
-                                                                    className={`text-xs text-green-400 border-green-400/30`}
-                                                                >
-                                                                    {'Solve Now'}
-                                                                </Badge>
+                                                                <div className="flex items-center justify-center w-28">
+                                                                    <Badge
+                                                                        variant="outline"
+                                                                        className={`text-xs ${completedProblemsSet.has(problem.id)
+                                                                            ? "text-green-400 border-green-400/30"
+                                                                            : "text-red-400 border-red-400/30"
+                                                                            }`}
+                                                                    >
+                                                                        {completedProblemsSet.has(problem.id) ? "Solved" : "Not Solved"}
+                                                                    </Badge>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

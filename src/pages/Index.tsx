@@ -92,7 +92,6 @@ const Index = () => {
       title: "Interactive Games",
       description: "Practice fast-paced games including mental math, sequences, memory, and reaction tests.",
       link: "/games",
-      isCommingSoon: true,
     },
     {
       icon: <BookOpen className="w-8 h-8 text-primary" />,

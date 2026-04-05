@@ -22,18 +22,18 @@ const ProblemDetail = () => {
   const isLoggedIn = !!user;
   // const isSubscribed = true;
   const isSubscribed = userProfile?.isPremium === true;
-  let backurl = '/problems?';
+  let paramsText = '';
   if (urlTopic) {
-    backurl += `topic=${urlTopic}`;
+    paramsText += `topic=${urlTopic}`;
   }
   if (page) {
-    backurl += `&page=${page}`;
+    paramsText += `&page=${page}`;
   }
   if (level) {
-    backurl += `&level=${level}`;
+    paramsText += `&level=${level}`;
   }
   if (q) {
-    backurl += `&q=${q}`;
+    paramsText += `&q=${q}`;
   }
 
   const [topic, setTopic] = useState<any>(null);
@@ -221,7 +221,7 @@ const ProblemDetail = () => {
       return;
     }
 
-    navigate(`/problems/${nextId.id}`);
+    navigate(`/problems/${nextId.id}?${paramsText}`);
   }
   const onClickPrev = () => {
     if (prevId.isPrivate && !isSubscribed) {
@@ -229,7 +229,7 @@ const ProblemDetail = () => {
       return;
     }
 
-    navigate(`/problems/${prevId.id}`);
+    navigate(`/problems/${prevId.id}?${paramsText}`);
   }
 
   useEffect(() => {
@@ -294,7 +294,7 @@ const ProblemDetail = () => {
         {/* Actions */}
         <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
           <Button
-            onClick={() => navigate(backurl)}
+            onClick={() => navigate('/problems?' + paramsText)}
             className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none"
           >
             Back to Problems

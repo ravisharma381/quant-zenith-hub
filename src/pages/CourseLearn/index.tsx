@@ -19,6 +19,7 @@ import CourseContent from "./CourseContent";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Lock } from "lucide-react";
+import { PROBLEMS_COURSE_ID } from "@/statics";
 
 const CourseLearnPage: React.FC = () => {
     const { courseId: routeCourseId, topicId: routeTopicId } =
@@ -31,6 +32,7 @@ const CourseLearnPage: React.FC = () => {
     const [topicMeta, setTopicMeta] = useState<any[]>([]);
     const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
     const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
+    const [completedProblemsSet, setCompletedProblemsSet] = useState<Set<string>>(new Set());
     const [pendingChanges, setPendingChanges] = useState<Set<string>>(new Set());
     const [writeTimer, setWriteTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -43,6 +45,20 @@ const CourseLearnPage: React.FC = () => {
     );
 
     const toggleSidebar = () => setSidebarOpen((s) => !s);
+    const loadProblemsProgress = async () => {
+        try {
+            const progressId = `${user.uid}_${PROBLEMS_COURSE_ID}`;
+            const ref = doc(db, "progress", progressId);
+            const snap = await getDoc(ref);
+
+            if (snap.exists()) {
+                const arr = snap.data()?.completedProblems || [];
+                setCompletedProblemsSet(new Set(arr));
+            }
+        } catch (e) {
+            console.error("Error fetching progress:", e);
+        }
+    };
 
     // -----------------------------
     // FETCH CHAPTERS + TOPICS
@@ -101,7 +117,6 @@ const CourseLearnPage: React.FC = () => {
                 // 2. Load Progress (1 read)
                 // ---------------------------
                 const pid = `${user.uid}_${routeCourseId}`;
-
                 const progressRef = doc(db, "progress", pid);
                 const progressSnap = await getDoc(progressRef);
 
@@ -116,9 +131,10 @@ const CourseLearnPage: React.FC = () => {
                     setCompletedSet(new Set<string>());
                 } else {
                     const arr = progressSnap.data()?.completedTopics || [];
+                    const completedProblems = progressSnap.data()?.completedProblems || [];
                     setCompletedSet(new Set<string>(arr));
                 }
-
+                await loadProblemsProgress();
                 // ---------------------------
                 // 3. Decide initial topic
                 // ---------------------------
@@ -312,6 +328,7 @@ const CourseLearnPage: React.FC = () => {
                             sidebarOpen={sidebarOpen}
                             toggleSidebar={toggleSidebar}
                             setSelectedTopicId={setSelectedTopicId}
+                            completedProblemsSet={completedProblemsSet}
                         />
                     </div>
                 </div>

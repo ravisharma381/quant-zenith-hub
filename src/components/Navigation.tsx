@@ -46,7 +46,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -100,7 +100,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
           </div>
 
           {/* Desktop Auth Buttons / User Avatar */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             {/* Admin */}
             {loading && (
               <div className="flex items-center justify-end gap-2 min-w-[215px]">
@@ -112,7 +112,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
               </div>
             )}
             {user && !loading && (
-              <div className="relative group min-w-[215px] flex justify-end gap-4">
+              <div className="relative min-w-[215px] flex justify-end gap-4">
                 {['admin', 'superAdmin'].includes(userProfile?.role) && <div className="relative group">
                   <Link
                     to="/admin"
@@ -125,61 +125,62 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <span className="font-medium">Admin</span>
                   </Link>
                 </div>}
-                <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.photoURL} alt={user.displayName} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {user.displayName
-                        ?.split(" ")
-                        ?.map((n) => n[0])
-                        ?.join("")
-                        ?.toUpperCase()
-                        ?.slice(0, 2) || 'A'}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
+                <div className="relative group">
+                  {/* User Dropdown with courses styling */}
+                  <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.photoURL} alt={user.displayName} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {user.displayName
+                          ?.split(" ")
+                          ?.map((n) => n[0])
+                          ?.join("")
+                          ?.toUpperCase()
+                          ?.slice(0, 2) || 'A'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                  <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
+                      {userProfile?.isPremium && (
+                        <div className="flex items-center gap-2 p-3 mb-1 rounded-md bg-purple-500/10 text-purple-300">
+                          <Crown className="w-4 h-4" />
+                          <span className="text-sm font-medium">Premium Member</span>
+                        </div>
+                      )}
+                      <Link
+                        to="/billing"
+                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                      >
+                        <div className="mt-1">
+                          <CreditCard className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-foreground">Billing</div>
+                          <div className="text-sm text-muted-foreground">View purchase history & details</div>
+                        </div>
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item w-full text-left"
+                      >
+                        <div className="mt-1">
+                          <LogOut className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-foreground">Logout</div>
+                          <div className="text-sm text-muted-foreground">Sign out of your account</div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 {/* Premium Crown */}
                 {userProfile?.isPremium && (
                   <div className="absolute -top-2 -right-1 w-4 h-4 rounded-full bg-purple-600 flex items-center justify-center shadow-md">
                     <Crown className="w-2.5 h-2.5 text-white" />
                   </div>
                 )}
-
-                {/* User Dropdown with courses styling */}
-                <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
-                    {userProfile?.isPremium && (
-                      <div className="flex items-center gap-2 p-3 mb-1 rounded-md bg-purple-500/10 text-purple-300">
-                        <Crown className="w-4 h-4" />
-                        <span className="text-sm font-medium">Premium Member</span>
-                      </div>
-                    )}
-                    <Link
-                      to="/billing"
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                    >
-                      <div className="mt-1">
-                        <CreditCard className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">Billing</div>
-                        <div className="text-sm text-muted-foreground">View purchase history & details</div>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item w-full text-left"
-                    >
-                      <div className="mt-1">
-                        <LogOut className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">Logout</div>
-                        <div className="text-sm text-muted-foreground">Sign out of your account</div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
               </div>
             )}
             {
@@ -204,7 +205,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
           {/* Mobile menu button */}
           <button
             onClick={() => { closeSidebar?.(); setIsOpen(!isOpen) }}
-            className="md:hidden text-muted-foreground hover:text-foreground"
+            className="lg:hidden text-muted-foreground hover:text-foreground"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -215,12 +216,12 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
               onClick={() => setIsOpen(false)}
             />
 
             {/* Menu */}
-            <div className="fixed top-16 left-0 right-0 z-50 md:hidden px-4 py-4">
+            <div className="fixed top-16 left-0 right-0 z-50 lg:hidden px-4 py-4">
               <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-auto">
                 {/* Main Navigation Items */}
                 {userProfile?.isPremium && (
