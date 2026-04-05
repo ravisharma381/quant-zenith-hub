@@ -222,7 +222,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
 
             {/* Menu */}
             <div className="fixed top-16 left-0 right-0 z-50 lg:hidden px-4 py-4">
-              <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 mx-auto">
+              <div className="w-full max-w-sm bg-card border border-border rounded-lg shadow-lg p-2 ml-auto">
                 {/* Main Navigation Items */}
                 {userProfile?.isPremium && (
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-500/10 text-purple-300 mb-2">
