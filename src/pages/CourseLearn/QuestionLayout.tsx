@@ -305,7 +305,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                     <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
                         {topic.title}
                     </h1>
-                    <Accordion type="single" collapsible className="w-full space-y-4">
+                    <Accordion type="multiple" className="w-full space-y-4">
 
                         { /* Render up to 5 hints, same style as before */}
                         {Array.from({ length: 5 }).map((_, i) => {
