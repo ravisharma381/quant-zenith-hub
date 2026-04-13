@@ -42,6 +42,8 @@ export interface TopicFormData {
     hint4?: string;
     hint5?: string;
     solution?: string;
+    solution2?: string;
+    solution3?: string;
     topic?: string;
     level?: string;
     playlistIds?: string[];
@@ -76,6 +78,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [hint4, setHint4] = useState("");
     const [hint5, setHint5] = useState("");
     const [solution, setSolution] = useState("");
+    const [solution2, setSolution2] = useState("");
+    const [solution3, setSolution3] = useState("");
     const [topic, setTopic] = useState("");
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
     const [askedIn, setAskedIn] = useState<{ name: string; logoURL: string }[]>([]);
@@ -99,6 +103,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint4(initialData.hint4 ?? "");
             setHint5(initialData.hint5 ?? "");
             setSolution(initialData.solution ?? "");
+            setSolution2(initialData.solution2 ?? "");
+            setSolution3(initialData.solution3 ?? "");
             setTopic(initialData.topic ?? "");
             setPlaylistIds(initialData.playlistIds ?? []);
             setAskedIn(initialData.askedIn ?? []);
@@ -121,6 +127,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint5("");
             setTopic("");
             setSolution("");
+            setSolution2("");
+            setSolution3("");
             setPlaylistIds([]);
             setAskedIn([]);
             setIsPrivate(true);
@@ -255,6 +263,8 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                 hint4,
                 hint5,
                 solution,
+                solution2,
+                solution3,
                 level,
                 askedIn: askedIn.filter((a) => a.name.trim() && a.logoURL.trim()),
                 isPrivate,
@@ -369,6 +379,14 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                             <div>
                                 <Label>Solution</Label>
                                 <Textarea rows={4} value={solution} onChange={(e) => setSolution(e.target.value)} />
+                            </div>
+                            <div>
+                                <Label>Solution 2</Label>
+                                <Textarea rows={4} value={solution2} onChange={(e) => setSolution2(e.target.value)} />
+                            </div>
+                            <div>
+                                <Label>Solution 3</Label>
+                                <Textarea rows={4} value={solution3} onChange={(e) => setSolution3(e.target.value)} />
                             </div>
                             <div>
                                 <Label>Level</Label>

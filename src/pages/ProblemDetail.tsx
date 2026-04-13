@@ -78,6 +78,8 @@ const ProblemDetail = () => {
           hint4: data.hint4 ?? "",
           hint5: data.hint5 ?? "",
           solution: data.solution ?? "",
+          solution2: data.solution2 ?? "",
+          solution3: data.solution3 ?? "",
           courseId: data.courseId ?? null,
           isPrivate: data.isPrivate ?? false,
           order: data.order ?? null

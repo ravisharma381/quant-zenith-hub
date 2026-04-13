@@ -39,6 +39,8 @@ export interface TopicFormData {
     hint4?: string;
     hint5?: string;
     solution?: string;
+    solution2?: string;
+    solution3?: string;
     level?: string;
     playlistIds?: string[];
     askedIn?: { name: string; logoURL: string }[];

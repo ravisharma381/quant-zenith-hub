@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Share, Send } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fireRandomCelebration } from "@/lib/confetti";
@@ -12,6 +12,7 @@ import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import TeX from "@matejmazur/react-katex";
 import "katex/dist/katex.min.css";
 import { useNavigate } from "react-router-dom";
+import { ScrollContext } from "@/components/Layout";
 
 function renderRichCMS(text?: string | null) {
     if (!text) return null;
@@ -132,6 +133,18 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
     });
     const [copied, setCopied] = useState(false);
     const navigate = useNavigate();
+    const [tab, setTab] = useState("problem");
+    const scrollRef = useContext(ScrollContext);
+
+    useEffect(() => {
+        if (isProblemsPage) {
+            scrollRef?.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        }
+    }, [tab]);
+
 
     // ---- ANSWER CHECK ----
     const isCorrect = () => {
@@ -198,7 +211,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
     return (
         <div className="max-w-4xl mx-auto">
 
-            <Tabs defaultValue="problem" className="w-full" onValueChange={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            <Tabs defaultValue="problem" className={`w-full ${isProblemsPage ? 'min-h-[90vh]' : ''}`} value={tab} onValueChange={setTab}>
 
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex items-center justify-between mb-6">
@@ -325,15 +338,23 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                             );
                         })}
 
-                        <AccordionItem value="solution" className="border border-border rounded-lg px-4">
-                            <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
-                                Solution
-                            </AccordionTrigger>
-                            <AccordionContent className="text-white leading-relaxed text-lg">
-                                <div className="">{renderRichCMS(topic.solution)}</div>
-                            </AccordionContent>
-                        </AccordionItem>
+                        {Array.from({ length: 3 }).map((_, i) => {
+                            const solutionKey = i === 0 ? "solution" : `solution${i + 1}`;
+                            const solutionVal = topic[solutionKey];
+                            const solutionVal2 = topic['solution2'];
+                            if (!solutionVal) return null;
 
+                            return (
+                                <AccordionItem key={solutionKey} value={solutionKey} className="border border-border rounded-lg px-4">
+                                    <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
+                                        {solutionVal2 ? `Solution ${i + 1}` : 'Solution'}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="text-white leading-relaxed text-lg">
+                                        <div className="">{renderRichCMS(solutionVal)}</div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            );
+                        })}
                     </Accordion>
                 </TabsContent>
 
