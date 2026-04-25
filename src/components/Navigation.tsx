@@ -68,60 +68,18 @@ const Navigation = () => {
               Courses
             </Link>
 
-            {/* Playlists Dropdown */}
-            <div className="relative group">
-              <button
-                className={cn(
-                  "flex items-center gap-1 text-base font-medium transition-colors hover:text-primary",
-                  location.pathname.startsWith("/playlists")
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                )}
-              >
-                Playlists
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="w-64 bg-card border border-border rounded-lg shadow-lg p-2">
-                  <Link
-                    to="/playlists?category=company"
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <BookOpen className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">Company Specific</div>
-                      <div className="text-sm text-muted-foreground">Problems by company</div>
-                    </div>
-                  </Link>
-                  <Link
-                    to="/playlists?category=quick-revision"
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <FileText className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">Quick Revision</div>
-                      <div className="text-sm text-muted-foreground">Curated short sets</div>
-                    </div>
-                  </Link>
-                  <Link
-                    to="/playlists?category=tags"
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                  >
-                    <div className="mt-1">
-                      <Puzzle className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground">Tags</div>
-                      <div className="text-sm text-muted-foreground">By topic & technique</div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <Link
+              to="/playlists"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                location.pathname.startsWith("/playlists")
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              Playlists
+            </Link>
+
 
             <Link
               to="/contact"
