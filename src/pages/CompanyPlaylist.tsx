@@ -1,220 +1,161 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
+type Problem = { id: string; name: string; solved: boolean };
+type Level = { id: string; name: string; problems: Problem[] };
 
 const CompanyPlaylist = () => {
   const { companyId } = useParams();
   const navigate = useNavigate();
-  const [selectedTopic, setSelectedTopic] = useState("Brainteasers");
 
-  const companyData: Record<string, { name: string; description: string; icon: string; color: string }> = {
-    "jane-street": {
-      name: "Jane Street",
-      description: "Problems commonly asked in Jane Street interviews.",
-      icon: "🎯",
-      color: "bg-blue-500/20"
-    },
-    "citadel": {
-      name: "Citadel", 
-      description: "Problems commonly asked in Citadel interviews.",
-      icon: "🏢",
-      color: "bg-blue-600/20"
-    },
-    // Add more companies as needed
+  const playlistData: Record<string, { name: string; icon: string }> = {
+    "jane-street": { name: "Jane Street", icon: "🎯" },
+    "citadel": { name: "Citadel", icon: "🏢" },
+    "dice": { name: "Dice", icon: "🎲" },
+    "top-75": { name: "Top 75", icon: "75" },
+    "top-50": { name: "Top 50", icon: "50" },
+    "coins": { name: "Coins", icon: "🪙" },
+    "optiver": { name: "Optiver", icon: "⚠️" },
+    "hudson-river": { name: "Hudson River Trading", icon: "🌊" },
+    "two-sigma": { name: "Two Sigma", icon: "2σ" },
+    "imc": { name: "IMC", icon: "📊" },
+    "akuna-capital": { name: "Akuna Capital", icon: "🎯" },
+    "drw": { name: "DRW", icon: "DRW" },
+    "sig": { name: "SIG", icon: "〰️" },
+    "old-mission": { name: "Old Mission", icon: "⚡" },
+    "squarepoint": { name: "Squarepoint Capital", icon: "⬜" },
+    "transmarket": { name: "TransMarket Group", icon: "📈" },
+    "worldquant": { name: "WorldQuant", icon: "🌍" },
+    "goldman-sachs": { name: "Goldman Sachs", icon: "💰" },
+    "belvedere": { name: "Belvedere Trading", icon: "🏪" },
+    "five-rings": { name: "Five Rings", icon: "💍" },
   };
 
-  const topics = [
+  const playlist = playlistData[companyId || ""] || { name: "Playlist", icon: "📚" };
+
+  const levels: Level[] = [
     {
-      id: "brainteasers",
-      name: "Brainteasers",
-      description: "Challenging puzzles or problems used to evaluate analytical thinking and problem-solving skills, common in quant interview assessments.",
-      count: 28
+      id: "level-1",
+      name: "Level 1",
+      problems: [
+        { id: "1-dot-removed", name: "1 Dot Removed", solved: false },
+        { id: "expected-wait-time-1", name: "Expected Wait Time I", solved: false },
+        { id: "prime-sum", name: "Prime Sum", solved: false },
+        { id: "gold-thief", name: "Gold Thief", solved: false },
+      ],
     },
     {
-      id: "combinatorics",
-      name: "Combinatorics",
-      description: "Mathematical techniques for counting and arranging, applied in complex financial calculations.",
-      count: 12
+      id: "level-2",
+      name: "Level 2",
+      problems: [
+        { id: "bridge-crossing", name: "Bridge Crossing", solved: false },
+        { id: "clock-angle-1", name: "Clock Angle I", solved: false },
+        { id: "ferry-stops", name: "Ferry Stops", solved: false },
+        { id: "hand-meet", name: "Hand Meet", solved: false },
+      ],
     },
     {
-      id: "conditional-expectation",
-      name: "Conditional Expectation", 
-      description: "Calculation of the expected value of a variable given certain conditions, essential for options pricing.",
-      count: 8
+      id: "level-3",
+      name: "Level 3",
+      problems: [
+        { id: "100-lights", name: "100 Lights", solved: false },
+        { id: "horse-racing", name: "Horse Racing", solved: false },
+        { id: "penny-stack", name: "Penny Stack", solved: false },
+        { id: "true-statement", name: "True Statement", solved: false },
+      ],
     },
     {
-      id: "conditional-probability",
-      name: "Conditional Probability",
-      description: "Evaluation of an event's likelihood given a prior event, key for predictive modeling in trading.",
-      count: 15
+      id: "level-4",
+      name: "Level 4",
+      problems: [
+        { id: "infected-dinner-2", name: "Infected Dinner II", solved: false },
+        { id: "poisoned-kegs-4", name: "Poisoned Kegs IV", solved: false },
+        { id: "prime-subset", name: "Prime Subset", solved: false },
+      ],
     },
-    {
-      id: "continuous-random-variables",
-      name: "Continuous Random Variables",
-      description: "Analysis of variables with infinite possibilities, crucial for modeling financial markets and risk assessment.",
-      count: 10
-    },
-    {
-      id: "events",
-      name: "Events",
-      description: "Specific outcomes or occurrences analyzed for their impact on financial markets.",
-      count: 6
-    },
-    {
-      id: "expected-value",
-      name: "Expected Value",
-      description: "Calculation of a weighted average outcome, fundamental for decision-making under uncertainty.",
-      count: 9
-    },
-    {
-      id: "games",
-      name: "Games",
-      description: "Strategic scenarios used to assess problem-solving and strategic thinking, relevant for trading strategies.",
-      count: 7
-    },
-    {
-      id: "other",
-      name: "Other",
-      description: "Topics with not enough problems grouped into one section for this playlist.",
-      count: 4
-    }
   ];
 
-  const problems = [
-    { id: "bridge-crossing", name: "Bridge Crossing", difficulty: "Easy", locked: false },
-    { id: "clock-angle-1", name: "Clock Angle I", difficulty: "Easy", locked: true },
-    { id: "clock-angle-2", name: "Clock Angle II", difficulty: "Easy", locked: false },
-    { id: "discard-game", name: "DisCard Game", difficulty: "Easy", locked: true },
-    { id: "ferry-stops", name: "Ferry Stops", difficulty: "Easy", locked: false },
-    { id: "hand-meet", name: "Hand Meet", difficulty: "Easy", locked: false },
-    { id: "infected-dinner-1", name: "Infected Dinner I", difficulty: "Easy", locked: false },
-    { id: "lawn-teamwork", name: "Lawn Teamwork", difficulty: "Easy", locked: true },
-    { id: "least-multiple-15", name: "Least Multiple of 15", difficulty: "Easy", locked: false },
-    { id: "matching-socks-1", name: "Matching Socks I", difficulty: "Easy", locked: true },
-    { id: "planets-aligned", name: "Planets Aligned", difficulty: "Easy", locked: true },
-    { id: "river-length", name: "River Length", difficulty: "Easy", locked: false },
-    { id: "stamp-sum", name: "Stamp Sum", difficulty: "Easy", locked: false },
-    { id: "windless-mile", name: "Windless Mile", difficulty: "Easy", locked: false },
-    { id: "100-lights", name: "100 Lights", difficulty: "Medium", locked: false },
-    { id: "digit-multiplication-1", name: "Digit Multiplication I", difficulty: "Medium", locked: false },
-    { id: "digit-multiplication-2", name: "Digit Multiplication II", difficulty: "Medium", locked: true },
-    { id: "distinct-date-1", name: "Distinct Date I", difficulty: "Medium", locked: false },
-    { id: "distinct-date-2", name: "Distinct Date II", difficulty: "Medium", locked: false },
-    { id: "horse-racing", name: "Horse Racing", difficulty: "Medium", locked: true },
-    { id: "paired-pumpkins-2", name: "Paired Pumpkins II", difficulty: "Medium", locked: false },
-    { id: "penny-stack", name: "Penny Stack", difficulty: "Medium", locked: true },
-    { id: "poisoned-kegs-1", name: "Poisoned Kegs I", difficulty: "Medium", locked: true },
-    { id: "poisoned-kegs-2", name: "Poisoned Kegs II", difficulty: "Medium", locked: true },
-    { id: "poisoned-kegs-3", name: "Poisoned Kegs III", difficulty: "Medium", locked: true },
-    { id: "true-statement", name: "True Statement", difficulty: "Medium", locked: false },
-    { id: "infected-dinner-2", name: "Infected Dinner II", difficulty: "Hard", locked: false },
-    { id: "poisoned-kegs-4", name: "Poisoned Kegs IV", difficulty: "Hard", locked: true },
-    { id: "prime-subset", name: "Prime Subset", difficulty: "Hard", locked: false }
-  ];
+  const [openLevels, setOpenLevels] = useState<Record<string, boolean>>({
+    "level-1": true,
+    "level-2": true,
+    "level-3": false,
+    "level-4": false,
+  });
 
-  const company = companyData[companyId || ""] || {
-    name: "Company",
-    description: "Problems from this company.",
-    icon: "🏢",
-    color: "bg-gray-500/20"
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy":
-        return "bg-green-500/20 text-green-400 border-green-500/30";
-      case "Medium":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "Hard":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
+  const toggleLevel = (id: string) => {
+    setOpenLevels((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
-            >
-              <ArrowLeft size={16} />
-              Back to Explore
-            </button>
-            
-            <div className={`${company.color} rounded-lg p-6 mb-6`}>
-              <div className="flex items-center gap-4">
-                <div className="text-4xl">{company.icon}</div>
-                <div>
-                  <h1 className="text-3xl font-bold text-foreground">{company.name}</h1>
-                  <p className="text-muted-foreground mt-1">{company.description}</p>
-                </div>
-              </div>
-            </div>
+      <div className="max-w-5xl mx-auto">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back to Playlists
+        </button>
+
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-16 h-16 bg-card border border-border rounded-xl flex items-center justify-center text-3xl">
+            {playlist.icon}
           </div>
+          <h1 className="text-4xl font-bold text-foreground">{playlist.name}</h1>
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-card border border-border rounded-lg p-4">
-                <h3 className="font-semibold text-foreground mb-4">Topics</h3>
-                <div className="space-y-2">
-                  {topics.map((topic) => (
-                    <button
-                      key={topic.id}
-                      onClick={() => setSelectedTopic(topic.name)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
-                        selectedTopic === topic.name
-                          ? "bg-primary/10 text-primary border border-primary/20"
-                          : "hover:bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">{topic.name}</span>
-                        <span className="text-xs">{topic.count}</span>
+        {/* Levels */}
+        <div className="space-y-4">
+          {levels.map((level) => {
+            const isOpen = openLevels[level.id];
+            return (
+              <div
+                key={level.id}
+                className="bg-card border border-border rounded-xl overflow-hidden"
+              >
+                <button
+                  onClick={() => toggleLevel(level.id)}
+                  className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors"
+                >
+                  <span className="text-xl font-bold text-foreground">{level.name}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-muted-foreground transition-transform ${
+                      isOpen ? "" : "-rotate-90"
+                    }`}
+                  />
+                </button>
+
+                {isOpen && (
+                  <div className="border-t border-border">
+                    {level.problems.map((problem, idx) => (
+                      <div
+                        key={problem.id}
+                        onClick={() => navigate(`/problems/${problem.id}`)}
+                        className={`flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-muted/30 transition-colors ${
+                          idx !== level.problems.length - 1 ? "border-b border-border/50" : ""
+                        }`}
+                      >
+                        <span className="text-foreground font-medium">{problem.name}</span>
+                        <Badge
+                          variant="outline"
+                          className={
+                            problem.solved
+                              ? "bg-green-500/10 text-green-400 border-green-500/30"
+                              : "bg-red-500/10 text-red-400 border-red-500/30"
+                          }
+                        >
+                          {problem.solved ? "Solved" : "Not Solved"}
+                        </Badge>
                       </div>
-                    </button>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="lg:col-span-3">
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold text-foreground mb-2">{selectedTopic}</h2>
-                  <p className="text-muted-foreground text-sm">
-                    {topics.find(t => t.name === selectedTopic)?.description}
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {problems.map((problem) => (
-                    <div
-                      key={problem.id}
-                      className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/problems/${problem.id}`)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        </div>
-                        <span className="font-medium text-foreground">{problem.name}</span>
-                        <span className="text-xs text-muted-foreground">{selectedTopic}</span>
-                      </div>
-                      <Badge className={getDifficultyColor(problem.difficulty)} variant="outline">
-                        {problem.difficulty}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            );
+          })}
         </div>
       </div>
     </div>
