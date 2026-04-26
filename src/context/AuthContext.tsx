@@ -152,7 +152,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
 
                 const fn = httpsCallable(functions, "getUserRegion");
-                const res = await fn();
+                const res: any = await fn();
 
                 const detectedRegion: any = res.data?.data?.region;
 
