@@ -132,17 +132,17 @@ const Playlists = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-border">
+        <div className="flex flex-wrap gap-3 mb-8">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSearchParams({ category: cat.id })}
-                className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
+                className={`px-6 py-2 text-sm font-medium rounded-full border transition-colors ${
                   isActive
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
                 }`}
               >
                 {cat.label}
