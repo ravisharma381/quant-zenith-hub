@@ -156,61 +156,29 @@ const Playlists = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {items.map((company) => {
-            const percent = 0;
-            const radius = 18;
-            const circumference = 2 * Math.PI * radius;
-            const dashOffset = circumference * (1 - percent / 100);
-            return (
-              <Card
-                key={company.id}
-                className="overflow-hidden hover:scale-105 transition-all duration-200 cursor-pointer group p-0 border-border"
-                onClick={() => navigate(`/playlists/${company.id}`)}
-              >
-                {/* Colored header */}
-                <div className={`${company.color} px-5 py-6 flex items-start justify-between gap-3 border-b border-border`}>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
-                    {company.name}
-                  </h3>
-                  <div className={`${company.iconBg} p-3 rounded-lg text-3xl leading-none flex items-center justify-center shrink-0`}>
-                    {company.icon}
+          {items.map((company) => (
+            <Card
+              key={company.id}
+              className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group min-h-[200px]`}
+              onClick={() => navigate(`/playlists/${company.id}`)}
+            >
+              <CardContent className="p-6 h-full">
+                <div className="flex flex-col h-full">
+                  <div className="flex justify-between items-start gap-3 mb-4">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
+                      {company.name}
+                    </h3>
+                    <div className={`${company.iconBg} p-3 rounded-lg text-4xl leading-none flex items-center justify-center shrink-0`}>
+                      {company.icon}
+                    </div>
                   </div>
+                  <p className="text-sm text-muted-foreground line-clamp-3 mt-auto">
+                    {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
+                  </p>
                 </div>
-
-                {/* Footer with stats */}
-                <div className="bg-card px-5 py-4 flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold text-foreground leading-none">{company.problems}</div>
-                    <div className="text-xs text-muted-foreground mt-1">Problems</div>
-                  </div>
-                  <div className="relative w-12 h-12 flex items-center justify-center">
-                    <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
-                      <circle
-                        cx="22"
-                        cy="22"
-                        r={radius}
-                        fill="none"
-                        stroke="hsl(var(--border))"
-                        strokeWidth="3"
-                      />
-                      <circle
-                        cx="22"
-                        cy="22"
-                        r={radius}
-                        fill="none"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth="3"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={dashOffset}
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span className="absolute text-xs font-semibold text-foreground">{percent}%</span>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
