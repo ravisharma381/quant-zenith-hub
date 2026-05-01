@@ -10,6 +10,50 @@ type PlaylistItem = {
   color: string;
   iconBg: string;
   icon: string;
+  description?: string;
+};
+
+const descriptions: Record<string, string> = {
+  "dice": "Classic dice puzzles covering expected value, conditional probability, and combinatorics.",
+  "jane-street": "Curated questions inspired by Jane Street's interview style across probability and logic.",
+  "top-75": "Most-asked quant questions every candidate should master before interviews.",
+  "coins": "Coin flip puzzles spanning fair, biased, and sequential outcome scenarios.",
+  "top-50": "A focused shortlist of the highest-impact problems for rapid prep.",
+  "citadel": "Probability, market-making, and brainteaser problems modeled after Citadel rounds.",
+  "optiver": "Mental math, market making, and game theory questions in Optiver's style.",
+  "hudson-river": "Algorithmic and probability problems that mirror Hudson River Trading interviews.",
+  "two-sigma": "Statistics, modeling, and quantitative reasoning problems from Two Sigma.",
+  "imc": "Trading-focused puzzles with a strong emphasis on speed and intuition.",
+  "akuna-capital": "Options-flavored probability and game theory questions from Akuna interviews.",
+  "drw": "Probability and trading puzzles inspired by DRW's selection process.",
+  "sig": "Game theory, betting, and probability questions in classic SIG style.",
+  "old-mission": "Market-making puzzles and probability brainteasers from Old Mission.",
+  "squarepoint": "Statistics-leaning quant problems and probability puzzles.",
+  "transmarket": "Mental math drills and probability problems from TransMarket interviews.",
+  "worldquant": "Quantitative modeling and statistics problems in WorldQuant's style.",
+  "goldman-sachs": "Finance, probability, and brainteaser problems from Goldman Sachs interviews.",
+  "belvedere": "Trading puzzles and game theory problems modeled on Belvedere rounds.",
+  "five-rings": "Probability and game theory questions inspired by Five Rings interviews.",
+  "qr-probability-30": "A 30-problem sprint covering core probability concepts in one sitting.",
+  "qr-brainteasers-25": "Twenty-five classic brainteasers to sharpen lateral thinking quickly.",
+  "qr-mental-math": "Fast-paced arithmetic drills to build interview-ready mental math speed.",
+  "qr-stats-essentials": "The must-know statistics concepts distilled into a focused review.",
+  "qr-game-theory": "Quick game theory refresher covering Nash equilibrium and strategy puzzles.",
+  "qr-must-know-50": "Fifty essential problems that recur across nearly every quant interview.",
+  "qr-final-week": "A structured review plan for your final week of interview preparation.",
+  "qr-day-before": "Light, high-yield problems perfect for the night before your interview.",
+  "tag-brainteasers": "Lateral thinking puzzles that test creativity and structured reasoning.",
+  "tag-probability": "Foundational probability problems from basic events to advanced distributions.",
+  "tag-combinatorics": "Counting, permutations, and arrangement problems for sharp combinatorial intuition.",
+  "tag-expected-value": "Expected value problems spanning games, gambles, and decision-making.",
+  "tag-markov-chains": "State-transition problems and stationary distribution puzzles.",
+  "tag-game-theory": "Strategic decision problems involving equilibria and optimal play.",
+  "tag-statistics": "Estimation, hypothesis testing, and statistical reasoning problems.",
+  "tag-linear-algebra": "Vector spaces, matrices, and eigenvalue problems for quant prep.",
+  "tag-calculus": "Derivatives, integrals, and limits applied to quantitative scenarios.",
+  "tag-mental-math": "Speed arithmetic and number-sense drills used in trading interviews.",
+  "tag-coding": "Algorithmic problems blending logic with quantitative reasoning.",
+  "tag-options": "Options pricing intuition, Greeks, and derivatives-flavored problems.",
 };
 
 const companyPlaylists: PlaylistItem[] = [
@@ -86,7 +130,7 @@ const Playlists = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 md:px-12 lg:px-20">
         {/* Category Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b border-border">
           {categories.map((cat) => {
@@ -111,36 +155,26 @@ const Playlists = () => {
           <h1 className="text-3xl font-bold text-foreground mb-2">{heading}</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((company) => (
             <Card
               key={company.id}
               className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  <div className="flex justify-between items-start gap-3 mb-3">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
                       {company.name}
                     </h3>
-                    <div className={`${company.iconBg} p-2 rounded-lg text-lg`}>
+                    <div className={`${company.iconBg} p-3 rounded-lg text-3xl leading-none flex items-center justify-center shrink-0`}>
                       {company.icon}
                     </div>
                   </div>
-
-                  <div className="mt-auto grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-foreground">{company.problems}</div>
-                      <div className="text-sm text-muted-foreground">Problems</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-foreground">{company.topics}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {activeCategory === "tags" ? "Tag" : "Topics"}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
+                  </p>
                 </div>
               </CardContent>
             </Card>
