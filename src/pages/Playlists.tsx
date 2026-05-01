@@ -130,7 +130,7 @@ const Playlists = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 md:px-12 lg:px-20">
         {/* Category Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b border-border">
           {categories.map((cat) => {
@@ -155,36 +155,26 @@ const Playlists = () => {
           <h1 className="text-3xl font-bold text-foreground mb-2">{heading}</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((company) => (
             <Card
               key={company.id}
               className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group`}
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                  <div className="flex justify-between items-start gap-3 mb-3">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
                       {company.name}
                     </h3>
-                    <div className={`${company.iconBg} p-2 rounded-lg text-lg`}>
+                    <div className={`${company.iconBg} p-3 rounded-lg text-3xl leading-none flex items-center justify-center shrink-0`}>
                       {company.icon}
                     </div>
                   </div>
-
-                  <div className="mt-auto grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-foreground">{company.problems}</div>
-                      <div className="text-sm text-muted-foreground">Problems</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-foreground">{company.topics}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {activeCategory === "tags" ? "Tag" : "Topics"}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
+                  </p>
                 </div>
               </CardContent>
             </Card>
