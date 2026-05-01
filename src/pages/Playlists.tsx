@@ -130,7 +130,7 @@ const Playlists = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-5xl mx-auto px-4 md:px-12 lg:px-20">
+      <div className="max-w-5xl mx-auto">
         {/* Category Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b border-border">
           {categories.map((cat) => {
