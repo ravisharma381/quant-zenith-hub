@@ -142,29 +142,24 @@ const Playlists = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
         {/* Category Tabs */}
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-            Browse by category
-          </p>
-          <div className="flex flex-wrap gap-3 p-2 rounded-2xl bg-muted/40 border border-border/60 w-fit">
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSearchParams({ category: cat.id })}
-                  className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02]"
-                      : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-background/60"
-                  }`}
-                >
-                  <span className="text-base leading-none">{cat.icon}</span>
-                  {cat.label}
-                </button>
-              );
-            })}
-          </div>
+        <div className="flex flex-wrap gap-3 mb-8">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSearchParams({ category: cat.id })}
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02]"
+                    : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-background/60"
+                }`}
+              >
+                <span className="text-base leading-none">{cat.icon}</span>
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="mb-8">
