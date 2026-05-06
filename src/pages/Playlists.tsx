@@ -142,14 +142,14 @@ const Playlists = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="inline-flex flex-wrap gap-2 p-2 mb-8 rounded-full bg-card border border-border">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSearchParams({ category: cat.id })}
-                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-colors ${
+                className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-muted/40"
