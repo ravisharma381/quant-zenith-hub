@@ -149,10 +149,10 @@ const Playlists = () => {
               <button
                 key={cat.id}
                 onClick={() => setSearchParams({ category: cat.id })}
-                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all ${
+                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-colors ${
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02]"
-                    : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-background/60"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-muted/40"
                 }`}
               >
                 <span className="text-base leading-none">{cat.icon}</span>
