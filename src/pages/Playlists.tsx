@@ -105,10 +105,18 @@ const tagPlaylists: PlaylistItem[] = [
   { id: "tag-options", name: "Options & Derivatives", problems: 39, topics: 1, color: "bg-rose-500/20 border-rose-500/30", iconBg: "bg-rose-500/10", icon: "💹" },
 ];
 
+const miscPlaylists: PlaylistItem[] = [
+  { id: "misc-classics", name: "Classic Puzzles", problems: 40, topics: 6, color: "bg-amber-500/20 border-amber-500/30", iconBg: "bg-amber-500/10", icon: "🧩" },
+  { id: "misc-hard", name: "Hardest Problems", problems: 25, topics: 8, color: "bg-red-500/20 border-red-500/30", iconBg: "bg-red-500/10", icon: "🔥" },
+  { id: "misc-warmup", name: "Warm-Up Set", problems: 20, topics: 4, color: "bg-green-500/20 border-green-500/30", iconBg: "bg-green-500/10", icon: "☕" },
+  { id: "misc-trick", name: "Tricky & Counterintuitive", problems: 28, topics: 5, color: "bg-violet-500/20 border-violet-500/30", iconBg: "bg-violet-500/10", icon: "🌀" },
+];
+
 const categories = [
-  { id: "company", label: "Company Specific" },
-  { id: "quick-revision", label: "Quick Revision" },
-  { id: "tags", label: "Tags" },
+  { id: "company", label: "Company Specific", icon: "🏢" },
+  { id: "quick-revision", label: "Quick Revision", icon: "⚡" },
+  { id: "tags", label: "Tags", icon: "🏷️" },
+  { id: "misc", label: "Miscellaneous", icon: "✨" },
 ] as const;
 
 const Playlists = () => {
@@ -119,12 +127,14 @@ const Playlists = () => {
   const items = useMemo(() => {
     if (activeCategory === "quick-revision") return quickRevisionPlaylists;
     if (activeCategory === "tags") return tagPlaylists;
+    if (activeCategory === "misc") return miscPlaylists;
     return companyPlaylists;
   }, [activeCategory]);
 
   const heading = useMemo(() => {
     if (activeCategory === "quick-revision") return "Quick revision playlists";
     if (activeCategory === "tags") return "Playlists by topic & tag";
+    if (activeCategory === "misc") return "Miscellaneous playlists";
     return "Curated quant interview question playlists";
   }, [activeCategory]);
 
@@ -132,23 +142,29 @@ const Playlists = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSearchParams({ category: cat.id })}
-                className={`px-6 py-2 text-sm font-medium rounded-full border transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/40"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+        <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+            Browse by category
+          </p>
+          <div className="flex flex-wrap gap-3 p-2 rounded-2xl bg-muted/40 border border-border/60 w-fit">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSearchParams({ category: cat.id })}
+                  className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/30 scale-[1.02]"
+                      : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-background/60"
+                  }`}
+                >
+                  <span className="text-base leading-none">{cat.icon}</span>
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="mb-8">
