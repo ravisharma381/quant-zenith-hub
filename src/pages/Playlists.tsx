@@ -168,7 +168,7 @@ const Playlists = () => {
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
                       {company.name}
                     </h3>
-                    <div className={`${company.iconBg} p-3 rounded-lg text-4xl leading-none flex items-center justify-center shrink-0`}>
+                    <div className="text-4xl leading-none flex items-center justify-center shrink-0">
                       {company.icon}
                     </div>
                   </div>
