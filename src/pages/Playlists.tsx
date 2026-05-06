@@ -105,10 +105,18 @@ const tagPlaylists: PlaylistItem[] = [
   { id: "tag-options", name: "Options & Derivatives", problems: 39, topics: 1, color: "bg-rose-500/20 border-rose-500/30", iconBg: "bg-rose-500/10", icon: "💹" },
 ];
 
+const miscPlaylists: PlaylistItem[] = [
+  { id: "misc-classics", name: "Classic Puzzles", problems: 40, topics: 6, color: "bg-amber-500/20 border-amber-500/30", iconBg: "bg-amber-500/10", icon: "🧩" },
+  { id: "misc-hard", name: "Hardest Problems", problems: 25, topics: 8, color: "bg-red-500/20 border-red-500/30", iconBg: "bg-red-500/10", icon: "🔥" },
+  { id: "misc-warmup", name: "Warm-Up Set", problems: 20, topics: 4, color: "bg-green-500/20 border-green-500/30", iconBg: "bg-green-500/10", icon: "☕" },
+  { id: "misc-trick", name: "Tricky & Counterintuitive", problems: 28, topics: 5, color: "bg-violet-500/20 border-violet-500/30", iconBg: "bg-violet-500/10", icon: "🌀" },
+];
+
 const categories = [
-  { id: "company", label: "Company Specific" },
-  { id: "quick-revision", label: "Quick Revision" },
-  { id: "tags", label: "Tags" },
+  { id: "company", label: "Company Specific", icon: "🏢" },
+  { id: "quick-revision", label: "Quick Revision", icon: "⚡" },
+  { id: "tags", label: "Tags", icon: "🏷️" },
+  { id: "misc", label: "Miscellaneous", icon: "✨" },
 ] as const;
 
 const Playlists = () => {
