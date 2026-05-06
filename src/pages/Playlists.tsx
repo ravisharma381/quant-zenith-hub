@@ -159,22 +159,22 @@ const Playlists = () => {
           {items.map((company) => (
             <Card
               key={company.id}
-              className={`${company.color} hover:scale-105 transition-all duration-200 cursor-pointer group min-h-[200px]`}
+              className={`${company.color} hover:scale-[1.03] transition-all duration-200 cursor-pointer group`}
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
-              <CardContent className="p-6 h-full">
-                <div className="flex flex-col h-full">
-                  <div className="flex justify-between items-start gap-3 mb-4">
-                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
+              <CardContent className="p-5">
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl leading-none shrink-0">
+                    {company.icon}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
                       {company.name}
                     </h3>
-                    <div className="text-4xl leading-none flex items-center justify-center shrink-0">
-                      {company.icon}
-                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                      {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground line-clamp-3 mt-auto">
-                    {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
-                  </p>
                 </div>
               </CardContent>
             </Card>
