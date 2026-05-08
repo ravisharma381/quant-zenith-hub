@@ -173,32 +173,24 @@ const Playlists = () => {
               className="relative overflow-hidden bg-card border-border/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
-              {/* Decorative gradient blobs */}
-              <div className={`absolute -top-16 -right-16 w-48 h-48 rounded-full blur-3xl opacity-50 group-hover:opacity-80 transition-opacity duration-500 ${company.iconBg}`} />
-              <div className={`absolute -bottom-20 -left-10 w-40 h-40 rounded-full blur-3xl opacity-25 group-hover:opacity-50 transition-opacity duration-500 ${company.iconBg}`} />
-
-              {/* Subtle inner highlight */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent" />
-
-              {/* Top accent line */}
-              <div className={`absolute inset-x-0 top-0 h-[2px] ${company.color} opacity-70`} />
+              {/* Decorative gradient blob */}
+              <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-500 ${company.iconBg}`} />
 
               <CardContent className="relative p-5">
                 <div className="flex items-start gap-4">
-                  <div className={`relative flex items-center justify-center w-14 h-14 rounded-xl text-3xl shrink-0 border border-border/60 bg-background/50 backdrop-blur-sm shadow-inner group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300`}>
-                    <div className={`absolute inset-0 rounded-xl ${company.iconBg} opacity-60`} />
-                    <span className="relative">{company.icon}</span>
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-xl text-3xl shrink-0 border border-border/60 bg-background/40 backdrop-blur-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                    {company.icon}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <h3 className="text-base font-bold text-foreground leading-tight mb-1.5 tracking-tight">
+                    <h3 className="text-base font-bold text-foreground leading-tight mb-1.5">
                       {company.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground/90 line-clamp-2 leading-relaxed mb-3">
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
                       {descriptions[company.id] ?? "Curated problems to help you prepare effectively."}
                     </p>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-background/60 border border-border/60 text-[11px] font-semibold text-foreground/80 backdrop-blur-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_6px_hsl(var(--primary))]" />
+                    <div className="flex items-center gap-3 text-[11px] font-medium text-muted-foreground">
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                         {company.problems} problems
                       </span>
                     </div>
