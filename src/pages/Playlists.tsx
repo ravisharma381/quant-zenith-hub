@@ -170,7 +170,7 @@ const Playlists = () => {
           {items.map((company) => (
             <Card
               key={company.id}
-              className={`relative overflow-hidden border-border/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer group ${company.color}`}
+              className="relative overflow-hidden bg-card border-border/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
               {/* Decorative gradient blob */}
