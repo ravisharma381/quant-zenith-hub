@@ -170,20 +170,19 @@ const Playlists = () => {
           {items.map((company) => (
             <Card
               key={company.id}
-              className="relative overflow-hidden bg-card border-border/60 hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_12px_40px_-12px_hsl(var(--primary)/0.35)] transition-all duration-300 cursor-pointer group"
+              className={`relative overflow-hidden border-border/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer group ${company.color}`}
               onClick={() => navigate(`/playlists/${company.id}`)}
             >
               {/* Decorative gradient blob */}
-              <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-40 group-hover:opacity-70 transition-opacity duration-500 ${company.iconBg}`} />
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-500 ${company.iconBg}`} />
 
               <CardContent className="relative p-5">
                 <div className="flex items-start gap-4">
-                  <div className={`flex items-center justify-center w-14 h-14 rounded-xl text-3xl shrink-0 border border-border/60 ${company.iconBg} group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                  <div className={`flex items-center justify-center w-14 h-14 rounded-xl text-3xl shrink-0 border border-border/60 bg-background/40 backdrop-blur-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                     {company.icon}
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors leading-tight mb-1.5">
+                    <h3 className="text-base font-bold text-foreground leading-tight mb-1.5">
                       {company.name}
                     </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
@@ -194,8 +193,6 @@ const Playlists = () => {
                         <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                         {company.problems} problems
                       </span>
-                      <span className="w-px h-3 bg-border" />
-                      <span>{company.topics} {company.topics === 1 ? "topic" : "topics"}</span>
                     </div>
                   </div>
                 </div>
