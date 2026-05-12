@@ -82,15 +82,15 @@ const Navigation = () => {
 
 
             <Link
-              to="/contact"
+              to="/games-ii"
               className={cn(
                 "text-base font-medium transition-colors hover:text-primary",
-                isActive("/contact")
+                location.pathname.startsWith("/games-ii")
                   ? "text-primary"
                   : "text-muted-foreground"
               )}
             >
-              Contact
+              Games II
             </Link>
 
             <Link
