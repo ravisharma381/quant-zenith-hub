@@ -255,16 +255,16 @@ const Navigation = () => {
               </Link>
               
               <Link 
-                to="/contact" 
+                to="/games-ii" 
                 className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
                 <div className="mt-1">
-                  <Mail className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                  <Gamepad2 className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
                 <div>
-                  <div className="font-medium text-foreground">Contact</div>
-                  <div className="text-sm text-muted-foreground">Get in touch with us</div>
+                  <div className="font-medium text-foreground">Games II</div>
+                  <div className="text-sm text-muted-foreground">Trainers across categories</div>
                 </div>
               </Link>
 
