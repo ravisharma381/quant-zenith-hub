@@ -31,6 +31,8 @@ import Premium from "./pages/Premium";
 import NotFound from "./pages/NotFound";
 import Playlists from "./pages/Playlists";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
+import GamesII from "./pages/GamesII";
+import MathTrainer from "./pages/MathTrainer";
 import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
@@ -63,6 +65,8 @@ const App = () => (
             <Route path="/course/:courseId/learn/:chapterId?" element={<CourseLearn />} />
             <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
             <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
+            <Route path="/games-ii" element={<Layout><GamesII /></Layout>} />
+            <Route path="/games-ii/math-trainer/setup" element={<Layout><MathTrainer /></Layout>} />
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
             <Route path="/billing" element={<Layout><Billing /></Layout>} />
