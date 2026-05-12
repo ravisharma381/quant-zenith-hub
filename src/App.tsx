@@ -31,6 +31,8 @@ import Premium from "./pages/Premium";
 import NotFound from "./pages/NotFound";
 import Playlists from "./pages/Playlists";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
+import GamesII from "./pages/GamesII";
+import MathTrainer from "./pages/MathTrainer";
 import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
