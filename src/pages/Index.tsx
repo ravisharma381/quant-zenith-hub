@@ -108,31 +108,6 @@ const Index = () => {
     }
   ];
 
-  const stats = [
-    { label: "Active Users", value: "50K+" },
-    { label: "Problems Solved", value: "1M+" },
-    { label: "Success Rate", value: "89%" },
-    { label: "Expert Instructors", value: "25+" }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Quantitative Analyst at Goldman Sachs",
-      content: "QuantProf helped me ace my quant interviews. The practice problems are incredibly realistic."
-    },
-    {
-      name: "Michael Rodriguez",
-      role: "Portfolio Manager at Two Sigma",
-      content: "The interactive approach made learning complex concepts enjoyable and memorable."
-    },
-    {
-      name: "Emma Thompson",
-      role: "Risk Manager at JPMorgan",
-      content: "Best platform for quantitative finance preparation. Highly recommend to anyone in the field."
-    }
-  ];
-
   return (
     <>
       <Helmet>

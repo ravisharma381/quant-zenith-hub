@@ -16,6 +16,7 @@ import { doc, getDoc, setDoc, serverTimestamp, query, getDocs, collection, where
 import { auth, db, functions } from "@/firebase/config";
 import { toast } from "@/hooks/use-toast";
 import { httpsCallable } from "firebase/functions";
+import { useTrackUserIp } from "@/hooks/useTrackIP";
 
 interface UserProfile {
     id: string;
@@ -143,7 +144,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const fetchRegion = async () => {
             try {
-                const cachedRegion = localStorage.getItem("user_region");
+                const cachedRegion = sessionStorage.getItem("user_region");
 
                 if (cachedRegion) {
                     setRegion(cachedRegion);
@@ -152,12 +153,12 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
 
                 const fn = httpsCallable(functions, "getUserRegion");
-                const res = await fn();
+                const res: any = await fn();
 
                 const detectedRegion: any = res.data?.data?.region;
 
                 if (detectedRegion) {
-                    localStorage.setItem("user_region", detectedRegion);
+                    sessionStorage.setItem("user_region", detectedRegion);
                     setRegion(detectedRegion);
                 }
             } catch (err) {
@@ -240,6 +241,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error("Logout error:", err);
         }
     };
+    useTrackUserIp(user?.uid);
 
     return (
         <AuthContext.Provider value={{ user, userProfile, loading, loginWithGoogle, logout, setRerender, loginWithGitHub, region, regionLoading }}>

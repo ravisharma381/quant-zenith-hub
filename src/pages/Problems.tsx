@@ -183,7 +183,7 @@ const Problems: React.FC = () => {
       c.push(
         where("normalizedTitle", ">=", term),
         where("normalizedTitle", "<=", term + "\uf8ff"),
-        orderBy("normalizedTitle")
+        // orderBy("normalizedTitle")
       );
     }
 
@@ -520,7 +520,7 @@ const Problems: React.FC = () => {
                 return (
                   <div
                     key={problem.id}
-                    className={`p-4 transition-colors ${locked ? "opacity-60" : "hover:bg-muted/30 cursor-pointer"} group`}
+                    className={`p-4 transition-colors ${locked ? "opacity-60 cursor-pointer" : "hover:bg-muted/30 cursor-pointer"} group`}
                     onClick={() => {
                       if (locked) {
                         setShowUpgradeDialog(true);
@@ -533,7 +533,7 @@ const Problems: React.FC = () => {
 
                       {/* # */}
                       <div className="col-span-1 flex items-center">
-                        <span className="text-muted-foreground">{globalIndex}</span>
+                        <span className="text-muted-foreground">{problem.order}</span>
                       </div>
 
                       {/* Title */}
