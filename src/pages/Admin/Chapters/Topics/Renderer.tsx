@@ -167,11 +167,13 @@ const InputQuestion = ({
                     placeholder={placeholder}
                     onKeyDown={handleKeyDown}
                     className={`flex-1 h-[46px] border-2 focus-visible:ring-0 focus-visible:ring-offset-0 ${status === 'wrong'
-                        ? 'border-red-500 animate-shake focus:border-red-500'
+                        ? 'border-red-500 focus:border-red-500'
                         : status === 'correct'
                             ? 'border-green-500 focus:border-green-500'
                             : 'focus:border-purple-500'
-                        }`}
+                        }
+                        ${shake ? "animate-shake" : ""}
+                        `}
                 />
                 <Button
                     onClick={check}

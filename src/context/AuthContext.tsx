@@ -117,14 +117,23 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         });
 
                     } else {
-                        await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
+                        setDoc(
+                            userRef,
+                            { lastLoginAt: serverTimestamp() },
+                            { merge: true }
+                        ).catch(console.error);
                     }
 
-                    const profileSnap = await getDoc(userRef);
-                    const data = profileSnap.data() as Omit<UserProfile, "id">;
+                    let data = userSnap.data() as Omit<UserProfile, "id">;
+                    let profileSnap = null;
+                    if (!data || !userSnap.exists()) {
+                        profileSnap = await getDoc(userRef);
+                        data = profileSnap.data() as Omit<UserProfile, "id">;
+                    }
+
                     setUser(firebaseUser);
                     setUserProfile({
-                        id: profileSnap.id,
+                        id: userSnap.id ?? profileSnap?.id,
                         ...data,
                     });
                 } else {

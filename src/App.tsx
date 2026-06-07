@@ -25,6 +25,7 @@ import Signup from "./pages/Signup";
 import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
 import Playlists from "./pages/Playlists";
+import Playlists2 from "./pages/Playlists2";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -161,7 +162,7 @@ const App = () => (
               <Route path="/paypal/success" element={<PaypalSuccess />} />
               <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
               <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
-              <Route path="/playlists" element={<Layout><Playlists /></Layout>} />
+              <Route path="/playlists" element={<Layout><Playlists2 /></Layout>} />
               <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
               {/* <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
               <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} /> */}

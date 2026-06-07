@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown, ShieldCheck } from "lucide-react";
+import { Menu, X, LogIn, User, ChevronDown, BookOpen, GraduationCap, LogOut, CreditCard, Gamepad2, FileText, Puzzle, Mail, Crown, ShieldCheck, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -73,6 +73,18 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
             >
               Courses
             </Link>
+
+            {/* <Link
+              to="/playlists"
+              className={cn(
+                "text-base font-medium transition-colors hover:text-primary",
+                location.pathname.startsWith("/playlists")
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              Playlists
+            </Link> */}
 
             <Link
               to="/contact"
@@ -271,7 +283,6 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <div className="text-sm text-muted-foreground">Read insights and tips</div>
                   </div>
                 </Link> */}
-
                 <Link
                   to="/courses"
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
@@ -285,6 +296,19 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <div className="text-sm text-muted-foreground">Browse expert-led courses</div>
                   </div>
                 </Link>
+                {/* <Link
+                  to="/playlists"
+                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="mt-1">
+                    <PlayCircle className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground">Playlists</div>
+                    <div className="text-sm text-muted-foreground">Curated interview question playlists</div>
+                  </div>
+                </Link> */}
                 <Link
                   to="/premium"
                   className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"

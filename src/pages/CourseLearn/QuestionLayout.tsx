@@ -123,7 +123,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
 
     // ---- STATES ----
     const [answer, setAnswer] = useState("");
-    const [shakeKey, setShakeKey] = useState(0);
+    const [shake, setShake] = useState(false);
     const [feedback, setFeedback] = useState<{
         type: "correct" | "wrong" | null;
         message: string;
@@ -174,11 +174,9 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
             fireRandomCelebration();
         } else {
             setFeedback({ type: "wrong", message: "Wrong answer" });
-            setShakeKey(k => k + 1);
-            if (navigator.vibrate) {
-                navigator.vibrate(0);
-                navigator.vibrate([0, 200]);
-            }
+            setShake(true);
+            setTimeout(() => setShake(false), 500);
+            navigator.vibrate?.(200);
         }
     };
 
@@ -277,13 +275,20 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                             <div className="flex gap-4 items-center">
 
                                 <Input
-                                    key={shakeKey}
                                     placeholder="Place answer here"
                                     value={answer}
                                     onChange={(e) => setAnswer(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    className="flex-1 h-[46px] border-2 border-border rounded-md bg-background
-                             px-3 text-base focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className={`flex-1 h-[46px] border-2 border-border rounded-md bg-background
+                                        px-3 text-base focus-visible:ring-0 focus-visible:ring-offset-0
+                                        ${feedback.type === 'wrong'
+                                            ? 'border-red-500 focus:border-red-500'
+                                            : feedback.type === 'correct'
+                                                ? 'border-green-500 focus:border-green-500'
+                                                : ''
+                                        }
+                                            ${shake ? "animate-shake" : ""}
+                                        `}
                                 />
 
                                 <Button
@@ -299,10 +304,9 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                             <div className="h-6 flex items-center">
                                 {feedback.type && (
                                     <div
-                                        key={shakeKey}
                                         className={`text-sm font-medium ${feedback.type === "correct"
                                             ? "text-green-400"
-                                            : "text-red-400 animate-shake"
+                                            : "text-red-400"
                                             }`}
                                     >
                                         {feedback.message}

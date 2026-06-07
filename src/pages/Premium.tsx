@@ -35,6 +35,7 @@ const planTemplates = [
   {
     name: "Yearly",
     description: "Access all premium features for one year, with no automatic renewal and a 30-day, no-questions-asked full refund.",
+    descriptionIN: "Access all premium features for one year, with no automatic renewal.",
     originalPrice: "$360",
     price: "$199",
     discount: "LIMITED TIME 30% OFF",
@@ -55,6 +56,7 @@ const planTemplates = [
   {
     name: "Lifetime",
     description: "Get lifetime access to all premium features with a one-time payment and a 30-day, no-questions-asked full refund.",
+    descriptionIN: "Get lifetime access to all premium features with a one-time payment.",
     originalPrice: "$599",
     price: "$399",
     discount: "LIMITED TIME 30% OFF",
@@ -498,7 +500,9 @@ const Premium = () => {
                       )}
                     </div>
 
-                    <p className="text-muted-foreground text-sm mb-6">{plan.description}</p>
+                    <p className="text-muted-foreground text-sm mb-6">{region === 'IN' ? plan.descriptionIN :
+
+                      plan.description}</p>
 
                     <div className="mb-4 h-[64px] flex flex-col justify-end">
                       {loading ? (
