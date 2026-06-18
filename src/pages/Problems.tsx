@@ -6,13 +6,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   collection,
   getDocs,
-  getCountFromServer,
   query,
   where,
   orderBy,
-  limit,
-  startAfter,
-  QueryDocumentSnapshot,
   doc,
   getDoc,
 } from "firebase/firestore";
@@ -80,11 +76,10 @@ const Problems: React.FC = () => {
 
   /* ---------------- State ---------------- */
 
-  const [problems, setProblems] = useState<ProblemDoc[]>([]);
-  const [problemsLoading, setProblemsLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
+  const [allProblems, setAllProblems] = useState<ProblemDoc[]>([]);
+  const [problemsLoading, setProblemsLoading] = useState(false);
 
   const [searchInput, setSearchInput] = useState(
     searchParams.get("q") ?? ""
@@ -110,9 +105,6 @@ const Problems: React.FC = () => {
   const isLoggedIn = !!user;
   const isFirstRender = useRef(true);
 
-  /* ---------------- Cursor Cache ---------------- */
-
-  const pageCursors = useRef<Map<number, QueryDocumentSnapshot>>(new Map());
 
   /* ---------------- Helpers ---------------- */
 
@@ -141,36 +133,6 @@ const Problems: React.FC = () => {
   const isPageLocked = (page: number) => {
     return !isSubscribed && page > SHOW_FREE_PAGES;
   }
-
-  const buildCountConstraints = () => {
-    const c = [
-      where("courseId", "==", PROBLEMS_COURSE_ID),
-    ];
-
-    if (searchTerm.length > 0) {
-      const term = searchTerm.toLowerCase();
-      c.push(
-        where("normalizedTitle", ">=", term),
-        where("normalizedTitle", "<=", term + "\uf8ff")
-      );
-    }
-
-    if (selectedTopic !== "All") {
-      c.push(where("topic", "==", selectedTopic));
-    }
-
-    if (selectedDifficulty !== "All") {
-      c.push(
-        where(
-          "level",
-          "==",
-          Number(selectedDifficulty.replace("Level ", ""))
-        )
-      );
-    }
-
-    return c;
-  };
 
   const buildBaseConstraints = () => {
     const c: any[] = [
@@ -203,6 +165,95 @@ const Problems: React.FC = () => {
   }
 
 
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      allProblems.length / PROBLEMS_PER_PAGE
+    )
+  );
+
+  async function loadProblems() {
+    setProblemsLoading(true);
+
+    try {
+      const q = query(
+        collection(db, "problem_index"),
+        ...buildBaseConstraints(),
+        ...(searchTerm
+          ? [
+            orderBy("normalizedTitle"),
+            orderBy("order", "asc"),
+          ]
+          : [
+            orderBy("order", "asc"),
+          ])
+      );
+
+      const snap = await getDocs(q);
+
+      const docs = snap.docs.map((d) => {
+        const data = d.data();
+
+        return {
+          id: d.id,
+          title: data.title,
+          topic: data.topic,
+          difficulty: parseInt(data.level ?? "1", 10),
+          askedIn: Array.isArray(data.askedIn)
+            ? data.askedIn
+            : [],
+          order: data.order ?? 0,
+          isPrivate: data.isPrivate ?? false,
+        };
+      });
+
+      setAllProblems(docs);
+    } finally {
+      setProblemsLoading(false);
+    }
+  }
+
+
+  async function goToPage(page: number) {
+    if (isPageLocked(page)) {
+      setShowUpgradeDialog(true);
+      return;
+    }
+
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ---------------- Load Page ---------------- */
+
+  useEffect(() => {
+    loadProblems();
+  }, [selectedTopic, selectedDifficulty, searchTerm]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    setCurrentPage(1);
+  }, [searchTerm, selectedTopic, selectedDifficulty]);
+
+  const scrollRef = useContext(ScrollContext);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
+  const problems = React.useMemo(() => {
+    const start = (currentPage - 1) * PROBLEMS_PER_PAGE;
+
+    return allProblems.slice(
+      start,
+      start + PROBLEMS_PER_PAGE
+    );
+  }, [allProblems, currentPage]);
+
   // URL STATE
 
   useEffect(() => {
@@ -233,34 +284,6 @@ const Problems: React.FC = () => {
     return () => clearTimeout(id);
   }, [searchInput, searchTerm]);
 
-  /* ---------------- Count ---------------- */
-
-  useEffect(() => {
-    (async () => {
-      const countQuery = query(
-        collection(db, "problem_index"),
-        ...buildCountConstraints()
-      );
-
-      const snap = await getCountFromServer(countQuery);
-      setTotalPages(
-        Math.max(1, Math.ceil(snap.data().count / PROBLEMS_PER_PAGE))
-      );
-    })();
-  }, [selectedTopic, selectedDifficulty, searchTerm]);
-
-  /* ---------------- Reset cursors on filter/search ---------------- */
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    pageCursors.current.clear();
-    setCurrentPage(1);
-  }, [searchTerm, selectedTopic, selectedDifficulty]);
-
   useEffect(() => {
     if (!isLoggedIn) return;
 
@@ -281,93 +304,6 @@ const Problems: React.FC = () => {
 
     loadProgress();
   }, [isLoggedIn]);
-
-  /* ---------------- Page Fetch ---------------- */
-
-  async function fetchPageInternal(page: number) {
-    let q = query(
-      collection(db, "problem_index"),
-      ...buildBaseConstraints(),
-      orderBy("order", "asc"),
-      limit(PROBLEMS_PER_PAGE)
-    );
-
-    if (page > 1) {
-      const cursor = pageCursors.current.get(page - 1);
-      if (cursor) {
-        q = query(q, startAfter(cursor));
-      }
-    }
-
-    const snap = await getDocs(q);
-
-    if (snap.docs.length > 0) {
-      pageCursors.current.set(page, snap.docs[snap.docs.length - 1]);
-    }
-
-    return snap.docs.map((d) => {
-      const data = d.data();
-      return {
-        id: d.id,
-        title: data.title,
-        topic: data.topic,
-        difficulty: parseInt(data.level ?? "1", 10),
-        askedIn: Array.isArray(data.askedIn) ? data.askedIn : [],
-        order: data.order ?? 0,
-        isPrivate: data.isPrivate ?? false,
-      };
-    });
-  }
-
-  async function warmUpCursors(targetPage: number) {
-    pageCursors.current.clear();
-
-    for (let p = 1; p < targetPage; p++) {
-      await fetchPageInternal(p);
-    }
-  }
-
-
-  async function fetchPage(page: number) {
-    setProblemsLoading(true);
-
-    try {
-      if (page > 1 && !pageCursors.current.has(page - 1)) {
-        await warmUpCursors(page);
-      }
-
-      const docs = await fetchPageInternal(page);
-      setProblems(docs);
-    } finally {
-      setProblemsLoading(false);
-    }
-  }
-
-
-
-  /* ---------------- Progressive Navigation ---------------- */
-
-  async function goToPage(page: number) {
-    if (isPageLocked(page)) {
-      setShowUpgradeDialog(true);
-      return;
-    }
-
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  /* ---------------- Load Page ---------------- */
-
-  useEffect(() => {
-    fetchPage(currentPage);
-  }, [currentPage, selectedTopic, selectedDifficulty, searchTerm]);
-
-  const scrollRef = useContext(ScrollContext);
-
-  useEffect(() => {
-    scrollRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
 
   /* ---------------- Pagination Render ---------------- */
 
@@ -624,9 +560,17 @@ const Problems: React.FC = () => {
                 {problemsLoading && <PaginationItem><div className="w-full"><PaginationSkeleton /></div></PaginationItem>}
                 {!problemsLoading && (
                   <>
-                    {currentPage > 1 && <PaginationPrevious onClick={() => goToPage(currentPage - 1)} />}
+                    {currentPage > 1 && (
+                      <PaginationPrevious
+                        onClick={() => goToPage(currentPage - 1)}
+                      />
+                    )}
                     {renderPaginationItems()}
-                    <PaginationNext onClick={() => goToPage(currentPage + 1)} />
+                    {currentPage < totalPages && (
+                      <PaginationNext
+                        onClick={() => goToPage(currentPage + 1)}
+                      />
+                    )}
                   </>
                 )}
               </PaginationContent>
