@@ -140,9 +140,10 @@ const Premium = () => {
   const [method, setMethod] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
-  const { user, userProfile, setRerender, region, regionLoading } = useAuth();
+  const { user, userProfile, setRerender } = useAuth();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
+  const region = 'IN', regionLoading = false
 
   useEffect(() => {
     const autoBuy = searchParams.get("autobuy");

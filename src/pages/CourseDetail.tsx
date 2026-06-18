@@ -17,7 +17,7 @@ const CourseDetail = () => {
   const enrollButtonRef = useRef<HTMLButtonElement>(null);
   const { userProfile } = useAuth();
   const [showBanner, setShowBanner] = useState(true);
-  const { region } = useAuth();
+  const region = 'IN'
   // const slug = window.location.pathname.split("/course/")[1];
   const courseId = 'pxeKbx6V6C2IeBy1UnWm';
 

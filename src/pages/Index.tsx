@@ -23,7 +23,6 @@ import { useSearchParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { fireRandomCelebration } from "@/lib/confetti";
 import PromoBanner from "@/components/PromoBanner";
-import MathBackground from "@/components/MathBackground";
 
 const Index = () => {
   const typewriterPhrases = [
@@ -119,7 +118,6 @@ const Index = () => {
       {/* Hero Section */}
       {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(270 70% 8% / 0.6), hsl(220 13% 8%) 40%, hsl(122 60% 10% / 0.3))' }}>
-        <MathBackground />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>
         <div className="container mx-auto max-w-7xl relative z-10">
