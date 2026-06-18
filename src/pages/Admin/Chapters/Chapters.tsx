@@ -83,7 +83,7 @@ const AdminChapters: React.FC = () => {
             );
             setTotalCount(countSnap.size);
 
-            let q = query(
+            const q = query(
                 collection(db, "chapters"),
                 where("courseId", "==", courseId),
                 orderBy("order", "asc"),

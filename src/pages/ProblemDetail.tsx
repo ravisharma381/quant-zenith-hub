@@ -161,9 +161,8 @@ const ProblemDetail = () => {
   const goToNext = async () => {
     if (!topic?.order || !topic.courseId) return;
 
-    // 🔥 Correct way: query by order
     const q = query(
-      collection(db, "topics"),
+      collection(db, "problem_index"),
       where("courseId", "==", topic.courseId),
       where("order", "==", topic.order + 1),
       limit(1)
@@ -190,9 +189,8 @@ const ProblemDetail = () => {
   const goToPrev = async () => {
     if (!topic?.order || !topic.courseId) return;
 
-    // 🔥 Correct way: query by order
     const q = query(
-      collection(db, "topics"),
+      collection(db, "problem_index"),
       where("courseId", "==", topic.courseId),
       where("order", "==", topic.order - 1),
       limit(1)
