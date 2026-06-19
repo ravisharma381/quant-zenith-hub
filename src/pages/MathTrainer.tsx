@@ -335,7 +335,7 @@ const MathTrainer = () => {
           </section>
 
           <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <Button variant="outline" onClick={() => navigate("/games-ii?category=arithmetic")} className="text-sm">
+            <Button variant="outline" onClick={() => navigate("/games?category=arithmetic")} className="text-sm">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </Button>
             <Button onClick={startTest} className="px-8 text-sm">Start Test</Button>
@@ -512,7 +512,7 @@ const MathTrainer = () => {
         )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button variant="outline" onClick={() => navigate("/games-ii?category=arithmetic")}>
+          <Button variant="outline" onClick={() => navigate("/games?category=arithmetic")}>
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games II
           </Button>
           <Button onClick={() => { setResultPage(1); setStage("setup"); }}>
