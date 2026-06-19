@@ -80,19 +80,6 @@ const Navigation = () => {
               Playlists
             </Link>
 
-
-            <Link
-              to="/games-ii"
-              className={cn(
-                "text-base font-medium transition-colors hover:text-primary",
-                location.pathname.startsWith("/games-ii")
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              )}
-            >
-              Games II
-            </Link>
-
             <Link
               to="/premium"
               className={cn(
@@ -254,19 +241,6 @@ const Navigation = () => {
                 </div>
               </Link>
               
-              <Link 
-                to="/games-ii" 
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                onClick={() => setIsOpen(false)}
-              >
-                <div className="mt-1">
-                  <Gamepad2 className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                </div>
-                <div>
-                  <div className="font-medium text-foreground">Games II</div>
-                  <div className="text-sm text-muted-foreground">Trainers across categories</div>
-                </div>
-              </Link>
 
               <Link 
                 to="/premium" 
