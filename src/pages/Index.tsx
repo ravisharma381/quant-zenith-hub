@@ -114,111 +114,165 @@ const Index = () => {
 
   return (
     <Layout>
+      {/* Floating animation keyframes */}
+      <style>{`
+        @keyframes heroFloat {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-12px) rotate(-2deg); }
+        }
+        @keyframes heroFloatBack {
+          0%, 100% { transform: translateY(0) rotate(3deg); }
+          50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .hero-float-front { animation: heroFloat 6s ease-in-out infinite; }
+        .hero-float-back { animation: heroFloatBack 7s ease-in-out infinite; }
+      `}</style>
+
       {/* Hero Section */}
-      <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(270 70% 8% / 0.6), hsl(220 13% 8%) 40%, hsl(122 60% 10% / 0.3))' }}>
+      <section className="relative pt-8 pb-12 md:pt-12 md:pb-20 px-4 lg:px-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(270 70% 8% / 0.6), hsl(220 13% 8%) 40%, hsl(122 60% 10% / 0.3))' }}>
         <MathBackground />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80 pointer-events-none" />
         <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
             {/* Left Side - Text Content */}
             <div className="text-center lg:text-left">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-bold mb-4 animate-fade-in leading-tight">
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Get into<br />Quant Finance
-                </span>
-              </h1>
-              <div className="h-8 mb-6">
-                <p className="text-xl md:text-2xl text-white font-medium">
-                  {displayedText}
-                </p>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium animate-fade-in">
+                <Zap className="w-4 h-4" />
+                Built by quants. Optimized for 2026.
               </div>
-              <div className="flex justify-center lg:justify-start animate-fade-in">
-                <Button size="lg" variant="premium" className="text-base lg:text-lg px-6 lg:px-8 shadow-none hover:shadow-none" asChild>
+
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 animate-fade-in leading-[1.05] tracking-tight">
+                <span className="text-foreground">Train for quant interviews.</span>
+                <br />
+                <span className="bg-gradient-hero bg-clip-text text-transparent">Get hired.</span>
+              </h1>
+
+              <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-xl lg:max-w-none leading-relaxed">
+                Master every hurdle: from Mental math and Probability to Machine Learning and Statistics. Practice full mock interviews with readiness scores that tell you when you're ready for the offer.
+              </p>
+
+              {/* Stats */}
+              <div className="grid grid-cols-4 gap-4 md:gap-8 mb-8 max-w-xl mx-auto lg:mx-0">
+                {[
+                  { value: "800+", label: "Questions" },
+                  { value: "50+", label: "Free" },
+                  { value: "30+", label: "Top Companies" },
+                  { value: "1000+", label: "Hours Saved" },
+                ].map((s) => (
+                  <div key={s.label} className="text-left">
+                    <div className="text-2xl md:text-3xl font-bold text-foreground">{s.value}</div>
+                    <div className="text-xs md:text-sm text-muted-foreground mt-1">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col items-center lg:items-start gap-2 animate-fade-in">
+                <Button size="lg" variant="premium" className="text-base lg:text-lg px-7 lg:px-9 rounded-full shadow-none hover:shadow-none" asChild>
                   <Link to="/problems">
-                    Solve your first problem
+                    Start Practicing
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                 </Button>
+                <p className="text-xs text-muted-foreground">Free to start. Upgrade anytime.</p>
               </div>
             </div>
 
-            {/* Right Side - Problem Card */}
-            <div className="animate-fade-in">
-              <Card className="bg-card/95 backdrop-blur-sm border-border/50 overflow-hidden">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <CardTitle className="text-2xl font-bold text-foreground">
-                      Nearest Diagonal I
-                    </CardTitle>
+            {/* Right Side - Floating mock app windows */}
+            <div className="relative h-[420px] md:h-[520px] hidden lg:block">
+              {/* Back window */}
+              <div className="hero-float-back absolute left-0 top-10 w-[58%] origin-center">
+                <div className="rounded-2xl border border-border bg-card/90 backdrop-blur-md shadow-2xl overflow-hidden">
+                  <div className="flex items-center gap-1.5 px-4 py-3 border-b border-border/60 bg-background/40">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                    <span className="ml-3 text-xs text-muted-foreground font-medium">QuantProf</span>
                   </div>
-                  <Badge className="w-fit bg-[hsl(142,76%,36%)] text-white hover:bg-[hsl(142,76%,36%)] border-none">
-                    Easy
-                  </Badge>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                    A point is selected uniformly at random from the unit square. Find the expected distance of the point from the <span className="italic">y = x</span> line.
-                  </CardDescription>
-                  
-                  {/* Multiple Choice Options */}
-                  <div className="space-y-3">
-                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground text-lg inline-flex items-center">
-                        <span className="inline-flex flex-col items-center leading-none">
-                          <span className="border-b border-foreground px-1">1</span>
-                          <span className="px-1">3</span>
-                        </span>
-                      </span>
-                    </button>
-                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground text-lg inline-flex items-center">
-                        <span className="inline-flex flex-col items-center leading-none">
-                          <span className="border-b border-foreground px-1">1</span>
-                          <span className="px-1">3√2</span>
-                        </span>
-                      </span>
-                    </button>
-                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground text-lg inline-flex items-center">
-                        <span className="inline-flex flex-col items-center leading-none">
-                          <span className="border-b border-foreground px-1">1</span>
-                          <span className="px-1">6</span>
-                        </span>
-                      </span>
-                    </button>
-                    <button className="w-full p-4 rounded-lg border border-border bg-background/50 hover:bg-accent/50 transition-colors text-left">
-                      <span className="text-foreground text-lg inline-flex items-center">
-                        <span className="inline-flex flex-col items-center leading-none">
-                          <span className="border-b border-foreground px-1">1</span>
-                          <span className="px-1">6√2</span>
-                        </span>
-                      </span>
-                    </button>
-                  </div>
-
-                  {/* Bottom Section with Tags and Submit */}
-                  <div className="flex flex-wrap items-center justify-between gap-4 pt-4">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-xs text-red-500 border-red-500">
-                        Expected Value/LOTUS
-                      </Badge>
-                      <Badge variant="outline" className="text-xs text-green-500 border-green-500">
-                        Uniform
-                      </Badge>
-                      <Badge variant="outline" className="text-xs text-purple-500 border-purple-500">
-                        Task Distribution
-                      </Badge>
+                  <div className="p-5 space-y-3">
+                    <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-primary/20 via-purple/20 to-primary/10 border border-border/60 flex items-center justify-center text-5xl">
+                      △
                     </div>
-                    <Button size="lg" className="bg-[hsl(0,0%,20%)] text-white hover:bg-[hsl(0,0%,25%)] shadow-none hover:shadow-none">
-                      Try it Out
-                    </Button>
+                    <div className="space-y-2">
+                      <div className="text-xs text-muted-foreground">Coins — 0 / 1</div>
+                      <div className="px-3 py-2 rounded-md bg-background/60 border border-border/60 text-xs text-foreground">4. Coin Sequence I</div>
+                      <div className="text-xs text-muted-foreground pt-1">Dice — 0 / 1</div>
+                      <div className="px-3 py-2 rounded-md bg-background/60 border border-border/60 text-xs text-foreground flex items-center justify-between">
+                        <span>5. Conditional Dice I</span>
+                        <Badge variant="outline" className="text-[10px] border-purple/50 text-purple">Medium</Badge>
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
+
+              {/* Front window */}
+              <div className="hero-float-front absolute right-0 top-0 w-[78%] origin-center">
+                <div className="rounded-2xl border border-border bg-card/95 backdrop-blur-md shadow-2xl overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-background/40">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                      <span className="ml-3 text-xs text-muted-foreground font-medium">QuantProf</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                      <span className="text-primary">Questions</span>
+                      <span>Mental Math</span>
+                      <span>Challenge</span>
+                      <span>Pricing</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    {/* Featured cards row */}
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      {[
+                        { title: "50 Dice problems", grad: "from-blue-500/30 to-cyan-500/20" },
+                        { title: "Quant Trading 50", grad: "from-purple/40 to-pink-500/20" },
+                        { title: "Quant Essentials 100", grad: "from-orange-500/30 to-amber-500/20" },
+                      ].map((c) => (
+                        <div key={c.title} className={`relative rounded-lg p-3 h-24 bg-gradient-to-br ${c.grad} border border-border/60 overflow-hidden`}>
+                          <div className="text-[10px] font-bold text-foreground leading-tight">{c.title}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Filter chips */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {["Quant Trader", "Quant Researcher", "Quant Analyst"].map((t) => (
+                        <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">{t}</span>
+                      ))}
+                    </div>
+
+                    {/* Search bar mock */}
+                    <div className="px-3 py-2 rounded-md bg-background/60 border border-border/60 text-[11px] text-muted-foreground mb-3">
+                      Search questions...
+                    </div>
+
+                    {/* Rows */}
+                    <div className="space-y-1.5">
+                      {[
+                        { n: "1.", title: "Asymptotic coins", tag: "Premium", cat: "Statistics", diff: "Easy", diffColor: "text-green-500" },
+                        { n: "10.", title: "Auction game", tag: "Premium", cat: "Probability", diff: "Hard", diffColor: "text-red-500" },
+                      ].map((r) => (
+                        <div key={r.n} className="flex items-center gap-2 px-2 py-1.5 rounded border border-border/40 text-[11px]">
+                          <span className="text-muted-foreground w-6">{r.n}</span>
+                          <span className="text-foreground flex-1 truncate">{r.title}</span>
+                          <Badge variant="outline" className="text-[9px] border-primary/40 text-primary">{r.tag}</Badge>
+                          <span className="text-muted-foreground w-20 truncate">{r.cat}</span>
+                          <span className={`${r.diffColor} font-medium w-12 text-right`}>{r.diff}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+
 
 
       {/* Features Section */}
