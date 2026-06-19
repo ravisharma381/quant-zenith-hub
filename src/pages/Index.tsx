@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import CompanyLogoTicker from "@/components/CompanyLogoTicker";
-import DiceCardsBackground from "@/components/DiceCardsBackground";
+import MathBackground from "@/components/MathBackground";
 import { 
   TrendingUp, 
   BookOpen, 
@@ -116,7 +116,7 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(270 70% 8% / 0.6), hsl(220 13% 8%) 40%, hsl(122 60% 10% / 0.3))' }}>
-        <DiceCardsBackground />
+        <MathBackground />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80 pointer-events-none" />
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-8 lg:gap-12 items-center">
