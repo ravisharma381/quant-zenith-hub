@@ -344,6 +344,37 @@ const ListBlock = ({
     );
 };
 
+const ImageBlock = (b: any) => {
+    const [loading, setLoading] = useState(true);
+    return (
+        <div className="flex flex-col items-center">
+            <div
+                className={`relative max-w-${b.width || "sm"} w-full rounded overflow-hidden`}
+                style={{
+                    height: loading ? `${b.height}px` : undefined,
+                }}
+            >
+                {loading && (
+                    <div className="absolute inset-0 animate-pulse bg-gray-700" />
+                )}
+                <img
+                    src={b.url}
+                    alt=""
+                    loading="lazy"
+                    onLoad={() => setLoading(false)}
+                    className={`w-full rounded transition-opacity duration-300 ${loading ? "opacity-0" : "opacity-100"
+                        }`}
+                />
+            </div>
+            {b.caption && (
+                <p className="text-gray-400 text-sm italic mt-2">
+                    {renderRichText(b.caption)}
+                </p>
+            )}
+        </div>
+    )
+}
+
 
 
 /* --- Main Renderer --- */
@@ -388,18 +419,7 @@ const Renderer = ({ doc, isChildren }: { doc: any, isChildren?: boolean }) => {
 
                         case "image":
                             return (
-                                <div key={i} className="flex flex-col items-center">
-                                    <img
-                                        src={b.url}
-                                        className={`max-w-${b.width || 'sm'} w-full rounded`}
-                                        alt=""
-                                    />
-                                    {b.caption && (
-                                        <p className="text-gray-400 text-sm italic mt-2">
-                                            {renderRichText(b.caption)}
-                                        </p>
-                                    )}
-                                </div>
+                                <ImageBlock key={i} {...b} />
                             );
 
                         case "video":
