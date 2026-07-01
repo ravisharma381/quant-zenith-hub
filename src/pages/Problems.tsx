@@ -182,8 +182,8 @@ const Problems: React.FC = () => {
         ...buildBaseConstraints(),
         ...(searchTerm
           ? [
-            orderBy("normalizedTitle"),
             orderBy("order", "asc"),
+            orderBy("normalizedTitle"),
           ]
           : [
             orderBy("order", "asc"),
