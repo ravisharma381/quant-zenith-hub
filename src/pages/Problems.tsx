@@ -65,6 +65,11 @@ interface ProblemDoc {
 }
 const topics = ["All", "probability", "brainteasers", "combinatorics"];
 const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"];
+const statuses = [
+  "All",
+  "Solved",
+  "Unsolved",
+];
 /* ---------------- Component ---------------- */
 
 const Problems: React.FC = () => {
@@ -80,6 +85,10 @@ const Problems: React.FC = () => {
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
   const [allProblems, setAllProblems] = useState<ProblemDoc[]>([]);
   const [problemsLoading, setProblemsLoading] = useState(false);
+
+  const [selectedStatus, setSelectedStatus] = useState(
+    searchParams.get("status") ?? "All"
+  );
 
   const [searchInput, setSearchInput] = useState(
     searchParams.get("q") ?? ""
@@ -166,10 +175,31 @@ const Problems: React.FC = () => {
 
 
 
+  const filteredProblems = React.useMemo(() => {
+    if (selectedStatus === "All") {
+      return allProblems;
+    }
+
+    if (selectedStatus === "Solved") {
+      return allProblems.filter((p) =>
+        completedSet.has(p.id)
+      );
+    }
+
+    return allProblems.filter(
+      (p) => !completedSet.has(p.id)
+    );
+  }, [
+    allProblems,
+    completedSet,
+    selectedStatus,
+  ]);
+
   const totalPages = Math.max(
     1,
     Math.ceil(
-      allProblems.length / PROBLEMS_PER_PAGE
+      filteredProblems.length /
+      PROBLEMS_PER_PAGE
     )
   );
 
@@ -229,7 +259,12 @@ const Problems: React.FC = () => {
 
   useEffect(() => {
     loadProblems();
-  }, [selectedTopic, selectedDifficulty, searchTerm]);
+  }, [
+    searchTerm,
+    selectedTopic,
+    selectedDifficulty,
+    selectedStatus,
+  ]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -246,13 +281,18 @@ const Problems: React.FC = () => {
   }, [currentPage]);
 
   const problems = React.useMemo(() => {
-    const start = (currentPage - 1) * PROBLEMS_PER_PAGE;
+    const start =
+      (currentPage - 1) *
+      PROBLEMS_PER_PAGE;
 
-    return allProblems.slice(
+    return filteredProblems.slice(
       start,
       start + PROBLEMS_PER_PAGE
     );
-  }, [allProblems, currentPage]);
+  }, [
+    filteredProblems,
+    currentPage,
+  ]);
 
   // URL STATE
 
@@ -261,12 +301,19 @@ const Problems: React.FC = () => {
 
     if (searchTerm) params.q = searchTerm;
     if (selectedTopic !== "All") params.topic = selectedTopic;
+    if (selectedStatus !== "All") params.status = selectedStatus;
     if (selectedDifficulty !== "All")
       params.level = selectedDifficulty.replace("Level ", "");
     if (currentPage > 1) params.page = String(currentPage);
 
     setSearchParams(params, { replace: true });
-  }, [searchTerm, selectedTopic, selectedDifficulty, currentPage]);
+  }, [
+    searchTerm,
+    selectedTopic,
+    selectedDifficulty,
+    selectedStatus,
+    currentPage,
+  ]);
 
   // DEBOUNCE
 
@@ -422,6 +469,30 @@ const Problems: React.FC = () => {
                 <SelectTrigger><SelectValue placeholder="Select difficulty" /></SelectTrigger>
                 <SelectContent>
                   {difficulties.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Status
+              </label>
+
+              <Select
+                value={selectedStatus}
+                onValueChange={setSelectedStatus}
+                disabled={!isLoggedIn}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {statuses.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
