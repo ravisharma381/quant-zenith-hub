@@ -263,7 +263,6 @@ const Problems: React.FC = () => {
     searchTerm,
     selectedTopic,
     selectedDifficulty,
-    selectedStatus,
   ]);
 
   useEffect(() => {
@@ -272,7 +271,7 @@ const Problems: React.FC = () => {
       return;
     }
     setCurrentPage(1);
-  }, [searchTerm, selectedTopic, selectedDifficulty]);
+  }, [searchTerm, selectedTopic, selectedDifficulty, selectedStatus]);
 
   const scrollRef = useContext(ScrollContext);
 
