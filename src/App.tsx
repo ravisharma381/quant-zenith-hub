@@ -11,13 +11,13 @@ import ArithmeticPro from "./pages/ArithmeticPro";
 import SequencesPro from "./pages/SequencesPro";
 import SequencesSetup from "./pages/SequencesSetup";
 import Optiver80 from "./pages/Optiver80";
-import Sokoban from "./pages/Sokoban";
-import ProbabilityMaster from "./pages/ProbabilityMaster";
-import MemorySequences from "./pages/MemorySequences";
+// import Sokoban from "./pages/Sokoban";
+// import ProbabilityMaster from "./pages/ProbabilityMaster";
+// import MemorySequences from "./pages/MemorySequences";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
-import MLCourseDetail from "./pages/MLCourseDetail";
-import MLCourseEnroll from "./pages/MLCourseEnroll";
+// import MLCourseDetail from "./pages/MLCourseDetail";
+// import MLCourseEnroll from "./pages/MLCourseEnroll";
 // import Blogs from "./pages/Blogs";
 // import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
@@ -65,9 +65,9 @@ const App = () => (
               <Route path="/games/sequences-pro/setup" element={<Layout><SequencesSetup /></Layout>} />
               <Route path="/games/sequences-pro" element={<Layout><SequencesPro /></Layout>} />
               <Route path="/games/optiver-80" element={<Layout><Optiver80 /></Layout>} />
-              <Route path="/games/sokoban" element={<Layout><Sokoban /></Layout>} />
-              <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} />
-              <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} />
+              {/* <Route path="/games/sokoban" element={<Layout><Sokoban /></Layout>} /> */}
+              {/* <Route path="/games/probability-master" element={<Layout><ProbabilityMaster /></Layout>} /> */}
+              {/* <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} /> */}
               <Route path="/courses" element={<Layout><Courses /></Layout>} />
               <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
               <Route path="/premium" element={<Layout><Premium /></Layout>} />
@@ -160,8 +160,8 @@ const App = () => (
                 </Layout>
               } />
               <Route path="/paypal/success" element={<PaypalSuccess />} />
-              <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} />
-              <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} />
+              {/* <Route path="/course/machine-learning-for-finance" element={<Layout><MLCourseDetail /></Layout>} /> */}
+              {/* <Route path="/course/machine-learning-for-finance/enroll" element={<Layout><MLCourseEnroll /></Layout>} /> */}
               <Route path="/playlists" element={<Layout><Playlists2 /></Layout>} />
               <Route path="/playlists/:companyId" element={<Layout><CompanyPlaylist /></Layout>} />
               {/* <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
