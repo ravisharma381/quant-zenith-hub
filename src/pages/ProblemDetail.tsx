@@ -19,6 +19,7 @@ const ProblemDetail = () => {
   const page = searchParams.get('page');
   const level = searchParams.get('level');
   const q = searchParams.get('q');
+  const status = searchParams.get('status');
   const isLoggedIn = !!user;
   // const isSubscribed = true;
   const isSubscribed = userProfile?.isPremium === true;
@@ -34,6 +35,9 @@ const ProblemDetail = () => {
   }
   if (q) {
     paramsText += `&q=${q}`;
+  }
+  if (status) {
+    paramsText += `&status=${status}`;
   }
 
   const [topic, setTopic] = useState<any>(null);
