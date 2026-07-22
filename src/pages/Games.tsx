@@ -30,10 +30,10 @@ const Games = () => {
     },
     {
       id: 3,
-      title: "Optiver 80 in 80",
-      description: "Complete 80 mental math questions in 80 seconds. Based on Optiver's online assessment!",
+      title: "Optiver 80 in 8",
+      description: "Complete 80 mental math questions in 480 seconds. Based on Optiver's online assessment!",
       icon: "⚡",
-      timeLimit: "80 seconds",
+      timeLimit: "480 seconds",
       category: "Speed Math",
       difficulty: "Medium",
       route: "/games/optiver-80"

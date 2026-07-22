@@ -135,7 +135,7 @@ const Optiver80 = () => {
   const navigate = useNavigate();
   const [gameState, setGameState] = useState<'countdown' | 'playing' | 'finished'>('countdown');
   const [countdown, setCountdown] = useState(3);
-  const [timeLeft, setTimeLeft] = useState(80);
+  const [timeLeft, setTimeLeft] = useState(480);
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -206,8 +206,8 @@ const Optiver80 = () => {
       <CountdownTimer
         countdown={countdown}
         color={themeColors.primary}
-        title="Optiver 80 in 80"
-        subtitle="80 questions in 80 seconds - Can you make it?"
+        title="Optiver 80 in 8"
+        subtitle="80 questions in 480 seconds - Can you make it?"
       />
     );
   }
@@ -365,7 +365,7 @@ const Optiver80 = () => {
         {/* Footer */}
         <div className="border-t border-border/50" />
         <div className="px-4 py-4 text-center">
-          <span className="text-muted-foreground text-sm">Optiver 80 in 80</span>
+          <span className="text-muted-foreground text-sm">Optiver 80 in 8</span>
         </div>
       </div>
     </div>
