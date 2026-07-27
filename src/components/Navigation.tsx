@@ -80,19 +80,6 @@ const Navigation = () => {
               Playlists
             </Link>
 
-
-            <Link
-              to="/contact"
-              className={cn(
-                "text-base font-medium transition-colors hover:text-primary",
-                isActive("/contact")
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              )}
-            >
-              Contact
-            </Link>
-
             <Link
               to="/premium"
               className={cn(
@@ -254,19 +241,6 @@ const Navigation = () => {
                 </div>
               </Link>
               
-              <Link 
-                to="/contact" 
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
-                onClick={() => setIsOpen(false)}
-              >
-                <div className="mt-1">
-                  <Mail className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
-                </div>
-                <div>
-                  <div className="font-medium text-foreground">Contact</div>
-                  <div className="text-sm text-muted-foreground">Get in touch with us</div>
-                </div>
-              </Link>
 
               <Link 
                 to="/premium" 

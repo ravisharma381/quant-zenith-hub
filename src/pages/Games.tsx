@@ -1,126 +1,127 @@
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Clock, Play } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { getGameTheme } from "@/lib/gameTheme";
+import React, { useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
+
+type GameItem = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  iconBg: string;
+  route?: string;
+  comingSoon?: boolean;
+};
+
+const categories = [
+  { id: "arithmetic", label: "Arithmetic", icon: "➗" },
+  { id: "sequences", label: "Sequences", icon: "🔢" },
+  { id: "memory", label: "Memory", icon: "🧠" },
+  { id: "reaction", label: "Reaction", icon: "⚡" },
+  { id: "market-making", label: "Market Making", icon: "📈" },
+] as const;
+
+const gamesByCategory: Record<string, GameItem[]> = {
+  arithmetic: [
+    {
+      id: "math-trainer",
+      name: "Math Trainer",
+      description: "Customize operations, number type, time, and question style — then drill.",
+      icon: "🧮",
+      iconBg: "bg-green-500/10",
+      route: "/games/math-trainer/setup",
+    },
+    { id: "speed-mult", name: "Speed Multiplication", description: "Rapid multiplication drills against the clock.", icon: "✖️", iconBg: "bg-orange-500/10", comingSoon: true },
+    { id: "fraction-flash", name: "Fraction Flash", description: "Quick-fire fraction conversion challenges.", icon: "½", iconBg: "bg-blue-500/10", comingSoon: true },
+  ],
+  sequences: [
+    { id: "seq-pattern", name: "Pattern Finder", description: "Spot the next term in tricky sequences.", icon: "🔢", iconBg: "bg-purple-500/10", comingSoon: true },
+    { id: "seq-recall", name: "Sequence Recall", description: "Memorize and reproduce growing sequences.", icon: "🧩", iconBg: "bg-pink-500/10", comingSoon: true },
+  ],
+  memory: [
+    { id: "mem-cards", name: "Card Memory", description: "Track shuffled cards and recall positions.", icon: "🃏", iconBg: "bg-red-500/10", comingSoon: true },
+    { id: "mem-numbers", name: "Number Span", description: "Push your working memory to the limit.", icon: "🔟", iconBg: "bg-yellow-500/10", comingSoon: true },
+  ],
+  reaction: [
+    { id: "rxn-tap", name: "Reaction Tap", description: "Test your raw response time.", icon: "⚡", iconBg: "bg-cyan-500/10", comingSoon: true },
+    { id: "rxn-color", name: "Color Switch", description: "React only when the right color appears.", icon: "🎨", iconBg: "bg-emerald-500/10", comingSoon: true },
+  ],
+  "market-making": [
+    { id: "mm-quote", name: "Quote the Market", description: "Make tight markets under uncertainty.", icon: "📈", iconBg: "bg-indigo-500/10", comingSoon: true },
+    { id: "mm-edge", name: "Edge Hunter", description: "Identify mispricings before the clock runs out.", icon: "💹", iconBg: "bg-rose-500/10", comingSoon: true },
+  ],
+};
 
 const Games = () => {
   const navigate = useNavigate();
-  const games = [
-    {
-      id: 1,
-      title: "Arithmetic Zetamac",
-      description: "Master mental math with rapid-fire arithmetic questions. Test your speed and accuracy!",
-      icon: "±",
-      timeLimit: "3 minutes",
-      category: "Mental Math",
-      difficulty: "Custom",
-      route: "/games/arithmetic-pro"
-    },
-    {
-      id: 2,
-      title: "Sequences Pro",
-      description: "Identify patterns and find the next number in sequences. Challenge your logical thinking!",
-      icon: "⋯",
-      timeLimit: "5 minutes",
-      category: "Pattern Recognition", 
-      difficulty: "Hard",
-      route: "/games/sequences-pro/setup"
-    },
-    {
-      id: 3,
-      title: "Optiver 80 in 80",
-      description: "Complete 80 mental math questions in 80 seconds. Based on Optiver's online assessment!",
-      icon: "⚡",
-      timeLimit: "80 seconds",
-      category: "Speed Math",
-      difficulty: "Hard",
-      route: "/games/optiver-80"
-    },
-    {
-      id: 6,
-      title: "Memory Sequences",
-      description: "Memorize digit sequences and reproduce them. Train your working memory and concentration!",
-      icon: "🧠",
-      timeLimit: "Varies",
-      category: "Memory",
-      difficulty: "Medium",
-      route: "/games/memory-sequences"
-    }
-  ];
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeCategory = (searchParams.get("category") as string) || "arithmetic";
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy": return "bg-green-500/20 text-green-400 border-green-500/30";
-      case "Medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "Hard": return "bg-red-500/20 text-red-400 border-red-500/30";
-      case "Custom": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      default: return "bg-muted text-muted-foreground";
-    }
-  };
-
- 
+  const items = useMemo(() => gamesByCategory[activeCategory] ?? [], [activeCategory]);
+  const heading = useMemo(() => {
+    const cat = categories.find((c) => c.id === activeCategory);
+    return cat ? `${cat.label} games` : "Games";
+  }, [activeCategory]);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">        
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Quant Interview Games</h1>
-          <p className="text-muted-foreground text-lg">
-            Sharpen your quantitative skills through interactive challenges
-          </p>
-        </div>
-
-        {/* Games Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {games.map((game) => {
-            const theme = getGameTheme(game.id);
+      <div className="max-w-5xl mx-auto">
+        <div className="inline-flex flex-wrap gap-2 p-2 mb-8 rounded-full bg-card border border-border">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.id;
             return (
-              <div 
-                key={game.id} 
-                onClick={() => navigate(game.route)}
-                className={`bg-card border border-border rounded-xl p-6 hover:shadow-card transition-all duration-300 ${theme.hoverBorder} cursor-pointer group hover:scale-105`}
+              <button
+                key={cat.id}
+                onClick={() => setSearchParams({ category: cat.id })}
+                className={`flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-transparent text-foreground/70 hover:text-foreground hover:bg-muted/40"
+                }`}
               >
-                {/* Icon */}
-                <div className={`w-16 h-16 ${theme.iconBg} rounded-lg flex items-center justify-center mb-6 transition-colors`}>
-                  <span className="text-2xl">{game.icon}</span>
-                </div>
-                
-                {/* Title */}
-                <h3 className={`text-xl font-bold text-foreground ${theme.titleHover} transition-colors mb-4`}>
-                  {game.title}
-                </h3>
-                
-                {/* Description */}
-                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                  {game.description}
-                </p>
-                
-                {/* Badge and Time */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Difficulty:</span>
-                    <Badge className={getDifficultyColor(game.difficulty)} variant="outline">
-                      {game.difficulty}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4 mr-2" />
-                    {game.timeLimit}
-                  </div>
-                </div>
-
-                {/* Play Button - Full Width */}
-                <Button 
-                  className={`w-full ${theme.buttonStyles} transition-colors pointer-events-none`}
-                >
-                  Play
-                </Button>
-              </div>
+                <span className="text-base leading-none">{cat.icon}</span>
+                {cat.label}
+              </button>
             );
           })}
+        </div>
+
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">{heading}</h1>
+          <p className="text-muted-foreground">Pick a trainer to start practicing.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {items.map((game) => (
+            <Card
+              key={game.id}
+              className={`relative overflow-hidden bg-card border border-border transition-transform duration-300 group ${
+                game.comingSoon ? "opacity-70" : "hover:-translate-y-1 cursor-pointer"
+              }`}
+              onClick={() => !game.comingSoon && game.route && navigate(game.route)}
+            >
+              <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-60 ${game.iconBg}`} />
+              <CardContent className="relative p-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex items-center justify-center w-14 h-14 rounded-xl text-3xl shrink-0 border border-border/60 bg-background/40 backdrop-blur-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    {game.icon}
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <h3 className="text-base font-bold text-foreground leading-tight">{game.name}</h3>
+                      {game.comingSoon && (
+                        <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground border border-border/60 rounded-full px-2 py-0.5">
+                          Coming soon
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {game.description}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
