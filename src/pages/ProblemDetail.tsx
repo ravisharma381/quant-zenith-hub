@@ -161,32 +161,50 @@ const ProblemDetail = () => {
                   ))}
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                title={isComplete ? "Mark as incomplete" : "Mark as complete"}
-                aria-label={isComplete ? "Mark as incomplete" : "Mark as complete"}
-                onClick={() => setIsComplete((prev) => !prev)}
-              >
-                {isComplete ? (
-                  <CheckCircle className="h-5 w-5 text-primary" />
-                ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground" />
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                title={isBookmarked ? "Remove bookmark" : "Bookmark"}
-                aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
-                onClick={() => setIsBookmarked((prev) => !prev)}
-              >
-                <Bookmark
-                  className={`h-5 w-5 transition-colors ${
-                    isBookmarked ? "text-primary fill-current" : "text-muted-foreground"
-                  }`}
-                />
-              </Button>
+              <div className="flex items-center gap-1">
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={isComplete ? "Mark as incomplete" : "Mark as complete"}
+                        onClick={() => setIsComplete((prev) => !prev)}
+                      >
+                        {isComplete ? (
+                          <CheckCircle className="h-5 w-5 text-primary" />
+                        ) : (
+                          <Circle className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="center" className="px-2 py-1">
+                      <p>{isComplete ? "Mark as incomplete" : "Mark as complete"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+                        onClick={() => setIsBookmarked((prev) => !prev)}
+                      >
+                        <Bookmark
+                          className={`h-5 w-5 transition-colors ${
+                            isBookmarked ? "text-primary fill-current" : "text-muted-foreground"
+                          }`}
+                        />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="center" className="px-2 py-1">
+                      <p>{isBookmarked ? "Remove bookmark" : "Bookmark"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
           </div>
 
