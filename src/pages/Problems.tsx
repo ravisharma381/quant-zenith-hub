@@ -244,6 +244,7 @@ const Problems = () => {
                 <SelectItem value="All">All</SelectItem>
                 <SelectItem value="Solved">Solved</SelectItem>
                 <SelectItem value="Unsolved">Unsolved</SelectItem>
+                <SelectItem value="Bookmarked">Bookmarked</SelectItem>
               </SelectContent>
             </Select>
           </div>
