@@ -70,6 +70,7 @@ const Problems = () => {
     
     // Mock completion status - some problems are done
     const isCompleted = [1, 3, 5, 7, 12, 15, 18, 22, 25, 30, 35, 40, 42, 48].includes(i + 1);
+    const isBookmarked = [2, 5, 8, 12, 19, 24, 33, 41, 47].includes(i + 1);
     
     return {
       id: i + 1,
@@ -77,7 +78,8 @@ const Problems = () => {
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
       askedIn: logos.slice(0, (i % 3) + 1),
-      completed: isCompleted
+      completed: isCompleted,
+      bookmarked: isBookmarked
     };
   });
 
