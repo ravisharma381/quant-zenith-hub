@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -70,6 +70,7 @@ const Problems = () => {
     
     // Mock completion status - some problems are done
     const isCompleted = [1, 3, 5, 7, 12, 15, 18, 22, 25, 30, 35, 40, 42, 48].includes(i + 1);
+    const isBookmarked = [2, 5, 8, 12, 19, 24, 33, 41, 47].includes(i + 1);
     
     return {
       id: i + 1,
@@ -77,7 +78,8 @@ const Problems = () => {
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
       askedIn: logos.slice(0, (i % 3) + 1),
-      completed: isCompleted
+      completed: isCompleted,
+      bookmarked: isBookmarked
     };
   });
 
@@ -122,7 +124,8 @@ const Problems = () => {
       `Level ${problem.difficulty}` === selectedDifficulty;
     const matchesStatus = selectedStatus === "All" || 
       (selectedStatus === "Solved" && problem.completed) ||
-      (selectedStatus === "Unsolved" && !problem.completed);
+      (selectedStatus === "Unsolved" && !problem.completed) ||
+      (selectedStatus === "Bookmarked" && problem.bookmarked);
     return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
   });
 
@@ -241,6 +244,7 @@ const Problems = () => {
                 <SelectItem value="All">All</SelectItem>
                 <SelectItem value="Solved">Solved</SelectItem>
                 <SelectItem value="Unsolved">Unsolved</SelectItem>
+                <SelectItem value="Bookmarked">Bookmarked</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -309,7 +313,7 @@ const Problems = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                  <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -317,7 +321,7 @@ const Problems = () => {
                             {problem.completed ? (
                               <CheckCircle className="h-5 w-5 text-green-500" />
                             ) : (
-                              <Circle className="h-5 w-5 text-muted-foreground" />
+                              <Circle className="h-5 w-5 text-red-500" />
                             )}
                           </div>
                         </TooltipTrigger>
@@ -325,6 +329,18 @@ const Problems = () => {
                           <p>{problem.completed ? "Solved" : "Unsolved"}</p>
                         </TooltipContent>
                       </Tooltip>
+                      {problem.bookmarked && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <Bookmark className="h-5 w-5 text-amber-400 fill-amber-400" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" align="center" sideOffset={8}>
+                            <p>Bookmarked</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </TooltipProvider>
                   </div>
                 </div>
