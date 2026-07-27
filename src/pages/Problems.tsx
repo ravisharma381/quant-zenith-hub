@@ -124,7 +124,8 @@ const Problems = () => {
       `Level ${problem.difficulty}` === selectedDifficulty;
     const matchesStatus = selectedStatus === "All" || 
       (selectedStatus === "Solved" && problem.completed) ||
-      (selectedStatus === "Unsolved" && !problem.completed);
+      (selectedStatus === "Unsolved" && !problem.completed) ||
+      (selectedStatus === "Bookmarked" && problem.bookmarked);
     return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
   });
 
