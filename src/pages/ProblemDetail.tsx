@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
@@ -20,6 +20,8 @@ const ProblemDetail = () => {
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
   const [shakeKey, setShakeKey] = useState(0);
   const [activeTab, setActiveTab] = useState("problem");
+  const [isComplete, setIsComplete] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
