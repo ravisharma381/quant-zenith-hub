@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
@@ -20,6 +20,8 @@ const ProblemDetail = () => {
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'wrong' | null; message: string }>({ type: null, message: "" });
   const [shakeKey, setShakeKey] = useState(0);
   const [activeTab, setActiveTab] = useState("problem");
+  const [isComplete, setIsComplete] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
@@ -158,11 +160,31 @@ const ProblemDetail = () => {
                   ))}
                 </div>
               </div>
-              <Button variant="ghost" size="icon" aria-label="Mark as complete">
-                <Check className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                title={isComplete ? "Mark as incomplete" : "Mark as complete"}
+                aria-label={isComplete ? "Mark as incomplete" : "Mark as complete"}
+                onClick={() => setIsComplete((prev) => !prev)}
+              >
+                {isComplete ? (
+                  <CheckCircle className="h-5 w-5 text-primary" />
+                ) : (
+                  <Circle className="h-5 w-5 text-muted-foreground" />
+                )}
               </Button>
-              <Button variant="ghost" size="icon" aria-label="Bookmark">
-                <Bookmark className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                title={isBookmarked ? "Remove bookmark" : "Bookmark"}
+                aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+                onClick={() => setIsBookmarked((prev) => !prev)}
+              >
+                <Bookmark
+                  className={`h-5 w-5 transition-colors ${
+                    isBookmarked ? "text-primary fill-current" : "text-muted-foreground"
+                  }`}
+                />
               </Button>
             </div>
           </div>
