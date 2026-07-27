@@ -313,7 +313,7 @@ const Problems = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                  <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -321,7 +321,7 @@ const Problems = () => {
                             {problem.completed ? (
                               <CheckCircle className="h-5 w-5 text-green-500" />
                             ) : (
-                              <Circle className="h-5 w-5 text-muted-foreground" />
+                              <Circle className="h-5 w-5 text-red-500" />
                             )}
                           </div>
                         </TooltipTrigger>
@@ -329,6 +329,18 @@ const Problems = () => {
                           <p>{problem.completed ? "Solved" : "Unsolved"}</p>
                         </TooltipContent>
                       </Tooltip>
+                      {problem.bookmarked && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <Bookmark className="h-5 w-5 text-amber-400 fill-amber-400" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" align="center" sideOffset={8}>
+                            <p>Bookmarked</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </TooltipProvider>
                   </div>
                 </div>
