@@ -158,8 +158,11 @@ const ProblemDetail = () => {
                   ))}
                 </div>
               </div>
-              <Button variant="ghost" size="icon">
-                <Share className="h-5 w-5" />
+              <Button variant="ghost" size="icon" aria-label="Mark as complete">
+                <Check className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="icon" aria-label="Bookmark">
+                <Bookmark className="h-5 w-5" />
               </Button>
             </div>
           </div>
