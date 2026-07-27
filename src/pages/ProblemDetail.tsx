@@ -194,7 +194,7 @@ const ProblemDetail = () => {
                       >
                         <Bookmark
                           className={`h-5 w-5 transition-colors ${
-                            isBookmarked ? "text-primary fill-current" : "text-muted-foreground"
+                            isBookmarked ? "text-amber-400 fill-amber-400" : "text-muted-foreground"
                           }`}
                         />
                       </Button>
