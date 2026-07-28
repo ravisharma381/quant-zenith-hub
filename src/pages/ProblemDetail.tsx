@@ -252,6 +252,35 @@ const ProblemDetail = () => {
             </div>
 
             {!isPremiumProblem && (
+              <Accordion type="single" collapsible className="w-full mt-8">
+                <AccordionItem value="notes" className="border border-border rounded-lg px-4">
+                  <AccordionTrigger className="text-white font-medium text-lg hover:no-underline hover:text-primary data-[state=open]:text-primary [&>svg]:text-white">
+                    Notes
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-3 pt-2">
+                    <Textarea
+                      placeholder="Write your notes here..."
+                      value={notesDraft}
+                      onChange={(e) => setNotesDraft(e.target.value)}
+                      className="min-h-[140px] resize-y"
+                    />
+                    <div className="flex items-center gap-3">
+                      <Button
+                        onClick={handleSaveNotes}
+                        className="bg-primary hover:bg-primary-glow text-primary-foreground font-semibold"
+                      >
+                        Save Notes
+                      </Button>
+                      {notesSaved && (
+                        <span className="text-sm text-green-400">Saved!</span>
+                      )}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
+
+            {!isPremiumProblem && (
               <div className="space-y-4 mt-12">
                 {/* Horizontal layout for input and submit button */}
                 <div className="flex gap-4 items-center">
