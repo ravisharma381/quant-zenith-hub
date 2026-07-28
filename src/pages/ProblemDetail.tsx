@@ -23,6 +23,20 @@ const ProblemDetail = () => {
   const [activeTab, setActiveTab] = useState("problem");
   const [isComplete, setIsComplete] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const notesKey = `problem-notes-${id}`;
+  const [notes, setNotes] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem(`problem-notes-${id}`) ?? "";
+  });
+  const [notesDraft, setNotesDraft] = useState<string>(notes);
+  const [notesSaved, setNotesSaved] = useState(false);
+
+  const handleSaveNotes = () => {
+    window.localStorage.setItem(notesKey, notesDraft);
+    setNotes(notesDraft);
+    setNotesSaved(true);
+    setTimeout(() => setNotesSaved(false), 2000);
+  };
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
