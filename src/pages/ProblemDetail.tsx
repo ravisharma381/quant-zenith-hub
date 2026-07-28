@@ -174,7 +174,7 @@ const ProblemDetail = () => {
                         {isComplete ? (
                           <CheckCircle className="h-5 w-5 text-primary" />
                         ) : (
-                          <Circle className="h-5 w-5 text-muted-foreground" />
+                          <Circle className="h-5 w-5 text-red-500" />
                         )}
                       </Button>
                     </TooltipTrigger>
