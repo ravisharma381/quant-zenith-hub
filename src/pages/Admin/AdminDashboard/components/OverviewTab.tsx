@@ -17,12 +17,12 @@ type AdminStats = {
 
 /* ---------------- HELPERS ---------------- */
 
-function formatCurrency(amountSmallest = 0) {
-    return `$${(amountSmallest / 100).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`;
-}
+// function formatCurrency(amountSmallest = 0) {
+//     return `$${(amountSmallest / 100).toLocaleString(undefined, {
+//         minimumFractionDigits: 2,
+//         maximumFractionDigits: 2,
+//     })}`;
+// }
 
 function getMonthKey(date = new Date()) {
     const y = date.getUTCFullYear();
@@ -163,16 +163,16 @@ const OverviewTab: React.FC = () => {
         })();
     }, []);
 
-    const monthKey = useMemo(getMonthKey, []);
-    const prevMonthKey = useMemo(getPreviousMonthKey, []);
+    // const monthKey = useMemo(getMonthKey, []);
+    // const prevMonthKey = useMemo(getPreviousMonthKey, []);
 
-    const thisMonthRevenue =
-        stats?.revenueByMonth?.[monthKey] ?? 0;
+    // const thisMonthRevenue =
+    //     stats?.revenueByMonth?.[monthKey] ?? 0;
 
-    const lastMonthRevenue =
-        stats?.revenueByMonth?.[prevMonthKey] ?? 0;
+    // const lastMonthRevenue =
+    //     stats?.revenueByMonth?.[prevMonthKey] ?? 0;
 
-    const mom = calculateMoM(thisMonthRevenue, lastMonthRevenue);
+    // const mom = calculateMoM(thisMonthRevenue, lastMonthRevenue);
 
     // const expectedActualRevenue = useMemo(
     //     () => calculateExpectedNetRevenue(stats?.lifetimeRevenue ?? 0),
@@ -215,7 +215,7 @@ const OverviewTab: React.FC = () => {
                 />
 
                 {/* Monthly Revenue – wider */}
-                <KpiCard
+                {/* <KpiCard
                     label="This Month Revenue"
                     value={formatCurrency(thisMonthRevenue)}
                     icon={<TrendingUp className="w-6 h-6" />}
@@ -233,16 +233,16 @@ const OverviewTab: React.FC = () => {
                             </span>
                         )
                     }
-                />
+                /> */}
 
                 {/* Lifetime Revenue – BIG */}
-                <KpiCard
+                {/* <KpiCard
                     label="Lifetime Revenue"
                     value={formatCurrency(stats.lifetimeRevenueUSDCents ?? 0)}
                     icon={<Wallet className="w-6 h-6" />}
                     accent="purple-500"
                     className="col-span-12 md:col-span-6"
-                />
+                /> */}
 
                 {/* Expected Net Revenue – BIG */}
                 {/* <KpiCard
