@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
-import { CheckCircle, Circle, Lock } from "lucide-react";
+import { Bookmark, BookmarkCheck, CheckCircle, Circle, Lock } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -69,6 +69,7 @@ const statuses = [
   "All",
   "Solved",
   "Unsolved",
+  "Bookmarked",
 ];
 /* ---------------- Component ---------------- */
 
@@ -83,6 +84,7 @@ const Problems: React.FC = () => {
 
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
+  const [bookmarkedSet, setBookmarkedSet] = useState<Set<string>>(new Set());
   const [allProblems, setAllProblems] = useState<ProblemDoc[]>([]);
   const [problemsLoading, setProblemsLoading] = useState(false);
 
@@ -186,12 +188,19 @@ const Problems: React.FC = () => {
       );
     }
 
+    if (selectedStatus === "Bookmarked") {
+      return allProblems.filter((p) =>
+        bookmarkedSet.has(p.id)
+      );
+    }
+
     return allProblems.filter(
       (p) => !completedSet.has(p.id)
     );
   }, [
     allProblems,
     completedSet,
+    bookmarkedSet,
     selectedStatus,
   ]);
 
@@ -340,8 +349,9 @@ const Problems: React.FC = () => {
         const snap = await getDoc(ref);
 
         if (snap.exists()) {
-          const arr = snap.data()?.completedProblems || [];
-          setCompletedSet(new Set(arr));
+          const data = snap.data();
+          setCompletedSet(new Set(data?.completedProblems || []));
+          setBookmarkedSet(new Set(data?.bookmarkedProblems || []));
         }
       } catch (e) {
         console.error("Error fetching progress:", e);
@@ -500,12 +510,15 @@ const Problems: React.FC = () => {
           <div className="bg-card border border-border rounded-lg overflow-hidden">
             {/* Header */}
             <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
-              <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
+              <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide" />
               <div className="col-span-4 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
               <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
               <div className="hidden md:block col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
               <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
-              <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
+              <div className="col-span-2 md:col-span-1 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
+              <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide text-center">
+                <Bookmark className="h-4 w-4 mx-auto" />
+              </div>
             </div>
 
             {/* Rows */}
@@ -592,7 +605,7 @@ const Problems: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                      <div className="col-span-2 md:col-span-1 flex items-center justify-center">
                         <TooltipProvider delayDuration={0}>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -612,6 +625,25 @@ const Problems: React.FC = () => {
                                 : completedSet.has(problem.id)
                                   ? "Solved"
                                   : "Unsolved"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+
+                      <div className="col-span-1 flex items-center justify-center">
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div>
+                                {bookmarkedSet.has(problem.id) ? (
+                                  <BookmarkCheck className="h-5 w-5 text-primary fill-primary" />
+                                ) : (
+                                  <Bookmark className="h-5 w-5 text-muted-foreground" />
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" sideOffset={8}>
+                              {bookmarkedSet.has(problem.id) ? "Bookmarked" : "Not bookmarked"}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>

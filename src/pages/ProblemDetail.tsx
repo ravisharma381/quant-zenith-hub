@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, CheckCircle, ChevronLeft, ChevronRight, Circle, Lock } from "lucide-react";
+import { Bookmark, BookmarkCheck, CheckCircle, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc, setDoc, query, where, limit, collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
@@ -43,6 +43,7 @@ const ProblemDetail = () => {
   const [topic, setTopic] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [disablePrev, setDisablePrev] = useState(true);
   const [disableNext, setDisableNext] = useState(true);
   const [nextId, setNextId] = useState(null);
@@ -104,8 +105,12 @@ const ProblemDetail = () => {
           const progressSnap = await getDoc(progressRef);
 
           if (progressSnap.exists()) {
-            const arr = progressSnap.data()?.completedProblems || [];
-            setIsCompleted(arr.includes(prob.id));
+            const data = progressSnap.data();
+            setIsCompleted((data?.completedProblems || []).includes(prob.id));
+            setIsBookmarked((data?.bookmarkedProblems || []).includes(prob.id));
+          } else {
+            setIsCompleted(false);
+            setIsBookmarked(false);
           }
         }
 
@@ -119,27 +124,19 @@ const ProblemDetail = () => {
     load();
   }, [id, authLoading]);
 
-  // ================================
-  // MARK / UNMARK COMPLETE
-  // ================================
-  const markAsCompleted = async () => {
-    if (!isLoggedIn) return;
-    if (!topic?.courseId) return;
+  const setCompleted = async (next: boolean) => {
+    if (!isLoggedIn || !topic?.courseId) return;
+    if (isCompleted === next) return;
 
-    const progressId = `${user.uid}_${topic.courseId}`;
-    const progressRef = doc(db, "progress", progressId);
-
-    // 🟢 Optimistic UI update (instant)   
+    setIsCompleted(next);
 
     try {
+      const progressRef = doc(db, "progress", `${user.uid}_${topic.courseId}`);
       const snap = await getDoc(progressRef);
       const prevList = snap.exists() ? snap.data()?.completedProblems || [] : [];
-      if (isCompleted)
-        return;
-      const updated = [...prevList, topic.id];
-      // const updated = !isCompleted
-      //   ? [...prevList, topic.id]
-      //   : prevList.filter((x: string) => x !== topic.id);
+      const updated = next
+        ? (prevList.includes(topic.id) ? prevList : [...prevList, topic.id])
+        : prevList.filter((x: string) => x !== topic.id);
 
       await setDoc(
         progressRef,
@@ -151,9 +148,42 @@ const ProblemDetail = () => {
         },
         { merge: true }
       );
-      setIsCompleted(true);
     } catch (err) {
       console.error("Progress update failed:", err);
+      setIsCompleted(!next);
+    }
+  };
+
+  const markAsCompleted = () => setCompleted(true);
+  const toggleCompleted = () => setCompleted(!isCompleted);
+
+  const toggleBookmark = async () => {
+    if (!isLoggedIn || !topic?.courseId) return;
+
+    const next = !isBookmarked;
+    setIsBookmarked(next);
+
+    try {
+      const progressRef = doc(db, "progress", `${user.uid}_${topic.courseId}`);
+      const snap = await getDoc(progressRef);
+      const prevList = snap.exists() ? snap.data()?.bookmarkedProblems || [] : [];
+      const updated = next
+        ? (prevList.includes(topic.id) ? prevList : [...prevList, topic.id])
+        : prevList.filter((x: string) => x !== topic.id);
+
+      await setDoc(
+        progressRef,
+        {
+          userId: user.uid,
+          courseId: topic.courseId,
+          bookmarkedProblems: updated,
+          updatedAt: new Date()
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Bookmark update failed:", err);
+      setIsBookmarked(!next);
     }
   };
 
@@ -287,13 +317,34 @@ const ProblemDetail = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8 custom-scrollbar">
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        {/* Completed badge */}
-        {isCompleted && (
-          <div className="flex items-center gap-1 text-sm">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span className="text-green-400">Completed</span>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {isLoggedIn && (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleCompleted}
+                className="gap-1.5 text-muted-foreground hover:text-foreground"
+              >
+                <CheckCircle className={`w-4 h-4 ${isCompleted ? "text-green-500" : ""}`} />
+                {isCompleted ? "Completed" : "Mark complete"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleBookmark}
+                className="gap-1.5 text-muted-foreground hover:text-foreground"
+              >
+                {isBookmarked ? (
+                  <BookmarkCheck className="w-4 h-4 text-primary fill-primary" />
+                ) : (
+                  <Bookmark className="w-4 h-4" />
+                )}
+                {isBookmarked ? "Bookmarked" : "Bookmark"}
+              </Button>
+            </>
+          )}
+        </div>
 
         {/* Actions */}
         <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
