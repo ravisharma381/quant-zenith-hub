@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight, Share } from "lucide-react";
+import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
@@ -201,23 +201,6 @@ const ProblemDetail = () => {
                     </TooltipTrigger>
                     <TooltipContent side="top" align="center" className="px-2 py-1">
                       <p>{isBookmarked ? "Remove bookmark" : "Bookmark"}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Share"
-                        onClick={() => {}}
-                      >
-                        <Share className="!h-6 !w-6 text-white" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="center" className="px-2 py-1">
-                      <p>Share</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
