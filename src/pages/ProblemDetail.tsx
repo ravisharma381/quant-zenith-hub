@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight, Share } from "lucide-react";
+import { CheckCircle, Circle, Bookmark, Send, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
