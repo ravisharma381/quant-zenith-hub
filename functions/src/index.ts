@@ -1335,6 +1335,162 @@ export const rebuildProblemIndex = onSchedule(
   }
 );
 
+type RazorpayPaymentLite = {
+  id?: string;
+  amount?: number;
+  currency?: string;
+  base_amount?: number;
+  base_currency?: string;
+  status?: string;
+};
 
+type RazorpayRefundLite = {
+  amount?: number;
+  currency?: string;
+  base_amount?: number;
+  payment_id?: string;
+  status?: string;
+};
 
+type PaymentInrMeta = {
+  amount: number;
+  inrPaise: number;
+};
 
+/** IST calendar month as UNIX seconds. Razorpay from/to/created_at are UNIX (UTC epoch), not local clock times. */
+function getIstMonthUnixRange(now = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+    })
+      .formatToParts(now)
+      .filter((p) => p.type !== "literal")
+      .map((p) => [p.type, p.value])
+  );
+  const y = Number(parts.year);
+  const m = Number(parts.month); // 1-12
+  const IST_OFFSET_SEC = 5.5 * 3600;
+  const from = Math.floor(Date.UTC(y, m - 1, 1, 0, 0, 0) / 1000) - IST_OFFSET_SEC;
+  const to = Math.floor(Date.UTC(y, m, 1, 0, 0, 0) / 1000) - IST_OFFSET_SEC - 1;
+  return {
+    from,
+    to,
+    monthKey: `${y}-${String(m).padStart(2, "0")}`,
+    timezone: "Asia/Kolkata",
+  };
+}
+
+/** INR paise: use amount for INR, else Razorpay base_amount (settlement INR). */
+function paymentToInrPaise(p: RazorpayPaymentLite): number {
+  if (!p.currency || p.currency === "INR") return Number(p.amount) || 0;
+  return Number(p.base_amount) || 0;
+}
+
+/**
+ * getRazorpayMonthlyKpis
+ * This month's revenue & refunds in INR (IST calendar month).
+ * Non-INR payments use Razorpay base_amount; refunds without base_amount are
+ * scaled from the parent payment's INR conversion.
+ */
+export const getRazorpayMonthlyKpis = onCall(
+  {
+    secrets: [RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET],
+    timeoutSeconds: 120,
+    memory: "256MiB",
+  },
+  async (req: CallableRequest) => {
+    const uid = req.auth?.uid;
+    if (!uid) throw new HttpsError("unauthenticated", "Sign in required.");
+
+    const userSnap = await db.collection("users").doc(uid).get();
+    const role = userSnap.data()?.role;
+    if (!["admin", "superAdmin"].includes(role)) {
+      throw new HttpsError("permission-denied", "Admin access required.");
+    }
+
+    const { from, to, monthKey, timezone } = getIstMonthUnixRange();
+
+    const razorpay = new Razorpay({
+      key_id: RAZORPAY_KEY_ID.value(),
+      key_secret: RAZORPAY_KEY_SECRET.value(),
+    });
+
+    const pageSize = 100;
+    const paymentInrCache = new Map<string, PaymentInrMeta>();
+
+    const cachePayment = (p: RazorpayPaymentLite) => {
+      if (!p.id) return;
+      paymentInrCache.set(p.id, {
+        amount: Number(p.amount) || 0,
+        inrPaise: paymentToInrPaise(p),
+      });
+    };
+
+    const getPaymentInrMeta = async (paymentId: string): Promise<PaymentInrMeta> => {
+      const cached = paymentInrCache.get(paymentId);
+      if (cached) return cached;
+      const p = (await razorpay.payments.fetch(paymentId)) as RazorpayPaymentLite;
+      const meta: PaymentInrMeta = {
+        amount: Number(p.amount) || 0,
+        inrPaise: paymentToInrPaise(p),
+      };
+      paymentInrCache.set(paymentId, meta);
+      return meta;
+    };
+
+    const refundToInrPaise = async (r: RazorpayRefundLite): Promise<number> => {
+      if (!r.currency || r.currency === "INR") return Number(r.amount) || 0;
+      if (r.base_amount != null) return Number(r.base_amount) || 0;
+      if (!r.payment_id) return 0;
+      const meta = await getPaymentInrMeta(r.payment_id);
+      if (!meta.amount) return 0;
+      return Math.round((Number(r.amount) || 0) * (meta.inrPaise / meta.amount));
+    };
+
+    let revenuePaise = 0;
+    let paymentCount = 0;
+    for (let skip = 0; ; skip += pageSize) {
+      const res = await razorpay.payments.all({ from, to, count: pageSize, skip });
+      const items = ((res as { items?: RazorpayPaymentLite[] }).items) || [];
+      for (const p of items) {
+        cachePayment(p);
+        if (p.status !== "captured" && p.status !== "refunded") continue;
+        const inr = paymentToInrPaise(p);
+        if (!inr) continue;
+        revenuePaise += inr;
+        paymentCount += 1;
+      }
+      if (items.length < pageSize) break;
+    }
+
+    let refundsPaise = 0;
+    let refundCount = 0;
+    for (let skip = 0; ; skip += pageSize) {
+      const res = await razorpay.refunds.all({ from, to, count: pageSize, skip });
+      const items = ((res as { items?: RazorpayRefundLite[] }).items) || [];
+      for (const r of items) {
+        if (r.status === "failed") continue;
+        const inr = await refundToInrPaise(r);
+        if (!inr) continue;
+        refundsPaise += inr;
+        refundCount += 1;
+      }
+      if (items.length < pageSize) break;
+    }
+
+    return {
+      ok: true,
+      monthKey,
+      timezone,
+      from,
+      to,
+      currency: "INR",
+      revenuePaise,
+      refundsPaise,
+      paymentCount,
+      refundCount,
+    };
+  }
+);
