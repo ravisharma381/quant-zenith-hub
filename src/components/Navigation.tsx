@@ -137,7 +137,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                     <span className="font-medium">Admin</span>
                   </Link>
                 </div>}
-                <div className="relative group">
+                <div className="relative group flex items-center">
                   {/* User Dropdown with courses styling */}
                   <Button variant="ghost" size="sm" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
@@ -189,7 +189,7 @@ const Navigation = ({ closeSidebar }: { closeSidebar?: () => void }) => {
                 </div>
                 {/* Premium Crown */}
                 {userProfile?.isPremium && (
-                  <div className="absolute -top-2 -right-1 w-4 h-4 rounded-full bg-purple-600 flex items-center justify-center shadow-md">
+                  <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-purple-600 flex items-center justify-center shadow-md">
                     <Crown className="w-2.5 h-2.5 text-white" />
                   </div>
                 )}
