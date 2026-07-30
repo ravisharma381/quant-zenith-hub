@@ -204,23 +204,6 @@ const ProblemDetail = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Share"
-                        onClick={() => {}}
-                      >
-                        <Share className="!h-6 !w-6 text-white" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="center" className="px-2 py-1">
-                      <p>Share</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
             </div>
           </div>
