@@ -42,7 +42,13 @@ export interface TopicFormData {
     hint4?: string;
     hint5?: string;
     solution?: string;
+    hint21?: string;
+    hint22?: string;
+    hint23?: string;
     solution2?: string;
+    hint31?: string;
+    hint32?: string;
+    hint33?: string;
     solution3?: string;
     topic?: string;
     level?: string;
@@ -78,7 +84,13 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
     const [hint4, setHint4] = useState("");
     const [hint5, setHint5] = useState("");
     const [solution, setSolution] = useState("");
+    const [hint21, setHint21] = useState("");
+    const [hint22, setHint22] = useState("");
+    const [hint23, setHint23] = useState("");
     const [solution2, setSolution2] = useState("");
+    const [hint31, setHint31] = useState("");
+    const [hint32, setHint32] = useState("");
+    const [hint33, setHint33] = useState("");
     const [solution3, setSolution3] = useState("");
     const [topic, setTopic] = useState("");
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
@@ -103,7 +115,13 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint4(initialData.hint4 ?? "");
             setHint5(initialData.hint5 ?? "");
             setSolution(initialData.solution ?? "");
+            setHint21(initialData.hint21 ?? "");
+            setHint22(initialData.hint22 ?? "");
+            setHint23(initialData.hint23 ?? "");
             setSolution2(initialData.solution2 ?? "");
+            setHint31(initialData.hint31 ?? "");
+            setHint32(initialData.hint32 ?? "");
+            setHint33(initialData.hint33 ?? "");
             setSolution3(initialData.solution3 ?? "");
             setTopic(initialData.topic ?? "");
             setPlaylistIds(initialData.playlistIds ?? []);
@@ -127,7 +145,13 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
             setHint5("");
             setTopic("");
             setSolution("");
+            setHint21("");
+            setHint22("");
+            setHint23("");
             setSolution2("");
+            setHint31("");
+            setHint32("");
+            setHint33("");
             setSolution3("");
             setPlaylistIds([]);
             setAskedIn([]);
@@ -263,7 +287,13 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                 hint4,
                 hint5,
                 solution,
+                hint21,
+                hint22,
+                hint23,
                 solution2,
+                hint31,
+                hint32,
+                hint33,
                 solution3,
                 level,
                 askedIn: askedIn.filter((a) => a.name.trim() && a.logoURL.trim()),
@@ -380,9 +410,37 @@ const TopicModal: React.FC<TopicModalProps> = ({ open, onOpenChange, onSubmit, i
                                 <Label>Solution</Label>
                                 <Textarea rows={4} value={solution} onChange={(e) => setSolution(e.target.value)} />
                             </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Hint 2-1</Label>
+                                    <Textarea rows={3} value={hint21} onChange={(e) => setHint21(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 2-2</Label>
+                                    <Textarea rows={3} value={hint22} onChange={(e) => setHint22(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 2-3</Label>
+                                    <Textarea rows={3} value={hint23} onChange={(e) => setHint23(e.target.value)} />
+                                </div>
+                            </div>
                             <div>
                                 <Label>Solution 2</Label>
                                 <Textarea rows={4} value={solution2} onChange={(e) => setSolution2(e.target.value)} />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Hint 3-1</Label>
+                                    <Textarea rows={3} value={hint31} onChange={(e) => setHint31(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 3-2</Label>
+                                    <Textarea rows={3} value={hint32} onChange={(e) => setHint32(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Hint 3-3</Label>
+                                    <Textarea rows={3} value={hint33} onChange={(e) => setHint33(e.target.value)} />
+                                </div>
                             </div>
                             <div>
                                 <Label>Solution 3</Label>

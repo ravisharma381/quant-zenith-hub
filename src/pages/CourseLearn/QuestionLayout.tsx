@@ -225,18 +225,73 @@ const QuestionLayout = ({ topic,
 
     const difficultyClass = getDifficultyColor(level);
 
+    const solutionTabs = [
+        {
+            value: "solution",
+            label: "Solution 1",
+            body: topic.solution ?? "",
+            hintKeys: ["hint1", "hint2", "hint3", "hint4", "hint5"],
+        },
+        {
+            value: "solution2",
+            label: "Solution 2",
+            body: topic.solution2 ?? "",
+            hintKeys: ["hint21", "hint22", "hint23"],
+        },
+        {
+            value: "solution3",
+            label: "Solution 3",
+            body: topic.solution3 ?? "",
+            hintKeys: ["hint31", "hint32", "hint33"],
+        },
+    ].filter((s) => !!s.body || s.hintKeys.some((k) => !!topic[k]));
+
+    const hasMultipleSolutions = solutionTabs.length > 1;
+    const visibleSolutionTabs = solutionTabs.length > 0
+        ? solutionTabs
+        : [{ value: "solution", label: "Solution", body: "", hintKeys: ["hint1", "hint2", "hint3", "hint4", "hint5"] }];
+
+    useEffect(() => {
+        const valid = new Set(["problem", ...visibleSolutionTabs.map((s) => s.value)]);
+        if (!valid.has(tab)) setTab("problem");
+    }, [topic?.id, topic?.solution, topic?.solution2, topic?.solution3]);
+
+    const solutionTabCount = visibleSolutionTabs.length;
+    const totalTabCount = 1 + solutionTabCount;
+
     return (
         <div className="max-w-4xl mx-auto">
 
             <Tabs defaultValue="problem" className={`w-full ${isProblemsPage ? 'min-h-[90vh]' : ''}`} value={tab} onValueChange={setTab}>
 
                 {/* ---------------- HEADER ---------------- */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
-                    <TabsList className="grid w-48 grid-cols-2">
-                        <TabsTrigger value="problem">Problem</TabsTrigger>
-                        <TabsTrigger value="solution">Solution</TabsTrigger>
+                <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
+                    <TabsList
+                        className={`grid h-auto w-full md:w-auto ${
+                            totalTabCount === 2
+                                ? "grid-cols-2 md:w-48"
+                                : totalTabCount === 3
+                                    ? "grid-cols-3 md:min-w-[18rem]"
+                                    : "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
+                        }`}
+                    >
+                        <TabsTrigger value="problem" className="px-2 text-xs sm:px-3 sm:text-sm">
+                            Problem
+                        </TabsTrigger>
+                        {visibleSolutionTabs.map((s, i) => (
+                            <TabsTrigger key={s.value} value={s.value} className="px-2 text-xs sm:px-3 sm:text-sm">
+                                {hasMultipleSolutions ? (
+                                    <>
+                                        <span className="sm:hidden">Sol {i + 1}</span>
+                                        <span className="hidden sm:inline">{s.label}</span>
+                                    </>
+                                ) : (
+                                    "Solution"
+                                )}
+                            </TabsTrigger>
+                        ))}
                     </TabsList>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
 
                         <Badge
                             className={`${difficultyClass} hidden md:flex text-center items-center justify-center`}
@@ -379,50 +434,40 @@ const QuestionLayout = ({ topic,
                     )}
                 </TabsContent>
 
-                {/* SOLUTION TAB */}
-                <TabsContent value="solution" className="space-y-6">
-                    <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
-                        {topic.title}
-                    </h1>
-                    <Accordion type="multiple" className="w-full space-y-4">
-
-                        { /* Render up to 5 hints, same style as before */}
-                        {Array.from({ length: 5 }).map((_, i) => {
-                            const hintKey = `hint${i + 1}`;
-                            const hintVal = topic[hintKey];
-                            if (!hintVal) return null;
-
-                            return (
-                                <AccordionItem key={hintKey} value={hintKey} className="border border-border rounded-lg px-4">
+                {/* SOLUTION TABS */}
+                {visibleSolutionTabs.map((s) => (
+                    <TabsContent key={s.value} value={s.value} className="space-y-6">
+                        <h1 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+                            {topic.title}
+                        </h1>
+                        <Accordion type="multiple" className="w-full space-y-4">
+                            {s.hintKeys.map((hintKey, i) => {
+                                const hintVal = topic[hintKey];
+                                if (!hintVal) return null;
+                                return (
+                                    <AccordionItem key={hintKey} value={hintKey} className="border border-border rounded-lg px-4">
+                                        <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
+                                            {`Hint ${i + 1}`}
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-white leading-relaxed text-lg">
+                                            <div className="">{renderRichCMS(hintVal)}</div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                );
+                            })}
+                            {!!s.body && (
+                                <AccordionItem value={s.value === "solution" ? "solution" : s.value} className="border border-border rounded-lg px-4">
                                     <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
-                                        {`Hint ${i + 1}`}
+                                        Solution
                                     </AccordionTrigger>
                                     <AccordionContent className="text-white leading-relaxed text-lg">
-                                        <div className="">{renderRichCMS(hintVal)}</div>
+                                        <div className="">{renderRichCMS(s.body)}</div>
                                     </AccordionContent>
                                 </AccordionItem>
-                            );
-                        })}
-
-                        {Array.from({ length: 3 }).map((_, i) => {
-                            const solutionKey = i === 0 ? "solution" : `solution${i + 1}`;
-                            const solutionVal = topic[solutionKey];
-                            const solutionVal2 = topic['solution2'];
-                            if (!solutionVal) return null;
-
-                            return (
-                                <AccordionItem key={solutionKey} value={solutionKey} className="border border-border rounded-lg px-4">
-                                    <AccordionTrigger className="text-white text-lg font-medium hover:no-underline hover:text-primary [&>svg]:text-white">
-                                        {solutionVal2 ? `Solution ${i + 1}` : 'Solution'}
-                                    </AccordionTrigger>
-                                    <AccordionContent className="text-white leading-relaxed text-lg">
-                                        <div className="">{renderRichCMS(solutionVal)}</div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            );
-                        })}
-                    </Accordion>
-                </TabsContent>
+                            )}
+                        </Accordion>
+                    </TabsContent>
+                ))}
 
             </Tabs>
         </div>
