@@ -515,10 +515,7 @@ const Problems: React.FC = () => {
               <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
               <div className="hidden md:block col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
               <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
-              <div className="col-span-2 md:col-span-1 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
-              <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide text-center">
-                <Bookmark className="h-4 w-4 mx-auto" />
-              </div>
+              <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
             </div>
 
             {/* Rows */}
@@ -605,7 +602,7 @@ const Problems: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="col-span-2 md:col-span-1 flex items-center justify-center">
+                      <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
                         <TooltipProvider delayDuration={0}>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -615,7 +612,7 @@ const Problems: React.FC = () => {
                                 ) : completedSet.has(problem.id) ? (
                                   <CheckCircle className="h-5 w-5 text-green-500" />
                                 ) : (
-                                  <Circle className="h-5 w-5 text-muted-foreground" />
+                                  <Circle className="h-5 w-5 text-red-500" />
                                 )}
                               </div>
                             </TooltipTrigger>
@@ -627,25 +624,18 @@ const Problems: React.FC = () => {
                                   : "Unsolved"}
                             </TooltipContent>
                           </Tooltip>
-                        </TooltipProvider>
-                      </div>
-
-                      <div className="col-span-1 flex items-center justify-center">
-                        <TooltipProvider delayDuration={0}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                {bookmarkedSet.has(problem.id) ? (
-                                  <BookmarkCheck className="h-5 w-5 text-primary fill-primary" />
-                                ) : (
-                                  <Bookmark className="h-5 w-5 text-muted-foreground" />
-                                )}
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="center" sideOffset={8}>
-                              {bookmarkedSet.has(problem.id) ? "Bookmarked" : "Not bookmarked"}
-                            </TooltipContent>
-                          </Tooltip>
+                          {bookmarkedSet.has(problem.id) && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div>
+                                  <Bookmark className="h-5 w-5 text-amber-400 fill-amber-400" />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" align="center" sideOffset={8}>
+                                <p>Bookmarked</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
                         </TooltipProvider>
                       </div>
                     </div>
