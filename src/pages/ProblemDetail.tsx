@@ -172,9 +172,9 @@ const ProblemDetail = () => {
                         onClick={() => setIsComplete((prev) => !prev)}
                       >
                         {isComplete ? (
-                          <CheckCircle className="h-6 w-6 text-primary" />
+                          <CheckCircle className="h-7 w-7 text-primary" />
                         ) : (
-                          <Circle className="h-6 w-6 text-red-500" />
+                          <Circle className="h-7 w-7 text-red-500" strokeWidth={4} />
                         )}
                       </Button>
                     </TooltipTrigger>
@@ -193,8 +193,8 @@ const ProblemDetail = () => {
                         onClick={() => setIsBookmarked((prev) => !prev)}
                       >
                         <Bookmark
-                          className={`h-6 w-6 transition-colors ${
-                            isBookmarked ? "text-amber-400 fill-amber-400" : "text-muted-foreground"
+                          className={`h-7 w-7 transition-colors ${
+                            isBookmarked ? "text-amber-400 fill-amber-400" : "text-white"
                           }`}
                         />
                       </Button>
