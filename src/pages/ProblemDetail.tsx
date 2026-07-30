@@ -317,34 +317,7 @@ const ProblemDetail = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl space-y-8 custom-scrollbar">
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
-          {isLoggedIn && (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleCompleted}
-                className="gap-1.5 text-muted-foreground hover:text-foreground"
-              >
-                <CheckCircle className={`w-4 h-4 ${isCompleted ? "text-green-500" : ""}`} />
-                {isCompleted ? "Completed" : "Mark complete"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleBookmark}
-                className="gap-1.5 text-muted-foreground hover:text-foreground"
-              >
-                {isBookmarked ? (
-                  <BookmarkCheck className="w-4 h-4 text-primary fill-primary" />
-                ) : (
-                  <Bookmark className="w-4 h-4" />
-                )}
-                {isBookmarked ? "Bookmarked" : "Bookmark"}
-              </Button>
-            </>
-          )}
-        </div>
+        <></>
 
         {/* Actions */}
         <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:ml-auto">
@@ -380,7 +353,17 @@ const ProblemDetail = () => {
       </div>
 
       {/* QUESTION */}
-      <QuestionLayout topic={topic} isUser={!!user} isProblemsPage={true} markAsCompleted={user ? markAsCompleted : undefined} />
+      <QuestionLayout
+        topic={topic}
+        isUser={!!user}
+        isProblemsPage={true}
+        markAsCompleted={user ? markAsCompleted : undefined}
+        isCompleted={isCompleted}
+        isBookmarked={isBookmarked}
+        toggleCompleted={toggleCompleted}
+        toggleBookmark={toggleBookmark}
+        isLoggedIn={isLoggedIn}
+      />
     </div>
   );
 };

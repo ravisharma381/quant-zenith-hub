@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Share, Send } from "lucide-react";
+import { Share, Send, CheckCircle, Circle, Bookmark } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useContext, useEffect, useState } from "react";
@@ -13,6 +13,19 @@ import TeX from "@matejmazur/react-katex";
 import "katex/dist/katex.min.css";
 import { useNavigate } from "react-router-dom";
 import { ScrollContext } from "@/components/Layout";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+type QuestionLayoutProps = {
+    topic: any;
+    markAsCompleted?: () => void;
+    isUser?: boolean;
+    isProblemsPage?: boolean;
+    isCompleted?: boolean;
+    isBookmarked?: boolean;
+    toggleCompleted?: () => void;
+    toggleBookmark?: () => void;
+    isLoggedIn?: boolean;
+}
 
 function renderRichCMS(text?: string | null) {
     if (!text) return null;
@@ -119,7 +132,13 @@ function renderRichCMS(text?: string | null) {
 
 
 
-const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false }: { topic: any, markAsCompleted?: () => void, isUser?: boolean, isProblemsPage?: boolean }) => {
+const QuestionLayout = ({ topic,
+    markAsCompleted, isUser,
+    isProblemsPage = false,
+    isCompleted, isBookmarked,
+    toggleCompleted, toggleBookmark,
+    isLoggedIn,
+}: QuestionLayoutProps) => {
 
     // ---- STATES ----
     const [answer, setAnswer] = useState("");
@@ -212,13 +231,12 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
             <Tabs defaultValue="problem" className={`w-full ${isProblemsPage ? 'min-h-[90vh]' : ''}`} value={tab} onValueChange={setTab}>
 
                 {/* ---------------- HEADER ---------------- */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
                     <TabsList className="grid w-48 grid-cols-2">
                         <TabsTrigger value="problem">Problem</TabsTrigger>
                         <TabsTrigger value="solution">Solution</TabsTrigger>
                     </TabsList>
-
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
 
                         <Badge
                             className={`${difficultyClass} hidden md:flex text-center items-center justify-center`}
@@ -228,7 +246,7 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
 
                         {/* Asked in */}
                         {Array.isArray(topic.askedIn) && topic.askedIn.length > 0 && (
-                            <div className="flex items-center gap-2">
+                            <div className="md:flex hidden items-center gap-2">
                                 <span className="text-sm text-muted-foreground">Asked in:</span>
                                 <div className="flex gap-1 md:gap-2">
                                     {topic.askedIn.map((c: any, idx: number) => (
@@ -242,6 +260,50 @@ const QuestionLayout = ({ topic, markAsCompleted, isUser, isProblemsPage = false
                                 </div>
                             </div>
                         )}
+
+                        {isProblemsPage && isLoggedIn && <div className="flex items-center gap-1">
+                            <TooltipProvider delayDuration={0}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            aria-label={isCompleted ? "Mark as incomplete" : "Mark as complete"}
+                                            onClick={toggleCompleted}
+                                        >
+                                            {isCompleted ? (
+                                                <CheckCircle className="h-5 w-5 text-primary" />
+                                            ) : (
+                                                <Circle className="h-5 w-5 text-red-500" />
+                                            )}
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" align="center" className="px-2 py-1">
+                                        <p>{isCompleted ? "Mark as incomplete" : "Mark as complete"}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider delayDuration={0}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+                                            onClick={toggleBookmark}
+                                        >
+                                            <Bookmark
+                                                className={`h-5 w-5 transition-colors ${isBookmarked ? "text-amber-400 fill-amber-400" : "text-muted-foreground"
+                                                    }`}
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" align="center" className="px-2 py-1">
+                                        <p>{isBookmarked ? "Remove bookmark" : "Bookmark"}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </div>}
 
                         <div className="relative">
                             <Button variant="ghost" size="icon" onClick={handleShare}>
