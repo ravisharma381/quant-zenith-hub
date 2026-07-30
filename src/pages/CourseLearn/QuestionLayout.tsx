@@ -267,13 +267,12 @@ const QuestionLayout = ({ topic,
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
                     <TabsList
-                        className={`grid h-auto w-full md:w-auto ${
-                            totalTabCount === 2
+                        className={`grid h-auto w-full md:w-auto ${totalTabCount === 2
                                 ? "grid-cols-2 md:w-48"
                                 : totalTabCount === 3
                                     ? "grid-cols-3 md:min-w-[18rem]"
                                     : "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
-                        }`}
+                            }`}
                     >
                         <TabsTrigger value="problem" className="px-2 text-xs sm:px-3 sm:text-sm">
                             Problem
@@ -360,16 +359,23 @@ const QuestionLayout = ({ topic,
                             </TooltipProvider>
                         </div>}
 
-                        <div className="relative">
-                            <Button variant="ghost" size="icon" onClick={handleShare}>
-                                <Share className="h-5 w-5" />
-                            </Button>
-                            {copied && (
-                                <div className="absolute top-10 right-0 text-xs bg-black/80 px-2 py-1 rounded text-white">
-                                    Copied!
-                                </div>
-                            )}
-                        </div>
+                        <TooltipProvider delayDuration={0}>
+                            <Tooltip open={copied ? true : undefined}>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        aria-label="Share"
+                                        onClick={handleShare}
+                                    >
+                                        <Share className="h-5 w-5" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" align="center" className="px-2 py-1">
+                                    <p>{copied ? "Copied!" : "Share"}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                 </div>
 
