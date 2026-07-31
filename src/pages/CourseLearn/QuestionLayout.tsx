@@ -199,15 +199,6 @@ const QuestionLayout = ({ topic,
         }
     };
 
-    const handleShare = async () => {
-        try {
-            await navigator.clipboard.writeText(window.location.href);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-        } catch (_) {
-            console.log("Failed to copy link");
-        }
-    };
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") handleSubmit();
@@ -268,10 +259,10 @@ const QuestionLayout = ({ topic,
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
                     <TabsList
                         className={`grid h-auto w-full md:w-auto ${totalTabCount === 2
-                                ? "grid-cols-2 md:w-48"
-                                : totalTabCount === 3
-                                    ? "grid-cols-3 md:min-w-[18rem]"
-                                    : "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
+                            ? "grid-cols-2 md:w-48"
+                            : totalTabCount === 3
+                                ? "grid-cols-3 md:min-w-[18rem]"
+                                : "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
                             }`}
                     >
                         <TabsTrigger value="problem" className="px-2 text-xs sm:px-3 sm:text-sm">
@@ -326,9 +317,9 @@ const QuestionLayout = ({ topic,
                                             onClick={toggleCompleted}
                                         >
                                             {isCompleted ? (
-                                                <CheckCircle className="h-5 w-5 text-primary" />
+                                                <CheckCircle className="!h-[21px] !w-[21px] text-primary" />
                                             ) : (
-                                                <Circle className="h-5 w-5 text-red-500" />
+                                                <Circle className="!h-[21px] !w-[21px] text-red-500" strokeWidth={2} />
                                             )}
                                         </Button>
                                     </TooltipTrigger>
@@ -347,7 +338,7 @@ const QuestionLayout = ({ topic,
                                             onClick={toggleBookmark}
                                         >
                                             <Bookmark
-                                                className={`h-5 w-5 transition-colors ${isBookmarked ? "text-amber-400 fill-amber-400" : "text-muted-foreground"
+                                                className={`!h-[21px] !w-[21px] transition-colors ${isBookmarked ? "text-amber-400 fill-amber-400" : "text-white"
                                                     }`}
                                             />
                                         </Button>
@@ -358,24 +349,6 @@ const QuestionLayout = ({ topic,
                                 </Tooltip>
                             </TooltipProvider>
                         </div>}
-
-                        <TooltipProvider delayDuration={0}>
-                            <Tooltip open={copied ? true : undefined}>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        aria-label="Share"
-                                        onClick={handleShare}
-                                    >
-                                        <Share className="h-5 w-5" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="top" align="center" className="px-2 py-1">
-                                    <p>{copied ? "Copied!" : "Share"}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
                     </div>
                 </div>
 
