@@ -198,8 +198,13 @@ const Navigation = () => {
                 <div className="mt-1">
                   <Puzzle className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
-                <div>
-                  <div className="font-medium text-foreground">Problems</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <div className="font-medium text-foreground">Problems</div>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
+                      16 new
+                    </span>
+                  </div>
                   <div className="text-sm text-muted-foreground">Practice problem solving</div>
                 </div>
               </Link>
@@ -212,8 +217,13 @@ const Navigation = () => {
                 <div className="mt-1">
                   <Gamepad2 className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
-                <div>
-                  <div className="font-medium text-foreground">Games</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <div className="font-medium text-foreground">Games</div>
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
+                      new
+                    </span>
+                  </div>
                   <div className="text-sm text-muted-foreground">Interactive challenges</div>
                 </div>
               </Link>
