@@ -18,8 +18,8 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Problems", path: "/problems" },
-    { name: "Games", path: "/games" },
+    { name: "Problems", path: "/problems", badge: "16 new" },
+    { name: "Games", path: "/games", badge: "new" },
     { name: "Blogs", path: "/blogs" },
   ];
 
@@ -46,13 +46,18 @@ const Navigation = () => {
                 key={item.name}
                 to={item.path}
                 className={cn(
-                  "text-base font-medium transition-colors hover:text-primary",
+                  "inline-flex items-center gap-1.5 text-base font-medium transition-colors hover:text-primary",
                   isActive(item.path)
                     ? "text-primary"
                     : "text-muted-foreground"
                 )}
               >
                 {item.name}
+                {item.badge && (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             ))}
             
