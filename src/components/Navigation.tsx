@@ -192,38 +192,34 @@ const Navigation = () => {
               {/* Main Navigation Items */}
               <Link 
                 to="/problems" 
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                className="relative flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
+                <span className="absolute top-2 right-2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-primary text-primary-foreground shadow-sm">
+                  16 new
+                </span>
                 <div className="mt-1">
                   <Puzzle className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <div className="font-medium text-foreground">Problems</div>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
-                      16 new
-                    </span>
-                  </div>
+                  <div className="font-medium text-foreground">Problems</div>
                   <div className="text-sm text-muted-foreground">Practice problem solving</div>
                 </div>
               </Link>
               
               <Link 
                 to="/games" 
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                className="relative flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
                 onClick={() => setIsOpen(false)}
               >
+                <span className="absolute top-2 right-2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-primary text-primary-foreground shadow-sm">
+                  new
+                </span>
                 <div className="mt-1">
                   <Gamepad2 className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <div className="font-medium text-foreground">Games</div>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
-                      new
-                    </span>
-                  </div>
+                  <div className="font-medium text-foreground">Games</div>
                   <div className="text-sm text-muted-foreground">Interactive challenges</div>
                 </div>
               </Link>
