@@ -46,7 +46,7 @@ const Navigation = () => {
                 key={item.name}
                 to={item.path}
                 className={cn(
-                  "inline-flex items-center gap-1.5 text-base font-medium transition-colors hover:text-primary",
+                  "relative text-base font-medium transition-colors hover:text-primary",
                   isActive(item.path)
                     ? "text-primary"
                     : "text-muted-foreground"
@@ -54,7 +54,7 @@ const Navigation = () => {
               >
                 {item.name}
                 {item.badge && (
-                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/15 text-primary">
+                  <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-primary text-primary-foreground shadow-sm">
                     {item.badge}
                   </span>
                 )}
