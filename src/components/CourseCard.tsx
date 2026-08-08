@@ -11,7 +11,11 @@ const CourseCard = ({ course, isEnrolled }) => {
         <div
             key={course.id}
             className="cursor-pointer bg-card border border-border rounded-xl overflow-hidden hover:shadow-card transition-all duration-300 group flex flex-col md:flex-row md:min-h-[215px]"
-            onClick={() => course.isComingSoon ? null : navigate(`/course/${course.slug}`)}
+            onClick={() => course.isComingSoon ? null : navigate(
+                isEnrolled
+                    ? `/course/${course.id}/learn`
+                    : `/course/${course.slug}`,
+            )}
         >
             {/* Gradient Header with Instructor Photo */}
             {/* <div className={`w-full md:w-64 h-52 md:h-auto bg-gradient-to-br ${course.gradient} relative flex items-center justify-center flex-shrink-0`}>

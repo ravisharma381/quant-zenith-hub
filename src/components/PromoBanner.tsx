@@ -2,20 +2,49 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { isSoftPremium } from "@/lib/premiumSoftCache";
 
-interface PromoBannerProps {
-  onClose: () => void;
-}
+const PROMO_CYCLE = {
+  introducedAt: Date.parse("2026-08-06T00:00:00Z"),
+  endsAt: Date.parse("2026-08-08T23:59:00Z"),
+};
+const STORAGE_KEY = "promoBannerDismiss";
+const COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
 
-const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
+const readHideUntil = (): number => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return 0;
+    const parsed = JSON.parse(raw);
+    return typeof parsed?.hideUntil === "number" ? parsed.hideUntil : 0;
+  } catch {
+    return 0;
+  }
+};
+
+const writeHideUntil = () => {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ hideUntil: Date.now() + COOLDOWN_MS })
+  );
+};
+
+const shouldShowPromo = (isPremium: boolean): boolean => {
+  if (isPremium || isSoftPremium()) return false;
+  if (Date.now() > PROMO_CYCLE.endsAt) return false;
+  const hideUntil = readHideUntil();
+  if (PROMO_CYCLE.introducedAt < hideUntil) return false;
+  return true;
+};
+
+const PromoBanner: React.FC = () => {
   const navigate = useNavigate();
-
-  // Set target date to February 24, 2026 at 11:59 PM GMT
-  const targetDate = new Date("2026-08-01T23:59:00Z");
+  const { userProfile } = useAuth();
+  const [visible, setVisible] = useState(() => shouldShowPromo(false));
 
   const calculateTimeLeft = () => {
-    const now = new Date();
-    const difference = targetDate.getTime() - now.getTime();
+    const difference = PROMO_CYCLE.endsAt - Date.now();
 
     if (difference <= 0) {
       return { days: 0, hours: 0, mins: 0, secs: 0 };
@@ -29,18 +58,27 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
     };
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
   useEffect(() => {
+    setVisible(shouldShowPromo(!!userProfile?.isPremium));
+  }, [userProfile?.isPremium]);
+
+  useEffect(() => {
+    if (!visible) return;
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
-  }, []);
+  }, [visible]);
 
-  if (new Date().getTime() > targetDate.getTime()) {
-    return null; // Don't render the banner if the target date has passed
+  const handleClose = () => {
+    writeHideUntil();
+    setVisible(false);
+  };
+
+  if (!visible || Date.now() > PROMO_CYCLE.endsAt) {
+    return null;
   }
 
   return (
@@ -50,7 +88,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         <div className="flex md:hidden items-center justify-between w-full">
           <div className="flex flex-col items-start">
             <h2 className="text-sm font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
-            <p className="text-[11px] text-white/80">Prices increase after August 1st</p>
+            <p className="text-[11px] text-white/80">Prices increase after August 8th</p>
             <div className="flex gap-2 text-center mt-1">
               <div className="flex flex-col">
                 <span className="text-sm font-bold">{timeLeft.days}</span>
@@ -82,7 +120,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
         <div className="hidden md:flex items-center gap-8">
           <div className="text-center">
             <h2 className="text-xl font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
-            <p className="text-sm text-white/80">Prices increase after August 1st</p>
+            <p className="text-sm text-white/80">Prices increase after August 8th</p>
           </div>
 
           <div className="flex gap-4 text-center">
@@ -114,7 +152,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({ onClose }) => {
 
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition-colors"
           aria-label="Close banner"
         >

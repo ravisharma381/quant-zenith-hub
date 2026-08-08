@@ -17,6 +17,7 @@ import { auth, db, functions } from "@/firebase/config";
 import { toast } from "@/hooks/use-toast";
 import { httpsCallable } from "firebase/functions";
 import { useTrackUserIp } from "@/hooks/useTrackIP";
+import { writePremiumSoft, clearPremiumSoft } from "@/lib/premiumSoftCache";
 
 interface UserProfile {
     id: string;
@@ -136,9 +137,15 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         id: userSnap.id ?? profileSnap?.id,
                         ...data,
                     });
+                    if (data?.isPremium) {
+                        writePremiumSoft(data);
+                    } else {
+                        clearPremiumSoft();
+                    }
                 } else {
                     setUser(null);
                     setUserProfile(null);
+                    clearPremiumSoft();
                 }
                 setLoading(false);
                 setRerender(false);
@@ -245,6 +252,7 @@ const ContextAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await signOut(auth);
             setUser(null);
             setUserProfile(null);
+            clearPremiumSoft();
             console.log("User signed out successfully.");
         } catch (err) {
             console.error("Logout error:", err);

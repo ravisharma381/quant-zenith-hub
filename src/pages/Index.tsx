@@ -39,7 +39,6 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -116,7 +115,7 @@ const Index = () => {
         <meta name="author" content="QuantProf" />
       </Helmet>
       {/* Hero Section */}
-      {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
+      <PromoBanner />
       <section className="relative pt-6 pb-8 md:pt-8 md:pb-12 px-4 lg:px-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(270 70% 8% / 0.6), hsl(220 13% 8%) 40%, hsl(122 60% 10% / 0.3))' }}>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-accent opacity-30"></div>

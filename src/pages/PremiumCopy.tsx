@@ -135,7 +135,6 @@ const Premium = () => {
     const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number, currency?: string }>>({});
     const [loading, setLoading] = useState(true);
     const [payInitiated, setPayInitiated] = useState<string | null>(null);
-    const [showBanner, setShowBanner] = useState(true);
     const navigate = useNavigate();
     const { user, userProfile, setRerender } = useAuth();
     const { toast } = useToast();
@@ -442,7 +441,7 @@ const Premium = () => {
                 />
             </Helmet>
             <div className="min-h-screen bg-background">
-                {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
+                <PromoBanner />
                 {/* Hero Section */}
                 <div className="container mx-auto px-4 py-16">
                     <div className="max-w-5xl mx-auto text-center mb-12">
