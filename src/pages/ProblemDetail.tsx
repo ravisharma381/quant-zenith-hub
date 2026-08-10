@@ -167,14 +167,14 @@ const ProblemDetail = () => {
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="bg-transparent hover:bg-transparent p-0 h-6 w-6 flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="bg-transparent hover:bg-transparent p-0 h-[21px] w-[21px] flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
                         aria-label={isComplete ? "Mark as incomplete" : "Mark as complete"}
                         onClick={() => setIsComplete((prev) => !prev)}
                       >
                         {isComplete ? (
-                          <CheckCircle className="!h-6 !w-6 text-primary" />
+                          <CheckCircle className="!h-[21px] !w-[21px] text-primary" />
                         ) : (
-                          <Circle className="!h-6 !w-6 text-white" strokeWidth={2} />
+                          <Circle className="!h-[21px] !w-[21px] text-white" strokeWidth={2} />
                         )}
                       </Button>
                     </TooltipTrigger>
