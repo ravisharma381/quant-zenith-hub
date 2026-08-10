@@ -172,9 +172,9 @@ const ProblemDetail = () => {
                         onClick={() => setIsComplete((prev) => !prev)}
                       >
                         {isComplete ? (
-                          <CheckCircle className="!h-[21px] !w-[21px] text-primary" />
+                          <CheckCircle className="!h-[21px] !w-[21px] text-primary" strokeWidth={2.5} />
                         ) : (
-                          <Circle className="!h-[21px] !w-[21px] text-white" strokeWidth={2} />
+                          <Circle className="!h-[21px] !w-[21px] text-white" strokeWidth={2.5} />
                         )}
                       </Button>
                     </TooltipTrigger>
