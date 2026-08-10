@@ -161,20 +161,20 @@ const ProblemDetail = () => {
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2.5">
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        className="bg-transparent hover:bg-transparent p-0 h-6 w-6 flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
                         aria-label={isComplete ? "Mark as incomplete" : "Mark as complete"}
                         onClick={() => setIsComplete((prev) => !prev)}
                       >
                         {isComplete ? (
                           <CheckCircle className="!h-6 !w-6 text-primary" />
                         ) : (
-                          <Circle className="!h-6 !w-6 text-red-500" strokeWidth={2} />
+                          <Circle className="!h-6 !w-6 text-white" strokeWidth={2} />
                         )}
                       </Button>
                     </TooltipTrigger>
@@ -188,7 +188,7 @@ const ProblemDetail = () => {
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        className="bg-transparent hover:bg-transparent p-0 h-6 w-6 flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
                         aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
                         onClick={() => setIsBookmarked((prev) => !prev)}
                       >
