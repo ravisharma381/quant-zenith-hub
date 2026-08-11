@@ -23,6 +23,25 @@ const ProblemDetail = () => {
   const [activeTab, setActiveTab] = useState("problem");
   const [isComplete, setIsComplete] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const notesKey = `problem-notes-${id ?? "1"}`;
+  const [notes, setNotes] = useState("");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const saveTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    setNotes(localStorage.getItem(notesKey) ?? "");
+    setSaveStatus("idle");
+  }, [notesKey]);
+
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    setSaveStatus("saving");
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      localStorage.setItem(notesKey, value);
+      setSaveStatus("saved");
+    }, 700);
+  };
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
@@ -124,11 +143,11 @@ const ProblemDetail = () => {
 
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)} className="w-full">
           <div className="flex items-center justify-between mb-6">
-            <div className="relative grid w-48 grid-cols-2 h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+            <div className="relative grid w-72 grid-cols-3 h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
               {/* Animated background slider */}
               <div 
-                className="absolute h-8 w-[calc(50%-4px)] bg-background rounded-sm shadow-sm transition-all duration-300 ease-out"
-                style={{ left: activeTab === "problem" ? "4px" : "calc(50% + 0px)" }}
+                className="absolute h-8 w-[calc(33.333%-3px)] bg-background rounded-sm shadow-sm transition-all duration-300 ease-out"
+                style={{ left: activeTab === "problem" ? "4px" : activeTab === "solution" ? "calc(33.333% + 1px)" : "calc(66.666% - 1px)" }}
               />
               <button
                 onClick={() => setActiveTab("problem")}
@@ -142,7 +161,17 @@ const ProblemDetail = () => {
               >
                 Solution
               </button>
+              <button
+                onClick={() => setActiveTab("notes")}
+                className={`relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === "notes" ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                Notes
+                <span className="absolute -top-2.5 -right-1.5 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
+                  New
+                </span>
+              </button>
             </div>
+            
             
             <div className="flex items-center gap-4">
               <Badge className={`${getDifficultyColor(problem.difficulty)} hidden md:flex text-center items-center justify-center`}>
@@ -326,6 +355,21 @@ const ProblemDetail = () => {
                   </AccordionItem>
                 </Accordion>
               )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="notes" className="space-y-3">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Notes</h1>
+            <div className="rounded-xl bg-muted/60 border border-border p-4 focus-within:border-primary/60 transition-colors">
+              <Textarea
+                value={notes}
+                onChange={(e) => handleNotesChange(e.target.value)}
+                placeholder="Write your notes here..."
+                className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+            <div className="h-5 text-sm text-muted-foreground">
+              {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved" : ""}
             </div>
           </TabsContent>
         </Tabs>
