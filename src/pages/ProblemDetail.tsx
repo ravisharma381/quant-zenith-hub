@@ -165,8 +165,8 @@ const ProblemDetail = () => {
                 onClick={() => setActiveTab("notes")}
                 className={`relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === "notes" ? "text-foreground" : "text-muted-foreground"}`}
               >
-                Notes
-                <span className="absolute -top-2.5 -right-1.5 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
+                {problem.title}
+                <span className="absolute -top-1.5 -right-2 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
                   New
                 </span>
               </button>
@@ -359,12 +359,11 @@ const ProblemDetail = () => {
           </TabsContent>
 
           <TabsContent value="notes" className="space-y-3">
-            <h1 className="text-2xl font-bold text-foreground mb-4">Notes</h1>
             <div className="rounded-xl bg-muted/60 border border-border p-4 focus-within:border-primary/60 transition-colors">
               <Textarea
                 value={notes}
                 onChange={(e) => handleNotesChange(e.target.value)}
-                placeholder="Write your notes here..."
+                placeholder="Jot down your approach, key insights, or formulas here. Your notes are saved automatically and will be here the next time you open this problem."
                 className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
