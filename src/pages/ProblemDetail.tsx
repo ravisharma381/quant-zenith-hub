@@ -23,6 +23,25 @@ const ProblemDetail = () => {
   const [activeTab, setActiveTab] = useState("problem");
   const [isComplete, setIsComplete] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const notesKey = `problem-notes-${id ?? "1"}`;
+  const [notes, setNotes] = useState("");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const saveTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    setNotes(localStorage.getItem(notesKey) ?? "");
+    setSaveStatus("idle");
+  }, [notesKey]);
+
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    setSaveStatus("saving");
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      localStorage.setItem(notesKey, value);
+      setSaveStatus("saved");
+    }, 700);
+  };
   
   const isPremiumProblem = Number(id) === 60;
   const currentProblemId = Number(id) || 1;
