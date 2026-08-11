@@ -359,12 +359,11 @@ const ProblemDetail = () => {
           </TabsContent>
 
           <TabsContent value="notes" className="space-y-3">
-            <h1 className="text-2xl font-bold text-foreground mb-4">Notes</h1>
             <div className="rounded-xl bg-muted/60 border border-border p-4 focus-within:border-primary/60 transition-colors">
               <Textarea
                 value={notes}
                 onChange={(e) => handleNotesChange(e.target.value)}
-                placeholder="Write your notes here..."
+                placeholder="Jot down your approach, key insights, or formulas here. Your notes are saved automatically and will be here the next time you open this problem."
                 className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
