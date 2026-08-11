@@ -359,7 +359,7 @@ const ProblemDetail = () => {
           </TabsContent>
 
           <TabsContent value="notes" className="space-y-3">
-            <div className="rounded-xl bg-muted/60 border border-border p-4 focus-within:border-primary/60 transition-colors">
+            <div className="rounded-xl bg-muted/60 border border-border p-4">
               <Textarea
                 value={notes}
                 onChange={(e) => handleNotesChange(e.target.value)}
