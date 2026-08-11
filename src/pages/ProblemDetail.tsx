@@ -165,8 +165,8 @@ const ProblemDetail = () => {
                 onClick={() => setActiveTab("notes")}
                 className={`relative z-10 inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === "notes" ? "text-foreground" : "text-muted-foreground"}`}
               >
-                Notes
-                <span className="absolute -top-2.5 -right-1.5 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
+                {problem.title}
+                <span className="absolute -top-1.5 -right-2 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
                   New
                 </span>
               </button>
