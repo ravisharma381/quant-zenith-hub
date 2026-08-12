@@ -364,7 +364,8 @@ const ProblemDetail = () => {
                 value={notes}
                 onChange={(e) => handleNotesChange(e.target.value)}
                 placeholder="Write your notes here - notes are autosaved for future reference."
-                className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                spellCheck={false}
+                className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus:placeholder:opacity-0 focus-visible:ring-0 focus-visible:ring-offset-0 notes-scrollbar"
               />
             </div>
             <div className="h-5 text-sm text-muted-foreground">

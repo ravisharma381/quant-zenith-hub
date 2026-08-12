@@ -132,6 +132,30 @@
     scrollbar-color: #adadad transparent;
   }
 
+  /* Notes textarea scrollbar - subtle, translucent, track hidden */
+  .notes-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .notes-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .notes-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.35);
+    border-radius: 10px;
+  }
+
+  .notes-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.55);
+  }
+
+  .notes-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+  }
+
+
   /* Mobile-specific optimizations */
   @media (max-width: 768px) {
     .container {
