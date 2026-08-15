@@ -1,6 +1,6 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Bookmark, BookmarkCheck, CheckCircle, ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { doc, getDoc, setDoc, query, where, limit, collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
@@ -48,6 +48,9 @@ const ProblemDetail = () => {
   const [disableNext, setDisableNext] = useState(true);
   const [nextId, setNextId] = useState(null);
   const [prevId, setPrevId] = useState(null);
+  const [notes, setNotes] = useState("");
+  const [notesStatus, setNotesStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const notesTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ================================
   // FETCH PROBLEM
@@ -104,20 +107,33 @@ const ProblemDetail = () => {
 
         setTopic(prob);
 
-        // ---- Fetch progress ONLY if logged in ----
-        if (isLoggedIn && prob.courseId) {
-          const progressId = `${user.uid}_${prob.courseId}`;
-          const progressRef = doc(db, "progress", progressId);
-          const progressSnap = await getDoc(progressRef);
+        // ---- Fetch progress + notes ONLY if logged in ----
+        if (isLoggedIn) {
+          const notesRef = doc(db, "notes", `${user.uid}_${prob.id}`);
+          const notesPromise = getDoc(notesRef);
 
-          if (progressSnap.exists()) {
-            const data = progressSnap.data();
-            setIsCompleted((data?.completedProblems || []).includes(prob.id));
-            setIsBookmarked((data?.bookmarkedProblems || []).includes(prob.id));
+          if (prob.courseId) {
+            const progressRef = doc(db, "progress", `${user.uid}_${prob.courseId}`);
+            const [progressSnap, notesSnap] = await Promise.all([
+              getDoc(progressRef),
+              notesPromise,
+            ]);
+
+            if (progressSnap.exists()) {
+              const data = progressSnap.data();
+              setIsCompleted((data?.completedProblems || []).includes(prob.id));
+              setIsBookmarked((data?.bookmarkedProblems || []).includes(prob.id));
+            } else {
+              setIsCompleted(false);
+              setIsBookmarked(false);
+            }
+
+            setNotes(notesSnap.exists() ? (notesSnap.data()?.content ?? "") : "");
           } else {
-            setIsCompleted(false);
-            setIsBookmarked(false);
+            const notesSnap = await notesPromise;
+            setNotes(notesSnap.exists() ? (notesSnap.data()?.content ?? "") : "");
           }
+          setNotesStatus("idle");
         }
 
       } catch (err) {
@@ -191,6 +207,36 @@ const ProblemDetail = () => {
       console.error("Bookmark update failed:", err);
       setIsBookmarked(!next);
     }
+  };
+
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    setNotesStatus("saving");
+
+    if (notesTimer.current) clearTimeout(notesTimer.current);
+
+    const problemId = topic.id;
+    const courseId = topic.courseId;
+
+    notesTimer.current = setTimeout(async () => {
+      try {
+        await setDoc(
+          doc(db, "notes", `${user.uid}_${problemId}`),
+          {
+            userId: user.uid,
+            problemId,
+            courseId,
+            content: value,
+            updatedAt: new Date()
+          },
+          { merge: true }
+        );
+        setNotesStatus("saved");
+      } catch (err) {
+        console.error("Notes update failed:", err);
+        setNotesStatus("idle");
+      }
+    }, 700);
   };
 
   useEffect(() => {
@@ -369,6 +415,9 @@ const ProblemDetail = () => {
         toggleCompleted={toggleCompleted}
         toggleBookmark={toggleBookmark}
         isLoggedIn={isLoggedIn}
+        notes={notes}
+        notesStatus={notesStatus}
+        onNotesChange={isLoggedIn ? handleNotesChange : undefined}
       />
     </div>
   );

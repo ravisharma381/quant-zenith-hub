@@ -2,9 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Share, Send, CheckCircle, Circle, Bookmark } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { fireRandomCelebration } from "@/lib/confetti";
 import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 
@@ -25,6 +26,9 @@ type QuestionLayoutProps = {
     toggleCompleted?: () => void;
     toggleBookmark?: () => void;
     isLoggedIn?: boolean;
+    notes?: string;
+    notesStatus?: "idle" | "saving" | "saved";
+    onNotesChange?: (value: string) => void;
 }
 
 function renderRichCMS(text?: string | null) {
@@ -132,12 +136,15 @@ function renderRichCMS(text?: string | null) {
 
 
 
+const tabTriggerClass = "relative z-10 px-2 text-xs sm:px-3 sm:text-sm data-[state=active]:bg-transparent data-[state=active]:shadow-none";
+
 const QuestionLayout = ({ topic,
     markAsCompleted, isUser,
     isProblemsPage = false,
     isCompleted, isBookmarked,
     toggleCompleted, toggleBookmark,
     isLoggedIn,
+    notes = "", notesStatus = "idle", onNotesChange,
 }: QuestionLayoutProps) => {
 
     // ---- STATES ----
@@ -242,13 +249,39 @@ const QuestionLayout = ({ topic,
         ? solutionTabs
         : [{ value: "solution", label: "Solution", body: "", hintKeys: ["hint1", "hint2", "hint3", "hint4", "hint5"] }];
 
+    const showNotes = !!onNotesChange;
+
     useEffect(() => {
-        const valid = new Set(["problem", ...visibleSolutionTabs.map((s) => s.value)]);
+        const valid = new Set(["problem", ...visibleSolutionTabs.map((s) => s.value), ...(showNotes ? ["notes"] : [])]);
         if (!valid.has(tab)) setTab("problem");
     }, [topic?.id, topic?.solution, topic?.solution2, topic?.solution3]);
 
     const solutionTabCount = visibleSolutionTabs.length;
-    const totalTabCount = 1 + solutionTabCount;
+    const totalTabCount = 1 + solutionTabCount + (showNotes ? 1 : 0);
+
+    const tabsListRef = useRef<HTMLDivElement>(null);
+    const [indicator, setIndicator] = useState({ left: 0, top: 0, width: 0, height: 0 });
+
+    useLayoutEffect(() => {
+        const list = tabsListRef.current;
+        if (!list) return;
+
+        const update = () => {
+            const active = list.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
+            if (!active) return;
+            setIndicator({
+                left: active.offsetLeft,
+                top: active.offsetTop,
+                width: active.offsetWidth,
+                height: active.offsetHeight,
+            });
+        };
+
+        update();
+        const observer = new ResizeObserver(update);
+        observer.observe(list);
+        return () => observer.disconnect();
+    }, [tab, totalTabCount]);
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -258,18 +291,30 @@ const QuestionLayout = ({ topic,
                 {/* ---------------- HEADER ---------------- */}
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
                     <TabsList
-                        className={`grid h-auto w-full md:w-auto ${totalTabCount === 2
+                        ref={tabsListRef}
+                        className={`relative grid h-auto w-full md:w-auto ${totalTabCount === 2
                             ? "grid-cols-2 md:w-48"
                             : totalTabCount === 3
                                 ? "grid-cols-3 md:min-w-[18rem]"
-                                : "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
+                                : totalTabCount === 4
+                                    ? "grid-cols-2 sm:grid-cols-4 md:min-w-[24rem]"
+                                    : "grid-cols-3 sm:grid-cols-5 md:min-w-[30rem]"
                             }`}
                     >
-                        <TabsTrigger value="problem" className="px-2 text-xs sm:px-3 sm:text-sm">
+                        <div
+                            className="absolute rounded-sm bg-background shadow-sm transition-all duration-300 ease-out"
+                            style={{
+                                left: indicator.left,
+                                top: indicator.top,
+                                width: indicator.width,
+                                height: indicator.height,
+                            }}
+                        />
+                        <TabsTrigger value="problem" className={tabTriggerClass}>
                             Problem
                         </TabsTrigger>
                         {visibleSolutionTabs.map((s, i) => (
-                            <TabsTrigger key={s.value} value={s.value} className="px-2 text-xs sm:px-3 sm:text-sm">
+                            <TabsTrigger key={s.value} value={s.value} className={tabTriggerClass}>
                                 {hasMultipleSolutions ? (
                                     <>
                                         <span className="sm:hidden">Sol {i + 1}</span>
@@ -280,6 +325,14 @@ const QuestionLayout = ({ topic,
                                 )}
                             </TabsTrigger>
                         ))}
+                        {showNotes && (
+                            <TabsTrigger value="notes" className={tabTriggerClass}>
+                                Notes
+                                <span className="absolute -top-1.5 -right-2 rounded-full bg-primary px-1.5 py-[1px] text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-foreground">
+                                    New
+                                </span>
+                            </TabsTrigger>
+                        )}
                     </TabsList>
                     <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
 
@@ -447,6 +500,23 @@ const QuestionLayout = ({ topic,
                         </Accordion>
                     </TabsContent>
                 ))}
+
+                {showNotes && (
+                    <TabsContent value="notes" className="space-y-3">
+                        <div className="rounded-xl bg-muted/60 border border-border p-4">
+                            <Textarea
+                                value={notes}
+                                onChange={(e) => onNotesChange(e.target.value)}
+                                placeholder="Write your notes here - notes are autosaved for future reference."
+                                spellCheck={false}
+                                className="min-h-[220px] resize-none bg-transparent border-0 p-0 text-base text-foreground placeholder:text-muted-foreground focus:placeholder:opacity-0 focus-visible:ring-0 focus-visible:ring-offset-0 custom-scrollbar"
+                            />
+                        </div>
+                        <div className="h-5 text-sm text-muted-foreground">
+                            {notesStatus === "saving" ? "Saving..." : notesStatus === "saved" ? "Saved" : ""}
+                        </div>
+                    </TabsContent>
+                )}
 
             </Tabs>
         </div>

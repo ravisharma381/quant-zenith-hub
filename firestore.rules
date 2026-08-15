@@ -1,18 +1,189 @@
-rules_version='2'
+rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2025, 12, 4);
+
+    /** ───── HELPERS ───── **/
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Generic role getter
+    function userRole() {
+      return isSignedIn() ?
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role :
+        null;
+    }
+
+    function isAdmin() {
+      return userRole() == "admin" || userRole() == "superAdmin";
+    }
+
+    function isSuperAdmin() {
+      return userRole() == "superAdmin";
+    }
+
+    function isPremiumUser() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true;
+    }
+
+
+    /** ───── COURSES ───── **/
+
+    match /courses/{courseId} {
+
+      // Allow listing publicly (homepage, cards, etc.)
+      allow list: if true;
+
+      // Normal users may read only if course is published or coming soon, or if premium
+      allow read: if
+        resource.data.isPublished == true ||
+        resource.data.isComingSoon == true ||
+        isPremiumUser() ||
+        isAdmin();
+
+      // Only admin & superAdmin can modify
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /** ───── CHAPTERS ───── **/
+
+    match /chapters/{chapterId} {
+
+      // Users may read chapters if they are premium or admin.
+      allow read: if
+        isAdmin() ||
+        isPremiumUser();
+
+      // Only admin/superAdmin can modify chapters
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /** ───── TOPICS ───── **/
+
+    match /topics/{topicId} {
+
+      // Users may read topics if premium or admin.
+      allow read: if
+        isAdmin() ||
+        isPremiumUser() ||
+        resource.data.isPrivate == false;
+
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /** ───── PLAYLISTS ───── **/
+
+    match /playlists/{playlistId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+
+    /** ───── PROGRESS ───── **/
+
+    match /progress/{progressId} {
+      allow read: if isSignedIn()
+        && progressId.matches('^' + request.auth.uid + '_.*')
+        && (resource == null || resource.data.userId == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && progressId.matches('^' + request.auth.uid + '_.*');
+
+      allow update, delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+    }
+
+    /** ───── NOTES ───── **/
+
+    match /notes/{notesId} {
+      allow read: if isSignedIn()
+        && notesId.matches('^' + request.auth.uid + '_.*')
+        && (resource == null || resource.data.userId == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && notesId.matches('^' + request.auth.uid + '_.*');
+
+      allow update, delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+    }
+
+
+    /** ───── PRICING ───── **/
+
+    match /pricing/{pricingId} {
+      allow read: if true;
+
+      // Only superAdmin can modify pricing
+      allow create, update, delete: if isSuperAdmin();
+    }
+
+
+    /** ───── USERS ───── **/
+
+    match /users/{userId} {
+
+      // A user can read only their own profile; admins can read all
+      allow read: if request.auth.uid == userId || isAdmin();
+
+      // Only the logged-in user can update their own doc
+      allow update: if
+        (request.auth.uid == userId
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.isPremium == resource.data.isPremium
+        )
+        || isSuperAdmin();
+
+      // Only signed-in users can create their user doc
+      allow create: if isSignedIn()
+      && request.resource.data.role == "user"
+      && request.resource.data.isPremium == false
+    }
+
+
+    /** ───── TRANSACTIONS ───── **/
+
+    match /transactions/{transactionId} {
+
+      // Allow reading if the user owns the transaction or is admin
+      allow read: if isSignedIn() &&
+        (isSuperAdmin() ||
+         resource == null ||            // allow read before creation
+         request.auth.uid == resource.data.userId);
+
+      // Allow write on creation OR if user owns transaction OR admin
+      allow write: if isSignedIn() &&
+        (
+          isSuperAdmin() ||
+          resource == null ||            // allow transaction creation
+          request.auth.uid == resource.data.userId
+        );
+    }
+    
+    match /adminStats/{statId} {
+
+      // Only superAdmin can read analytics
+      allow read: if isSuperAdmin();
+
+      // No client-side writes allowed
+      allow create, update, delete: if false;
+    }
+    match /problem_index/{problemId} {
+
+      // Anyone can read (logged in or not)
+      allow read: if true;
+
+      // No client-side writes ever
+      allow create, update, delete: if false;
     }
   }
 }
