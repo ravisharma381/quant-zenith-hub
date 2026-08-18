@@ -359,7 +359,7 @@ const QuestionLayout = ({ topic,
                             </div>
                         )}
 
-                        {isProblemsPage && isLoggedIn && <div className="flex items-center gap-2">
+                        {isProblemsPage && isLoggedIn && <div className="flex items-center gap-1 ml-1">
                             <TooltipProvider delayDuration={0}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
