@@ -443,8 +443,8 @@ const Problems = () => {
           </div>
 
           {/* Firms sidebar */}
-          <div className="lg:sticky lg:top-24 h-fit">
-            <div className="bg-card border border-border rounded-xl p-5">
+          <div className="lg:sticky lg:top-24 h-fit max-h-[50vh]">
+            <div className="bg-card border border-border rounded-xl p-5 h-full flex flex-col">
               <h2 className="text-xl font-semibold text-foreground mb-4">Firms</h2>
               <div className="relative mb-4">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -455,7 +455,7 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5 overflow-y-auto pr-1">
                 {displayedFirms.map((firm) => {
                   const isActive = selectedFirm === firm.name;
                   return (
