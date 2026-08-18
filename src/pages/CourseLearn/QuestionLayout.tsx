@@ -365,14 +365,14 @@ const QuestionLayout = ({ topic,
                                     <TooltipTrigger asChild>
                                         <Button
                                             variant="ghost"
-                                            size="icon"
+                                            className="bg-transparent hover:bg-transparent p-0 h-[21px] w-[21px] flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
                                             aria-label={isCompleted ? "Mark as incomplete" : "Mark as complete"}
                                             onClick={toggleCompleted}
                                         >
                                             {isCompleted ? (
-                                                <CheckCircle className="!h-[21px] !w-[21px] text-primary" />
+                                                <CheckCircle className="!h-[21px] !w-[21px] text-primary" strokeWidth={2.5} />
                                             ) : (
-                                                <Circle className="!h-[21px] !w-[21px] text-red-500" strokeWidth={2} />
+                                                <Circle className="!h-[21px] !w-[21px] text-white" strokeWidth={2.5} />
                                             )}
                                         </Button>
                                     </TooltipTrigger>
@@ -386,12 +386,12 @@ const QuestionLayout = ({ topic,
                                     <TooltipTrigger asChild>
                                         <Button
                                             variant="ghost"
-                                            size="icon"
+                                            className="bg-transparent hover:bg-transparent p-0 h-6 w-6 flex items-center justify-center focus-visible:ring-0 focus-visible:ring-offset-0"
                                             aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
                                             onClick={toggleBookmark}
                                         >
                                             <Bookmark
-                                                className={`!h-[21px] !w-[21px] transition-colors ${isBookmarked ? "text-amber-400 fill-amber-400" : "text-white"
+                                                className={`!h-6 !w-6 transition-colors ${isBookmarked ? "text-amber-400 fill-amber-400" : "text-white"
                                                     }`}
                                             />
                                         </Button>

@@ -612,7 +612,7 @@ const Problems: React.FC = () => {
                                 ) : completedSet.has(problem.id) ? (
                                   <CheckCircle className="h-5 w-5 text-green-500" />
                                 ) : (
-                                  <Circle className="h-5 w-5 text-red-500" />
+                                  <Circle className="h-5 w-5 text-white" />
                                 )}
                               </div>
                             </TooltipTrigger>
