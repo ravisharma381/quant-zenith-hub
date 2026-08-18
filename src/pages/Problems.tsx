@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle, Bookmark } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark, ChevronDown, ChevronUp, Search } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
-import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
 import drivLogo from "@/assets/driv-logo.png";
@@ -34,12 +33,90 @@ const Problems = () => {
   const [selectedTopic, setSelectedTopic] = useState("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedFirm, setSelectedFirm] = useState("All firms");
+  const [firmSearch, setFirmSearch] = useState("");
+  const [showAllFirms, setShowAllFirms] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
   const FREE_PAGES = 3; // Pages 1-3 are free, 4-60 are locked
+
+  const firmList = [
+    { name: "All firms", count: 761 },
+    { name: "SIG", count: 113 },
+    { name: "Jane Street", count: 77 },
+    { name: "IMC Trading", count: 54 },
+    { name: "Maven Securities", count: 44 },
+    { name: "DRW", count: 40 },
+    { name: "Akuna Capital", count: 40 },
+    { name: "Flow Traders", count: 37 },
+    { name: "Da Vinci Trading", count: 37 },
+    { name: "Wincent", count: 33 },
+    { name: "Mako Trading", count: 33 },
+    { name: "Five Rings", count: 30 },
+    { name: "All Options", count: 26 },
+    { name: "Goldman Sachs", count: 25 },
+    { name: "VIRTU Financial", count: 25 },
+    { name: "Maverick Derivatives", count: 19 },
+    { name: "Citadel", count: 88 },
+    { name: "Two Sigma", count: 62 },
+    { name: "Jump Trading", count: 55 },
+    { name: "HRT", count: 48 },
+    { name: "Optiver", count: 42 },
+    { name: "Tower Research", count: 38 },
+    { name: "Wolverine", count: 31 },
+    { name: "Belvedere", count: 27 },
+    { name: "RGM", count: 22 },
+    { name: "Sun Trading", count: 18 },
+    { name: "Peak6", count: 15 },
+    { name: "Chopper", count: 12 },
+    { name: "Old Mission", count: 10 },
+    { name: "Teza", count: 8 },
+    { name: "Quantlab", count: 6 },
+    { name: "Infinium", count: 5 },
+    { name: "TransMarket", count: 4 },
+    { name: " spot Trading", count: 3 },
+    { name: "Hold Brothers", count: 3 },
+    { name: "Group One", count: 2 },
+    { name: "Simplex", count: 2 },
+    { name: "Akuna", count: 1 },
+    { name: "Cypress", count: 1 },
+    { name: "3Red", count: 1 },
+    { name: "EWT", count: 1 },
+    { name: "Elite", count: 1 },
+    { name: "Flora", count: 1 },
+    { name: "Geneva", count: 1 },
+    { name: "Latour", count: 1 },
+    { name: "Mercury", count: 1 },
+    { name: "Nico", count: 1 },
+    { name: "Saber", count: 1 },
+    { name: "Tibra", count: 1 },
+    { name: "Valkyrie", count: 1 },
+    { name: "Westerly", count: 1 },
+    { name: "XTX", count: 1 },
+    { name: "Yorkville", count: 1 },
+    { name: "Zomojo", count: 1 },
+  ];
+
+  const initialFirmCount = 16;
+  const filteredFirmList = firmList.filter(firm =>
+    firm.name.toLowerCase().includes(firmSearch.toLowerCase())
+  );
+  const displayedFirms = showAllFirms
+    ? filteredFirmList
+    : filteredFirmList.slice(0, initialFirmCount);
+  const hiddenFirmCount = Math.max(0, filteredFirmList.length - initialFirmCount);
+
+  const allLogos = [janeStreetLogo, citadelLogo, drivLogo, companyLogo];
+  const getCompanyNameFromLogo = (logo: string) => {
+    if (logo.includes('jane-street')) return 'Jane Street';
+    if (logo.includes('citadel')) return 'Citadel';
+    if (logo.includes('driv')) return 'DRW';
+    if (logo.includes('company')) return 'Top Firm';
+    return 'Company';
+  };
 
   // Generate 1200 problems (60 pages × 20 problems each)
   const allProblems = Array.from({ length: TOTAL_PAGES * PROBLEMS_PER_PAGE }, (_, i) => {
@@ -108,14 +185,6 @@ const Problems = () => {
     return colors[topic.length % colors.length];
   };
 
-  const getCompanyName = (logo: string) => {
-    if (logo.includes('jane-street')) return 'Jane Street';
-    if (logo.includes('citadel')) return 'Citadel';
-    if (logo.includes('driv')) return 'Driv';
-    if (logo.includes('company')) return 'Top Firm';
-    return 'Company';
-  };
-
   // Filter all problems first
   const filteredProblems = allProblems.filter(problem => {
     const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -126,7 +195,9 @@ const Problems = () => {
       (selectedStatus === "Solved" && problem.completed) ||
       (selectedStatus === "Unsolved" && !problem.completed) ||
       (selectedStatus === "Bookmarked" && problem.bookmarked);
-    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
+    const matchesFirm = selectedFirm === "All firms" ||
+      problem.askedIn.some(logo => getCompanyNameFromLogo(logo) === selectedFirm);
+    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus && matchesFirm;
   });
 
   // Get problems for current page
@@ -197,188 +268,237 @@ const Problems = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+          {/* Main content */}
+          <div>
+            {/* Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Search</label>
+                <Input
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
+                <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a topic" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {topics.map((topic) => (
+                      <SelectItem key={topic} value={topic}>{topic}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
+                <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select difficulty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {difficulties.map((difficulty) => (
+                      <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Status</label>
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
+                    <SelectItem value="Solved">Solved</SelectItem>
+                    <SelectItem value="Unsolved">Unsolved</SelectItem>
+                    <SelectItem value="Bookmarked">Bookmarked</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
-        {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Search</label>
-            <Input
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
-            <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a topic" />
-              </SelectTrigger>
-              <SelectContent>
-                {topics.map((topic) => (
-                  <SelectItem key={topic} value={topic}>{topic}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
-            <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select difficulty" />
-              </SelectTrigger>
-              <SelectContent>
-                {difficulties.map((difficulty) => (
-                  <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Status</label>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">All</SelectItem>
-                <SelectItem value="Solved">Solved</SelectItem>
-                <SelectItem value="Unsolved">Unsolved</SelectItem>
-                <SelectItem value="Bookmarked">Bookmarked</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Problems Table */}
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
-            <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
-            <div className="col-span-3 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
-            <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
-            <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
-            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
-            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
-          </div>
-          
-          {/* Table Body */}
-          <div className="divide-y divide-border">
-            {currentProblems.map((problem) => (
-              <div 
-                key={problem.id} 
-                className="p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
-                onClick={() => navigate(`/problems/${problem.id}`)}
-              >
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-1 flex items-center">
-                    <span className="text-muted-foreground">{problem.id}</span>
-                  </div>
-                  <div className="col-span-3 md:col-span-3 flex items-center gap-2">
-                    {problem.id === 60 && (
-                      <Lock className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                    )}
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                      {problem.title}
-                    </h3>
-                  </div>
-                  <div className="hidden md:block md:col-span-2 flex items-center justify-center">
-                    <Badge className={`${getTopicColor(problem.topic)} text-center inline-flex items-center justify-center px-2 py-1`} variant="outline">
-                      {problem.topic}
-                    </Badge>
-                  </div>
-                  <div className="col-span-2 md:col-span-2 flex items-center justify-center">
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-3 md:px-5 py-0.5 text-xs md:text-sm font-semibold`}>
-                            {problem.difficulty}/10
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
-                          <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
-                    <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
-                      {problem.askedIn.map((logo, index) => (
-                        <LogoWithSkeleton
-                          key={index}
-                          src={logo}
-                          alt="Company logo"
-                          companyName={getCompanyName(logo)}
-                        />
-                      ))}
+            {/* Problems Table */}
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
+                <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
+                <div className="col-span-6 md:col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+                <div className="hidden md:block md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
+                <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
+                <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
+              </div>
+              
+              {/* Table Body */}
+              <div className="divide-y divide-border">
+                {currentProblems.map((problem) => (
+                  <div 
+                    key={problem.id} 
+                    className="p-4 hover:bg-muted/30 transition-colors cursor-pointer group"
+                    onClick={() => navigate(`/problems/${problem.id}`)}
+                  >
+                    <div className="grid grid-cols-12 gap-4">
+                      <div className="col-span-1 flex items-center">
+                        <span className="text-muted-foreground">{problem.id}</span>
+                      </div>
+                      <div className="col-span-6 md:col-span-4 flex items-center gap-2">
+                        {problem.id === 60 && (
+                          <Lock className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                        )}
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                          {problem.title}
+                        </h3>
+                      </div>
+                      <div className="hidden md:block md:col-span-3 flex items-center justify-center">
+                        <Badge className={`${getTopicColor(problem.topic)} text-center inline-flex items-center justify-center px-2 py-1`} variant="outline">
+                          {problem.topic}
+                        </Badge>
+                      </div>
+                      <div className="col-span-2 md:col-span-2 flex items-center justify-center">
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className={`${getDifficultyColor(problem.difficulty)} hover:scale-110 transition-transform cursor-default inline-flex items-center rounded-full border px-3 md:px-5 py-0.5 text-xs md:text-sm font-semibold`}>
+                                {problem.difficulty}/10
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" sideOffset={8} className="text-center">
+                              <p>We have 10 difficulty levels, this problem is level {problem.difficulty}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
+                        <TooltipProvider delayDuration={0}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div>
+                                {problem.completed ? (
+                                  <CheckCircle className="h-5 w-5 text-green-500" />
+                                ) : (
+                                  <Circle className="h-5 w-5 text-white" />
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" sideOffset={8}>
+                              <p>{problem.completed ? "Solved" : "Unsolved"}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          {problem.bookmarked && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div>
+                                  <Bookmark className="h-5 w-5 text-amber-400 fill-amber-400" />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" align="center" sideOffset={8}>
+                                <p>Bookmarked</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                        </TooltipProvider>
+                      </div>
                     </div>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div>
-                            {problem.completed ? (
-                              <CheckCircle className="h-5 w-5 text-green-500" />
-                            ) : (
-                              <Circle className="h-5 w-5 text-white" />
-                            )}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" align="center" sideOffset={8}>
-                          <p>{problem.completed ? "Solved" : "Unsolved"}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      {problem.bookmarked && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <Bookmark className="h-5 w-5 text-amber-400 fill-amber-400" />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent side="top" align="center" sideOffset={8}>
-                            <p>Bookmarked</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </TooltipProvider>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Pagination */}
-        <div className="mt-6">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) handlePageClick(currentPage - 1);
-                  }}
-                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+            {/* Pagination */}
+            <div className="mt-6">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage > 1) handlePageClick(currentPage - 1);
+                      }}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                    />
+                  </PaginationItem>
+                  {renderPaginationItems()}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < FREE_PAGES) {
+                          handlePageClick(currentPage + 1);
+                        } else {
+                          setShowUpgradeDialog(true);
+                        }
+                      }}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </div>
+
+          {/* Firms sidebar */}
+          <div className="lg:sticky lg:top-24 h-fit">
+            <div className="bg-card border border-border rounded-xl p-5">
+              <h2 className="text-xl font-semibold text-foreground mb-4">Firms</h2>
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search a firm..."
+                  value={firmSearch}
+                  onChange={(e) => setFirmSearch(e.target.value)}
+                  className="pl-9"
                 />
-              </PaginationItem>
-              {renderPaginationItems()}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage < FREE_PAGES) {
-                      handlePageClick(currentPage + 1);
-                    } else {
-                      setShowUpgradeDialog(true);
-                    }
-                  }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {displayedFirms.map((firm) => {
+                  const isActive = selectedFirm === firm.name;
+                  return (
+                    <button
+                      key={firm.name}
+                      onClick={() => setSelectedFirm(firm.name)}
+                      className={`
+                        relative inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors
+                        ${isActive
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card text-foreground border-border hover:border-primary/50 hover:bg-muted/40"
+                        }
+                      `}
+                    >
+                      <span className="truncate max-w-[140px]">{firm.name}</span>
+                      <span className={`
+                        inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 text-[10px] font-bold rounded-full
+                        ${isActive ? "bg-primary-foreground/20 text-primary-foreground" : "bg-red-500 text-white"}
+                      `}>
+                        {firm.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {hiddenFirmCount > 0 && (
+                <button
+                  onClick={() => setShowAllFirms(!showAllFirms)}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                >
+                  {showAllFirms ? (
+                    <>
+                      Show less <ChevronUp className="h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      SHOW {hiddenFirmCount} MORE <ChevronDown className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
