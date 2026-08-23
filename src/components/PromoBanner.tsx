@@ -6,8 +6,8 @@ import { useAuth } from "@/context/AuthContext";
 import { isSoftPremium } from "@/lib/premiumSoftCache";
 
 const PROMO_CYCLE = {
-  introducedAt: Date.parse("2026-08-16T00:00:00Z"),
-  endsAt: Date.parse("2026-08-18T23:59:00Z"),
+  introducedAt: Date.parse("2026-08-23T03:43:39.520Z"),
+  endsAt: Date.parse("2026-08-23T23:59:00Z"),
 };
 const STORAGE_KEY = "promoBannerDismiss";
 const COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -88,7 +88,7 @@ const PromoBanner: React.FC = () => {
         <div className="flex md:hidden items-center justify-between w-full">
           <div className="flex flex-col items-start">
             <h2 className="text-sm font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
-            <p className="text-[11px] text-white/80">Prices increase after August 18th</p>
+            <p className="text-[11px] text-white/80">Prices increase after August 23th</p>
             <div className="flex gap-2 text-center mt-1">
               <div className="flex flex-col">
                 <span className="text-sm font-bold">{timeLeft.days}</span>
@@ -120,7 +120,7 @@ const PromoBanner: React.FC = () => {
         <div className="hidden md:flex items-center gap-8">
           <div className="text-center">
             <h2 className="text-xl font-extrabold tracking-wide">LIMITED TIME 30% OFF</h2>
-            <p className="text-sm text-white/80">Prices increase after August 18th</p>
+            <p className="text-sm text-white/80">Prices increase after August 23th</p>
           </div>
 
           <div className="flex gap-4 text-center">
