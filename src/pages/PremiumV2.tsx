@@ -33,16 +33,41 @@ const planTemplates = [
   //   ],
   // },
   {
+    name: "Quarterly",
+    description: "Access all premium features for 3 months, with no automatic renewal",
+    descriptionIN: "Access all premium features for 3 months, with no automatic renewal.",
+    originalPrice: "$45",
+    price: "$29.95",
+    sortOrder: 1,
+    discount: "LIMITED TIME 30% OFF",
+    period: "/quarter",
+    buttonColor: "bg-blue-600 hover:bg-blue-700",
+    borderColor: "border-blue-500 hover:border-blue-600",
+    badgeColor: 'bg-blue-100 text-blue-700',
+    checkColor: "text-blue-500",
+    featured: false,
+    features: [
+      { text: "30-day, no-questions-asked full refund.", bold: "full refund" },
+      { text: "1,000+ high-quality quant interview problems", bold: "1,000+" },
+      { text: "Detailed hints and solution for every problem", bold: "" },
+      { text: "Hundreds of company-tagged questions", bold: 'company-tagged' },
+      { text: "Curated playlists for fast, focused revision", bold: 'Curated playlists' },
+      { text: "100+ chapters with in-depth theory", bold: '100+' },
+    ],
+  },
+  {
     name: "Yearly",
     description: "Access all premium features for one year, with no automatic renewal and a 30-day, no-questions-asked full refund.",
     descriptionIN: "Access all premium features for one year, with no automatic renewal.",
     originalPrice: "$360",
     price: "$199",
+    sortOrder: 2,
     discount: "LIMITED TIME 30% OFF",
     period: "/year",
     buttonColor: "bg-purple-600 hover:bg-purple-700",
     borderColor: "border-purple-500 hover:border-purple-600",
-    badgeColor: 'text-purple-700',
+    badgeColor: 'bg-purple-100 text-purple-700',
+    checkColor: "text-purple-500",
     featured: false,
     features: [
       { text: "30-day, no-questions-asked full refund.", bold: "full refund" },
@@ -59,11 +84,13 @@ const planTemplates = [
     descriptionIN: "Get lifetime access to all premium features with a one-time payment.",
     originalPrice: "$599",
     price: "$399",
+    sortOrder: 3,
     discount: "LIMITED TIME 30% OFF",
     period: " one-time",
     borderColor: "border-amber-500 hover:border-amber-600",
     buttonColor: "bg-amber-600 hover:bg-amber-700",
     badgeColor: "bg-amber-100 text-amber-700",
+    checkColor: "text-amber-500",
     featured: false,
     features: [
       { text: "30-day, no-questions-asked full refund.", bold: "full refund" },
@@ -134,7 +161,7 @@ const faqs = [
 ];
 
 const Premium = () => {
-  const [pricingMap, setPricingMap] = useState<Record<string, { price?: number; originalPrice?: number, currency?: string }>>({});
+  const [plansV3, setPlansV3] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [payInitiated, setPayInitiated] = useState<string | null>(null);
   const [method, setMethod] = useState<string | null>(null);
@@ -144,10 +171,15 @@ const Premium = () => {
   const [searchParams] = useSearchParams();
   const region = 'IN', regionLoading = false
 
+  const USE_PRICING_V3 = true;
+  const planTemplateMap = Object.fromEntries(
+    planTemplates.map((tpl) => [tpl.name.toLowerCase(), tpl])
+  );
+
   useEffect(() => {
     const autoBuy = searchParams.get("autobuy");
     if (autoBuy && user) {
-      handleGetStartedV2(decodeURIComponent(autoBuy));
+      handleGetStartedV3(decodeURIComponent(autoBuy));
     }
   }, [user]);
 
@@ -158,26 +190,17 @@ const Premium = () => {
   useEffect(() => {
     const fetchPricing = async () => {
       try {
-        const getPlans = httpsCallable(functions, "getPlansV2");
+        const getPlans = httpsCallable(
+          functions,
+          "getPlansV3"
+        );
+
         const res: any = await getPlans();
 
         const plans = res.data?.plans || [];
 
-        const map: Record<
-          string,
-          { price: number; originalPrice: number | null; currency: string }
-        > = {};
+        setPlansV3(plans);
 
-        plans.forEach((plan: any) => {
-          if (!plan?.name) return;
-
-          map[String(plan.name).toLowerCase()] = {
-            price: plan.price,
-            originalPrice: plan.originalPrice ?? null,
-            currency: plan.currency,
-          };
-        });
-        setPricingMap(map);
       } catch (err) {
         console.error("Error fetching pricing:", err);
       } finally {
@@ -187,54 +210,48 @@ const Premium = () => {
 
     fetchPricing();
   }, []);
-  const handlePaypalGetStarted = async (planName: string) => {
+
+  const plans = plansV3.map((plan: any) => {
+    const tpl = planTemplateMap[plan.name.toLowerCase()];
+
+    return {
+      name: plan.name,
+      description: tpl?.description || "",
+      descriptionIN: tpl?.descriptionIN || "",
+      features: tpl?.features || [],
+      buttonColor: tpl?.buttonColor || "bg-purple-600",
+      borderColor: tpl?.borderColor || "border-purple-500",
+      badgeColor: tpl?.badgeColor || "",
+      checkColor: tpl?.checkColor || "text-purple-500",
+      featured: tpl?.featured || false,
+      discount: tpl?.discount || "",
+      period: tpl?.period || "",
+
+      price:
+        typeof plan.price === "number"
+          ? `${plan.currency === "INR" ? "₹" : "$"}${plan.price}`
+          : "$—",
+
+      originalPrice:
+        typeof plan.originalPrice === "number"
+          ? `${plan.currency === "INR" ? "₹" : "$"}${plan.originalPrice}`
+          : "",
+    };
+  }).sort((a, b) => {
+    const orderA = planTemplateMap[a.name.toLowerCase()]?.sortOrder ?? Number.MAX_SAFE_INTEGER;
+    const orderB = planTemplateMap[b.name.toLowerCase()]?.sortOrder ?? Number.MAX_SAFE_INTEGER;
+    return orderA - orderB;
+  });
+
+
+  const displayPlans = loading ? planTemplates : plans;
+  const cardCount = displayPlans.length;
+
+  const handleGetStartedV3 = async (planName: string) => {
     const encodedPlan = encodeURIComponent(planName);
 
-    // Require login
     if (!user) {
       navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
-      return;
-    }
-
-    if (payInitiated) return;
-    setPayInitiated(planName);
-    setMethod('paypal');
-
-    try {
-      const createPayPalOrder = httpsCallable(functions, "createPayPalOrder");
-
-      const resp: any = await createPayPalOrder({
-        planType: planName,
-      });
-
-      const payload = resp?.data?.data;
-      if (!payload?.approvalUrl) {
-        throw new Error("PayPal approval URL not returned");
-      }
-
-      // Open PayPal checkout
-      window.open(payload.approvalUrl, "_blank");
-
-    } catch (err: any) {
-      console.error("PayPal checkout failed", err);
-      toast({
-        title: "Payment failed",
-        description: err?.message || "Unable to start PayPal checkout",
-        variant: "destructive",
-      });
-    } finally {
-      setPayInitiated(null);
-    }
-  };
-
-  const handleGetStartedV2 = async (planName: string) => {
-    const encodedPlan = encodeURIComponent(planName);
-
-    // 🔒 Require login
-    if (!user) {
-      navigate(
-        `/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`
-      );
       return;
     }
 
@@ -243,29 +260,11 @@ const Premium = () => {
     setMethod('razorpay');
 
     try {
-      const createPremiumOrder = httpsCallable(
-        functions,
-        "createPremiumOrderV2"
-      );
+      const fn = httpsCallable(functions, "createPremiumOrderV3");
 
-      const resp = await createPremiumOrder({ planType: planName });
+      const resp: any = await fn({ planType: planName });
 
-      const result = resp.data as {
-        ok: boolean;
-        data?: {
-          orderId: string;
-          keyId: string;
-          amount: number;
-          currency: string;
-        };
-      };
-
-      if (!result.ok || !result.data) {
-        console.error("createPremiumOrder invalid response:", resp);
-        throw new Error("Invalid Razorpay order response");
-      }
-
-      const { orderId, keyId, amount, currency } = result.data;
+      const { orderId, keyId, amount, currency } = resp.data.data;
 
       const options = {
         key: keyId,
@@ -275,31 +274,19 @@ const Premium = () => {
         image: "https://quantprof.org/favicon-96x96.png",
         name: "QuantProf",
         description: `${planName} Premium Access`,
-
         handler: () => {
           navigate("/?success=true", { replace: true });
           setRerender(true);
         },
-
-        modal: {
-          ondismiss: () => {
-            setPayInitiated(null);
-          },
-        },
-
-        theme: {
-          color: "hsl(270,95%,60%)",
-        },
-        prefill: {
-          email: userProfile?.email,
-        },
+        modal: { ondismiss: () => setPayInitiated(null) },
+        theme: { color: "hsl(270,95%,60%)" },
+        prefill: { email: userProfile?.email },
       };
 
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
 
     } catch (err: any) {
-      console.error("Razorpay checkout failed:", err);
       toast({
         title: "Payment failed",
         description: err?.message || "Unable to start Razorpay checkout",
@@ -310,23 +297,40 @@ const Premium = () => {
     }
   };
 
-  // const plans = planTemplates.map((tpl) => {
-  //   const found = pricingMap[tpl.name.toLowerCase()];
-  //   return {
-  //     ...tpl,
-  //     price: found && typeof found.price === "number" ? `$${found.price}` : "$—",
-  //     originalPrice: found && typeof found.originalPrice === "number" ? `$${found.originalPrice}` : "",
-  //   };
-  // });
+  const handlePaypalGetStartedV3 = async (planName: string) => {
+    const encodedPlan = encodeURIComponent(planName);
 
-  const plans = planTemplates.map((tpl) => {
-    const found = pricingMap[tpl.name.toLowerCase()];
-    return {
-      ...tpl,
-      price: found && typeof found.price === "number" ? `${found.currency === 'INR' ? '₹' : '$'}${found.price}` : "$—",
-      originalPrice: found && typeof found.originalPrice === "number" ? `${found.currency === 'INR' ? '₹' : '$'}${found.originalPrice}` : "",
-    };
-  });
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent(`/premium?autobuy=${encodedPlan}`)}`);
+      return;
+    }
+
+    if (payInitiated) return;
+    setPayInitiated(planName);
+    setMethod('paypal');
+
+    try {
+      const fn = httpsCallable(functions, "createPayPalOrderV3");
+
+      const resp: any = await fn({ planType: planName });
+
+      const approvalUrl = resp.data.data.approvalUrl;
+
+      window.open(approvalUrl, "_blank");
+
+    } catch (err: any) {
+      toast({
+        title: "Payment failed",
+        description: err?.message || "Unable to start PayPal checkout",
+        variant: "destructive",
+      });
+    } finally {
+      setPayInitiated(null);
+    }
+  };
+
+
+
   const enableBoth = userProfile?.usePaypal
   // const enableBoth = true
 
@@ -349,6 +353,52 @@ const Premium = () => {
 
       </div>
     ))
+  )
+
+  const CardSkeleton = () => (
+    <Card className="relative border-2 border-border bg-card overflow-hidden rounded-xl h-full flex flex-col">
+      <CardContent className="p-6 flex flex-col h-full">
+
+        {/* Header */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <SkeletonBox className="h-8 w-40" />
+            <SkeletonBox className="h-5 w-24 rounded-md" />
+          </div>
+
+          <SkeletonBox className="h-4 w-full mb-2" />
+          <SkeletonBox className="h-4 w-5/6 mb-4" />
+
+          {/* Pricing */}
+          <div className="mb-4 h-[64px] flex flex-col justify-end">
+            <div className="flex items-center gap-2 mb-1">
+              <SkeletonBox className="h-4 w-16" />
+              <SkeletonBox className="h-4 w-20 rounded-md" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <SkeletonBox className="h-10 w-24" />
+              <SkeletonBox className="h-4 w-16" />
+            </div>
+          </div>
+
+          <SkeletonBox className="h-12 w-full rounded-lg mb-4" />
+        </div>
+
+        {/* Features */}
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <SkeletonBox className="w-5 h-5 rounded-full mt-1" />
+              <div className="flex-1">
+                <SkeletonBox className="h-4 w-full mb-1" />
+                <SkeletonBox className="h-4 w-4/5" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </CardContent>
+    </Card>
   )
 
   return (
@@ -374,88 +424,58 @@ const Premium = () => {
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
-            {plans.map((plan, index) => (
-              <Card
-                key={index}
-                className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
-              >
-                <CardContent className="p-8 flex flex-col h-full">
-                  <div>
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="text-3xl font-bold text-foreground">{plan.name}</h3>
-                      {plan.featured && (
-                        <Badge className={`bg-purple-100 ${plan.badgeColor} border-0 text-xs px-2 py-1`}>
-                          🎉 Most Popular
-                        </Badge>
-                      )}
-                    </div>
-
-                    <p className="text-muted-foreground text-sm mb-6">{region === 'IN' ? plan.descriptionIN :
-
-                      plan.description}</p>
-
-                    <div className="mb-4 h-[64px] flex flex-col justify-end">
-                      {loading ? (
-                        <>
-                          <SkeletonBox className="h-4 w-20 mb-2" />
-                          <SkeletonBox className="h-10 w-32" />
-                        </>
-                      ) : (
-                        <>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-muted-foreground line-through text-sm">
-                              {plan.originalPrice}
-                            </span>
-                            <Badge className="bg-green-500 text-white border-0 text-xs px-2 py-0.5 font-bold">
-                              {plan.discount}
-                            </Badge>
-                          </div>
-                          <div className="flex items-baseline">
-                            <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-                            <span className="text-muted-foreground ml-1">{plan.period}</span>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {enableBoth ?
-                      <div>
-                        <Button
-                          className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
-                          !shadow-none
-                          hover:!shadow-none
-                          focus:!shadow-none
-                          focus-visible:!shadow-none
-                          active:!shadow-none
-                          !ring-0
-                          focus-visible:!ring-0
-                          focus-visible:!ring-offset-0`}
-                          disabled={loading || payInitiated !== null}
-                          onClick={() => handlePaypalGetStarted(plan.name)}
-                        >
-                          {(payInitiated === plan.name && method === 'paypal') ? "Initiating Payment…" : "Get Started"}
-                          <span className="text-xs font-normal opacity-80">via PayPal</span>
-                        </Button>
-                        <Button
-                          className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
-                          !shadow-none
-                          hover:!shadow-none
-                          focus:!shadow-none
-                          focus-visible:!shadow-none
-                          active:!shadow-none
-                          !ring-0
-                          focus-visible:!ring-0
-                          focus-visible:!ring-offset-0`}
-                          disabled={loading || payInitiated !== null}
-                          onClick={() => handleGetStartedV2(plan.name)}
-                        >
-                          {(payInitiated === plan.name && method === 'razorpay') ? "Initiating Payment…" : "Get Started"}
-                          <span className="text-xs font-normal opacity-80">via Razorpay</span>
-                        </Button>
+          <div className={`grid grid-cols-1 gap-4 mx-auto mb-20 ${cardCount === 1 ? "max-w-md" : cardCount === 2 ? "md:grid-cols-2 max-w-4xl" : "md:grid-cols-2 lg:grid-cols-3 max-w-6xl"}`}>
+            {loading ?
+              Array.from({ length: cardCount }).map((_, i) => <CardSkeleton key={i} />)
+              :
+              displayPlans.map((plan, index) => (
+                <Card
+                  key={index}
+                  className={`relative border-2 ${plan.borderColor} bg-card overflow-hidden rounded-xl h-full flex flex-col`}
+                >
+                  <CardContent className="p-6 flex flex-col h-full">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
+                        {plan.featured && (
+                          <Badge className={`${plan.badgeColor} border-0 text-xs px-2 py-1`}>
+                            🎉 Most Popular
+                          </Badge>
+                        )}
                       </div>
-                      : <Button
-                        className={`w-full ${plan.buttonColor} text-white font-semibold py-6 rounded-lg mb-6
+
+                      <p className="text-muted-foreground text-sm mb-4">{region === 'IN' ? plan.descriptionIN :
+
+                        plan.description}</p>
+
+                      <div className="mb-4 h-[64px] flex flex-col justify-end">
+                        {loading ? (
+                          <>
+                            <SkeletonBox className="h-4 w-20 mb-2" />
+                            <SkeletonBox className="h-10 w-32" />
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-muted-foreground line-through text-sm">
+                                {plan.originalPrice}
+                              </span>
+                              <Badge className="bg-green-500 text-white border-0 text-xs px-2 py-0.5 font-bold">
+                                {plan.discount}
+                              </Badge>
+                            </div>
+                            <div className="flex items-baseline">
+                              <span className="text-3xl font-bold text-foreground">{plan.price}</span>
+                              <span className="text-muted-foreground ml-1">{plan.period}</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {enableBoth ?
+                        <div>
+                          <Button
+                            className={`w-full ${plan.buttonColor} text-white font-semibold py-5 rounded-lg mb-4
                           !shadow-none
                           hover:!shadow-none
                           focus:!shadow-none
@@ -464,38 +484,71 @@ const Premium = () => {
                           !ring-0
                           focus-visible:!ring-0
                           focus-visible:!ring-offset-0`}
-                        disabled={loading || payInitiated !== null}
-                        onClick={() => handleGetStartedV2(plan.name)}
-                      >
-                        {(payInitiated === plan.name) ? "Initiating Payment…" : "Get Started"}
-                      </Button>
-                    }
-                  </div>
-
-                  <div className="space-y-3">
-                    {regionLoading ?
-                      <FeatureSkeleton />
-                      : plan.features.slice(region === 'IN' ? 1 : 0, 6).map((feature, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-purple-500 mt-0.5" />
-                          <span className="text-sm text-muted-foreground">
-                            {feature.bold ? (
-                              <>
-                                {feature.text.split(feature.bold)[0]}
-                                <span className="font-semibold text-foreground">{feature.bold}</span>
-                                {feature.text.split(feature.bold)[1]}
-                              </>
-                            ) : (
-                              feature.text
-                            )}
-                          </span>
+                            disabled={loading || payInitiated !== null}
+                            onClick={() => handlePaypalGetStartedV3(plan.name)}
+                          >
+                            {(payInitiated === plan.name && method === 'paypal') ? "Initiating Payment…" : "Get Started"}
+                            <span className="text-xs font-normal opacity-80">via PayPal</span>
+                          </Button>
+                          <Button
+                            className={`w-full ${plan.buttonColor} text-white font-semibold py-5 rounded-lg mb-4
+                          !shadow-none
+                          hover:!shadow-none
+                          focus:!shadow-none
+                          focus-visible:!shadow-none
+                          active:!shadow-none
+                          !ring-0
+                          focus-visible:!ring-0
+                          focus-visible:!ring-offset-0`}
+                            disabled={loading || payInitiated !== null}
+                            onClick={() => handleGetStartedV3(plan.name)}
+                          >
+                            {(payInitiated === plan.name && method === 'razorpay') ? "Initiating Payment…" : "Get Started"}
+                            <span className="text-xs font-normal opacity-80">via Razorpay</span>
+                          </Button>
                         </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
+                        : <Button
+                          className={`w-full ${plan.buttonColor} text-white font-semibold py-5 rounded-lg mb-4
+                          !shadow-none
+                          hover:!shadow-none
+                          focus:!shadow-none
+                          focus-visible:!shadow-none
+                          active:!shadow-none
+                          !ring-0
+                          focus-visible:!ring-0
+                          focus-visible:!ring-offset-0`}
+                          disabled={loading || payInitiated !== null}
+                          onClick={() => handleGetStartedV3(plan.name)}
+                        >
+                          {(payInitiated === plan.name) ? "Initiating Payment…" : "Get Started"}
+                        </Button>
+                      }
+                    </div>
 
-            ))}
+                    <div className="space-y-3">
+                      {regionLoading ?
+                        <FeatureSkeleton />
+                        : plan.features.slice(region === 'IN' ? 1 : 0, 6).map((feature, i) => (
+                          <div key={i} className="flex items-start gap-3">
+                            <Check className={`w-5 h-5 ${plan.checkColor} mt-0.5`} />
+                            <span className="text-sm text-muted-foreground">
+                              {feature.bold ? (
+                                <>
+                                  {feature.text.split(feature.bold)[0]}
+                                  <span className="font-semibold text-foreground">{feature.bold}</span>
+                                  {feature.text.split(feature.bold)[1]}
+                                </>
+                              ) : (
+                                feature.text
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+              ))}
           </div>
 
 

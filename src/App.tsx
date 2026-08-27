@@ -42,10 +42,11 @@ import ScrollToTop from "./components/ScrollToTop";
 import ContactUs from "./Contact";
 import Premium from "./pages/Premium";
 import AdminPricing from "./pages/Admin/AdminPricing";
-import PremiumCheckout from "./pages/PremiumCheckout";
+// import PremiumCheckout from "./pages/PremiumCheckout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PaypalSuccess from "./pages/PaypalSuccess";
 import ImageBucket from "./pages/Admin/ImageBucket";
+import PremiumV2 from "./pages/PremiumV2";
 
 const App = () => (
   <HelmetProvider>
@@ -71,13 +72,7 @@ const App = () => (
               <Route path="/courses" element={<Layout><Courses /></Layout>} />
               <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
               <Route path="/premium" element={<Layout><Premium /></Layout>} />
-              <Route path="/checkout" element={
-                <Layout>
-                  <ProtectedRoute>
-                    <PremiumCheckout />
-                  </ProtectedRoute>
-                </Layout>}
-              />
+              <Route path="/premium-v2" element={<Layout><PremiumV2 /></Layout>} />
               <Route path="/admin"
                 element={
                   <Layout>
