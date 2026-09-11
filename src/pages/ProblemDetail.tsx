@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Bookmark, BookmarkCheck, CheckCircle, ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { doc, getDoc, setDoc, query, where, limit, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, setDoc, query, where, limit, collection, getDocs, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import QuestionLayout from "./CourseLearn/QuestionLayout";
@@ -153,19 +153,12 @@ const ProblemDetail = () => {
     setIsCompleted(next);
 
     try {
-      const progressRef = doc(db, "progress", `${user.uid}_${topic.courseId}`);
-      const snap = await getDoc(progressRef);
-      const prevList = snap.exists() ? snap.data()?.completedProblems || [] : [];
-      const updated = next
-        ? (prevList.includes(topic.id) ? prevList : [...prevList, topic.id])
-        : prevList.filter((x: string) => x !== topic.id);
-
       await setDoc(
-        progressRef,
+        doc(db, "progress", `${user.uid}_${topic.courseId}`),
         {
           userId: user.uid,
           courseId: topic.courseId,
-          completedProblems: updated,
+          completedProblems: next ? arrayUnion(topic.id) : arrayRemove(topic.id),
           updatedAt: new Date()
         },
         { merge: true }
@@ -186,19 +179,12 @@ const ProblemDetail = () => {
     setIsBookmarked(next);
 
     try {
-      const progressRef = doc(db, "progress", `${user.uid}_${topic.courseId}`);
-      const snap = await getDoc(progressRef);
-      const prevList = snap.exists() ? snap.data()?.bookmarkedProblems || [] : [];
-      const updated = next
-        ? (prevList.includes(topic.id) ? prevList : [...prevList, topic.id])
-        : prevList.filter((x: string) => x !== topic.id);
-
       await setDoc(
-        progressRef,
+        doc(db, "progress", `${user.uid}_${topic.courseId}`),
         {
           userId: user.uid,
           courseId: topic.courseId,
-          bookmarkedProblems: updated,
+          bookmarkedProblems: next ? arrayUnion(topic.id) : arrayRemove(topic.id),
           updatedAt: new Date()
         },
         { merge: true }

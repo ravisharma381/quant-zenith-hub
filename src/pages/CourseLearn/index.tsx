@@ -1,5 +1,5 @@
 // CourseLearnPage.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navigation from "@/components/Navigation";
@@ -10,7 +10,7 @@ import {
     where,
     getDocs,
     orderBy,
-    doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp
+    doc, getDoc, setDoc, arrayUnion, arrayRemove, serverTimestamp
 } from "firebase/firestore";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -33,8 +33,7 @@ const CourseLearnPage: React.FC = () => {
     const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
     const [completedSet, setCompletedSet] = useState<Set<string>>(new Set());
     const [completedProblemsSet, setCompletedProblemsSet] = useState<Set<string>>(new Set());
-    const [pendingChanges, setPendingChanges] = useState<Set<string>>(new Set());
-    const [writeTimer, setWriteTimer] = useState<NodeJS.Timeout | null>(null);
+    const completedSetRef = useRef<Set<string>>(new Set());
 
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -125,14 +124,15 @@ const CourseLearnPage: React.FC = () => {
                         progressId: pid,
                         userId: user.uid,
                         courseId: routeCourseId,
-                        completedTopics: [],
                         updatedAt: serverTimestamp()
-                    });
+                    }, { merge: true });
+                    completedSetRef.current = new Set<string>();
                     setCompletedSet(new Set<string>());
                 } else {
                     const arr = progressSnap.data()?.completedTopics || [];
-                    const completedProblems = progressSnap.data()?.completedProblems || [];
-                    setCompletedSet(new Set<string>(arr));
+                    const nextSet = new Set<string>(arr);
+                    completedSetRef.current = nextSet;
+                    setCompletedSet(nextSet);
                 }
                 await loadProblemsProgress();
                 // ---------------------------
@@ -167,44 +167,30 @@ const CourseLearnPage: React.FC = () => {
         }
     }, [routeTopicId]);
 
-    const flushProgressUpdates = async (finalSet: Set<string>) => {
-        const progressId = `${user.uid}_${routeCourseId}`;
-        const progressRef = doc(db, "progress", progressId);
-
-        await setDoc(progressRef, {
-            userId: user.uid,
-            courseId: routeCourseId,
-            completedTopics: Array.from(finalSet),
-            updatedAt: serverTimestamp(),
-        }, { merge: true });
-
-        // Clear buffer
-        setPendingChanges(new Set());
-    };
-
-
     const onToggleComplete = (topicId: string) => {
         if (!user || !routeCourseId) return;
 
-        const newSet = new Set(completedSet);
+        const shouldComplete = !completedSetRef.current.has(topicId);
+        const newSet = new Set(completedSetRef.current);
+        if (shouldComplete) newSet.add(topicId);
+        else newSet.delete(topicId);
 
-        if (newSet.has(topicId)) newSet.delete(topicId);
-        else newSet.add(topicId);
-
-        // UI updates immediately
+        completedSetRef.current = newSet;
         setCompletedSet(newSet);
 
-        // Mark change in buffer
-        const updatedBuffer = new Set(pendingChanges);
-        updatedBuffer.add(topicId);
-        setPendingChanges(updatedBuffer);
-
-        // reset existing timer
-        if (writeTimer) clearTimeout(writeTimer);
-
-        // schedule a batched write
-        const t = setTimeout(() => flushProgressUpdates(newSet), 500);
-        setWriteTimer(t);
+        setDoc(doc(db, "progress", `${user.uid}_${routeCourseId}`), {
+            userId: user.uid,
+            courseId: routeCourseId,
+            completedTopics: shouldComplete ? arrayUnion(topicId) : arrayRemove(topicId),
+            updatedAt: serverTimestamp(),
+        }, { merge: true }).catch((err) => {
+            console.error("Progress update failed:", err);
+            const rolled = new Set(completedSetRef.current);
+            if (shouldComplete) rolled.delete(topicId);
+            else rolled.add(topicId);
+            completedSetRef.current = rolled;
+            setCompletedSet(rolled);
+        });
     };
 
 
