@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle, Bookmark, Search, ChevronUp, ChevronDown } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark, Search } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -56,13 +56,11 @@ const Problems = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
-  const companiesRef = useRef<HTMLDivElement>(null);
+  const [showAllCompanies, setShowAllCompanies] = useState(false);
 
-  const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
-  };
+  const INITIAL_VISIBLE_COMPANIES = 8;
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -147,7 +145,8 @@ const Problems = () => {
       (selectedStatus === "Solved" && problem.completed) ||
       (selectedStatus === "Unsolved" && !problem.completed) ||
       (selectedStatus === "Bookmarked" && problem.bookmarked);
-    const matchesCompany = !selectedCompany || problem.askedIn.includes(selectedCompany);
+    const matchesCompany =
+      selectedCompany === "All Firms" || problem.askedIn.includes(selectedCompany);
     return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus && matchesCompany;
   });
 
