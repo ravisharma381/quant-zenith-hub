@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -434,17 +434,7 @@ const Problems = () => {
           {/* Companies sidebar - large screens only */}
           <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-foreground">Companies</h2>
-                <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies up" onClick={() => scrollCompanies(-1)}>
-                    <ChevronUp className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies down" onClick={() => scrollCompanies(1)}>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <h2 className="text-lg font-semibold text-foreground mb-3">Companies</h2>
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -454,27 +444,65 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div ref={companiesRef} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
-                {companyStats.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No companies found</p>
-                )}
-                {companyStats.map((company) => (
-                  <button
-                    key={company.name}
-                    onClick={() => setSelectedCompany(selectedCompany === company.name ? null : company.name)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                      selectedCompany === company.name
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border hover:bg-muted/50"
-                    }`}
-                  >
-                    {company.name}
-                    <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
-                      {company.count}
-                    </span>
-                  </button>
-                ))}
-              </div>
+              {(() => {
+                const allFirmsVisible = "all firms"
+                  .includes(companySearch.toLowerCase().trim());
+                const visibleFirms = showAllCompanies
+                  ? companyStats
+                  : companyStats.slice(0, INITIAL_VISIBLE_COMPANIES);
+                return (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {allFirmsVisible && (
+                        <button
+                          onClick={() => setSelectedCompany("All Firms")}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                            selectedCompany === "All Firms"
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border hover:bg-muted/50"
+                          }`}
+                        >
+                          All Firms
+                          <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
+                            1200
+                          </span>
+                        </button>
+                      )}
+                      {visibleFirms.map((company) => (
+                        <button
+                          key={company.name}
+                          onClick={() =>
+                            setSelectedCompany(
+                              selectedCompany === company.name ? "All Firms" : company.name
+                            )
+                          }
+                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                            selectedCompany === company.name
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border hover:bg-muted/50"
+                          }`}
+                        >
+                          {company.name}
+                          <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
+                            {company.count}
+                          </span>
+                        </button>
+                      ))}
+                      {companyStats.length === 0 && !allFirmsVisible && (
+                        <p className="text-sm text-muted-foreground">No companies found</p>
+                      )}
+                    </div>
+                    {companyStats.length > INITIAL_VISIBLE_COMPANIES && (
+                      <button
+                        onClick={() => setShowAllCompanies((v) => !v)}
+                        className="text-sm text-primary hover:underline text-left self-start"
+                      >
+                        {showAllCompanies ? "Show less" : "Show 30 more"}
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </aside>
         </div>
