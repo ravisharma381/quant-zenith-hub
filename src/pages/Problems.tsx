@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle, Bookmark } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark, Search, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,27 @@ import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
 import drivLogo from "@/assets/driv-logo.png";
-import companyLogo from "@/assets/company-logo.png";
+
+const COMPANIES = [
+  { name: "SIG" },
+  { name: "Jane Street", logo: janeStreetLogo },
+  { name: "Citadel", logo: citadelLogo },
+  { name: "Goldman Sachs" },
+  { name: "Five Rings" },
+  { name: "Akuna" },
+  { name: "WorldQuant" },
+  { name: "DRW", logo: drivLogo },
+  { name: "IMC" },
+  { name: "Virtu Financial" },
+];
+
+const getInitials = (name: string) =>
+  name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
 const Problems = () => {
   const navigate = useNavigate();
@@ -36,6 +56,13 @@ const Problems = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [companySearch, setCompanySearch] = useState("");
+  const companiesRef = useRef<HTMLDivElement>(null);
+
+  const scrollCompanies = (direction: number) => {
+    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
+  };
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -44,7 +71,6 @@ const Problems = () => {
   // Generate 1200 problems (60 pages × 20 problems each)
   const allProblems = Array.from({ length: TOTAL_PAGES * PROBLEMS_PER_PAGE }, (_, i) => {
     const topics = ["Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
-    const logos = [janeStreetLogo, citadelLogo, drivLogo, companyLogo];
     const problemTitles = [
       "Black-Scholes Options Pricing",
       "Portfolio Risk Calculation",
@@ -77,7 +103,9 @@ const Problems = () => {
       title: problemTitles[i % problemTitles.length],
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
-      askedIn: logos.slice(0, (i % 3) + 1),
+      askedIn: Array.from(new Set([(i * 3) % 10, (i * 7 + 4) % 10, (i * 11 + 7) % 10].slice(0, (i % 3) + 1))).map(
+        (idx) => COMPANIES[idx].name
+      ),
       completed: isCompleted,
       bookmarked: isBookmarked
     };
@@ -108,13 +136,6 @@ const Problems = () => {
     return colors[topic.length % colors.length];
   };
 
-  const getCompanyName = (logo: string) => {
-    if (logo.includes('jane-street')) return 'Jane Street';
-    if (logo.includes('citadel')) return 'Citadel';
-    if (logo.includes('driv')) return 'Driv';
-    if (logo.includes('company')) return 'Top Firm';
-    return 'Company';
-  };
 
   // Filter all problems first
   const filteredProblems = allProblems.filter(problem => {
@@ -126,8 +147,16 @@ const Problems = () => {
       (selectedStatus === "Solved" && problem.completed) ||
       (selectedStatus === "Unsolved" && !problem.completed) ||
       (selectedStatus === "Bookmarked" && problem.bookmarked);
-    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
+    const matchesCompany = !selectedCompany || problem.askedIn.includes(selectedCompany);
+    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus && matchesCompany;
   });
+
+  const companyStats = COMPANIES.map((company) => ({
+    ...company,
+    count: allProblems.filter((p) => p.askedIn.includes(company.name)).length,
+  })).filter((company) =>
+    company.name.toLowerCase().includes(companySearch.toLowerCase())
+  );
 
   // Get problems for current page
   const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
@@ -197,6 +226,8 @@ const Problems = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col xl:flex-row gap-6 xl:items-start">
+          <div className="flex-1 min-w-0 w-full">
 
         {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -255,11 +286,11 @@ const Problems = () => {
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 p-4 border-b border-border bg-muted/50">
             <div className="col-span-1 text-sm font-medium text-foreground uppercase tracking-wide">#</div>
-            <div className="col-span-3 md:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
+            <div className="col-span-3 md:col-span-3 xl:col-span-4 text-sm font-medium text-foreground uppercase tracking-wide">TITLE</div>
             <div className="hidden md:block md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide">TOPIC</div>
             <div className="col-span-2 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">DIFFICULTY</div>
-            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
-            <div className="col-span-3 md:col-span-2 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
+            <div className="col-span-3 md:col-span-2 xl:hidden text-sm font-medium text-foreground uppercase tracking-wide text-center">ASKED IN</div>
+            <div className="col-span-3 md:col-span-2 xl:col-span-3 text-sm font-medium text-foreground uppercase tracking-wide text-center">STATUS</div>
           </div>
           
           {/* Table Body */}
@@ -274,7 +305,7 @@ const Problems = () => {
                   <div className="col-span-1 flex items-center">
                     <span className="text-muted-foreground">{problem.id}</span>
                   </div>
-                  <div className="col-span-3 md:col-span-3 flex items-center gap-2">
+                  <div className="col-span-3 md:col-span-3 xl:col-span-4 flex items-center gap-2">
                     {problem.id === 60 && (
                       <Lock className="h-4 w-4 text-amber-500 flex-shrink-0" />
                     )}
@@ -301,19 +332,38 @@ const Problems = () => {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center">
+                  <div className="col-span-3 md:col-span-2 xl:hidden flex items-center justify-center">
                     <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
-                      {problem.askedIn.map((logo, index) => (
-                        <LogoWithSkeleton
-                          key={index}
-                          src={logo}
-                          alt="Company logo"
-                          companyName={getCompanyName(logo)}
-                        />
-                      ))}
+                      <TooltipProvider delayDuration={0}>
+                        {problem.askedIn.map((name) => {
+                          const company = COMPANIES.find((c) => c.name === name);
+                          if (company?.logo) {
+                            return (
+                              <LogoWithSkeleton
+                                key={name}
+                                src={company.logo}
+                                alt={name}
+                                companyName={name}
+                              />
+                            );
+                          }
+                          return (
+                            <Tooltip key={name}>
+                              <TooltipTrigger asChild>
+                                <div className="w-8 h-8 rounded-full bg-muted border border-border flex items-center justify-center text-[10px] font-semibold text-muted-foreground cursor-default">
+                                  {getInitials(name)}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" align="center">
+                                <p>{name}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          );
+                        })}
+                      </TooltipProvider>
                     </div>
                   </div>
-                  <div className="col-span-3 md:col-span-2 flex items-center justify-center gap-2">
+                  <div className="col-span-3 md:col-span-2 xl:col-span-3 flex items-center justify-center gap-2">
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -379,6 +429,55 @@ const Problems = () => {
               </PaginationItem>
             </PaginationContent>
           </Pagination>
+        </div>
+          </div>
+
+          {/* Companies sidebar - large screens only */}
+          <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
+            <div className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold text-foreground">Companies</h2>
+                <div className="flex gap-1.5">
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies up" onClick={() => scrollCompanies(-1)}>
+                    <ChevronUp className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies down" onClick={() => scrollCompanies(1)}>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="relative mb-3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  value={companySearch}
+                  onChange={(e) => setCompanySearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <div ref={companiesRef} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
+                {companyStats.length === 0 && (
+                  <p className="text-sm text-muted-foreground">No companies found</p>
+                )}
+                {companyStats.map((company) => (
+                  <button
+                    key={company.name}
+                    onClick={() => setSelectedCompany(selectedCompany === company.name ? null : company.name)}
+                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                      selectedCompany === company.name
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border hover:bg-muted/50"
+                    }`}
+                  >
+                    {company.name}
+                    <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
+                      {company.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
 
