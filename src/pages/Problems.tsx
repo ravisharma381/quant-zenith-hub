@@ -154,6 +154,8 @@ const Problems = () => {
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
 
+  const visibleCompanies = showAllCompanies ? companyStats : companyStats.slice(0, 9);
+
   // Get problems for current page
   const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
   const currentProblems = filteredProblems.slice(startIndex, startIndex + PROBLEMS_PER_PAGE);
@@ -469,7 +471,6 @@ const Problems = () => {
                   </button>
                 ))}
               </div>
-              {(showAllCompanies ? companyStats.length : companyStats.length > 9) && null}
               {companyStats.length > 9 && (
                 <button
                   onClick={() => setShowAllCompanies(!showAllCompanies)}
