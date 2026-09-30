@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -58,11 +58,7 @@ const Problems = () => {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [companySearch, setCompanySearch] = useState("");
-  const companiesRef = useRef<HTMLDivElement>(null);
-
-  const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
-  };
+  const [showAllCompanies, setShowAllCompanies] = useState(false);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
