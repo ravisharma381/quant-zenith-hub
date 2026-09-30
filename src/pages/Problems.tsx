@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -58,11 +58,7 @@ const Problems = () => {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [companySearch, setCompanySearch] = useState("");
-  const companiesRef = useRef<HTMLDivElement>(null);
-
-  const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
-  };
+  const [showAllCompanies, setShowAllCompanies] = useState(false);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -157,6 +153,8 @@ const Problems = () => {
   })).filter((company) =>
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
+
+  const visibleCompanies = showAllCompanies ? companyStats : companyStats.slice(0, 9);
 
   // Get problems for current page
   const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
@@ -435,17 +433,7 @@ const Problems = () => {
           {/* Companies sidebar - large screens only */}
           <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-foreground">Companies</h2>
-                <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies up" onClick={() => scrollCompanies(-1)}>
-                    <ChevronUp className="h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies down" onClick={() => scrollCompanies(1)}>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              <h2 className="text-lg font-semibold text-foreground mb-3">Companies</h2>
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -455,27 +443,43 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div ref={companiesRef} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
-                {companyStats.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No companies found</p>
-                )}
-                {companyStats.map((company) => (
+              <div className="flex flex-wrap gap-2 pr-1">
+                <button
+                  onClick={() => setSelectedCompany(null)}
+                  className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                    selectedCompany === null
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:bg-muted/50"
+                  }`}
+                >
+                  All
+                </button>
+                {visibleCompanies.map((company) => (
                   <button
                     key={company.name}
                     onClick={() => setSelectedCompany(selectedCompany === company.name ? null : company.name)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                    className={`relative inline-flex items-center rounded-full border px-3 py-1.5 text-sm transition-colors ${
                       selectedCompany === company.name
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border hover:bg-muted/50"
                     }`}
                   >
                     {company.name}
-                    <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
+                    <span className="absolute -top-2 -right-1.5 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-semibold px-1.5 py-0.5">
                       {company.count}
                     </span>
                   </button>
                 ))}
               </div>
+              {companyStats.length > 9 && (
+                <button
+                  onClick={() => setShowAllCompanies(!showAllCompanies)}
+                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                >
+                  {showAllCompanies ? "Show less" : `Show ${companyStats.length - 9} more`}
+                  {showAllCompanies ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                </button>
+              )}
             </div>
           </aside>
         </div>
