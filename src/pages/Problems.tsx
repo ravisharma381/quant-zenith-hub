@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle, Bookmark } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark, Search, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,27 @@ import LogoWithSkeleton from "@/components/LogoWithSkeleton";
 import janeStreetLogo from "@/assets/jane-street-logo.png";
 import citadelLogo from "@/assets/citadel-logo.png";
 import drivLogo from "@/assets/driv-logo.png";
-import companyLogo from "@/assets/company-logo.png";
+
+const COMPANIES = [
+  { name: "SIG" },
+  { name: "Jane Street", logo: janeStreetLogo },
+  { name: "Citadel", logo: citadelLogo },
+  { name: "Goldman Sachs" },
+  { name: "Five Rings" },
+  { name: "Akuna" },
+  { name: "WorldQuant" },
+  { name: "DRW", logo: drivLogo },
+  { name: "IMC" },
+  { name: "Virtu Financial" },
+];
+
+const getInitials = (name: string) =>
+  name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
 const Problems = () => {
   const navigate = useNavigate();
@@ -36,6 +56,13 @@ const Problems = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [companySearch, setCompanySearch] = useState("");
+  const companiesRef = useRef<HTMLDivElement>(null);
+
+  const scrollCompanies = (direction: number) => {
+    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
+  };
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -44,7 +71,6 @@ const Problems = () => {
   // Generate 1200 problems (60 pages × 20 problems each)
   const allProblems = Array.from({ length: TOTAL_PAGES * PROBLEMS_PER_PAGE }, (_, i) => {
     const topics = ["Derivatives", "Risk Management", "Statistics", "Quantitative Methods", "Asset Pricing", "Fixed Income"];
-    const logos = [janeStreetLogo, citadelLogo, drivLogo, companyLogo];
     const problemTitles = [
       "Black-Scholes Options Pricing",
       "Portfolio Risk Calculation",
@@ -77,7 +103,9 @@ const Problems = () => {
       title: problemTitles[i % problemTitles.length],
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
-      askedIn: logos.slice(0, (i % 3) + 1),
+      askedIn: Array.from(new Set([(i * 3) % 10, (i * 7 + 4) % 10, (i * 11 + 7) % 10].slice(0, (i % 3) + 1))).map(
+        (idx) => COMPANIES[idx].name
+      ),
       completed: isCompleted,
       bookmarked: isBookmarked
     };
@@ -108,13 +136,6 @@ const Problems = () => {
     return colors[topic.length % colors.length];
   };
 
-  const getCompanyName = (logo: string) => {
-    if (logo.includes('jane-street')) return 'Jane Street';
-    if (logo.includes('citadel')) return 'Citadel';
-    if (logo.includes('driv')) return 'Driv';
-    if (logo.includes('company')) return 'Top Firm';
-    return 'Company';
-  };
 
   // Filter all problems first
   const filteredProblems = allProblems.filter(problem => {
@@ -126,8 +147,16 @@ const Problems = () => {
       (selectedStatus === "Solved" && problem.completed) ||
       (selectedStatus === "Unsolved" && !problem.completed) ||
       (selectedStatus === "Bookmarked" && problem.bookmarked);
-    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus;
+    const matchesCompany = !selectedCompany || problem.askedIn.includes(selectedCompany);
+    return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus && matchesCompany;
   });
+
+  const companyStats = COMPANIES.map((company) => ({
+    ...company,
+    count: allProblems.filter((p) => p.askedIn.includes(company.name)).length,
+  })).filter((company) =>
+    company.name.toLowerCase().includes(companySearch.toLowerCase())
+  );
 
   // Get problems for current page
   const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
