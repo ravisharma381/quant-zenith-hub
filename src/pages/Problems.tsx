@@ -454,7 +454,7 @@ const Problems = () => {
                 >
                   All
                 </button>
-                {companyStats.map((company) => (
+                {visibleCompanies.map((company) => (
                   <button
                     key={company.name}
                     onClick={() => setSelectedCompany(selectedCompany === company.name ? null : company.name)}
