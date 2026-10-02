@@ -99,6 +99,7 @@ const Problems = () => {
   const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
   const [companyPage, setCompanyPage] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
