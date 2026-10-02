@@ -54,7 +54,7 @@ const Navigation = () => {
               >
                 {item.name}
                 {item.name === "Problems" && (
-                  <span className="ml-1.5 inline-flex items-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-foreground align-middle">
+                  <span className="absolute -top-2 left-full -ml-2 inline-flex items-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-foreground whitespace-nowrap">
                     16 new
                   </span>
                 )}
