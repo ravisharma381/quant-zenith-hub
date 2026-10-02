@@ -65,8 +65,8 @@ const Problems = () => {
   const updateScrollArrows = () => {
     const el = companiesRef.current;
     if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    setCanScrollLeft(el.scrollTop > 0);
+    setCanScrollRight(el.scrollTop + el.clientHeight < el.scrollHeight - 1);
   };
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const Problems = () => {
   });
 
   const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ left: direction * 240, behavior: "smooth" });
+    companiesRef.current?.scrollBy({ top: direction * 240, behavior: "smooth" });
   };
 
   const TOTAL_PAGES = 60;
@@ -471,7 +471,7 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div ref={companiesRef} onScroll={updateScrollArrows} className="notes-scrollbar flex flex-nowrap gap-2 overflow-x-auto max-w-full pr-1">
+              <div ref={companiesRef} onScroll={updateScrollArrows} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
                 {companyStats.length === 0 && (
                   <p className="text-sm text-muted-foreground">No companies found</p>
                 )}
