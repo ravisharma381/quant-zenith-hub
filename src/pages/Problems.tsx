@@ -506,36 +506,33 @@ const Problems = () => {
               )}
               <div className="overflow-hidden">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${activeCompanyPage * 100}%)` }}
+                  key={activeCompanyPage}
+                  className="flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1 company-slide"
+                  style={{ ["--slide-from" as string]: slideDirection > 0 ? "100%" : "-100%" }}
                 >
-                  {companyPages.map((pageCompanies, pageIdx) => (
-                    <div key={pageIdx} className="w-full shrink-0 flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1">
-                      {pageCompanies.map((company) => (
-                        <button
-                          key={company.name}
-                          onClick={() => setSelectedCompany(
-                            company.name === "All Firms" || selectedCompany === company.name
-                              ? "All Firms"
-                              : company.name
-                          )}
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm transition-colors ${
-                            selectedCompany === company.name
-                              ? "border-white bg-white text-black"
-                              : "border-border hover:bg-muted/50"
-                          }`}
-                        >
-                          <span className="truncate">{company.name}</span>
-                          <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-1.5 py-0.5 ${
-                            selectedCompany === company.name
-                              ? "bg-black text-white"
-                              : "bg-muted text-muted-foreground"
-                          }`}>
-                            {company.count}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
+                  {companyPages[activeCompanyPage]?.map((company) => (
+                    <button
+                      key={company.name}
+                      onClick={() => setSelectedCompany(
+                        company.name === "All Firms" || selectedCompany === company.name
+                          ? "All Firms"
+                          : company.name
+                      )}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm transition-colors ${
+                        selectedCompany === company.name
+                          ? "border-white bg-white text-black"
+                          : "border-border hover:bg-muted/50"
+                      }`}
+                    >
+                      <span className="truncate">{company.name}</span>
+                      <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-1.5 py-0.5 ${
+                        selectedCompany === company.name
+                          ? "bg-black text-white"
+                          : "bg-muted text-muted-foreground"
+                      }`}>
+                        {company.count}
+                      </span>
+                    </button>
                   ))}
                 </div>
               </div>
