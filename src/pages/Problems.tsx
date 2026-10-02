@@ -505,7 +505,7 @@ const Problems = () => {
               {companyStats.length === 0 && (
                 <p className="text-sm text-muted-foreground">No companies found</p>
               )}
-              <div className="overflow-hidden">
+              <div className="overflow-hidden h-[360px]">
                 <div
                   key={activeCompanyPage}
                   className="flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1 company-slide"
