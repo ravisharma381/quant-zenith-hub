@@ -198,11 +198,10 @@ const Problems = () => {
   );
 
   const COMPANIES_PER_PAGE = 12;
-  const companyPages = companyStats.reduce<(typeof companyStats)[number][]>((acc, company, idx) => {
-    if (idx % COMPANIES_PER_PAGE === 0) acc.push([]);
-    acc[acc.length - 1].push(company);
-    return acc;
-  }, []);
+  const companyPages: (typeof companyStats)[] = [];
+  for (let i = 0; i < companyStats.length; i += COMPANIES_PER_PAGE) {
+    companyPages.push(companyStats.slice(i, i + COMPANIES_PER_PAGE));
+  }
   const activeCompanyPage = Math.min(companyPage, companyPages.length - 1);
 
   // Get problems for current page
