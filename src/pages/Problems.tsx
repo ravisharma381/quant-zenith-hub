@@ -526,7 +526,7 @@ const Problems = () => {
                           }`}
                         >
                           <span className="truncate">{company.name}</span>
-                          <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5 ${
+                          <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-1.5 py-0.5 ${
                             selectedCompany === company.name
                               ? "bg-black text-white"
                               : "bg-muted text-muted-foreground"
