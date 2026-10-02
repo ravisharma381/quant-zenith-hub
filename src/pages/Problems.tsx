@@ -499,7 +499,7 @@ const Problems = () => {
                   placeholder="Search..."
                   value={companySearch}
                   onChange={(e) => setCompanySearch(e.target.value)}
-                  className="pl-9 h-8"
+                  className="pl-9 h-8 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
               {companyStats.length === 0 && (
