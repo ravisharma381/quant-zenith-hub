@@ -46,13 +46,18 @@ const Navigation = () => {
                 key={item.name}
                 to={item.path}
                 className={cn(
-                  "text-base font-medium transition-colors hover:text-primary",
+                  "relative text-base font-medium transition-colors hover:text-primary",
                   isActive(item.path)
                     ? "text-primary"
                     : "text-muted-foreground"
                 )}
               >
                 {item.name}
+                {item.name === "Problems" && (
+                  <span className="ml-1.5 inline-flex items-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-foreground align-middle">
+                    16 new
+                  </span>
+                )}
               </Link>
             ))}
             
