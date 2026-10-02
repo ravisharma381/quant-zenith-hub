@@ -155,7 +155,7 @@ const Problems = () => {
       title: problemTitles[i % problemTitles.length],
       difficulty: (i % 10) + 1,
       topic: topics[i % topics.length],
-      askedIn: Array.from(new Set([(i * 3) % 10, (i * 7 + 4) % 10, (i * 11 + 7) % 10].slice(0, (i % 3) + 1))).map(
+      askedIn: Array.from(new Set([(i * 3) % 50, (i * 7 + 4) % 50, (i * 11 + 7) % 50].slice(0, (i % 3) + 1))).map(
         (idx) => COMPANIES[idx].name
       ),
       completed: isCompleted,
