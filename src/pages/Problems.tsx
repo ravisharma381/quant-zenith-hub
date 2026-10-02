@@ -510,7 +510,7 @@ const Problems = () => {
                   style={{ transform: `translateX(-${activeCompanyPage * 100}%)` }}
                 >
                   {companyPages.map((pageCompanies, pageIdx) => (
-                    <div key={pageIdx} className="w-full shrink-0 flex flex-wrap gap-x-2 gap-y-2 content-start pr-1">
+                    <div key={pageIdx} className="w-full shrink-0 flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1">
                       {pageCompanies.map((company) => (
                         <button
                           key={company.name}
@@ -519,7 +519,7 @@ const Problems = () => {
                               ? "All Firms"
                               : company.name
                           )}
-                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm transition-colors ${
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm transition-colors ${
                             selectedCompany === company.name
                               ? "border-white bg-white text-black"
                               : "border-border hover:bg-muted/50"
