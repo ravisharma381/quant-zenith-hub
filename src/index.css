@@ -155,21 +155,6 @@
     scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
   }
 
-  /* Companies panel page swipe */
-  @keyframes company-slide {
-    from {
-      transform: translateX(var(--slide-from, 100%));
-      opacity: 0.6;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  .company-slide {
-    animation: company-slide 0.35s ease-out;
-  }
 
 
 
