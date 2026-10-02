@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -98,24 +98,7 @@ const Problems = () => {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const companiesRef = useRef<HTMLDivElement>(null);
-
-  const updateScrollArrows = () => {
-    const el = companiesRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollTop > 0);
-    setCanScrollRight(el.scrollTop + el.clientHeight < el.scrollHeight - 1);
-  };
-
-  useEffect(() => {
-    updateScrollArrows();
-  });
-
-  const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ top: direction * 240, behavior: "smooth" });
-  };
+  const [companyPage, setCompanyPage] = useState(0);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -213,6 +196,13 @@ const Problems = () => {
   ].filter((company) =>
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
+
+  const COMPANIES_PER_PAGE = 12;
+  const companyPages: (typeof companyStats)[] = [];
+  for (let i = 0; i < companyStats.length; i += COMPANIES_PER_PAGE) {
+    companyPages.push(companyStats.slice(i, i + COMPANIES_PER_PAGE));
+  }
+  const activeCompanyPage = Math.min(companyPage, companyPages.length - 1);
 
   // Get problems for current page
   const startIndex = (currentPage - 1) * PROBLEMS_PER_PAGE;
@@ -494,10 +484,10 @@ const Problems = () => {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
                 <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies left" disabled={!canScrollLeft} onClick={() => scrollCompanies(-1)}>
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => setCompanyPage((p) => Math.max(0, p - 1))}>
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies right" disabled={!canScrollRight} onClick={() => scrollCompanies(1)}>
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1))}>
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -511,34 +501,45 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div ref={companiesRef} onScroll={updateScrollArrows} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
-                {companyStats.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No companies found</p>
-                )}
-                {companyStats.map((company) => (
-                  <button
-                    key={company.name}
-                    onClick={() => setSelectedCompany(
-                      company.name === "All Firms" || selectedCompany === company.name
-                        ? "All Firms"
-                        : company.name
-                    )}
-                    className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                      selectedCompany === company.name
-                        ? "border-white bg-white text-black"
-                        : "border-border hover:bg-muted/50"
-                    }`}
-                  >
-                    {company.name}
-                    <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5 ${
-                      selectedCompany === company.name
-                        ? "bg-black text-white"
-                        : "bg-muted text-muted-foreground"
-                    }`}>
-                      {company.count}
-                    </span>
-                  </button>
-                ))}
+              {companyStats.length === 0 && (
+                <p className="text-sm text-muted-foreground">No companies found</p>
+              )}
+              <div className="overflow-hidden">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${activeCompanyPage * 100}%)` }}
+                >
+                  {companyPages.map((pageCompanies, pageIdx) => (
+                    <div key={pageIdx} className="w-full shrink-0 grid grid-cols-2 gap-2 content-start pr-1">
+                      {pageCompanies.map((company) => (
+                        <button
+                          key={company.name}
+                          onClick={() => setSelectedCompany(
+                            company.name === "All Firms" || selectedCompany === company.name
+                              ? "All Firms"
+                              : company.name
+                          )}
+                          className={`inline-flex items-center justify-between gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                            company.name === "All Firms" ? "col-span-2" : ""
+                          } ${
+                            selectedCompany === company.name
+                              ? "border-white bg-white text-black"
+                              : "border-border hover:bg-muted/50"
+                          }`}
+                        >
+                          <span className="truncate">{company.name}</span>
+                          <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5 ${
+                            selectedCompany === company.name
+                              ? "bg-black text-white"
+                              : "bg-muted text-muted-foreground"
+                          }`}>
+                            {company.count}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
