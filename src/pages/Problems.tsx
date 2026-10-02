@@ -99,6 +99,7 @@ const Problems = () => {
   const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
   const [companyPage, setCompanyPage] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -197,7 +198,7 @@ const Problems = () => {
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
 
-  const COMPANIES_PER_PAGE = 12;
+  const COMPANIES_PER_PAGE = 10;
   const companyPages: (typeof companyStats)[] = [];
   for (let i = 0; i < companyStats.length; i += COMPANIES_PER_PAGE) {
     companyPages.push(companyStats.slice(i, i + COMPANIES_PER_PAGE));
@@ -479,26 +480,26 @@ const Problems = () => {
           </div>
 
           {/* Companies sidebar - large screens only */}
-          <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
-            <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
+          <aside className="hidden xl:block w-72 shrink-0 self-start xl:sticky xl:top-20">
+            <div className="bg-card border border-border rounded-xl p-3 h-fit">
+              <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
-                <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => setCompanyPage((p) => Math.max(0, p - 1))}>
-                    <ChevronLeft className="h-4 w-4" />
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => { setSlideDirection(-1); setCompanyPage((p) => Math.max(0, p - 1)); }}>
+                    <ChevronLeft className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1))}>
-                    <ChevronRight className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => { setSlideDirection(1); setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1)); }}>
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
-              <div className="relative mb-3">
+              <div className="relative mb-2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search..."
                   value={companySearch}
                   onChange={(e) => setCompanySearch(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 h-8"
                 />
               </div>
               {companyStats.length === 0 && (
@@ -506,36 +507,33 @@ const Problems = () => {
               )}
               <div className="overflow-hidden">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${activeCompanyPage * 100}%)` }}
+                  key={activeCompanyPage}
+                  className="flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1 company-slide"
+                  style={{ ["--slide-from" as string]: slideDirection > 0 ? "100%" : "-100%" }}
                 >
-                  {companyPages.map((pageCompanies, pageIdx) => (
-                    <div key={pageIdx} className="w-full shrink-0 flex flex-wrap gap-2 content-start pr-1">
-                      {pageCompanies.map((company) => (
-                        <button
-                          key={company.name}
-                          onClick={() => setSelectedCompany(
-                            company.name === "All Firms" || selectedCompany === company.name
-                              ? "All Firms"
-                              : company.name
-                          )}
-                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                            selectedCompany === company.name
-                              ? "border-white bg-white text-black"
-                              : "border-border hover:bg-muted/50"
-                          }`}
-                        >
-                          <span className="truncate">{company.name}</span>
-                          <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5 ${
-                            selectedCompany === company.name
-                              ? "bg-black text-white"
-                              : "bg-muted text-muted-foreground"
-                          }`}>
-                            {company.count}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
+                  {companyPages[activeCompanyPage]?.map((company) => (
+                    <button
+                      key={company.name}
+                      onClick={() => setSelectedCompany(
+                        company.name === "All Firms" || selectedCompany === company.name
+                          ? "All Firms"
+                          : company.name
+                      )}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm transition-colors ${
+                        selectedCompany === company.name
+                          ? "border-white bg-white text-black"
+                          : "border-border hover:bg-muted/50"
+                      }`}
+                    >
+                      <span className="truncate">{company.name}</span>
+                      <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-1.5 py-0.5 ${
+                        selectedCompany === company.name
+                          ? "bg-black text-white"
+                          : "bg-muted text-muted-foreground"
+                      }`}>
+                        {company.count}
+                      </span>
+                    </button>
                   ))}
                 </div>
               </div>
