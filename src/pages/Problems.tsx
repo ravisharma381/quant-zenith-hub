@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Lock, CheckCircle, Circle, Bookmark, Search, ChevronUp, ChevronDown } from "lucide-react";
+import { Lock, CheckCircle, Circle, Bookmark, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -56,12 +56,25 @@ const Problems = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
   const companiesRef = useRef<HTMLDivElement>(null);
 
+  const updateScrollArrows = () => {
+    const el = companiesRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  useEffect(() => {
+    updateScrollArrows();
+  });
+
   const scrollCompanies = (direction: number) => {
-    companiesRef.current?.scrollBy({ top: direction * 120, behavior: "smooth" });
+    companiesRef.current?.scrollBy({ left: direction * 240, behavior: "smooth" });
   };
 
   const TOTAL_PAGES = 60;
@@ -147,14 +160,17 @@ const Problems = () => {
       (selectedStatus === "Solved" && problem.completed) ||
       (selectedStatus === "Unsolved" && !problem.completed) ||
       (selectedStatus === "Bookmarked" && problem.bookmarked);
-    const matchesCompany = !selectedCompany || problem.askedIn.includes(selectedCompany);
+    const matchesCompany = !selectedCompany || selectedCompany === "All Firms" || problem.askedIn.includes(selectedCompany);
     return matchesSearch && matchesTopic && matchesDifficulty && matchesStatus && matchesCompany;
   });
 
-  const companyStats = COMPANIES.map((company) => ({
-    ...company,
-    count: allProblems.filter((p) => p.askedIn.includes(company.name)).length,
-  })).filter((company) =>
+  const companyStats = [
+    { name: "All Firms", count: allProblems.length },
+    ...COMPANIES.map((company) => ({
+      ...company,
+      count: allProblems.filter((p) => p.askedIn.includes(company.name)).length,
+    })),
+  ].filter((company) =>
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
 
@@ -438,11 +454,11 @@ const Problems = () => {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
                 <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies up" onClick={() => scrollCompanies(-1)}>
-                    <ChevronUp className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies left" disabled={!canScrollLeft} onClick={() => scrollCompanies(-1)}>
+                    <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies down" onClick={() => scrollCompanies(1)}>
-                    <ChevronDown className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Scroll companies right" disabled={!canScrollRight} onClick={() => scrollCompanies(1)}>
+                    <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -455,22 +471,30 @@ const Problems = () => {
                   className="pl-9"
                 />
               </div>
-              <div ref={companiesRef} className="notes-scrollbar flex flex-wrap gap-2 overflow-y-auto max-h-[420px] pr-1">
+              <div ref={companiesRef} onScroll={updateScrollArrows} className="notes-scrollbar flex flex-nowrap gap-2 overflow-x-auto max-w-full pr-1">
                 {companyStats.length === 0 && (
                   <p className="text-sm text-muted-foreground">No companies found</p>
                 )}
                 {companyStats.map((company) => (
                   <button
                     key={company.name}
-                    onClick={() => setSelectedCompany(selectedCompany === company.name ? null : company.name)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                    onClick={() => setSelectedCompany(
+                      company.name === "All Firms" || selectedCompany === company.name
+                        ? "All Firms"
+                        : company.name
+                    )}
+                    className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-3 py-1.5 text-sm transition-colors ${
                       selectedCompany === company.name
-                        ? "border-primary bg-primary/10 text-primary"
+                        ? "border-white bg-white text-black"
                         : "border-border hover:bg-muted/50"
                     }`}
                   >
                     {company.name}
-                    <span className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5">
+                    <span className={`inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5 ${
+                      selectedCompany === company.name
+                        ? "bg-black text-white"
+                        : "bg-muted text-muted-foreground"
+                    }`}>
                       {company.count}
                     </span>
                   </button>
