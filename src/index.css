@@ -191,3 +191,9 @@
     }
   }
 }
+/* Companies panel search: keep border unchanged on focus (no green ring) */
+.company-search-input:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+  border-color: hsl(var(--input)) !important;
+}
