@@ -77,6 +77,7 @@ const COMPANIES = [
   { name: "Pinnacle Alpha" },
   { name: "Quarry Capital" },
   { name: "Redwood Markets" },
+  { name: "Juniper Capital" },
 ];
 
 const getInitials = (name: string) =>
