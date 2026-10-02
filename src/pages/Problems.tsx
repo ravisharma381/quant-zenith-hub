@@ -197,7 +197,7 @@ const Problems = () => {
     company.name.toLowerCase().includes(companySearch.toLowerCase())
   );
 
-  const COMPANIES_PER_PAGE = 12;
+  const COMPANIES_PER_PAGE = 10;
   const companyPages: (typeof companyStats)[] = [];
   for (let i = 0; i < companyStats.length; i += COMPANIES_PER_PAGE) {
     companyPages.push(companyStats.slice(i, i + COMPANIES_PER_PAGE));
