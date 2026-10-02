@@ -99,7 +99,6 @@ const Problems = () => {
   const [selectedCompany, setSelectedCompany] = useState<string>("All Firms");
   const [companySearch, setCompanySearch] = useState("");
   const [companyPage, setCompanyPage] = useState(0);
-  const [slideDirection, setSlideDirection] = useState(1);
 
   const TOTAL_PAGES = 60;
   const PROBLEMS_PER_PAGE = 20;
@@ -485,10 +484,10 @@ const Problems = () => {
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
                 <div className="flex gap-1">
-                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => { setSlideDirection(-1); setCompanyPage((p) => Math.max(0, p - 1)); }}>
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => setCompanyPage((p) => Math.max(0, p - 1))}>
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => { setSlideDirection(1); setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1)); }}>
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1))}>
                     <ChevronRight className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -508,8 +507,7 @@ const Problems = () => {
               <div className="overflow-hidden h-[274px]">
                 <div
                   key={activeCompanyPage}
-                  className="flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1 company-slide"
-                  style={{ ["--slide-from" as string]: slideDirection > 0 ? "100%" : "-100%" }}
+                  className="flex flex-wrap gap-x-1.5 gap-y-1.5 content-start pr-1"
                 >
                   {companyPages[activeCompanyPage]?.map((company) => (
                     <button
