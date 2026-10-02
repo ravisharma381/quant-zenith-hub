@@ -515,6 +515,7 @@ const Problems = () => {
                       {pageCompanies.map((company) => (
                         <button
                           key={company.name}
+                          className={``}
                           onClick={() => setSelectedCompany(
                             company.name === "All Firms" || selectedCompany === company.name
                               ? "All Firms"
