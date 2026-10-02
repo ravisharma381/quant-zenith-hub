@@ -515,13 +515,14 @@ const Problems = () => {
                       {pageCompanies.map((company) => (
                         <button
                           key={company.name}
-                          className={``}
                           onClick={() => setSelectedCompany(
                             company.name === "All Firms" || selectedCompany === company.name
                               ? "All Firms"
                               : company.name
                           )}
                           className={`inline-flex items-center justify-between gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                            company.name === "All Firms" ? "col-span-2" : ""
+                          } ${
                             selectedCompany === company.name
                               ? "border-white bg-white text-black"
                               : "border-border hover:bg-muted/50"
