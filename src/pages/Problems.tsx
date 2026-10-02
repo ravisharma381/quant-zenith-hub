@@ -479,8 +479,8 @@ const Problems = () => {
           </div>
 
           {/* Companies sidebar - large screens only */}
-          <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
-            <div className="bg-card border border-border rounded-xl p-3">
+          <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20 xl:self-start">
+            <div className="bg-card border border-border rounded-xl p-3 h-fit">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
                 <div className="flex gap-1">
