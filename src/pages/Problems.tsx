@@ -480,25 +480,25 @@ const Problems = () => {
 
           {/* Companies sidebar - large screens only */}
           <aside className="hidden xl:block w-72 shrink-0 xl:sticky xl:top-20">
-            <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
+            <div className="bg-card border border-border rounded-xl p-3">
+              <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold text-foreground">Companies</h2>
-                <div className="flex gap-1.5">
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => setCompanyPage((p) => Math.max(0, p - 1))}>
-                    <ChevronLeft className="h-4 w-4" />
+                <div className="flex gap-1">
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Previous companies" disabled={activeCompanyPage === 0} onClick={() => setCompanyPage((p) => Math.max(0, p - 1))}>
+                    <ChevronLeft className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1))}>
-                    <ChevronRight className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-7 w-7 rounded-full" aria-label="Next companies" disabled={activeCompanyPage >= companyPages.length - 1} onClick={() => setCompanyPage((p) => Math.min(companyPages.length - 1, p + 1))}>
+                    <ChevronRight className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
-              <div className="relative mb-3">
+              <div className="relative mb-2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search..."
                   value={companySearch}
                   onChange={(e) => setCompanySearch(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 h-8"
                 />
               </div>
               {companyStats.length === 0 && (
