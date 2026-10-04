@@ -63,7 +63,6 @@ interface ProblemDoc {
   isPrivate: boolean;
   level?: string;
 }
-const topics = ["All", "probability", "brainteasers", "combinatorics"];
 const difficulties = ["All", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"];
 const statuses = [
   "All",
@@ -145,6 +144,28 @@ const Problems: React.FC = () => {
     return !isSubscribed && page > SHOW_FREE_PAGES;
   }
 
+  const topicSelectOptions = React.useMemo(() => {
+    const unique = new Set<string>();
+    allProblems.forEach((p) => {
+      if (typeof p.topic === "string" && p.topic.trim()) {
+        unique.add(p.topic.trim());
+      }
+    });
+
+    const sorted = Array.from(unique).sort((a, b) => a.localeCompare(b));
+    const options = ["All", ...sorted];
+
+    if (selectedTopic !== "All" && !options.includes(selectedTopic)) {
+      return ["All", ...sorted, selectedTopic].sort((a, b) => {
+        if (a === "All") return -1;
+        if (b === "All") return 1;
+        return a.localeCompare(b);
+      });
+    }
+
+    return options;
+  }, [allProblems, selectedTopic]);
+
   const buildBaseConstraints = () => {
     const c: any[] = [
       where("courseId", "==", PROBLEMS_COURSE_ID),
@@ -158,10 +179,6 @@ const Problems: React.FC = () => {
         where("normalizedTitle", "<=", term + "\uf8ff"),
         // orderBy("normalizedTitle")
       );
-    }
-
-    if (selectedTopic !== "All") {
-      c.push(where("topic", "==", selectedTopic));
     }
 
     if (selectedDifficulty !== "All") {
@@ -178,27 +195,27 @@ const Problems: React.FC = () => {
 
 
   const filteredProblems = React.useMemo(() => {
-    if (selectedStatus === "All") {
-      return allProblems;
-    }
+    const list =
+      selectedTopic === "All"
+        ? allProblems
+        : allProblems.filter((p) => p.topic === selectedTopic);
 
     if (selectedStatus === "Solved") {
-      return allProblems.filter((p) =>
-        completedSet.has(p.id)
-      );
+      return list.filter((p) => completedSet.has(p.id));
     }
 
     if (selectedStatus === "Bookmarked") {
-      return allProblems.filter((p) =>
-        bookmarkedSet.has(p.id)
-      );
+      return list.filter((p) => bookmarkedSet.has(p.id));
     }
 
-    return allProblems.filter(
-      (p) => !completedSet.has(p.id)
-    );
+    if (selectedStatus === "Unsolved") {
+      return list.filter((p) => !completedSet.has(p.id));
+    }
+
+    return list;
   }, [
     allProblems,
+    selectedTopic,
     completedSet,
     bookmarkedSet,
     selectedStatus,
@@ -270,7 +287,6 @@ const Problems: React.FC = () => {
     loadProblems();
   }, [
     searchTerm,
-    selectedTopic,
     selectedDifficulty,
   ]);
 
@@ -453,9 +469,9 @@ const Problems: React.FC = () => {
           {/* Filters row: uses flex-wrap, fits in one row on normal screens, wraps on small screens */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div >
-              <label className="block text-sm font-medium text-foreground mb-2">Search</label>
+              <label className="block text-sm font-medium text-foreground mb-2 select-none">Search</label>
               <Input
-                className="w-full"
+                className="w-full focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                 placeholder="Search"
                 value={searchInput}
                 onChange={(e) => { setSearchInput(e.target.value); }}
@@ -463,19 +479,27 @@ const Problems: React.FC = () => {
             </div>
 
             <div className="">
-              <label className="block text-sm font-medium text-foreground mb-2">Topic</label>
-              <Select value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); }}>
-                <SelectTrigger><SelectValue placeholder="Select a topic" /></SelectTrigger>
+              <label className="block text-sm font-medium text-foreground mb-2 select-none">Topic</label>
+              <Select
+                value={selectedTopic} onValueChange={(v) => { setSelectedTopic(v); }}>
+                <SelectTrigger
+                  className="focus:outline-none focus:ring-0 focus:ring-offset-0 select-none">
+                  <SelectValue placeholder="Select a topic" />
+                </SelectTrigger>
                 <SelectContent>
-                  {topics.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                  {topicSelectOptions.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="">
-              <label className="block text-sm font-medium text-foreground mb-2">Difficulty</label>
+              <label className="block text-sm font-medium text-foreground mb-2 select-none">Difficulty</label>
               <Select value={selectedDifficulty} onValueChange={(v) => { setSelectedDifficulty(v); }}>
-                <SelectTrigger><SelectValue placeholder="Select difficulty" /></SelectTrigger>
+                <SelectTrigger
+                  className="focus:outline-none focus:ring-0 focus:ring-offset-0 select-none"
+                >
+                  <SelectValue placeholder="Select difficulty" />
+                </SelectTrigger>
                 <SelectContent>
                   {difficulties.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                 </SelectContent>
@@ -483,7 +507,7 @@ const Problems: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2 select-none">
                 Status
               </label>
 
@@ -492,7 +516,7 @@ const Problems: React.FC = () => {
                 onValueChange={setSelectedStatus}
                 disabled={!isLoggedIn}
               >
-                <SelectTrigger>
+                <SelectTrigger className="focus:outline-none focus:ring-0 focus:ring-offset-0 select-none">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
 

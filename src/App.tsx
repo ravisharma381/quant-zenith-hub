@@ -24,7 +24,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Billing from "./pages/Billing";
 import NotFound from "./pages/NotFound";
-import Playlists from "./pages/Playlists";
+// import Playlists from "./pages/Playlists";
 import Playlists2 from "./pages/Playlists2";
 import CompanyPlaylist from "./pages/CompanyPlaylist";
 import Layout from "./components/Layout";
@@ -40,7 +40,7 @@ import AdminChapters from "./pages/Admin/Chapters/Chapters";
 import CourseLearn from "./pages/CourseLearn";
 import ScrollToTop from "./components/ScrollToTop";
 import ContactUs from "./Contact";
-import Premium from "./pages/Premium";
+// import Premium from "./pages/Premium";
 import AdminPricing from "./pages/Admin/AdminPricing";
 // import PremiumCheckout from "./pages/PremiumCheckout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -71,8 +71,8 @@ const App = () => (
               {/* <Route path="/games/memory-sequences" element={<Layout><MemorySequences /></Layout>} /> */}
               <Route path="/courses" element={<Layout><Courses /></Layout>} />
               <Route path="/course/quant-interview-masterclass" element={<Layout><CourseDetail /></Layout>} />
-              <Route path="/premium" element={<Layout><Premium /></Layout>} />
-              <Route path="/premium-v2" element={<Layout><PremiumV2 /></Layout>} />
+              <Route path="/premium" element={<Layout><PremiumV2 /></Layout>} />
+              {/* <Route path="/premium-v2" element={<Layout><PremiumV2 /></Layout>} /> */}
               <Route path="/admin"
                 element={
                   <Layout>
