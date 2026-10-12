@@ -87,6 +87,27 @@ const Profile = () => {
           <h2 className="text-lg font-semibold text-foreground">Activity</h2>
           <span className="text-sm text-muted-foreground">{totalSubs} problems solved in the last year</span>
         </div>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="flex items-center gap-2.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2">
+            <Flame className="h-5 w-5 text-primary" />
+            <div className="leading-tight">
+              <div className="text-base font-bold text-foreground">{currentStreak} day{currentStreak === 1 ? "" : "s"}</div>
+              <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Current streak</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5 rounded-lg border border-border bg-background/50 px-3 py-2">
+            <Trophy className="h-5 w-5 text-muted-foreground" />
+            <div className="leading-tight">
+              <div className="text-base font-bold text-foreground">{longestStreak} day{longestStreak === 1 ? "" : "s"}</div>
+              <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Longest streak</div>
+            </div>
+          </div>
+          <span className="ml-1 text-xs text-muted-foreground">
+            {days[days.length - 1].count > 0
+              ? "Solved today — keep it going."
+              : "Solve a problem today to keep the streak alive."}
+          </span>
+        </div>
         <TooltipProvider delayDuration={0}>
           <div className="overflow-x-auto">
             <div className="flex gap-[3px] w-max">
