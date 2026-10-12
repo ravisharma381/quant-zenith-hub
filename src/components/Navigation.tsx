@@ -106,6 +106,18 @@ const Navigation = () => {
                 {/* User Dropdown with courses styling */}
                 <div className="absolute top-full right-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="w-72 bg-card border border-border rounded-lg shadow-lg p-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    >
+                      <div className="mt-1">
+                        <User className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-foreground">Profile</div>
+                        <div className="text-sm text-muted-foreground">Your progress & activity</div>
+                      </div>
+                    </Link>
                     <Link 
                       to="/my-courses" 
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
@@ -258,6 +270,19 @@ const Navigation = () => {
               
               {isLoggedIn && (
                 <>
+                  <Link
+                    to="/profile"
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="mt-1">
+                      <User className="w-5 h-5 text-muted-foreground group-hover/item:text-foreground" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground">Profile</div>
+                      <div className="text-sm text-muted-foreground">Your progress & activity</div>
+                    </div>
+                  </Link>
                   <Link 
                     to="/my-courses" 
                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors group/item"
