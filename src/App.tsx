@@ -26,6 +26,7 @@ import BlogDetail from "./pages/BlogDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Billing from "./pages/Billing";
+import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
 import Premium from "./pages/Premium";
 import NotFound from "./pages/NotFound";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/blogs" element={<Layout><Blogs /></Layout>} />
             <Route path="/blogs/:slug" element={<Layout><BlogDetail /></Layout>} />
             <Route path="/billing" element={<Layout><Billing /></Layout>} />
+            <Route path="/profile" element={<Layout><Profile /></Layout>} />
             <Route path="/contact" element={<Layout><Contact /></Layout>} />
             <Route path="/premium" element={<Layout><Premium /></Layout>} />
             <Route path="/login" element={<Login />} />
