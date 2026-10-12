@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+import { Flame, Trophy } from "lucide-react";
+
 const TOPICS = [
   { name: "Combinatorics", solved: 34, total: 120 },
   { name: "Probability", solved: 58, total: 150 },
@@ -38,6 +40,26 @@ const Profile = () => {
     }
     return arr;
   }, []);
+
+  const { currentStreak, longestStreak } = useMemo(() => {
+    let longest = 0;
+    let run = 0;
+    for (const d of days) {
+      if (d.count > 0) {
+        run += 1;
+        if (run > longest) longest = run;
+      } else {
+        run = 0;
+      }
+    }
+    let current = 0;
+    for (let i = days.length - 1; i >= 0; i--) {
+      if (days[i].count > 0) current += 1;
+      else if (i === days.length - 1) continue;
+      else break;
+    }
+    return { currentStreak: current, longestStreak: longest };
+  }, [days]);
 
   const weeks: (typeof days)[] = [];
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
