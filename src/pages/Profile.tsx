@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+import { Flame, Trophy } from "lucide-react";
+
 const TOPICS = [
   { name: "Combinatorics", solved: 34, total: 120 },
   { name: "Probability", solved: 58, total: 150 },
@@ -39,6 +41,26 @@ const Profile = () => {
     return arr;
   }, []);
 
+  const { currentStreak, longestStreak } = useMemo(() => {
+    let longest = 0;
+    let run = 0;
+    for (const d of days) {
+      if (d.count > 0) {
+        run += 1;
+        if (run > longest) longest = run;
+      } else {
+        run = 0;
+      }
+    }
+    let current = 0;
+    for (let i = days.length - 1; i >= 0; i--) {
+      if (days[i].count > 0) current += 1;
+      else if (i === days.length - 1) continue;
+      else break;
+    }
+    return { currentStreak: current, longestStreak: longest };
+  }, [days]);
+
   const weeks: (typeof days)[] = [];
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
   const totalSubs = days.reduce((s, d) => s + d.count, 0);
@@ -64,6 +86,27 @@ const Profile = () => {
         <div className="flex justify-between items-baseline mb-4">
           <h2 className="text-lg font-semibold text-foreground">Activity</h2>
           <span className="text-sm text-muted-foreground">{totalSubs} problems solved in the last year</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="flex items-center gap-2.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2">
+            <Flame className="h-5 w-5 text-primary" />
+            <div className="leading-tight">
+              <div className="text-base font-bold text-foreground">{currentStreak} day{currentStreak === 1 ? "" : "s"}</div>
+              <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Current streak</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5 rounded-lg border border-border bg-background/50 px-3 py-2">
+            <Trophy className="h-5 w-5 text-muted-foreground" />
+            <div className="leading-tight">
+              <div className="text-base font-bold text-foreground">{longestStreak} day{longestStreak === 1 ? "" : "s"}</div>
+              <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Longest streak</div>
+            </div>
+          </div>
+          <span className="ml-1 text-xs text-muted-foreground">
+            {days[days.length - 1].count > 0
+              ? "Solved today — keep it going."
+              : "Solve a problem today to keep the streak alive."}
+          </span>
         </div>
         <TooltipProvider delayDuration={0}>
           <div className="overflow-x-auto">
