@@ -48,6 +48,7 @@ const AdminPlaylists: React.FC = () => {
     const [firstDoc, setFirstDoc] = useState<any>(null);
     const [pageStack, setPageStack] = useState<any[]>([]);
     const [hasNext, setHasNext] = useState(true);
+    const [listVersion, setListVersion] = useState(0);
 
     const { toast } = useToast();
     const navigate = useNavigate();
@@ -121,8 +122,9 @@ const AdminPlaylists: React.FC = () => {
             setPlaylists(data);
         };
 
+        setPageStack([]);
         fetchPlaylists();
-    }, [courseId, search]);
+    }, [courseId, search, listVersion]);
 
 
     // 🔹 Fetch topics of type 'question' for multi-select
@@ -251,21 +253,21 @@ const AdminPlaylists: React.FC = () => {
 
     // 🔹 Save (Add or Update)
     const handleSave = async () => {
-        try {
-            const { id, ...data } = formData;
+        if (!courseId) return;
 
-            if (editingPlaylist) {
-                await updateDoc(doc(db, "playlists", editingPlaylist.id!), data);
-                setPlaylists((prev) =>
-                    prev.map((p) => (p.id === editingPlaylist.id ? { ...editingPlaylist, ...data } : p))
-                );
+        try {
+            const { id: _id, ...rest } = formData;
+            const data = { ...rest, courseId };
+
+            if (editingPlaylist?.id) {
+                await updateDoc(doc(db, "playlists", editingPlaylist.id), data);
                 toast({ title: "Playlist updated successfully" });
             } else {
-                const docRef = await addDoc(collection(db, "playlists"), { ...data, createdAt: serverTimestamp(), });
-                setPlaylists((prev) => [...prev, { id: docRef.id, ...data }]);
+                await addDoc(collection(db, "playlists"), { ...data, createdAt: serverTimestamp() });
                 toast({ title: "Playlist created successfully" });
             }
 
+            setListVersion((v) => v + 1);
             setOpen(false);
             setEditingPlaylist(null);
             setFormData({
@@ -288,7 +290,7 @@ const AdminPlaylists: React.FC = () => {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this playlist?")) return;
         await deleteDoc(doc(db, "playlists", id));
-        setPlaylists((prev) => prev.filter((p) => p.id !== id));
+        setListVersion((v) => v + 1);
         toast({ title: "Playlist deleted" });
     };
 
@@ -299,17 +301,25 @@ const AdminPlaylists: React.FC = () => {
         setOpen(true);
     };
     const openAdd = () => {
+        setEditingPlaylist(null);
         setFormData({
             heading: "",
             description: "",
             subheading: "",
             logoURL: "",
-            courseId,
+            courseId: courseId ?? "",
             topicIds: [],
             keywords: [],
             sortOrder: 0,
         });
         setOpen(true);
+    };
+
+    const handleDialogOpenChange = (nextOpen: boolean) => {
+        setOpen(nextOpen);
+        if (!nextOpen) {
+            setEditingPlaylist(null);
+        }
     };
 
 
@@ -391,7 +401,7 @@ const AdminPlaylists: React.FC = () => {
             </div>
 
             {/* Create/Edit Playlist Modal */}
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open} onOpenChange={handleDialogOpenChange}>
                 <DialogContent className="max-w-lg">
                     <DialogHeader>
                         <DialogTitle>{editingPlaylist ? "Edit Playlist" : "Add Playlist"}</DialogTitle>
